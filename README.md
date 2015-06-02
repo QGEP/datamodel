@@ -11,6 +11,10 @@ Preparation:
 
   - Install hstore extension (`CREATE EXTENSION hstore`)
 
+
+Files:
+------
+
  * 00_create_schema.sql - creates the QGEP schema
 
  * 01_audit.sql - creates the trigger to log history on tables
@@ -29,3 +33,4 @@ Preparation:
 
  * 08_qgep_functions.sql - plpgsql functions that work in collaboration with the QGEP plugin
 
+ * view - Views for implementation of business logic
