@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
     re.slope_building_plan,
     re.wall_roughness,
     re.fk_pipe_profile,
+    ch.bedding_encasement,
     ch.function_hierarchic,
     ch.connection_type,
     ch.function_hydraulic,
@@ -210,6 +211,86 @@ BEGIN
             , NEW.rp_from_obj_id
             , NEW.rp_to_obj_id
             , NEW.fk_pipe_profile);
+
+  INSERT INTO qgep.od_wastewater_structure (
+            obj_id
+            , accessibility
+            , contract_section
+            -- , detail_geometry_geometry
+            -- , detail_geometry_3d_geometry
+            , financing
+            , gross_costs
+            , identifier
+            , inspection_interval
+            , location_name
+            , records
+            , remark
+            , renovation_necessity
+            , replacement_value
+            , rv_base_year
+            , rv_construction_type
+            , status
+            , structure_condition
+            , subsidies
+            , year_of_construction
+            , year_of_replacement
+            , last_modification
+            , dataowner
+            , provider
+            , fk_owner
+            , fk_operator )
+
+    VALUES ( qgep.generate_oid('od_channel') -- obj_id
+            , NEW.accessibility
+            , NEW.contract_section
+            -- , NEW.detail_geometry_geometry
+            -- , NEW.detail_geometry_3d_geometry
+            , NEW.financing
+            , NEW.gross_costs
+            , NEW.identifier
+            , NEW.inspection_interval
+            , NEW.location_name
+            , NEW.records
+            , NEW.remark
+            , NEW.renovation_necessity
+            , NEW.replacement_value
+            , NEW.rv_base_year
+            , NEW.rv_construction_type
+            , NEW.status
+            , NEW.structure_condition
+            , NEW.subsidies
+            , NEW.year_of_construction
+            , NEW.year_of_replacement
+            , NEW.last_modification
+            , NEW.dataowner
+            , NEW.provider
+            , NEW.fk_owner
+            , NEW.fk_operator
+           )
+           RETURNING obj_id INTO NEW.obj_id;
+
+  INSERT INTO qgep.od_channel(
+              obj_id
+            , bedding_encasement
+            , connection_type
+            , function_hierarchic
+            , function_hydraulic
+            , jetting_interval
+            , pipe_length
+            , usage_current
+            , usage_planned
+            )
+            VALUES(
+              NEW.obj_id -- obj_id
+            , NEW.bedding_encasement
+            , NEW.connection_type
+            , NEW.function_hierarchic
+            , NEW.function_hydraulic
+            , NEW.jetting_interval
+            , NEW.pipe_length
+            , NEW.usage_current
+            , NEW.usage_planned
+            );
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
@@ -218,7 +299,7 @@ END; $BODY$
 DROP TRIGGER IF EXISTS vw_qgep_reach_on_insert ON qgep.vw_qgep_reach;
 
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep.vw_qgep_reach
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_reach_insert();
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_reach_insert();
 
 -- REACH UPDATE
 -- Rule: vw_qgep_reach_on_update()
