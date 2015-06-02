@@ -17,7 +17,8 @@ COMMENT ON TABLE qgep.is_oid_prefixes
   IS 'This table contains OID prefixes for different communities or organizations. The application or administrator changing this table has to make sure that only one record is set to active.';
 
 -- sample entry for the City of Uster - you need to adapt this entry later for your own organization
-INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch11h8mw','Stadt Uster',TRUE);
+INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch11h8mw','Stadt Uster',FALSE);
+INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch15z36d','SIGE',FALSE);
 
 CREATE INDEX in_qgep_is_oid_prefixes_active
   ON qgep.is_oid_prefixes
