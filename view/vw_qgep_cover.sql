@@ -39,6 +39,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     ws.inspection_interval,
     ws.location_name,
     ws.records,
+    ws.remark AS ws_remark,
     ws.renovation_necessity,
     ws.replacement_value,
     ws.rv_base_year,
@@ -165,7 +166,7 @@ BEGIN
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
-           , NEW.remark
+           , NEW.ws_remark
            , NEW.renovation_necessity
            , NEW.replacement_value
            , NEW.rv_base_year
@@ -236,7 +237,7 @@ BEGIN
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
-           , NEW.remark
+           , NEW.ws_remark
            , NEW.renovation_necessity
            , NEW.replacement_value
            , NEW.rv_base_year
@@ -308,7 +309,7 @@ BEGIN
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
-           , NEW.remark
+           , NEW.ws_remark
            , NEW.renovation_necessity
            , NEW.replacement_value
            , NEW.rv_base_year
