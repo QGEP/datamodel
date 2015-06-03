@@ -32,6 +32,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     END AS ws_type,
 
     ws.obj_id as ws_obj_id,
+    ws.identifier as ws_identifier,
     ws.accessibility,
     ws.contract_section,
     ws.financing,
@@ -162,7 +163,7 @@ BEGIN
     --       , NEW.detail_geometry_3d_geometry
            , NEW.financing
            , NEW.gross_costs
-           , NEW.identifier
+           , NEW.ws_identifier
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
@@ -233,7 +234,7 @@ BEGIN
     --       , NEW.detail_geometry_3d_geometry
            , NEW.financing
            , NEW.gross_costs
-           , NEW.identifier
+           , NEW.ws_identifier
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
@@ -305,7 +306,7 @@ BEGIN
     --       , NEW.detail_geometry_3d_geometry
            , NEW.financing
            , NEW.gross_costs
-           , NEW.identifier
+           , NEW.ws_identifier
            , NEW.inspection_interval
            , NEW.location_name
            , NEW.records
