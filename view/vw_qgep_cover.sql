@@ -398,14 +398,11 @@ BEGIN
     , ws_obj_id
   );
   RETURN NEW;
-END; $BODY$ LANGUAGE plpgsql VOLATILE
-  COST 100;
+END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
 DROP TRIGGER IF EXISTS vw_qgep_cover_ON_INSERT ON qgep.vw_qgep_cover;
 
 CREATE TRIGGER vw_qgep_cover_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qgep_cover
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_INSERT();
-
-ALTER TABLE qgep.vw_qgep_cover OWNER TO qgep;
 
 END TRANSACTION;
