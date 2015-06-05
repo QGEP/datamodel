@@ -406,4 +406,125 @@ DROP TRIGGER IF EXISTS vw_qgep_cover_ON_INSERT ON qgep.vw_qgep_cover;
 CREATE TRIGGER vw_qgep_cover_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qgep_cover
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_INSERT();
 
+/**************************************************************
+ * UPDATE
+ *************************************************************/
+CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_UPDATE()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  ws_obj_id character varying(16);
+BEGIN
+    UPDATE qgep.od_cover 
+      SET 
+        brand = NEW.brand, 
+        cover_shape = new.cover_shape, 
+        depth = new.depth, 
+        diameter = new.diameter, 
+        fastening = new.fastening, 
+        level = new.level, 
+        material = new.material, 
+        positional_accuracy = new.positional_accuracy, 
+        situation_geometry = new.situation_geometry, 
+        sludge_bucket = new.sludge_bucket, 
+        venting = new.venting
+    WHERE od_cover.obj_id::text = old.obj_id::text;
+    
+    UPDATE qgep.od_structure_part 
+      SET 
+        identifier = new.identifier, 
+        remark = new.remark, 
+        renovation_demand = new.renovation_demand, 
+        last_modification = new.last_modification, 
+        dataowner = new.dataowner, 
+        provider = new.provider
+    WHERE od_structure_part.obj_id::text = old.obj_id::text;
+    
+    UPDATE qgep.od_wastewater_structure
+      SET
+        obj_id = NEW.ws_obj_id,
+        identifier = NEW.ws_identifier,
+        accessibility = NEW.accessibility,
+        contract_section = NEW.contract_section,
+        financing = NEW.financing,
+        gross_costs = NEW.gross_costs,
+        inspection_interval = NEW.inspection_interval,
+        location_name = NEW.location_name,
+        records = NEW.records,
+        remark = NEW.ws_remark,
+        renovation_necessity = NEW.renovation_necessity,
+        replacement_value = NEW.replacement_value,
+        rv_base_year = NEW.rv_base_year,
+        rv_construction_type = NEW.rv_construction_type,
+        status = NEW.status,
+        structure_condition = NEW.structure_condition,
+        subsidies = NEW.subsidies,
+        year_of_construction = NEW.year_of_construction,
+        year_of_replacement = NEW.year_of_replacement,
+        fk_owner = NEW.fk_owner,
+        fk_operator = NEW.fk_operator
+     WHERE od_wastewater_structure.obj_id::text = old.ws_obj_id::text;
+
+  IF OLD.ws_type <> NEW.ws_type THEN
+    CASE
+      WHEN OLD.ws_type = 'manhole' THEN DELETE FROM qgep.od_manhole WHERE obj_id = OLD.ws_obj_id;
+      WHEN OLD.ws_type = 'special_structure' THEN DELETE FROM qgep.od_special_structure WHERE obj_id = OLD.ws_obj_id;
+      WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep.od_discharge_point WHERE obj_id = OLD.ws_obj_id;
+      WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep.infiltration_installation WHERE obj_id = OLD.ws_obj_id;
+    END CASE;
+    
+    CASE
+      WHEN NEW.ws_type = 'manhole' THEN INSERT INTO qgep.od_manhole (obj_id) VALUES(OLD.ws_obj_id);
+      WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep.od_special_structure (obj_id) VALUES(OLD.ws_obj_id);
+      WHEN NEW.ws_type = 'discharge_point' THEN INSERT INTO qgep.od_discharge_point (obj_id) VALUES(OLD.ws_obj_id);
+      WHEN NEW.ws_type = 'infiltration_installation' THEN INSERT INTO qgep.infiltration_installation (obj_id) VALUES(OLD.ws_obj_id);
+    END CASE;
+  END IF;
+
+  CASE
+    WHEN OLD.ws_type = 'manhole' THEN
+      UPDATE qgep.od_manhole
+      SET
+        depth = NEW.depth,
+        dimension1 = NEW.dimension1,
+        dimension2 = NEW.dimension2,
+        function = NEW.manhole_function,
+        material = NEW.material,
+        surface_inflow = NEW.surface_inflow
+      WHERE obj_id = OLD.ws_obj_id;
+      
+    WHEN OLD.ws_type = 'special_structure' THEN
+      UPDATE qgep.od_special_structure
+      SET
+        bypass = NEW.bypass,
+        depth = NEW.depth,
+        emergency_spillway = NEW.emergency_spillway,
+        function = NEW.special_structure_function,
+        stormwater_tank_arrangement = NEW.stormwater_tank_arrangement,
+        upper_elevation = NEW.upper_elevation
+      WHERE obj_id = OLD.ws_obj_id;
+    
+    WHEN OLD.ws_type = 'discharge_point' THEN
+      UPDATE qgep.od_discharge_point
+      SET
+        depth = NEW.depth,
+        highwater_level = NEW.highwater_level,
+        relevance = NEW.relevance,
+        terrain_level = NEW.terrain_level,
+        upper_elevation = NEW.upper_elevation,
+        waterlevel_hydraulic = NEW.waterlevel_hydraulic
+      WHERE obj_id = OLD.ws_obj_id;
+      
+    WHEN OLD.ws_type = 'infiltration_installation' THEN
+    -- TODO
+  END CASE;
+  
+  RETURN NEW;
+END; $BODY$ LANGUAGE plpgsql VOLATILE;
+
+DROP TRIGGER IF EXISTS vw_qgep_cover_ON_UPDATE ON qgep.vw_qgep_cover;
+
+CREATE TRIGGER vw_qgep_cover_ON_UPDATE INSTEAD OF UPDATE ON qgep.vw_qgep_cover
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_UPDATE();
+  
 END TRANSACTION;
