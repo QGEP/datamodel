@@ -17,13 +17,27 @@
 # Exit on error
 set -e
 
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
+
 if [ "0${PGSERVICE}" = "0" ]
 then
   PGSERVICE=pg_qgep
 fi
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
+while getopts ":f" opt; do
+  case $opt in
+    f)
+      force=True
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
 
+if [[ $force ]]; then
+  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA qgep CASCADE"
+fi
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/00_qgep_schema.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/01_audit.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/02_oid_generation.sql
