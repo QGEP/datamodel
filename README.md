@@ -1,36 +1,75 @@
 
-Installation of the data model in PostgreSQL
-============================================
+The QGEP Datamodel
+==================
+
+This repository contains a bare QGEP datamodel. This is an SQL implementation
+of the VSA-DSS datamodel (including SIA405). It ships with SQL scripts required
+to setup an empty PostgreSQL/PostGIS database to use as basis for the QGEP
+project.
+
+Ordinary data tables (od\_)
+---------------------------
+
+These tables contain the business data. In these tables the information which
+is maintained by organizations can be found.
+
+Value Lists (vl\_)
+------------------
+
+These tables contain value lists which are referenced by od\_ tables. The value
+lists contain additional information in different languages about the values.
+
+Information Schema (is\_)
+-------------------------
+
+These tables contain meta information about the schema.
+
+Views (vw\_)
+------------
+
+The VSA-DSS model is built in an object relational way. Its PostgreSQL
+implementation does not make use of object inheritance and instead uses a pure
+relational approach. For base classes (like od\_wastewater\_structure) there
+are multiple child classes (like od\_manhole or od\_special\_structure) which
+are linked with the same `obj_id` to the parent object.
+
+For easier usage views are provided which give access to the merged attributes
+of child and parent classes. These views are prefixed with `vw_` and all come
+with INSERT, UPDATE and DELETE rules which allow changing data directly on the
+view.
+
+E.g. The view `vw_manhole` merges all the attributes of the tables `od_manhole`
+and `od_wastewater_structure`.
+
+QGEP Views (vw\_qgep\_\*)
+-------------------------
+
+These Views are handcrafted specifically for QGEP data entry. They normally
+join data from various tables. They also come with INSERT, UPDATE and DELETE
+rules but some attributes may be read-only (aggregated from multiple tables,
+calculated otherwise).
+
+Functions
+---------
+
+The functions are mainly used to create cached data required for symbology.
+They are often triggered for changes on specific tables and then executed only
+to update information on specific roles.
+
+Installation instructions
+=========================
+
+Detailed instructions can be found in the [QGEP documentation](http://qgep.github.io/docs/).
+This is only a short summary for reference.
 
 Preparation:
 ------------
 
-  - Create new database e.g. "qgeptest"
+ * Create new database (e.g. `qgeptest`)
+ * Create a service in a pg\_service definition (e.g. `pg_qgep`)
 
-  - Install Postgis extension (`CREATE EXTENSION postgis`)
+Installation:
+-------------
 
-  - Install hstore extension (`CREATE EXTENSION hstore`)
-
-
-Files:
-------
-
- * 00_create_schema.sql - creates the QGEP schema
-
- * 01_audit.sql - creates the trigger to log history on tables
-
- * 02_is_dictionary_metadata_table.sql - translations of tables into different languages, incl. abbreviations
-
- * 03_oid_generation.sql - infrastructure table and function for StandardOID generation, you should add entries to the table qgep.is_oid_prefixes for your own organization or check the entry into this file in github.
-
- * 04_qgep_tables.sql - the core of the model: the empty tables
-
- * 05_vsa_kek_extension.sql - optional extension for documenting results of channel-TV
-
- * 06_vw_symbology_manhole_reach_specialstructure.sql - views for displaying/symbolizing the data
-
- * 07_views_for_network_following.sql - 2 views for network following
-
- * 08_qgep_functions.sql - plpgsql functions that work in collaboration with the QGEP plugin
-
- * view - Views for implementation of business logic
+ * `export PG_SERVICE=pg_qgep`
+ * Run `scripts/db_setup.sh`
