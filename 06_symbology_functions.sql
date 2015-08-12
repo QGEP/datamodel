@@ -233,13 +233,13 @@ BEGIN
       WHERE re.obj_id = ANY ( affected_obj_ids )
   LOOP
     SELECT * FROM qgep.wastewater_structure_symbology_attribs( ws_obj_id.obj_id  )
-        INTO symb_attribs;
-      UPDATE qgep.od_wastewater_structure
-      SET
-        _usage_current = symb_attribs.usage_current,
-        _function_hierarchic = symb_attribs.function_hierarchic
-      WHERE
-        obj_id = ws_obj_id.obj_id;
+      INTO symb_attribs;
+    UPDATE qgep.od_wastewater_structure
+    SET
+      _usage_current = symb_attribs.usage_current,
+      _function_hierarchic = symb_attribs.function_hierarchic
+    WHERE
+      obj_id = ws_obj_id.obj_id;
 
       -- RAISE NOTICE 'Updating wastewater_structure (%, %)', ws_obj_id.obj_id, symb_attribs.usage_current;
   END LOOP;
@@ -248,14 +248,14 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep.od_reach;
+DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep.od_reach;
 
 CREATE TRIGGER ws_symbology_update_by_reach
   AFTER INSERT OR UPDATE OR DELETE
     ON qgep.od_reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach();
-    
+
 -- Function: qgep.wastewater_structure_label_detailed(text)
 -- This function is used to update the detailed label consisting of identifier, cover level, levels of incoming pipes and levels of outgoing pipes
 
