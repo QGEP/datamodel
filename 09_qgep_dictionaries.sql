@@ -121,6 +121,7 @@ WITH (
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr) VALUES (99981,'od_symbol','SYMBOL','SX','Symbol','SX','Symbole','SX');
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr) VALUES (99982,'re_maintenance_event_wastewater_structure','maintenance event wastewater structure','','Erhaltungsereignis Abwasserbauwre','','Evénement de maintenance Ouvrage réseau AS','');
 
+DROP TYPE IF EXISTS plantype;
 CREATE TYPE plantype AS ENUM ('Leitungskataster','Werkinformation', 'GEP_Verband', 'GEP_Traegerschaft', 'PAA', 'SAA', 'kein_Plantyp_definiert');
 CREATE TABLE qgep.is_dictionary_od_field (
     id serial NOT NULL,
@@ -139,10 +140,10 @@ CREATE TABLE qgep.is_dictionary_od_field (
     field_mandatory plantype[],
     field_visible boolean,
     field_datatype character varying(40),
-    field_unit_de character varying(60),
-    field_unit_en character varying(50),
-    field_unit_fr character varying(50),
-    field_unit_it character varying(50),
+    field_unit_de character varying(90),
+    field_unit_en character varying(90),
+    field_unit_fr character varying(90),
+    field_unit_it character varying(90),
     field_min numeric,
     field_max numeric,
     CONSTRAINT is_dictionary_od_field_pkey PRIMARY KEY (id)
@@ -832,13 +833,13 @@ CREATE TABLE qgep.is_dictionary_od_values (
   field_name character varying(80),
   value_name character varying(100),
   value_name_en character varying(80),
-  shortcut_en character(2),
+  shortcut_en character(3),
   value_name_de character varying(100),
-  shortcut_de character(2),
+  shortcut_de character(3),
   value_name_fr character varying(100),
-  shortcut_fr character(2),
+  shortcut_fr character(3),
   value_name_it character varying(100),
-  shortcut_it character(2),
+  shortcut_it character(3),
   value_description_en text,
   value_description_de text,
   value_description_fr text,
