@@ -1,4 +1,4 @@
-﻿-- Function: qgep.wastewater_structure_symbology_attribs(text)
+-- Function: qgep.wastewater_structure_symbology_attribs(text)
 -- This function allows to determine the function_hierarchic and usage_current of a given wastewater_structure
 -- in order to properly style the wastewater_structure.
 -- Determination of these attributes is based on the outgoing reaches (ordered by hierarchy) - if any - or incoming reaches

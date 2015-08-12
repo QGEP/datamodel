@@ -1,4 +1,4 @@
-﻿------ This file generates the VSA-DSS database (Modul VSA-KEK) in en on QQIS
+------ This file generates the VSA-DSS database (Modul VSA-KEK) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
 ------ version 19.07.2013 21:17:12
 BEGIN;

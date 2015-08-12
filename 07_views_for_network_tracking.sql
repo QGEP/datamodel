@@ -1,4 +1,4 @@
-﻿-- Views for network following with the Python NetworkX module and the QGEP Python plugins
+-- Views for network following with the Python NetworkX module and the QGEP Python plugins
 -- View: qgep.vw_network_node
 
 DROP MATERIALIZED VIEW IF EXISTS qgep.vw_network_node CASCADE;

@@ -1,4 +1,4 @@
-﻿-- table od_wastewater_structure is extended to hold additional attributes necessary for symbology reasons
+-- table od_wastewater_structure is extended to hold additional attributes necessary for symbology reasons
 -- extended attributes are started with an underscore
 -- _usage_current is necessary for coloring the wastewater_structure/cover symbols
 -- _function_hierarchic is necessary for scale-based filtering (display minor wastewater_structures only at larger scales)

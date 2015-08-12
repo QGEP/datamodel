@@ -1,4 +1,4 @@
-﻿DROP TABLE qgep.is_dictionary_vw_field CASCADE;
+DROP TABLE qgep.is_dictionary_vw_field CASCADE;
 CREATE TABLE qgep.is_dictionary_vw_field
 (
   id serial NOT NULL,
