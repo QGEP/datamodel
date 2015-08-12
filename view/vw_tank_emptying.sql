@@ -1,10 +1,13 @@
-DROP VIEW IF EXISTS qgep.vw_access_aid;
+DROP VIEW IF EXISTS qgep.vw_tank_emptying;
 
-CREATE OR REPLACE VIEW qgep.vw_access_aid AS
+CREATE OR REPLACE VIEW qgep.vw_tank_emptying AS
 
 SELECT
-   AA.obj_id
-   , AA.kind
+   TE.obj_id
+   , TE.flow
+   , TE.gross_costs
+   , TE.type
+   , TE.year_of_replacement
    , SP.identifier
    , SP.remark
    , SP.renovation_demand
@@ -12,16 +15,16 @@ SELECT
    , SP.provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_access_aid AA
+  FROM qgep.od_tank_emptying TE
  LEFT JOIN qgep.od_structure_part SP
- ON SP.obj_id = AA.obj_id;
+ ON SP.obj_id = TE.obj_id;
 
 -----------------------------------
--- access_aid INSERT
--- Function: vw_access_aid_insert()
+-- tank_emptying INSERT
+-- Function: vw_tank_emptying_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_access_aid_insert()
+CREATE OR REPLACE FUNCTION qgep.vw_tank_emptying_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -35,7 +38,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( qgep.generate_oid('od_access_aid') -- obj_id
+     VALUES ( qgep.generate_oid('od_tank_emptying') -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -46,33 +49,42 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_access_aid (
+INSERT INTO qgep.od_tank_emptying (
              obj_id
-           , kind
+           , flow
+           , gross_costs
+           , type
+           , year_of_replacement
            )
           VALUES (
             NEW.obj_id -- obj_id
-           , NEW.kind
+           , NEW.flow
+           , NEW.gross_costs
+           , NEW.type
+           , NEW.year_of_replacement
            );
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_access_aid_ON_INSERT ON qgep.access_aid;
+-- DROP TRIGGER vw_tank_emptying_ON_INSERT ON qgep.tank_emptying;
 
-CREATE TRIGGER vw_access_aid_ON_INSERT INSTEAD OF INSERT ON qgep.vw_access_aid
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_access_aid_insert();
+CREATE TRIGGER vw_tank_emptying_ON_INSERT INSTEAD OF INSERT ON qgep.vw_tank_emptying
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_tank_emptying_insert();
 
 -----------------------------------
--- access_aid UPDATE
--- Rule: vw_access_aid_ON_UPDATE()
+-- tank_emptying UPDATE
+-- Rule: vw_tank_emptying_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_UPDATE AS ON UPDATE TO qgep.vw_access_aid DO INSTEAD (
-UPDATE qgep.od_access_aid
+CREATE OR REPLACE RULE vw_tank_emptying_ON_UPDATE AS ON UPDATE TO qgep.vw_tank_emptying DO INSTEAD (
+UPDATE qgep.od_tank_emptying
   SET
-       kind = NEW.kind
+       flow = NEW.flow
+     , gross_costs = NEW.gross_costs
+     , type = NEW.type
+     , year_of_replacement = NEW.year_of_replacement
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_structure_part
@@ -88,12 +100,12 @@ UPDATE qgep.od_structure_part
 );
 
 -----------------------------------
--- access_aid DELETE
--- Rule: vw_access_aid_ON_DELETE ()
+-- tank_emptying DELETE
+-- Rule: vw_tank_emptying_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_DELETE AS ON DELETE TO qgep.vw_access_aid DO INSTEAD (
-  DELETE FROM qgep.od_access_aid WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_tank_emptying_ON_DELETE AS ON DELETE TO qgep.vw_tank_emptying DO INSTEAD (
+  DELETE FROM qgep.od_tank_emptying WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
 );
 

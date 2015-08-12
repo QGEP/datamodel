@@ -1,10 +1,12 @@
-DROP VIEW IF EXISTS qgep.vw_access_aid;
+DROP VIEW IF EXISTS qgep.vw_electromechanical_equipment;
 
-CREATE OR REPLACE VIEW qgep.vw_access_aid AS
+CREATE OR REPLACE VIEW qgep.vw_electromechanical_equipment AS
 
 SELECT
-   AA.obj_id
-   , AA.kind
+   EQ.obj_id
+   , EQ.gross_costs
+   , EQ.kind
+   , EQ.year_of_replacement
    , SP.identifier
    , SP.remark
    , SP.renovation_demand
@@ -12,16 +14,16 @@ SELECT
    , SP.provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_access_aid AA
+  FROM qgep.od_electromechanical_equipment EQ
  LEFT JOIN qgep.od_structure_part SP
- ON SP.obj_id = AA.obj_id;
+ ON SP.obj_id = EQ.obj_id;
 
 -----------------------------------
--- access_aid INSERT
--- Function: vw_access_aid_insert()
+-- electromechanical_equipment INSERT
+-- Function: vw_electromechanical_equipment_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_access_aid_insert()
+CREATE OR REPLACE FUNCTION qgep.vw_electromechanical_equipment_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -35,7 +37,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( qgep.generate_oid('od_access_aid') -- obj_id
+     VALUES ( qgep.generate_oid('od_electromechanical_equipment') -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -46,33 +48,39 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_access_aid (
+INSERT INTO qgep.od_electromechanical_equipment (
              obj_id
+           , gross_costs
            , kind
+           , year_of_replacement
            )
           VALUES (
             NEW.obj_id -- obj_id
+           , NEW.gross_costs
            , NEW.kind
+           , NEW.year_of_replacement
            );
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_access_aid_ON_INSERT ON qgep.access_aid;
+-- DROP TRIGGER vw_electromechanical_equipment_ON_INSERT ON qgep.electromechanical_equipment;
 
-CREATE TRIGGER vw_access_aid_ON_INSERT INSTEAD OF INSERT ON qgep.vw_access_aid
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_access_aid_insert();
+CREATE TRIGGER vw_electromechanical_equipment_ON_INSERT INSTEAD OF INSERT ON qgep.vw_electromechanical_equipment
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_electromechanical_equipment_insert();
 
 -----------------------------------
--- access_aid UPDATE
--- Rule: vw_access_aid_ON_UPDATE()
+-- electromechanical_equipment UPDATE
+-- Rule: vw_electromechanical_equipment_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_UPDATE AS ON UPDATE TO qgep.vw_access_aid DO INSTEAD (
-UPDATE qgep.od_access_aid
+CREATE OR REPLACE RULE vw_electromechanical_equipment_ON_UPDATE AS ON UPDATE TO qgep.vw_electromechanical_equipment DO INSTEAD (
+UPDATE qgep.od_electromechanical_equipment
   SET
-       kind = NEW.kind
+       gross_costs = NEW.gross_costs
+     , kind = NEW.kind
+     , year_of_replacement = NEW.year_of_replacement
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_structure_part
@@ -88,12 +96,12 @@ UPDATE qgep.od_structure_part
 );
 
 -----------------------------------
--- access_aid DELETE
--- Rule: vw_access_aid_ON_DELETE ()
+-- electromechanical_equipment DELETE
+-- Rule: vw_electromechanical_equipment_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_DELETE AS ON DELETE TO qgep.vw_access_aid DO INSTEAD (
-  DELETE FROM qgep.od_access_aid WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_electromechanical_equipment_ON_DELETE AS ON DELETE TO qgep.vw_electromechanical_equipment DO INSTEAD (
+  DELETE FROM qgep.od_electromechanical_equipment WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
 );
 

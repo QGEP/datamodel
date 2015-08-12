@@ -1,4 +1,4 @@
-﻿-- View: vw_wizard_reach_channel
+-- View: vw_wizard_reach_channel
 
 -- DROP VIEW vw_wizard_reach_channel;
 

@@ -1,4 +1,4 @@
-﻿DROP VIEW IF EXISTS qgep.vw_qgep_reach;
+DROP VIEW IF EXISTS qgep.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
 

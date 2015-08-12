@@ -1,15 +1,10 @@
-DROP VIEW IF EXISTS qgep.vw_special_structure;
+DROP VIEW IF EXISTS qgep.vw_wwtp_structure;
 
-CREATE OR REPLACE VIEW qgep.vw_special_structure AS
+CREATE OR REPLACE VIEW qgep.vw_wwtp_structure AS
 
 SELECT
-   SS.obj_id
-   , SS.bypass
-   , SS.depth
-   , SS.emergency_spillway
-   , SS.function
-   , SS.stormwater_tank_arrangement
-   , SS.upper_elevation
+   WT.obj_id
+   , WT.kind
    , WS.accessibility
    , WS.contract_section,
 WS.detail_geometry_geometry,
@@ -35,16 +30,16 @@ WS.detail_geometry_3d_geometry
    , WS.last_modification
   , WS.fk_owner
   , WS.fk_operator
-  FROM qgep.od_special_structure SS
+  FROM qgep.od_wwtp_structure WT
  LEFT JOIN qgep.od_wastewater_structure WS
- ON WS.obj_id = SS.obj_id;
+ ON WS.obj_id = WT.obj_id;
 
 -----------------------------------
--- special_structure INSERT
--- Function: vw_special_structure_insert()
+-- wwtp_structure INSERT
+-- Function: vw_wwtp_structure_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_special_structure_insert()
+CREATE OR REPLACE FUNCTION qgep.vw_wwtp_structure_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -76,7 +71,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( qgep.generate_oid('od_special_structure') -- obj_id
+     VALUES ( qgep.generate_oid('od_wwtp_structure') -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
@@ -105,48 +100,33 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_special_structure (
+INSERT INTO qgep.od_wwtp_structure (
              obj_id
-           , bypass
-           , depth
-           , emergency_spillway
-           , function
-           , stormwater_tank_arrangement
-           , upper_elevation
+           , kind
            )
           VALUES (
             NEW.obj_id -- obj_id
-           , NEW.bypass
-           , NEW.depth
-           , NEW.emergency_spillway
-           , NEW.function
-           , NEW.stormwater_tank_arrangement
-           , NEW.upper_elevation
+           , NEW.kind
            );
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_special_structure_ON_INSERT ON qgep.special_structure;
+-- DROP TRIGGER vw_wwtp_structure_ON_INSERT ON qgep.wwtp_structure;
 
-CREATE TRIGGER vw_special_structure_ON_INSERT INSTEAD OF INSERT ON qgep.vw_special_structure
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_special_structure_insert();
+CREATE TRIGGER vw_wwtp_structure_ON_INSERT INSTEAD OF INSERT ON qgep.vw_wwtp_structure
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_wwtp_structure_insert();
 
 -----------------------------------
--- special_structure UPDATE
--- Rule: vw_special_structure_ON_UPDATE()
+-- wwtp_structure UPDATE
+-- Rule: vw_wwtp_structure_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_special_structure_ON_UPDATE AS ON UPDATE TO qgep.vw_special_structure DO INSTEAD (
-UPDATE qgep.od_special_structure
+CREATE OR REPLACE RULE vw_wwtp_structure_ON_UPDATE AS ON UPDATE TO qgep.vw_wwtp_structure DO INSTEAD (
+UPDATE qgep.od_wwtp_structure
   SET
-       bypass = NEW.bypass
-     , depth = NEW.depth
-     , emergency_spillway = NEW.emergency_spillway
-     , function = NEW.function
-     , stormwater_tank_arrangement = NEW.stormwater_tank_arrangement
-     , upper_elevation = NEW.upper_elevation
+       kind = NEW.kind
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_wastewater_structure
@@ -180,12 +160,12 @@ UPDATE qgep.od_wastewater_structure
 );
 
 -----------------------------------
--- special_structure DELETE
--- Rule: vw_special_structure_ON_DELETE ()
+-- wwtp_structure DELETE
+-- Rule: vw_wwtp_structure_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_special_structure_ON_DELETE AS ON DELETE TO qgep.vw_special_structure DO INSTEAD (
-  DELETE FROM qgep.od_special_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_wwtp_structure_ON_DELETE AS ON DELETE TO qgep.vw_wwtp_structure DO INSTEAD (
+  DELETE FROM qgep.od_wwtp_structure WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
 );
 

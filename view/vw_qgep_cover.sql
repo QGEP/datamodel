@@ -1,4 +1,4 @@
-﻿-- View: vw_qgep_cover
+-- View: vw_qgep_cover
 
 BEGIN TRANSACTION;
 
