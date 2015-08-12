@@ -17,6 +17,9 @@ has to be updated by triggers';
 ALTER TABLE qgep.od_manhole ADD COLUMN _orientation numeric;
 COMMENT ON COLUMN qgep.od_manhole._orientation IS 'not part of the VSA-DSS data model
 added solely for QGEP';
+ALTER TABLE qgep.od_manhole ADD COLUMN _label text;
+COMMENT ON COLUMN qgep.od_manhole._label IS 'not part of the VSA-DSS data model
+added solely for QGEP';
 
 -- this column is an extension to the VSA data model and puts the _function_hierarchic in order
 ALTER TABLE qgep.vl_channel_function_hierarchic ADD COLUMN order_fct_hierarchic smallint;
