@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/QGEP/datamodel.svg?branch=master)](https://travis-ci.org/QGEP/datamodel)
 
 The QGEP Datamodel
 ==================
