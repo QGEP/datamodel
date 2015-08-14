@@ -1081,7 +1081,7 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.contract_section IS 'Number of co
 ALTER TABLE qgep.od_wastewater_structure ADD COLUMN detail_geometry_geometry geometry('POLYGON', 21781);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_geometry IS 'Detail geometry especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie insbesondere bei Spezialbauwerken. Für Normschächte i.d. R.  Dimension1 und 2 verwenden. Dito bei normierten Versickerungsanlagen.  Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée particulièrement pour un OUVRAGE_SPECIAL. Pour lattribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.  Les canalisations nont en général pas de géométrie détaillée.';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_3d_geometry', 21781, 'POLYGON', 3, true);
+ALTER TABLE qgep.od_wastewater_structure ADD COLUMN detail_geometry_3d_geometry geometry('POLYGONZ', 21781);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_3d_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_3d_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_3d_geometry IS 'Detail geometry (3D) especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie (3D) insbesondere bei Spezialbauwerken. Bei Normschächten mit Dimension1 und 2 arbeiten. Dito bei normierten Versickerungsanlagen. Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée (3D) particulièrement pour un OUVRAGE_SPECIAL. Pour lattribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.Les canalisations nont en général pas de géométrie détaillée.';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN financing  integer ;
@@ -2464,7 +2464,7 @@ COMMENT ON COLUMN qgep.od_reach.material IS 'Material of reach / pipe / Rohrmate
 ALTER TABLE qgep.od_reach ADD COLUMN progression_geometry geometry('LINESTRING', 21781);
 CREATE INDEX in_qgep_od_reach_progression_geometry ON qgep.od_reach USING gist (progression_geometry );
 COMMENT ON COLUMN qgep.od_reach.progression_geometry IS 'Start, inflextion and endpoints of a pipe / Anfangs-, Knick- und Endpunkte der Leitung / Points de départ, intermédiaires et darrivée de la conduite.';
-SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_3d_geometry', 21781, 'LINESTRING', 3, true);
+ALTER TABLE qgep.od_reach ADD COLUMN progression_3d_geometry geometry('LINESTRINGZ', 21781);
 CREATE INDEX in_qgep_od_reach_progression_3d_geometry ON qgep.od_reach USING gist (progression_3d_geometry );
 COMMENT ON COLUMN qgep.od_reach.progression_3d_geometry IS 'Start, inflextion and endpoints of a pipe (3D coordinates) / Anfangs-, Knick- und Endpunkte der Leitung (3D Koordinaten) / Points de départ, intermédiaires et darrivée de la conduite (coordonnées 3D)';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_material  integer ;
