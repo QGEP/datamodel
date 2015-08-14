@@ -66,6 +66,7 @@ INSERT INTO qgep.od_cover (
            , level
            , material
            , positional_accuracy
+           , situation_geometry
            , sludge_bucket
            , venting
            )
@@ -79,6 +80,7 @@ INSERT INTO qgep.od_cover (
            , NEW.level
            , NEW.material
            , NEW.positional_accuracy
+           , NEW.situation_geometry
            , NEW.sludge_bucket
            , NEW.venting
            );
