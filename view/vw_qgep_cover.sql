@@ -52,6 +52,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     ws.year_of_replacement,
     ws.fk_owner,
     ws.fk_operator,
+    ws._label,
 
     COALESCE( mh.depth, ss.depth, dp.depth, ii.depth ) AS depth,
     COALESCE( mh.dimension1, ii.dimension1 ) AS dimension1,
@@ -415,31 +416,31 @@ $BODY$
 DECLARE
   ws_obj_id character varying(16);
 BEGIN
-    UPDATE qgep.od_cover 
-      SET 
-        brand = NEW.brand, 
-        cover_shape = new.cover_shape, 
-        depth = new.depth, 
-        diameter = new.diameter, 
-        fastening = new.fastening, 
-        level = new.level, 
-        material = new.material, 
-        positional_accuracy = new.positional_accuracy, 
-        situation_geometry = new.situation_geometry, 
-        sludge_bucket = new.sludge_bucket, 
+    UPDATE qgep.od_cover
+      SET
+        brand = NEW.brand,
+        cover_shape = new.cover_shape,
+        depth = new.depth,
+        diameter = new.diameter,
+        fastening = new.fastening,
+        level = new.level,
+        material = new.material,
+        positional_accuracy = new.positional_accuracy,
+        situation_geometry = new.situation_geometry,
+        sludge_bucket = new.sludge_bucket,
         venting = new.venting
     WHERE od_cover.obj_id::text = old.obj_id::text;
-    
-    UPDATE qgep.od_structure_part 
-      SET 
-        identifier = new.identifier, 
-        remark = new.remark, 
-        renovation_demand = new.renovation_demand, 
-        last_modification = new.last_modification, 
-        dataowner = new.dataowner, 
+
+    UPDATE qgep.od_structure_part
+      SET
+        identifier = new.identifier,
+        remark = new.remark,
+        renovation_demand = new.renovation_demand,
+        last_modification = new.last_modification,
+        dataowner = new.dataowner,
         provider = new.provider
     WHERE od_structure_part.obj_id::text = old.obj_id::text;
-    
+
     UPDATE qgep.od_wastewater_structure
       SET
         obj_id = NEW.ws_obj_id,
@@ -472,7 +473,7 @@ BEGIN
       WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep.od_discharge_point WHERE obj_id = OLD.ws_obj_id;
       WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep.infiltration_installation WHERE obj_id = OLD.ws_obj_id;
     END CASE;
-    
+
     CASE
       WHEN NEW.ws_type = 'manhole' THEN INSERT INTO qgep.od_manhole (obj_id) VALUES(OLD.ws_obj_id);
       WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep.od_special_structure (obj_id) VALUES(OLD.ws_obj_id);
@@ -492,7 +493,7 @@ BEGIN
         material = NEW.material,
         surface_inflow = NEW.surface_inflow
       WHERE obj_id = OLD.ws_obj_id;
-      
+
     WHEN OLD.ws_type = 'special_structure' THEN
       UPDATE qgep.od_special_structure
       SET
@@ -503,7 +504,7 @@ BEGIN
         stormwater_tank_arrangement = NEW.stormwater_tank_arrangement,
         upper_elevation = NEW.upper_elevation
       WHERE obj_id = OLD.ws_obj_id;
-    
+
     WHEN OLD.ws_type = 'discharge_point' THEN
       UPDATE qgep.od_discharge_point
       SET
@@ -514,11 +515,11 @@ BEGIN
         upper_elevation = NEW.upper_elevation,
         waterlevel_hydraulic = NEW.waterlevel_hydraulic
       WHERE obj_id = OLD.ws_obj_id;
-      
+
     WHEN OLD.ws_type = 'infiltration_installation' THEN
     -- TODO
   END CASE;
-  
+
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -526,5 +527,5 @@ DROP TRIGGER IF EXISTS vw_qgep_cover_ON_UPDATE ON qgep.vw_qgep_cover;
 
 CREATE TRIGGER vw_qgep_cover_ON_UPDATE INSTEAD OF UPDATE ON qgep.vw_qgep_cover
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_UPDATE();
-  
+
 END TRANSACTION;
