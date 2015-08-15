@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS qgep.vw_qgep_reach;
+﻿DROP VIEW IF EXISTS qgep.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
 
@@ -297,8 +297,6 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-DROP TRIGGER IF EXISTS vw_qgep_reach_on_insert ON qgep.vw_qgep_reach;
-
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_reach_insert();
 
@@ -335,6 +333,48 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , provider = NEW.rp_to_provider
       , fk_wastewater_networkelement = NEW.rp_to_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_to_obj_id;
+
+  UPDATE qgep.od_channel
+    SET
+       bedding_encasement = NEW.bedding_encasement
+     , connection_type = NEW.connection_type
+     , function_hierarchic = NEW.function_hierarchic
+     , function_hydraulic = NEW.function_hydraulic
+     , jetting_interval = NEW.jetting_interval
+     , pipe_length = NEW.pipe_length
+     , usage_current = NEW.usage_current
+     , usage_planned = NEW.usage_planned
+  WHERE obj_id = OLD.fk_wastewater_structure;
+
+  UPDATE qgep.od_wastewater_structure
+    SET
+       accessibility = NEW.accessibility
+     , contract_section = NEW.contract_section
+     -- , detail_geometry_geometry = NEW.detail_geometry_geometry
+     -- , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
+     , financing = NEW.financing
+     , gross_costs = NEW.gross_costs
+     , identifier = NEW.identifier
+     , inspection_interval = NEW.inspection_interval
+     , location_name = NEW.location_name
+     , records = NEW.records
+     , remark = NEW.remark
+     , renovation_necessity = NEW.renovation_necessity
+     , replacement_value = NEW.replacement_value
+     , rv_base_year = NEW.rv_base_year
+     , rv_construction_type = NEW.rv_construction_type
+     , status = NEW.status
+     , structure_condition = NEW.structure_condition
+     , subsidies = NEW.subsidies
+     , year_of_construction = NEW.year_of_construction
+     , year_of_replacement = NEW.year_of_replacement
+     , dataowner = NEW.dataowner
+     , provider = NEW.provider
+     , last_modification = NEW.last_modification
+     , fk_owner = NEW.fk_owner
+     , fk_operator = NEW.fk_operator
+  WHERE obj_id = OLD.fk_wastewater_structure;
+
 
   UPDATE qgep.od_wastewater_networkelement
     SET

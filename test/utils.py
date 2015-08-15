@@ -1,0 +1,75 @@
+import unittest
+
+import psycopg2
+import psycopg2.extras
+
+class DbTestBase:
+
+    def select(self, table, obj_id):
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cur.execute("SELECT * FROM qgep.{table} WHERE obj_id='{obj_id}'".format(table=table, obj_id=obj_id))
+        return cur.fetchone()
+
+    def insert(self, table, row):
+        cur = self.conn.cursor()
+
+        cols = row.keys()
+        cols_str = ','.join(cols)
+        vals = [unicode(row[x]) for x in cols]
+        vals_str_list = ["%s"] * len(vals)
+        vals_str = ','.join(vals_str_list)
+
+        cur.execute(
+            "INSERT INTO qgep.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, cols=cols_str, vals_str=vals_str),
+            row.values()
+        )
+
+        return cur.fetchone()[0]
+
+    def update(self, table, row, obj_id):
+        cur = self.conn.cursor()
+
+        cols = ['{}=%s'.format(key) for key, _ in row.iteritems()]
+        cols_str = ','.join(cols)
+
+        cur.execute(
+            "UPDATE qgep.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, cols_str=cols_str),
+            row.values() + [obj_id]
+        )
+
+    def insert_check(self, table, row):
+        obj_id = self.insert(table, row)
+        result = self.select(table, obj_id)
+
+        self.check_result(row, result, table, 'insert')
+
+        return obj_id
+
+    def update_check(self, table, row, obj_id):
+        self.update(table, row, obj_id)
+        result = self.select(table, obj_id)
+
+        self.check_result(row, result, table, 'update')
+
+
+    def check_result(self, expected, result, table, test_name):
+        # TODO: don't convert to unicode, type inference for smallint is
+        # currently broken, that's the reason at the moment.
+        for key, value in expected.iteritems():
+          self.assertEquals(unicode(result[key]), unicode(value), """
+             ========================================================
+
+             Data: {expected}
+
+             ========================================================
+
+             Failed {test_name} test on
+             Table: "{table}"
+             Field: "{key}"
+               expected: {expected_value}
+               result: {result_value}
+
+             ========================================================
+            """.format(expected=repr(expected), test_name=test_name, table=table, key = key, expected_value = value, result_value = result[key]))
+
