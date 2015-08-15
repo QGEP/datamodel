@@ -77,7 +77,7 @@ DROP MATERIALIZED VIEW IF EXISTS qgep.vw_network_segment CASCADE;
 CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
  WITH reach_parts AS (
    SELECT 
-     row_number() OVER (ORDER BY od_reach_point.fk_wastewater_networkelement, st_line_locate_point(st_linemerge(od_reach.progression_geometry), od_reach_point.situation_geometry)) AS gid, 
+     row_number() OVER (ORDER BY od_reach_point.fk_wastewater_networkelement, ST_LineLocatePoint(st_linemerge(od_reach.progression_geometry), od_reach_point.situation_geometry)) AS gid, 
      od_reach_point.obj_id, 
      od_reach_point.fk_wastewater_networkelement, 
      od_reach_point.situation_geometry, 
@@ -85,14 +85,14 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
      od_reach.fk_reach_point_from, 
      od_reach.fk_reach_point_to, 
      st_linemerge(od_reach.progression_geometry) AS reach_progression, 
-     st_line_locate_point(
+     ST_LineLocatePoint(
        st_linemerge(od_reach.progression_geometry), 
        od_reach_point.situation_geometry
      ) AS pos
    FROM qgep.od_reach_point
    LEFT JOIN qgep.od_reach ON od_reach_point.fk_wastewater_networkelement::text = od_reach.obj_id::text
    WHERE od_reach_point.fk_wastewater_networkelement IS NOT NULL AND od_reach.progression_geometry IS NOT NULL
-   ORDER BY od_reach_point.obj_id, st_line_locate_point(st_linemerge(od_reach.progression_geometry), od_reach_point.situation_geometry)
+   ORDER BY od_reach_point.obj_id, ST_LineLocatePoint(st_linemerge(od_reach.progression_geometry), od_reach_point.situation_geometry)
  )
 
  SELECT row_number() OVER () AS gid,
