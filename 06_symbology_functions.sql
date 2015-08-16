@@ -1,105 +1,50 @@
-﻿-- Function: qgep.wastewater_structure_symbology_attribs(text)
--- This function allows to determine the function_hierarchic and usage_current of a given wastewater_structure
--- in order to properly style the wastewater_structure.
--- Determination of these attributes is based on the outgoing reaches (ordered by hierarchy) - if any - or incoming reaches
--- if there are no outgoing reaches
+﻿--------------------------------------------------------
+-- UPDATE wastewater structure symbology
+-- Argument:
+--  * obj_id of wastewater structure or NULL to update all
+--------------------------------------------------------
 
--- DROP FUNCTION qgep.wastewater_structure_symbology_attribs(text);
+CREATE OR REPLACE FUNCTION qgep.update_wastewater_structure_symbology(_obj_id text)
+  RETURNS VOID AS
+  $BODY$
 
--- NEW return type necessary for the function below
+UPDATE qgep.od_wastewater_structure ws
+SET
+  _function_hierarchic = COALESCE(function_hierarchic_from, function_hierarchic_to),
+  _usage_current = COALESCE(usage_current_from, usage_current_to)
+FROM(
+  SELECT ws.obj_id AS ws_obj_id,
+    CH_from.function_hierarchic AS function_hierarchic_from,
+    CH_to.function_hierarchic AS function_hierarchic_to,
+    CH_from.usage_current AS usage_current_from,
+    CH_to.usage_current AS usage_current_to,
+    rank() OVER( PARTITION BY ws.obj_id ORDER BY vl_fct_hier_from.order_fct_hierarchic ASC NULLS LAST, vl_fct_hier_to.order_fct_hierarchic ASC NULLS LAST,
+                              vl_usg_curr_from.order_usage_current ASC NULLS LAST, vl_usg_curr_to.order_usage_current ASC NULLS LAST)
+                              AS hierarchy_rank
+  FROM
+    qgep.od_wastewater_structure ws
+    LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.fk_wastewater_structure = ws.obj_id
 
-CREATE TYPE qgep.wastewater_structure_symbology_attribs AS
-   (function_hierarchic smallint,
-    usage_current smallint);
-
-CREATE OR REPLACE FUNCTION qgep.wastewater_structure_symbology_attribs(wastewater_structure_object_id text)
-  RETURNS qgep.wastewater_structure_symbology_attribs AS
-$BODY$DECLARE
-myrec record;
-return_vals qgep.wastewater_structure_symbology_attribs;
-network_element_obj_id character varying(16);
-order_fct_hierarchic smallint := 99;
-order_usage_current smallint := 99;
-function_hierarchic smallint := NULL;
-usage_current smallint := NULL;
-BEGIN
--- first get the relevant network_element obj_id
-SELECT INTO myrec ne.obj_id
-  FROM qgep.od_wastewater_structure ws
-  LEFT JOIN qgep.od_wastewater_structure str ON ws.obj_id = str.obj_id
-  LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.fk_wastewater_structure = str.obj_id
-  WHERE ws.obj_id = wastewater_structure_object_id;
-network_element_obj_id := myrec.obj_id;
--- process first only outgoing channels/reaches
--- need to process multiple outgoing reaches in order of function_hierarchic and usage_current
-FOR myrec
-  IN SELECT
-    channel_from.function_hierarchic,
-    vl_fct_hier.order_fct_hierarchic,
-    channel_from.usage_current,
-    vl_usg_curr.order_usage_current
-    FROM qgep.od_wastewater_networkelement ne
     LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-    LEFT JOIN qgep.od_reach re_from ON re_from.fk_reach_point_from = rp.obj_id
-    LEFT JOIN qgep.od_wastewater_networkelement ne_from ON ne_from.obj_id = re_from.obj_id
-    LEFT JOIN qgep.od_wastewater_structure struct_from ON ne_from.fk_wastewater_structure = struct_from.obj_id
-    LEFT JOIN qgep.od_channel channel_from ON channel_from.obj_id = struct_from.obj_id
-    LEFT JOIN qgep.vl_channel_function_hierarchic vl_fct_hier ON channel_from.function_hierarchic = vl_fct_hier.code
-    LEFT JOIN qgep.vl_channel_usage_current vl_usg_curr ON channel_from.usage_current = vl_usg_curr.code
-    WHERE ne.obj_id = network_element_obj_id AND channel_from.function_hierarchic IS NOT NULL
-    AND channel_from.usage_current IS NOT NULL
-    ORDER BY vl_fct_hier.order_fct_hierarchic ASC, vl_usg_curr.order_usage_current ASC
-LOOP
-  IF myrec.order_fct_hierarchic IS NOT NULL AND myrec.order_usage_current IS NOT NULL THEN
-	IF myrec.order_fct_hierarchic <= order_fct_hierarchic THEN
-		order_fct_hierarchic := myrec.order_fct_hierarchic;
-		function_hierarchic := myrec.function_hierarchic;
-		IF myrec.order_usage_current <= order_usage_current THEN
-			order_usage_current := myrec.order_usage_current;
-			usage_current := myrec.usage_current;
-		END IF;
-	END IF;
-  END IF;
-END LOOP;
--- in case there is no outgoing channel/reach we need to examine incoming reaches
-IF function_hierarchic IS NULL THEN
-  FOR myrec
-    IN SELECT
-	  channel_to.function_hierarchic,
-	  vl_fct_hier.order_fct_hierarchic,
-	  channel_to.usage_current,
-	  vl_usg_curr.order_usage_current
-      FROM qgep.od_wastewater_networkelement ne
-      LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-      LEFT JOIN qgep.od_reach re_to ON re_to.fk_reach_point_to = rp.obj_id
-      LEFT JOIN qgep.od_wastewater_networkelement ne_to ON ne_to.obj_id = re_to.obj_id
-      LEFT JOIN qgep.od_wastewater_structure struct_to ON ne_to.fk_wastewater_structure = struct_to.obj_id
-      LEFT JOIN qgep.od_channel channel_to ON channel_to.obj_id = struct_to.obj_id
-      LEFT JOIN qgep.vl_channel_function_hierarchic vl_fct_hier ON channel_to.function_hierarchic = vl_fct_hier.code
-      LEFT JOIN qgep.vl_channel_usage_current vl_usg_curr ON channel_to.usage_current = vl_usg_curr.code
-      WHERE ne.obj_id = network_element_obj_id
-      AND channel_to.function_hierarchic IS NOT NULL
-      AND channel_to.usage_current IS NOT NULL
-      ORDER BY vl_fct_hier.order_fct_hierarchic ASC, vl_usg_curr.order_usage_current ASC
-  LOOP
-    IF myrec.order_fct_hierarchic IS NOT NULL AND myrec.order_usage_current IS NOT NULL THEN
-	IF myrec.order_fct_hierarchic <= order_fct_hierarchic THEN
-		order_fct_hierarchic := myrec.order_fct_hierarchic;
-		function_hierarchic := myrec.function_hierarchic;
-		IF myrec.order_usage_current <= order_usage_current THEN
-			order_usage_current := myrec.order_usage_current;
-			usage_current := myrec.usage_current;
-		END IF;
-	END IF;
-    END IF;
-  END LOOP;
-END IF;
-return_vals.function_hierarchic := function_hierarchic;
-return_vals.usage_current := usage_current;
-RETURN return_vals;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+
+    LEFT JOIN qgep.od_reach re_from                                 ON re_from.fk_reach_point_from = rp.obj_id
+    LEFT JOIN qgep.od_wastewater_networkelement ne_from             ON ne_from.obj_id = re_from.obj_id
+    LEFT JOIN qgep.od_channel CH_from                               ON CH_from.obj_id = ne_from.fk_wastewater_structure
+    LEFT JOIN qgep.vl_channel_function_hierarchic vl_fct_hier_from  ON CH_from.function_hierarchic = vl_fct_hier_from.code
+    LEFT JOIN qgep.vl_channel_usage_current vl_usg_curr_from        ON CH_from.usage_current = vl_usg_curr_from.code
+
+    LEFT JOIN qgep.od_reach                       re_to          ON re_to.fk_reach_point_to = rp.obj_id
+    LEFT JOIN qgep.od_wastewater_networkelement   ne_to          ON ne_to.obj_id = re_to.obj_id
+    LEFT JOIN qgep.od_channel                     CH_to          ON CH_to.obj_id = ne_to.fk_wastewater_structure
+    LEFT JOIN qgep.vl_channel_function_hierarchic vl_fct_hier_to ON CH_to.function_hierarchic = vl_fct_hier_to.code
+    LEFT JOIN qgep.vl_channel_usage_current       vl_usg_curr_to ON CH_to.usage_current = vl_usg_curr_to.code
+
+    WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE ws.obj_id = _obj_id END
+) labeled_ws
+WHERE labeled_ws.ws_obj_id = ws.obj_id
+$BODY$
+LANGUAGE sql
+VOLATILE;
 
 
   -------------------- SYMBOLOGY UPDATE ON CHANNEL TABLE CHANGES ----------------------
@@ -109,50 +54,32 @@ CREATE OR REPLACE FUNCTION qgep.ws_symbology_update_by_channel()
 $BODY$
 DECLARE
   ws_obj_id RECORD;
-  symb_attribs RECORD;
-  affected_obj_ids TEXT[];
+  ch_obj_id TEXT;
 BEGIN
   CASE
     WHEN TG_OP = 'UPDATE' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id, OLD.obj_id];
+      ch_obj_id = OLD.obj_id;
     WHEN TG_OP = 'INSERT' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id];
+      ch_obj_id = NEW.obj_id;
     WHEN TG_OP = 'DELETE' THEN
-      affected_obj_ids = ARRAY[OLD.obj_id];
+      ch_obj_id = OLD.obj_id;
   END CASE;
 
-  FOR ws_obj_id IN
-    SELECT ws.obj_id
-      FROM qgep.od_wastewater_structure ws
-      LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-      LEFT JOIN qgep.od_reach re ON (re.fk_reach_point_from = rp.obj_id OR re.fk_reach_point_to = rp.obj_id )
-      LEFT JOIN qgep.od_wastewater_networkelement rene ON rene.obj_id = re.obj_id
-      WHERE rene.fk_wastewater_structure = ANY ( affected_obj_ids )
-  LOOP
-      SELECT * FROM qgep.wastewater_structure_symbology_attribs( ws_obj_id.obj_id  )
-        INTO symb_attribs;
-      UPDATE qgep.od_wastewater_structure
-      SET
-        _usage_current = symb_attribs.usage_current,
-        _function_hierarchic = symb_attribs.function_hierarchic
-      WHERE
-        obj_id = ws_obj_id.obj_id;
+  SELECT ws.obj_id INTO ws_obj_id
+    FROM qgep.od_wastewater_structure ws
+    LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+    LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+    LEFT JOIN qgep.od_reach re ON (re.fk_reach_point_from = rp.obj_id OR re.fk_reach_point_to = rp.obj_id )
+    LEFT JOIN qgep.od_wastewater_networkelement rene ON rene.obj_id = re.obj_id
+    WHERE rene.fk_wastewater_structure = ch_obj_id;
 
-      -- RAISE NOTICE 'Updating wastewater_structure (%, %)', ws_obj_id.obj_id, symb_attribs.usage_current;
-  END LOOP;
+  EXECUTE qgep.update_wastewater_structure_symbology(ws_obj_id);
   RETURN NEW;
 END; $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+  LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep.od_channel;
 
-CREATE TRIGGER ws_symbology_update_by_channel
-  AFTER INSERT OR UPDATE OR DELETE
-  ON qgep.od_channel
-  FOR EACH ROW
-  EXECUTE PROCEDURE qgep.ws_symbology_update_by_channel();
+
 
   -------------------- SYMBOLOGY UPDATE ON REACH POINT TABLE CHANGES ----------------------
 
@@ -161,50 +88,27 @@ CREATE OR REPLACE FUNCTION qgep.ws_symbology_update_by_reach_point()
 $BODY$
 DECLARE
   ws_obj_id RECORD;
-  symb_attribs RECORD;
-  affected_obj_ids TEXT[];
+  rp_obj_id TEXT;
 BEGIN
   CASE
     WHEN TG_OP = 'UPDATE' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id, OLD.obj_id];
+      rp_obj_id = OLD.obj_id;
     WHEN TG_OP = 'INSERT' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id];
+      rp_obj_id = NEW.obj_id;
     WHEN TG_OP = 'DELETE' THEN
-      affected_obj_ids = ARRAY[OLD.obj_id];
+      rp_obj_id = OLD.obj_id;
   END CASE;
 
-  FOR ws_obj_id IN
-    SELECT ws.obj_id
-      FROM qgep.od_wastewater_structure ws
-      LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-      WHERE rp.obj_id = ANY ( affected_obj_ids )
-  LOOP
-    SELECT * FROM qgep.wastewater_structure_symbology_attribs( ws_obj_id.obj_id  )
-        INTO symb_attribs;
-      UPDATE qgep.od_wastewater_structure
-      SET
-        _usage_current = symb_attribs.usage_current,
-        _function_hierarchic = symb_attribs.function_hierarchic
-      WHERE
-        obj_id = ws_obj_id.obj_id;
+  SELECT ws.obj_id INTO ws_obj_id
+    FROM qgep.od_wastewater_structure ws
+    LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+    LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+    WHERE rp.obj_id = rp_obj_id;
 
-      -- RAISE NOTICE 'Updating wastewater_structure (%, %)', ws_obj_id.obj_id, symb_attribs.usage_current;
-  END LOOP;
+  EXECUTE qgep.update_wastewater_structure_symbology(ws_obj_id);
   RETURN NEW;
 END; $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-
-  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep.od_reach_point;
-
--- only update -> insert and delete are handled by reach trigger
-CREATE TRIGGER ws_symbology_update_by_reach_point
-  AFTER UPDATE
-    ON qgep.od_reach_point
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach_point();
-
+  LANGUAGE plpgsql VOLATILE;
 
   -------------------- SYMBOLOGY UPDATE ON REACH TABLE CHANGES ----------------------
 
@@ -214,48 +118,30 @@ $BODY$
 DECLARE
   ws_obj_id RECORD;
   symb_attribs RECORD;
-  affected_obj_ids TEXT[];
+  re_obj_id TEXT;
 BEGIN
   CASE
     WHEN TG_OP = 'UPDATE' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id, OLD.obj_id];
+      re_obj_id = OLD.obj_id;
     WHEN TG_OP = 'INSERT' THEN
-      affected_obj_ids = ARRAY[NEW.obj_id];
+      re_obj_id = NEW.obj_id;
     WHEN TG_OP = 'DELETE' THEN
-      affected_obj_ids = ARRAY[OLD.obj_id];
+      re_obj_id = OLD.obj_id;
   END CASE;
 
-  FOR ws_obj_id IN
-    SELECT ws.obj_id
-      FROM qgep.od_wastewater_structure ws
-      LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-      LEFT JOIN qgep.od_reach re ON ( rp.obj_id = re.fk_reach_point_from OR rp.obj_id = re.fk_reach_point_to )
-      WHERE re.obj_id = ANY ( affected_obj_ids )
-  LOOP
-    SELECT * FROM qgep.wastewater_structure_symbology_attribs( ws_obj_id.obj_id  )
-      INTO symb_attribs;
-    UPDATE qgep.od_wastewater_structure
-    SET
-      _usage_current = symb_attribs.usage_current,
-      _function_hierarchic = symb_attribs.function_hierarchic
-    WHERE
-      obj_id = ws_obj_id.obj_id;
+  SELECT ws.obj_id INTO ws_obj_id
+    FROM qgep.od_wastewater_structure ws
+    LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+    LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+    LEFT JOIN qgep.od_reach re ON ( rp.obj_id = re.fk_reach_point_from OR rp.obj_id = re.fk_reach_point_to )
+    WHERE re.obj_id = re_obj_id;
+  EXECUTE qgep.update_wastewater_structure_symbology(ws_obj_id);
 
-      -- RAISE NOTICE 'Updating wastewater_structure (%, %)', ws_obj_id.obj_id, symb_attribs.usage_current;
-  END LOOP;
   RETURN NEW;
 END; $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep.od_reach;
 
-CREATE TRIGGER ws_symbology_update_by_reach
-  AFTER INSERT OR UPDATE OR DELETE
-    ON qgep.od_reach
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach();
 
 
 
@@ -303,7 +189,6 @@ CREATE TRIGGER ws_symbology_update_by_reach
 -- UPDATE wastewater structure label
 -- Argument:
 --  * obj_id of wastewater structure or NULL to update all
--- 
 --------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION qgep.update_wastewater_structure_label(_obj_id text)
@@ -319,51 +204,38 @@ FROM (
          E'\n'
        ) ||
        E'\n' ||
-       ws_identifier || 
+       ws_identifier ||
        E'\n' ||
        array_to_string(
-         array_agg(
-           io || 
-             CASE 
-               WHEN io='I' THEN i_index 
-               ELSE o_index 
-             END  || '⁼' || 
-             COALESCE(round(level, 2)::text, 'N/A')
-           ORDER BY io='O' ASC NULLS LAST, CASE WHEN io = 'I' THEN i_index ELSE o_index END)
+         array_agg(lbl_type || idx || '=' || rp_level ORDER BY lbl_type, idx)
            , E'\n'
          ) AS label
   FROM (
-    SELECT SP.identifier AS co_identifier,
-           CO.obj_id,
-           CO.level AS co_level,
-           WS.obj_id AS ws_obj_id,
-           WS.identifier AS ws_identifier,
-           RP.obj_id,
-           RP.level,
-           RE_from.obj_id,
-           RE_to.obj_id,
-           CASE 
-             WHEN RE_to.obj_id IS NOT NULL THEN 'I' 
-             WHEN RE_from.obj_id IS NOT NULL THEN 'O'
-             ELSE NULL 
-           END AS io,
-           row_number() OVER(
-             PARTITION BY WS.obj_id
-             ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_GeometryN(RE_to.progression_geometry,1),0.99))/pi()*180 ASC) AS i_index,
-           row_number() OVER(
-             PARTITION BY WS.obj_id
-             ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_GeometryN(RE_from.progression_geometry,1),0.99))/pi()*180 ASC) AS o_index
+    SELECT ws.obj_id AS ws_obj_id, ws.identifier AS ws_identifier, parts.lbl_type, parts.co_level, parts.rp_level, parts.obj_id, idx
     FROM qgep.od_wastewater_structure WS
-    LEFT JOIN qgep.od_wastewater_networkelement NE ON NE.fk_wastewater_structure = WS.obj_id
-    LEFT JOIN qgep.od_reach_point RP ON RP.fk_wastewater_networkelement = NE.obj_id
-    LEFT JOIN qgep.od_reach RE_from ON RP.obj_id = RE_from.fk_reach_point_from
-    LEFT JOIN qgep.od_reach RE_to ON RP.obj_id = RE_to.fk_reach_point_to
-    LEFT JOIN qgep.od_structure_part SP on SP.fk_wastewater_structure = WS.obj_id
-    LEFT JOIN qgep.od_cover CO ON CO.obj_id = SP.obj_id
-  ) AS c
-  GROUP BY ws_identifier, ws_obj_id
-) sq
-WHERE ws_obj_id = ws.obj_id AND CASE WHEN _obj_id IS NULL THEN TRUE ELSE obj_id = _obj_id END
+
+    RIGHT JOIN (
+      SELECT 'C' as lbl_type, CO.level AS co_level, NULL AS rp_level, SP.fk_wastewater_structure ws, SP.obj_id, row_number() OVER(PARTITION BY SP.fk_wastewater_structure) AS idx
+      FROM qgep.od_structure_part SP
+      RIGHT JOIN qgep.od_cover CO ON CO.obj_id = SP.obj_id
+      WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE SP.fk_wastewater_structure = _obj_id END
+      UNION
+      SELECT 'I' as lbl_type, NULL, RP.level AS rp_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_GeometryN(RE_to.progression_geometry,1),0.99))/pi()*180 ASC)
+      FROM qgep.od_reach_point RP
+      LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
+      INNER JOIN qgep.od_reach RE_to ON RP.obj_id = RE_to.fk_reach_point_to
+      WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE NE.fk_wastewater_structure = _obj_id END
+      UNION
+      SELECT 'O' as lbl_type, NULL, RP.level AS rp_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_GeometryN(RE_from.progression_geometry,1),0.99))/pi()*180 ASC)
+      FROM qgep.od_reach_point RP
+      LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
+      INNER JOIN qgep.od_reach RE_from ON RP.obj_id = RE_from.fk_reach_point_from
+      WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE NE.fk_wastewater_structure = _obj_id END
+    ) AS parts ON ws = ws.obj_id
+  ) parts
+  GROUP BY ws_obj_id, ws_identifier
+) labeled_ws
+WHERE ws.obj_id = labeled_ws.ws_obj_id
 $BODY$
 LANGUAGE sql
 VOLATILE;
@@ -424,7 +296,7 @@ BEGIN
   LOOP
     EXECUTE qgep.update_wastewater_structure_label(_ws_obj_id);
   END LOOP;
-  
+
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -487,7 +359,7 @@ BEGIN
   LOOP
     EXECUTE qgep.update_wastewater_structure_label(_ws_obj_id);
   END LOOP;
-  
+
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -516,7 +388,7 @@ BEGIN
   FROM qgep.od_wastewater_structure ws
   LEFT JOIN qgep.od_wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
   LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = rp_obj_id;
-  
+
   EXECUTE qgep.update_wastewater_structure_label(_ws_obj_id);
 
   RETURN NEW;
@@ -536,6 +408,9 @@ BEGIN
   DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_networkelement ON qgep.od_wastewater_networkelement;
   DROP TRIGGER IF EXISTS ws_label_update_by_structure_part ON qgep.od_structure_part;
   DROP TRIGGER IF EXISTS ws_label_update_by_cover ON qgep.od_cover;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep.od_reach;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep.od_channel;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep.od_reach_point;
   RETURN;
 END;
 $$ LANGUAGE plpgsql;
@@ -546,8 +421,9 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION qgep.create_symbology_triggers() RETURNS VOID AS $$
 BEGIN
+  -- only update -> insert and delete are handled by reach trigger
   CREATE TRIGGER ws_label_update_by_reach_point
-  AFTER INSERT OR UPDATE OR DELETE
+  AFTER UPDATE
     ON qgep.od_reach_point
   FOR EACH ROW
     EXECUTE PROCEDURE qgep.ws_label_update_by_reach_point();
@@ -581,6 +457,26 @@ BEGIN
     ON qgep.od_cover
   FOR EACH ROW
     EXECUTE PROCEDURE qgep.ws_label_update_by_cover();
+
+  CREATE TRIGGER ws_symbology_update_by_reach
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep.od_reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach();
+
+  CREATE TRIGGER ws_symbology_update_by_channel
+  AFTER INSERT OR UPDATE OR DELETE
+  ON qgep.od_channel
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep.ws_symbology_update_by_channel();
+
+  -- only update -> insert and delete are handled by reach trigger
+  CREATE TRIGGER ws_symbology_update_by_reach_point
+  AFTER UPDATE
+    ON qgep.od_reach_point
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach_point();
+
 
   RETURN;
 END;
