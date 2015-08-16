@@ -111,8 +111,6 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
 CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_INSERT()
   RETURNS trigger AS
 $BODY$
-DECLARE
-  ws_obj_id character varying(16);
 BEGIN
   -- Manhole
   CASE
@@ -183,7 +181,7 @@ BEGIN
            , NEW.provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO ws_obj_id;
+           ) RETURNING obj_id INTO NEW.ws_obj_id;
 
     -- Special Structure
     WHEN NEW.ws_type = 'special_structure' THEN
@@ -254,7 +252,7 @@ BEGIN
            , NEW.provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO ws_obj_id;
+           ) RETURNING obj_id INTO NEW.ws_obj_id;
 
     -- Discharge Point
     WHEN NEW.ws_type = 'discharge_point' THEN
@@ -326,7 +324,7 @@ BEGIN
            , NEW.provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO ws_obj_id;
+           ) RETURNING obj_id INTO NEW.ws_obj_id;
 
     -- Infiltration Installation
     WHEN NEW.ws_type = 'infiltration_installation' THEN
@@ -357,7 +355,7 @@ BEGIN
     , NOW()
     , COALESCE(NULLIF(NEW.wn_provider,''), NEW.provider) -- TODO will need to be switched to fk
     , COALESCE(NULLIF(NEW.wn_dataowner,''), NEW.dataowner) -- TODO will need to be switched to fk
-    , ws_obj_id
+    , NEW.ws_obj_id
   );
 
   INSERT INTO qgep.vw_cover(
@@ -397,8 +395,8 @@ BEGIN
     , NOW()
     , NEW.dataowner
     , NEW.provider
-    , ws_obj_id
-  );
+    , NEW.ws_obj_id
+  ) RETURNING obj_id INTO NEW.obj_id;
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 

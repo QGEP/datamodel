@@ -56,6 +56,8 @@ class DbTestBase:
     def check_result(self, expected, result, table, test_name):
         # TODO: don't convert to unicode, type inference for smallint is
         # currently broken, that's the reason at the moment.
+        assert result, "No result set received."
+
         for key, value in expected.iteritems():
           self.assertEquals(unicode(result[key]), unicode(value), """
              ========================================================
