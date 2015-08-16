@@ -49,11 +49,13 @@ INSERT INTO qgep.od_wastewater_node (
              obj_id
            , backflow_level
            , bottom_level
+           , situation_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
            , NEW.backflow_level
            , NEW.bottom_level
+           , NEW.situation_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -75,15 +77,16 @@ UPDATE qgep.od_wastewater_node
   SET
        backflow_level = NEW.backflow_level
      , bottom_level = NEW.bottom_level
+     , situation_geometry = NEW.situation_geometry
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_wastewater_networkelement
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
-           , last_modification = NEW.last_modification
+     , dataowner = NEW.dataowner
+     , provider = NEW.provider
+     , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;
 );

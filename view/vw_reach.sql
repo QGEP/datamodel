@@ -24,7 +24,6 @@ SELECT
    , WE.remark
    , WE.dataowner
    , WE.provider
-   , WE.last_modification
   , WE.fk_wastewater_structure
   FROM qgep.od_reach RE
  LEFT JOIN qgep.od_wastewater_networkelement WE
@@ -45,7 +44,6 @@ BEGIN
            , remark
            , dataowner
            , provider
-           , last_modification
            , fk_wastewater_structure
            )
      VALUES ( qgep.generate_oid('od_reach') -- obj_id
@@ -53,7 +51,6 @@ BEGIN
            , NEW.remark
            , NEW.dataowner
            , NEW.provider
-           , NEW.last_modification
            , NEW.fk_wastewater_structure
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -67,6 +64,8 @@ INSERT INTO qgep.od_reach (
            , inside_coating
            , length_effective
            , material
+           , progression_geometry
+           , progression_3d_geometry
            , reliner_material
            , reliner_nominal_size
            , relining_construction
@@ -84,6 +83,8 @@ INSERT INTO qgep.od_reach (
            , NEW.inside_coating
            , NEW.length_effective
            , NEW.material
+           , NEW.progression_geometry
+           , NEW.progression_3d_geometry
            , NEW.reliner_material
            , NEW.reliner_nominal_size
            , NEW.relining_construction
@@ -117,6 +118,8 @@ UPDATE qgep.od_reach
      , inside_coating = NEW.inside_coating
      , length_effective = NEW.length_effective
      , material = NEW.material
+     , progression_geometry = NEW.progression_geometry
+     , progression_3d_geometry = NEW.progression_3d_geometry
      , reliner_material = NEW.reliner_material
      , reliner_nominal_size = NEW.reliner_nominal_size
      , relining_construction = NEW.relining_construction
@@ -132,7 +135,6 @@ UPDATE qgep.od_wastewater_networkelement
      , remark = NEW.remark
            , dataowner = NEW.dataowner
            , provider = NEW.provider
-           , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;
 );
