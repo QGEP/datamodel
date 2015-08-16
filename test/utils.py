@@ -67,9 +67,18 @@ class DbTestBase:
              Failed {test_name} test on
              Table: "{table}"
              Field: "{key}"
-               expected: {expected_value}
-               result: {result_value}
+               expected: {expected_value} ({expected_type})
+               result: {result_value} ({result_type})
 
              ========================================================
-            """.format(expected=repr(expected), test_name=test_name, table=table, key = key, expected_value = value, result_value = result[key]))
+            """.format(
+                  expected = repr(expected),
+                  test_name = test_name,
+                  table = table,
+                  key = key,
+                  expected_value = value,
+                  result_value = result[key],
+                  expected_type = type(value),
+                  result_type = type(result[key])
+              ))
 
