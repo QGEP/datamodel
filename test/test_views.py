@@ -2,6 +2,7 @@ import unittest
 
 import psycopg2
 import psycopg2.extras
+import decimal
 
 from utils import DbTestBase
 
@@ -37,7 +38,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'clear_height': 100,
                 'coefficient_of_friction': 10,
-                'identifier': '20',
+                'identifier': 'pra',
                 'usage_current': 4514
         }
 
@@ -55,18 +56,30 @@ class TestViews(unittest.TestCase, DbTestBase):
     def test_vw_qgep_cover(self):
         row = {
                 'identifier': '20',
-                'ws_type': 'manhole'
+                'ws_type': 'manhole',
+                'backflow_level': decimal.Decimal('100.000')
         }
 
         obj_id = self.insert_check('vw_qgep_cover', row)
 
         row = {
                 'identifier': '10',
-                'ws_type': 'special_structure'
+                'ws_type': 'special_structure',
         }
 
         self.update_check('vw_qgep_cover', row, obj_id)
 
+        cur = self.cursor()
+
+        cur.execute("SELECT * FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
+        row = cur.fetchone()
+
+        ws_obj_id = row['fk_wastewater_structure']
+
+        cur.execute("SELECT * FROM qgep.od_wastewater_networkelement NE LEFT JOIN qgep.od_wastewater_node NO ON NO.obj_id = NE.obj_id WHERE fk_wastewater_structure='{obj_id}' ".format(obj_id=ws_obj_id))
+        row = cur.fetchone()
+
+        assert row['backflow_level'] == decimal.Decimal('100.000')
 
 if __name__ == '__main__':
     unittest.main()

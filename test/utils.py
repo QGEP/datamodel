@@ -11,6 +11,9 @@ class DbTestBase:
         cur.execute("SELECT * FROM qgep.{table} WHERE obj_id='{obj_id}'".format(table=table, obj_id=obj_id))
         return cur.fetchone()
 
+    def cursor(self):
+        return self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
     def insert(self, table, row):
         cur = self.conn.cursor()
 
