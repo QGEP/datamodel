@@ -74,9 +74,7 @@ BEGIN
     LEFT JOIN qgep.od_wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
     WHERE ch_ne.fk_wastewater_structure = ch_obj_id;
 
-  RAISE WARNING '------------ % --------------', _ws.obj_id;
-
-  -- EXECUTE qgep.update_wastewater_structure_symbology(_ws.obj_id);
+  EXECUTE qgep.update_wastewater_structure_symbology(_ws.obj_id);
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -140,7 +138,7 @@ BEGIN
     LEFT JOIN qgep.od_wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
     WHERE re.obj_id = re_obj_id;
 
-  -- EXECUTE qgep.update_wastewater_structure_symbology(_ws.obj_id);
+  EXECUTE qgep.update_wastewater_structure_symbology(_ws.obj_id);
 
   RETURN NEW;
 END; $BODY$
