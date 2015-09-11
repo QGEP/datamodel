@@ -422,7 +422,7 @@ BEGIN
         diameter = new.diameter,
         fastening = new.fastening,
         level = new.level,
-        material = new.material,
+        material = new.cover_material,
         positional_accuracy = new.positional_accuracy,
         situation_geometry = new.situation_geometry,
         sludge_bucket = new.sludge_bucket,

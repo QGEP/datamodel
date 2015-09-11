@@ -58,6 +58,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 'identifier': '20',
                 'ws_type': 'manhole',
                 'situation_geometry': '01010000201555000000000000006AE840000000000088D340',
+		'cover_material': 5355,
                 'backflow_level': decimal.Decimal('100.000')
         }
 
@@ -66,6 +67,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'identifier': '10',
                 'ws_type': 'special_structure',
+		'cover_material': 233,
         }
 
         self.update_check('vw_qgep_cover', row, obj_id)
