@@ -481,7 +481,7 @@ BEGIN
   END IF;
 
   CASE
-    WHEN OLD.ws_type = 'manhole' THEN
+    WHEN NEW.ws_type = 'manhole' THEN
       UPDATE qgep.od_manhole
       SET
         depth = NEW.depth,
@@ -492,7 +492,7 @@ BEGIN
         surface_inflow = NEW.surface_inflow
       WHERE obj_id = OLD.ws_obj_id;
 
-    WHEN OLD.ws_type = 'special_structure' THEN
+    WHEN NEW.ws_type = 'special_structure' THEN
       UPDATE qgep.od_special_structure
       SET
         bypass = NEW.bypass,
@@ -503,7 +503,7 @@ BEGIN
         upper_elevation = NEW.upper_elevation
       WHERE obj_id = OLD.ws_obj_id;
 
-    WHEN OLD.ws_type = 'discharge_point' THEN
+    WHEN NEW.ws_type = 'discharge_point' THEN
       UPDATE qgep.od_discharge_point
       SET
         depth = NEW.depth,
@@ -514,7 +514,7 @@ BEGIN
         waterlevel_hydraulic = NEW.waterlevel_hydraulic
       WHERE obj_id = OLD.ws_obj_id;
 
-    WHEN OLD.ws_type = 'infiltration_installation' THEN
+    WHEN NEW.ws_type = 'infiltration_installation' THEN
     -- TODO
   END CASE;
 
