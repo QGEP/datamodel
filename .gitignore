@@ -1,1 +1,4 @@
 *.pyc
+.noseids
+nosetests.xml
+*.orig
