@@ -34,6 +34,21 @@ class TestViews(unittest.TestCase, DbTestBase):
 
         self.update_check('vw_reach', row, obj_id)
 
+    def test_vw_overflow_prank_weir(self):
+        row = {
+                'identifier': 'STAR20',
+                'level_max': decimal.Decimal('300.123')
+        }
+
+        obj_id = self.insert_check('vw_overflow_prank_weir', row)
+
+        row = {
+                'identifier': '30',
+                'level_max': decimal.Decimal('400.321')
+        }
+
+        self.update_check('vw_overflow_prank_weir', row, obj_id)
+
     def test_vw_qgep_reach(self):
         row = {
                 'clear_height': 100,
