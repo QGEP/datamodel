@@ -3,6 +3,14 @@ language: python
 addons:
   postgresql: "9.4"
 
+# Handle git submodules yourself
+git:
+    submodules: false
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+    - sed -i 's|git@github.com:|https://github.com/|' .gitmodules
+    - git submodule update --init --recursive
+
 before_script:
   - printf "[pg_qgep]\nhost=localhost\ndbname=qgep\nuser=postgres" > ~/.pg_service.conf
   - psql -c 'CREATE DATABASE qgep;' -U postgres
