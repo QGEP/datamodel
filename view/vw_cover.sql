@@ -1,6 +1,11 @@
 DROP VIEW IF EXISTS qgep.vw_cover;
 
-CREATE OR REPLACE VIEW qgep.vw_cover AS
+
+--------
+-- Subclass: od_cover
+-- Superclass: od_structure_part
+
+--------CREATE OR REPLACE VIEW qgep.vw_cover AS
 
 SELECT
    CO.obj_id
@@ -110,6 +115,7 @@ UPDATE qgep.od_cover
      , level = NEW.level
      , material = NEW.material
      , positional_accuracy = NEW.positional_accuracy
+     , situation = NEW.situation_geometry
      , sludge_bucket = NEW.sludge_bucket
      , venting = NEW.venting
   WHERE obj_id = OLD.obj_id;
