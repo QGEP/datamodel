@@ -134,7 +134,7 @@ COMMENT ON COLUMN qgep.txt_text.provider IS 'Metaattribute provider - this is th
 CREATE TRIGGER
 update_last_modified_text
 BEFORE UPDATE OR INSERT ON
- qgep.od_text
+ qgep.txt_text
 FOR EACH ROW EXECUTE PROCEDURE
  qgep.update_last_modified();
 
