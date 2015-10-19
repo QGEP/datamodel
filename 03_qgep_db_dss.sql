@@ -90,7 +90,7 @@ COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Foreignkey to Metaattribute provi
 CREATE TRIGGER
 update_last_modified_symbol
 BEFORE UPDATE OR INSERT ON
- qgep.od_symbol
+ qgep.txt_symbol
 FOR EACH ROW EXECUTE PROCEDURE
  qgep.update_last_modified();
 
