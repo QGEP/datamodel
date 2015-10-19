@@ -334,6 +334,10 @@ BEGIN
      RAISE NOTICE 'Wastewater structure type not known (%)', ws_type; -- ERROR
   END CASE;
 
+  IF NEW.identifier IS NULL OR NEW.identifier='' THEN
+     NEW.identifier := NEW.ws_obj_id;
+  END IF;
+
   INSERT INTO qgep.vw_wastewater_node(
       backflow_level
     , bottom_level
@@ -414,6 +418,10 @@ $BODY$
 DECLARE
   ws_obj_id character varying(16);
 BEGIN
+    IF NEW.identifier IS NULL OR NEW.identifier='' THEN
+       NEW.identifier := NEW.ws_obj_id;
+    END IF;
+
     UPDATE qgep.od_cover
       SET
         brand = NEW.brand,
