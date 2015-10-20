@@ -53,6 +53,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     def test_identifier(self):
         row = {
+                'identifier': '',
                 'level': decimal.Decimal('50.000')
         }
 
