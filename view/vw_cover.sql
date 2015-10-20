@@ -117,7 +117,7 @@ UPDATE qgep.od_cover
      , level = NEW.level
      , material = NEW.material
      , positional_accuracy = NEW.positional_accuracy
-     , situation = NEW.situation_geometry
+     , situation_geometry = NEW.situation_geometry
      , sludge_bucket = NEW.sludge_bucket
      , venting = NEW.venting
   WHERE obj_id = OLD.obj_id;
