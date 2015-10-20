@@ -1,6 +1,6 @@
------- This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
+ ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 19.10.2015 21:32:25
+------ version 20.10.2015 15:09:15
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -2108,7 +2108,7 @@ update_last_modified_planning_zone
 BEFORE UPDATE OR INSERT ON
  qgep.od_planning_zone
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2134,7 +2134,7 @@ update_last_modified_groundwater_protection_zone
 BEFORE UPDATE OR INSERT ON
  qgep.od_groundwater_protection_zone
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2158,7 +2158,7 @@ update_last_modified_ground_water_protection_perimeter
 BEFORE UPDATE OR INSERT ON
  qgep.od_ground_water_protection_perimeter
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2184,7 +2184,7 @@ update_last_modified_water_body_protection_sector
 BEFORE UPDATE OR INSERT ON
  qgep.od_water_body_protection_sector
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2210,7 +2210,7 @@ update_last_modified_drainage_system
 BEFORE UPDATE OR INSERT ON
  qgep.od_drainage_system
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2236,7 +2236,7 @@ update_last_modified_infiltration_zone
 BEFORE UPDATE OR INSERT ON
  qgep.od_infiltration_zone
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('zone');
+ qgep.update_last_modified_parent("qgep.od_zone");
 
 -------
 -------
@@ -2259,7 +2259,7 @@ update_last_modified_dryweather_downspout
 BEFORE UPDATE OR INSERT ON
  qgep.od_dryweather_downspout
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2303,7 +2303,7 @@ update_last_modified_cover
 BEFORE UPDATE OR INSERT ON
  qgep.od_cover
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2326,7 +2326,7 @@ update_last_modified_access_aid
 BEFORE UPDATE OR INSERT ON
  qgep.od_access_aid
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2353,7 +2353,7 @@ update_last_modified_electric_equipment
 BEFORE UPDATE OR INSERT ON
  qgep.od_electric_equipment
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2376,7 +2376,7 @@ update_last_modified_dryweather_flume
 BEFORE UPDATE OR INSERT ON
  qgep.od_dryweather_flume
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2405,7 +2405,7 @@ update_last_modified_tank_emptying
 BEFORE UPDATE OR INSERT ON
  qgep.od_tank_emptying
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2432,7 +2432,7 @@ update_last_modified_electromechanical_equipment
 BEFORE UPDATE OR INSERT ON
  qgep.od_electromechanical_equipment
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2455,7 +2455,7 @@ update_last_modified_benching
 BEFORE UPDATE OR INSERT ON
  qgep.od_benching
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2482,7 +2482,7 @@ update_last_modified_backflow_prevention
 BEFORE UPDATE OR INSERT ON
  qgep.od_backflow_prevention
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2509,7 +2509,7 @@ update_last_modified_tank_cleaning
 BEFORE UPDATE OR INSERT ON
  qgep.od_tank_cleaning
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2540,7 +2540,7 @@ update_last_modified_solids_retention
 BEFORE UPDATE OR INSERT ON
  qgep.od_solids_retention
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('structure_part');
+ qgep.update_last_modified_parent("qgep.od_structure_part");
 
 -------
 -------
@@ -2563,7 +2563,7 @@ update_last_modified_wwtp_structure
 BEFORE UPDATE OR INSERT ON
  qgep.od_wwtp_structure
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2597,7 +2597,7 @@ update_last_modified_manhole
 BEFORE UPDATE OR INSERT ON
  qgep.od_manhole
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2631,7 +2631,7 @@ update_last_modified_special_structure
 BEFORE UPDATE OR INSERT ON
  qgep.od_special_structure
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2670,7 +2670,7 @@ update_last_modified_channel
 BEFORE UPDATE OR INSERT ON
  qgep.od_channel
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2703,7 +2703,7 @@ update_last_modified_discharge_point
 BEFORE UPDATE OR INSERT ON
  qgep.od_discharge_point
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2752,7 +2752,7 @@ update_last_modified_infiltration_installation
 BEFORE UPDATE OR INSERT ON
  qgep.od_infiltration_installation
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_structure');
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
 
 -------
 -------
@@ -2775,7 +2775,7 @@ update_last_modified_river
 BEFORE UPDATE OR INSERT ON
  qgep.od_river
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('surface_water_bodies');
+ qgep.update_last_modified_parent("qgep.od_surface_water_bodies");
 
 -------
 -------
@@ -2799,7 +2799,7 @@ update_last_modified_lake
 BEFORE UPDATE OR INSERT ON
  qgep.od_lake
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('surface_water_bodies');
+ qgep.update_last_modified_parent("qgep.od_surface_water_bodies");
 
 -------
 -------
@@ -2824,7 +2824,7 @@ update_last_modified_dam
 BEFORE UPDATE OR INSERT ON
  qgep.od_dam
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2851,7 +2851,7 @@ update_last_modified_chute
 BEFORE UPDATE OR INSERT ON
  qgep.od_chute
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2876,7 +2876,7 @@ update_last_modified_rock_ramp
 BEFORE UPDATE OR INSERT ON
  qgep.od_rock_ramp
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2899,7 +2899,7 @@ update_last_modified_blocking_debris
 BEFORE UPDATE OR INSERT ON
  qgep.od_blocking_debris
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2920,7 +2920,7 @@ update_last_modified_passage
 BEFORE UPDATE OR INSERT ON
  qgep.od_passage
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2943,7 +2943,7 @@ update_last_modified_lock
 BEFORE UPDATE OR INSERT ON
  qgep.od_lock
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2964,7 +2964,7 @@ update_last_modified_ford
 BEFORE UPDATE OR INSERT ON
  qgep.od_ford
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('water_control_structure');
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
 
 -------
 -------
@@ -2997,7 +2997,7 @@ update_last_modified_param_ca_mouse1
 BEFORE UPDATE OR INSERT ON
  qgep.od_param_ca_mouse1
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('surface_runoff_parameters');
+ qgep.update_last_modified_parent("qgep.od_surface_runoff_parameters");
 
 -------
 -------
@@ -3028,7 +3028,7 @@ update_last_modified_param_ca_general
 BEFORE UPDATE OR INSERT ON
  qgep.od_param_ca_general
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('surface_runoff_parameters');
+ qgep.update_last_modified_parent("qgep.od_surface_runoff_parameters");
 
 -------
 -------
@@ -3051,7 +3051,7 @@ update_last_modified_private
 BEFORE UPDATE OR INSERT ON
  qgep.od_private
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3072,7 +3072,7 @@ update_last_modified_administrative_office
 BEFORE UPDATE OR INSERT ON
  qgep.od_administrative_office
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3096,7 +3096,7 @@ update_last_modified_canton
 BEFORE UPDATE OR INSERT ON
  qgep.od_canton
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3117,7 +3117,7 @@ update_last_modified_cooperative
 BEFORE UPDATE OR INSERT ON
  qgep.od_cooperative
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3151,7 +3151,7 @@ update_last_modified_municipality
 BEFORE UPDATE OR INSERT ON
  qgep.od_municipality
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3172,7 +3172,7 @@ update_last_modified_waste_water_association
 BEFORE UPDATE OR INSERT ON
  qgep.od_waste_water_association
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3213,7 +3213,7 @@ update_last_modified_waste_water_treatment_plant
 BEFORE UPDATE OR INSERT ON
  qgep.od_waste_water_treatment_plant
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('organisation');
+ qgep.update_last_modified_parent("qgep.od_organisation");
 
 -------
 -------
@@ -3241,7 +3241,7 @@ update_last_modified_wastewater_node
 BEFORE UPDATE OR INSERT ON
  qgep.od_wastewater_node
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_networkelement');
+ qgep.update_last_modified_parent("qgep.od_wastewater_networkelement");
 
 -------
 -------
@@ -3296,7 +3296,7 @@ update_last_modified_reach
 BEFORE UPDATE OR INSERT ON
  qgep.od_reach
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('wastewater_networkelement');
+ qgep.update_last_modified_parent("qgep.od_wastewater_networkelement");
 
 -------
 -------
@@ -3335,7 +3335,7 @@ update_last_modified_pump
 BEFORE UPDATE OR INSERT ON
  qgep.od_pump
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('overflow');
+ qgep.update_last_modified_parent("qgep.od_overflow");
 
 -------
 -------
@@ -3362,7 +3362,7 @@ update_last_modified_leapingweir
 BEFORE UPDATE OR INSERT ON
  qgep.od_leapingweir
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('overflow');
+ qgep.update_last_modified_parent("qgep.od_overflow");
 
 -------
 -------
@@ -3393,7 +3393,7 @@ update_last_modified_prank_weir
 BEFORE UPDATE OR INSERT ON
  qgep.od_prank_weir
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('overflow');
+ qgep.update_last_modified_parent("qgep.od_overflow");
 
 -------
 -------
@@ -3423,7 +3423,7 @@ update_last_modified_individual_surface
 BEFORE UPDATE OR INSERT ON
  qgep.od_individual_surface
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('connection_object');
+ qgep.update_last_modified_parent("qgep.od_connection_object");
 
 -------
 -------
@@ -3454,7 +3454,7 @@ update_last_modified_building
 BEFORE UPDATE OR INSERT ON
  qgep.od_building
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('connection_object');
+ qgep.update_last_modified_parent("qgep.od_connection_object");
 
 -------
 -------
@@ -3480,7 +3480,7 @@ update_last_modified_reservoir
 BEFORE UPDATE OR INSERT ON
  qgep.od_reservoir
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('connection_object');
+ qgep.update_last_modified_parent("qgep.od_connection_object");
 
 -------
 -------
@@ -3506,7 +3506,7 @@ update_last_modified_fountain
 BEFORE UPDATE OR INSERT ON
  qgep.od_fountain
 FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified_parent('connection_object');
+ qgep.update_last_modified_parent("qgep.od_connection_object");
 
 -------
 ------------ Relationships and Value Tables ----------- ;
@@ -5200,306 +5200,6 @@ ALTER TABLE qgep.vl_individual_surface_pavement ADD CONSTRAINT pkey_qgep_vl_indi
 ALTER TABLE qgep.od_building ADD CONSTRAINT oorel_od_building_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
 ALTER TABLE qgep.od_reservoir ADD CONSTRAINT oorel_od_reservoir_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
 ALTER TABLE qgep.od_fountain ADD CONSTRAINT oorel_od_fountain_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
-
------------- Text and Symbol Tables ----------- ;
--------
-CREATE TABLE qgep.od_wastewater_structure_text
-(
-   obj_id varchar(16) NOT NULL,
-   CONSTRAINT pkey_qgep_od_wastewater_structure_text_obj_id PRIMARY KEY (obj_id)
-)
-WITH (
-   OIDS = False
-);
-CREATE SEQUENCE qgep.seq_od_wastewater_structure_text_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
- ALTER TABLE qgep.od_wastewater_structure_text ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure_text');
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN plantype  integer ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.plantype IS '';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN remark  varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.remark IS '';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN text  text ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.text IS 'yyy_Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / valeur calculée à partir d’attributs, plusieurs lignes possible';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN texthali  smallint ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.texthali IS '';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN textori  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.textori IS '';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_structure_text', 'textpos_geometry', 21781, 'POINT', 2, true);
-CREATE INDEX in_qgep_od_wastewater_structure_text_textpos_geometry ON qgep.od_wastewater_structure_text USING gist (textpos_geometry );
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.textpos_geometry IS '';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN textvali  smallint ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.textvali IS '';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
--------
-CREATE TRIGGER
-update_last_modified_wastewater_structure_text
-BEFORE UPDATE OR INSERT ON
- qgep.od_wastewater_structure_text
-FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified();
-
--------
--------
-CREATE TABLE qgep.od_reach_text
-(
-   obj_id varchar(16) NOT NULL,
-   CONSTRAINT pkey_qgep_od_reach_text_obj_id PRIMARY KEY (obj_id)
-)
-WITH (
-   OIDS = False
-);
-CREATE SEQUENCE qgep.seq_od_reach_text_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
- ALTER TABLE qgep.od_reach_text ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_reach_text');
-COMMENT ON COLUMN qgep.od_reach_text.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
- ALTER TABLE qgep.od_reach_text ADD COLUMN plantype  integer ;
-COMMENT ON COLUMN qgep.od_reach_text.plantype IS '';
- ALTER TABLE qgep.od_reach_text ADD COLUMN remark  varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_text.remark IS '';
- ALTER TABLE qgep.od_reach_text ADD COLUMN text  text ;
-COMMENT ON COLUMN qgep.od_reach_text.text IS 'yyy_Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / valeur calculée à partir d’attributs, plusieurs lignes possible';
- ALTER TABLE qgep.od_reach_text ADD COLUMN texthali  smallint ;
-COMMENT ON COLUMN qgep.od_reach_text.texthali IS '';
- ALTER TABLE qgep.od_reach_text ADD COLUMN textori  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_reach_text.textori IS '';
-SELECT AddGeometryColumn('qgep', 'od_reach_text', 'textpos_geometry', 21781, 'POINT', 2, true);
-CREATE INDEX in_qgep_od_reach_text_textpos_geometry ON qgep.od_reach_text USING gist (textpos_geometry );
-COMMENT ON COLUMN qgep.od_reach_text.textpos_geometry IS '';
- ALTER TABLE qgep.od_reach_text ADD COLUMN textvali  smallint ;
-COMMENT ON COLUMN qgep.od_reach_text.textvali IS '';
- ALTER TABLE qgep.od_reach_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
-COMMENT ON COLUMN qgep.od_reach_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_reach_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_reach_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
--------
-CREATE TRIGGER
-update_last_modified_reach_text
-BEFORE UPDATE OR INSERT ON
- qgep.od_reach_text
-FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified();
-
--------
--------
-CREATE TABLE qgep.od_catchment_area_text
-(
-   obj_id varchar(16) NOT NULL,
-   CONSTRAINT pkey_qgep_od_catchment_area_text_obj_id PRIMARY KEY (obj_id)
-)
-WITH (
-   OIDS = False
-);
-CREATE SEQUENCE qgep.seq_od_catchment_area_text_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
- ALTER TABLE qgep.od_catchment_area_text ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_catchment_area_text');
-COMMENT ON COLUMN qgep.od_catchment_area_text.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN plantype  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.plantype IS '';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN remark  varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.remark IS '';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN text  text ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.text IS 'yyy_Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / valeur calculée à partir d’attributs, plusieurs lignes possible';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN texthali  smallint ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.texthali IS '';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN textori  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.textori IS '';
-SELECT AddGeometryColumn('qgep', 'od_catchment_area_text', 'textpos_geometry', 21781, 'POINT', 2, true);
-CREATE INDEX in_qgep_od_catchment_area_text_textpos_geometry ON qgep.od_catchment_area_text USING gist (textpos_geometry );
-COMMENT ON COLUMN qgep.od_catchment_area_text.textpos_geometry IS '';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN textvali  smallint ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.textvali IS '';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
-COMMENT ON COLUMN qgep.od_catchment_area_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
--------
-CREATE TRIGGER
-update_last_modified_catchment_area_text
-BEFORE UPDATE OR INSERT ON
- qgep.od_catchment_area_text
-FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified();
-
--------
--------
-CREATE TABLE qgep.od_wastewater_structure_symbol
-(
-   obj_id varchar(16) NOT NULL,
-   CONSTRAINT pkey_qgep_od_wastewater_structure_symbol_obj_id PRIMARY KEY (obj_id)
-)
-WITH (
-   OIDS = False
-);
-CREATE SEQUENCE qgep.seq_od_wastewater_structure_symbol_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
- ALTER TABLE qgep.od_wastewater_structure_symbol ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure_symbol');
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN plantype  integer ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.plantype IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN remark  varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.remark IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN symbol_scaling_heigth  decimal(2,1) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbol_scaling_heigth IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN symbol_scaling_width  decimal(2,1) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbol_scaling_width IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN symbolhali  smallint ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolhali IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN symbolori  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolori IS '';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_structure_symbol', 'symbolpos_geometry', 21781, 'POINT', 2, true);
-CREATE INDEX in_qgep_od_wastewater_structure_symbol_symbolpos_geometry ON qgep.od_wastewater_structure_symbol USING gist (symbolpos_geometry );
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolpos_geometry IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN symbolvali  smallint ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolvali IS '';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
--------
-CREATE TRIGGER
-update_last_modified_wastewater_structure_symbol
-BEFORE UPDATE OR INSERT ON
- qgep.od_wastewater_structure_symbol
-FOR EACH ROW EXECUTE PROCEDURE
- qgep.update_last_modified();
-
--------
-
------------- Text and Symbol Tables Relationships ----------- ;
-ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_wastewater_structure_text ADD CONSTRAINT rel_wastewater_structure_text_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
-ALTER TABLE qgep.od_reach_text ADD COLUMN fk_reach varchar (16);
-ALTER TABLE qgep.od_reach_text ADD CONSTRAINT rel_reach_text_reach FOREIGN KEY (fk_reach) REFERENCES qgep.od_reach(obj_id);
-ALTER TABLE qgep.od_catchment_area_text ADD COLUMN fk_catchment_area varchar (16);
-ALTER TABLE qgep.od_catchment_area_text ADD CONSTRAINT rel_catchment_area_text_catchment_area FOREIGN KEY (fk_catchment_area) REFERENCES qgep.od_catchment_area(obj_id);
-ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT rel_wastewater_structure_symbol_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
-
------------- Text and Symbol Tables Values ----------- ;
-CREATE TABLE qgep.vl_wastewater_structure_text_plantype () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_text_plantype ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_text_plantype_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7844,7844,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7846,7846,'overviewmap.om10','Uebersichtsplan.UeP10','plan_d_ensemble.pe10', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7847,7847,'overviewmap.om2','Uebersichtsplan.UeP2','plan_d_ensemble.pe5', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe2', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep.vl_wastewater_structure_text_plantype (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_wastewater_structure_text_texthali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_text_texthali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_text_texthali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7850,7850,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7851,7851,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7852,7852,'2','2','2', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep.vl_wastewater_structure_text_texthali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_wastewater_structure_text_textvali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_text_textvali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_text_textvali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7853,7853,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7854,7854,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7855,7855,'2','2','2', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7856,7856,'3','3','3', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7857,7857,'4','4','4', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep.vl_wastewater_structure_text_textvali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_reach_text_plantype () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_reach_text_plantype ADD CONSTRAINT pkey_qgep_vl_reach_text_plantype_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_reach_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7844,7844,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7846,7846,'overviewmap.om10','Uebersichtsplan.UeP10','plan_d_ensemble.pe10', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7847,7847,'overviewmap.om2','Uebersichtsplan.UeP2','plan_d_ensemble.pe5', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe2', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', 'true');
- ALTER TABLE qgep.od_reach_text ADD CONSTRAINT fkey_vl_reach_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep.vl_reach_text_plantype (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_reach_text_texthali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_reach_text_texthali ADD CONSTRAINT pkey_qgep_vl_reach_text_texthali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_reach_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7850,7850,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7851,7851,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7852,7852,'2','2','2', '', '', '', 'true');
- ALTER TABLE qgep.od_reach_text ADD CONSTRAINT fkey_vl_reach_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep.vl_reach_text_texthali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_reach_text_textvali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_reach_text_textvali ADD CONSTRAINT pkey_qgep_vl_reach_text_textvali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_reach_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7853,7853,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7854,7854,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7855,7855,'2','2','2', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7856,7856,'3','3','3', '', '', '', 'true');
- INSERT INTO qgep.vl_reach_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7857,7857,'4','4','4', '', '', '', 'true');
- ALTER TABLE qgep.od_reach_text ADD CONSTRAINT fkey_vl_reach_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep.vl_reach_text_textvali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_catchment_area_text_plantype () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_catchment_area_text_plantype ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_plantype_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7844,7844,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7846,7846,'overviewmap.om10','Uebersichtsplan.UeP10','plan_d_ensemble.pe10', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7847,7847,'overviewmap.om2','Uebersichtsplan.UeP2','plan_d_ensemble.pe5', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe2', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', 'true');
- ALTER TABLE qgep.od_catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep.vl_catchment_area_text_plantype (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_catchment_area_text_texthali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_catchment_area_text_texthali ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_texthali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_catchment_area_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7850,7850,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7851,7851,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_texthali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7852,7852,'2','2','2', '', '', '', 'true');
- ALTER TABLE qgep.od_catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep.vl_catchment_area_text_texthali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_catchment_area_text_textvali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_catchment_area_text_textvali ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_textvali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7853,7853,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7854,7854,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7855,7855,'2','2','2', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7856,7856,'3','3','3', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7857,7857,'4','4','4', '', '', '', 'true');
- ALTER TABLE qgep.od_catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep.vl_catchment_area_text_textvali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_wastewater_structure_symbol_plantype () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_symbol_plantype ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_symbol_plantype_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7874,7874,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7876,7876,'overviewmap.om10','Uebersichtsplan.UeP10','plan_d_ensemble.pe10', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7877,7877,'overviewmap.om2','Uebersichtsplan.UeP2','plan_d_ensemble.pe5', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7878,7878,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe2', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7875,7875,'network_plan','Werkplan','plan_de_reseau', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT fkey_vl_wastewater_structure_symbol_plantype FOREIGN KEY (plantype)
- REFERENCES qgep.vl_wastewater_structure_symbol_plantype (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_wastewater_structure_symbol_symbolhali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_symbol_symbolhali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_symbol_symbolhali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolhali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7880,7880,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolhali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7881,7881,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolhali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7882,7882,'2','2','2', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT fkey_vl_wastewater_structure_symbol_symbolhali FOREIGN KEY (symbolhali)
- REFERENCES qgep.vl_wastewater_structure_symbol_symbolhali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep.vl_wastewater_structure_symbol_symbolvali () INHERITS (qgep.is_value_list_base);
-ALTER TABLE qgep.vl_wastewater_structure_symbol_symbolvali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_symbol_symbolvali_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7883,7883,'0','0','0', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7884,7884,'1','1','1', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7885,7885,'2','2','2', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7886,7886,'3','3','3', '', '', '', 'true');
- INSERT INTO qgep.vl_wastewater_structure_symbol_symbolvali (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7887,7887,'4','4','4', '', '', '', 'true');
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT fkey_vl_wastewater_structure_symbol_symbolvali FOREIGN KEY (symbolvali)
- REFERENCES qgep.vl_wastewater_structure_symbol_symbolvali (code) MATCH SIMPLE 
- ON UPDATE RESTRICT ON DELETE RESTRICT;
 --------- Relations to class organisation for dataowner and provider (new 3.11.2014);
 
 ALTER TABLE qgep.txt_symbol ADD CONSTRAINT rel_txt_symbol_fk_dataowner FOREIGN KEY (fk_dataowner) REFERENCES qgep.od_organisation(obj_id);
@@ -5590,8 +5290,6 @@ ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT rel_od_measurement_series_
 ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT rel_od_measurement_series_fk_dataprovider FOREIGN KEY (fk_provider) REFERENCES qgep.od_organisation(obj_id);
 ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_od_measuring_point_fk_dataowner FOREIGN KEY (fk_dataowner) REFERENCES qgep.od_organisation(obj_id);
 ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_od_measuring_point_fk_dataprovider FOREIGN KEY (fk_provider) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT rel_od_wastewater_structure_symbol_fk_dataowner FOREIGN KEY (fk_dataowner) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT rel_od_wastewater_structure_symbol_fk_dataprovider FOREIGN KEY (fk_provider) REFERENCES qgep.od_organisation(obj_id);
 
 ------ Indexes on identifiers
 
