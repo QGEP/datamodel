@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_reach;
 
+
+--------
+-- Subclass: od_reach
+-- Superclass: od_wastewater_networkelement
+--------
 CREATE OR REPLACE VIEW qgep.vw_reach AS
 
 SELECT
@@ -24,6 +29,7 @@ SELECT
    , WE.remark
    , WE.dataowner
    , WE.provider
+   , WE.last_modification
   , WE.fk_wastewater_structure
   FROM qgep.od_reach RE
  LEFT JOIN qgep.od_wastewater_networkelement WE
@@ -44,6 +50,7 @@ BEGIN
            , remark
            , dataowner
            , provider
+           , last_modification
            , fk_wastewater_structure
            )
      VALUES ( qgep.generate_oid('od_reach') -- obj_id
@@ -51,6 +58,7 @@ BEGIN
            , NEW.remark
            , NEW.dataowner
            , NEW.provider
+           , NEW.last_modification
            , NEW.fk_wastewater_structure
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -84,7 +92,7 @@ INSERT INTO qgep.od_reach (
            , NEW.length_effective
            , NEW.material
            , NEW.progression_geometry
-           , NEW.progression_3d_geometry
+   , RE.progression_3d_geometry
            , NEW.reliner_material
            , NEW.reliner_nominal_size
            , NEW.relining_construction
@@ -135,6 +143,7 @@ UPDATE qgep.od_wastewater_networkelement
      , remark = NEW.remark
            , dataowner = NEW.dataowner
            , provider = NEW.provider
+           , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;
 );

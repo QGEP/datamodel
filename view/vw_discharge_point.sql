@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_discharge_point;
 
+
+--------
+-- Subclass: od_discharge_point
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_discharge_point AS
 
 SELECT

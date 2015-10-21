@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_param_ca_general;
 
+
+--------
+-- Subclass: od_param_ca_general
+-- Superclass: od_surface_runoff_parameters
+--------
 CREATE OR REPLACE VIEW qgep.vw_param_ca_general AS
 
 SELECT

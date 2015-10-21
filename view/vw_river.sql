@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_river;
 
+
+--------
+-- Subclass: od_river
+-- Superclass: od_surface_water_bodies
+--------
 CREATE OR REPLACE VIEW qgep.vw_river AS
 
 SELECT

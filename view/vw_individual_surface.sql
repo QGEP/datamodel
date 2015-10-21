@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_individual_surface;
 
+
+--------
+-- Subclass: od_individual_surface
+-- Superclass: od_connection_object
+--------
 CREATE OR REPLACE VIEW qgep.vw_individual_surface AS
 
 SELECT
@@ -60,12 +65,14 @@ INSERT INTO qgep.od_individual_surface (
            , function
            , inclination
            , pavement
+           , perimeter_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
            , NEW.function
            , NEW.inclination
            , NEW.pavement
+           , NEW.perimeter_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -88,6 +95,7 @@ UPDATE qgep.od_individual_surface
        function = NEW.function
      , inclination = NEW.inclination
      , pavement = NEW.pavement
+     , perimeter_geometry = NEW.perimeter_geometry
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_connection_object

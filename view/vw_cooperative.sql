@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_cooperative;
 
+
+--------
+-- Subclass: od_cooperative
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_cooperative AS
 
 SELECT

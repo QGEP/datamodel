@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_waste_water_association;
 
+
+--------
+-- Subclass: od_waste_water_association
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_waste_water_association AS
 
 SELECT

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_tank_emptying;
 
+
+--------
+-- Subclass: od_tank_emptying
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_tank_emptying AS
 
 SELECT

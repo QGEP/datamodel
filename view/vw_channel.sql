@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_channel;
 
+
+--------
+-- Subclass: od_channel
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_channel AS
 
 SELECT

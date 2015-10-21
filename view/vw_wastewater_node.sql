@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_wastewater_node;
 
+
+--------
+-- Subclass: od_wastewater_node
+-- Superclass: od_wastewater_networkelement
+--------
 CREATE OR REPLACE VIEW qgep.vw_wastewater_node AS
 
 SELECT
@@ -84,9 +89,9 @@ UPDATE qgep.od_wastewater_networkelement
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-     , dataowner = NEW.dataowner
-     , provider = NEW.provider
-     , last_modification = NEW.last_modification
+           , dataowner = NEW.dataowner
+           , provider = NEW.provider
+           , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;
 );
