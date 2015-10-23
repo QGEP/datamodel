@@ -92,7 +92,7 @@ INSERT INTO qgep.od_reach (
            , NEW.length_effective
            , NEW.material
            , NEW.progression_geometry
-   , RE.progression_3d_geometry
+   , NEW.progression_3d_geometry
            , NEW.reliner_material
            , NEW.reliner_nominal_size
            , NEW.relining_construction
