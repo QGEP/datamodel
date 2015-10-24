@@ -51,5 +51,17 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = self.select('od_structure_part', obj_id)
         assert last_mod != row['last_modification'], "Last modification not set on update of child table (still {})".format(row['last_modification'])
 
+    def test_identifier(self):
+        row = {
+                'level': decimal.Decimal('50.000')
+        }
+
+        obj_id = self.insert_check('vw_cover', row)
+
+        row = self.select('od_structure_part', obj_id)
+
+        identifier = row['identifier']
+        assert identifier, "Identifier not set on insert: {}".format(repr(identifier))
+
 if __name__ == '__main__':
     unittest.main()
