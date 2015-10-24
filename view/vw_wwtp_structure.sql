@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_wwtp_structure;
 
+
+--------
+-- Subclass: od_wwtp_structure
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_wwtp_structure AS
 
 SELECT

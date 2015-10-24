@@ -1,17 +1,19 @@
-DROP VIEW IF EXISTS qgep.vw_leapingweir;
+DROP VIEW IF EXISTS qgep.vw_prank_weir;
 
 
 --------
--- Subclass: od_leapingweir
+-- Subclass: od_prank_weir
 -- Superclass: od_overflow
 --------
-CREATE OR REPLACE VIEW qgep.vw_leapingweir AS
+CREATE OR REPLACE VIEW qgep.vw_prank_weir AS
 
 SELECT
-   LW.obj_id
-   , LW.length
-   , LW.opening_shape
-   , LW.width
+   PW.obj_id
+   , PW.hydraulic_overflow_length
+   , PW.level_max
+   , PW.level_min
+   , PW.weir_edge
+   , PW.weir_kind
    , OF.actuation
    , OF.adjustability
    , OF.brand
@@ -31,16 +33,16 @@ SELECT
   , OF.fk_overflow_to
   , OF.fk_overflow_characteristic
   , OF.fk_control_center
-  FROM qgep.od_leapingweir LW
+  FROM qgep.od_prank_weir PW
  LEFT JOIN qgep.od_overflow OF
- ON OF.obj_id = LW.obj_id;
+ ON OF.obj_id = PW.obj_id;
 
 -----------------------------------
--- leapingweir INSERT
--- Function: vw_leapingweir_insert()
+-- prank_weir INSERT
+-- Function: vw_prank_weir_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_leapingweir_insert()
+CREATE OR REPLACE FUNCTION qgep.vw_prank_weir_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -66,7 +68,7 @@ BEGIN
            , fk_overflow_characteristic
            , fk_control_center
            )
-     VALUES ( qgep.generate_oid('od_leapingweir') -- obj_id
+     VALUES ( qgep.generate_oid('od_prank_weir') -- obj_id
            , NEW.actuation
            , NEW.adjustability
            , NEW.brand
@@ -89,39 +91,45 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_leapingweir (
+INSERT INTO qgep.od_prank_weir (
              obj_id
-           , length
-           , opening_shape
-           , width
+           , hydraulic_overflow_length
+           , level_max
+           , level_min
+           , weir_edge
+           , weir_kind
            )
           VALUES (
             NEW.obj_id -- obj_id
-           , NEW.length
-           , NEW.opening_shape
-           , NEW.width
+           , NEW.hydraulic_overflow_length
+           , NEW.level_max
+           , NEW.level_min
+           , NEW.weir_edge
+           , NEW.weir_kind
            );
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_leapingweir_ON_INSERT ON qgep.leapingweir;
+-- DROP TRIGGER vw_prank_weir_ON_INSERT ON qgep.prank_weir;
 
-CREATE TRIGGER vw_leapingweir_ON_INSERT INSTEAD OF INSERT ON qgep.vw_leapingweir
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_leapingweir_insert();
+CREATE TRIGGER vw_prank_weir_ON_INSERT INSTEAD OF INSERT ON qgep.vw_prank_weir
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_prank_weir_insert();
 
 -----------------------------------
--- leapingweir UPDATE
--- Rule: vw_leapingweir_ON_UPDATE()
+-- prank_weir UPDATE
+-- Rule: vw_prank_weir_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_leapingweir_ON_UPDATE AS ON UPDATE TO qgep.vw_leapingweir DO INSTEAD (
-UPDATE qgep.od_leapingweir
+CREATE OR REPLACE RULE vw_prank_weir_ON_UPDATE AS ON UPDATE TO qgep.vw_prank_weir DO INSTEAD (
+UPDATE qgep.od_prank_weir
   SET
-       length = NEW.length
-     , opening_shape = NEW.opening_shape
-     , width = NEW.width
+       hydraulic_overflow_length = NEW.hydraulic_overflow_length
+     , level_max = NEW.level_max
+     , level_min = NEW.level_min
+     , weir_edge = NEW.weir_edge
+     , weir_kind = NEW.weir_kind
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_overflow
@@ -149,12 +157,12 @@ UPDATE qgep.od_overflow
 );
 
 -----------------------------------
--- leapingweir DELETE
--- Rule: vw_leapingweir_ON_DELETE ()
+-- prank_weir DELETE
+-- Rule: vw_prank_weir_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_leapingweir_ON_DELETE AS ON DELETE TO qgep.vw_leapingweir DO INSTEAD (
-  DELETE FROM qgep.od_leapingweir WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_prank_weir_ON_DELETE AS ON DELETE TO qgep.vw_prank_weir DO INSTEAD (
+  DELETE FROM qgep.od_prank_weir WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep.od_overflow WHERE obj_id = OLD.obj_id;
 );
 

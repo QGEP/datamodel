@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_special_structure;
 
+
+--------
+-- Subclass: od_special_structure
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_special_structure AS
 
 SELECT
@@ -11,9 +16,9 @@ SELECT
    , SS.stormwater_tank_arrangement
    , SS.upper_elevation
    , WS.accessibility
-   , WS.contract_section
-   , WS.detail_geometry_geometry
-   , WS.detail_geometry_3d_geometry
+   , WS.contract_section,
+WS.detail_geometry_geometry,
+WS.detail_geometry_3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -52,8 +57,8 @@ BEGIN
              obj_id
            , accessibility
            , contract_section
-           , detail_geometry_geometry
-           , detail_geometry_3d_geometry
+            , detail_geometry_geometry
+            , detail_geometry_3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -79,8 +84,8 @@ BEGIN
      VALUES ( qgep.generate_oid('od_special_structure') -- obj_id
            , NEW.accessibility
            , NEW.contract_section
-           , NEW.detail_geometry_geometry
-           , NEW.detail_geometry_3d_geometry
+            , NEW.detail_geometry_geometry
+            , NEW.detail_geometry_3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.identifier
@@ -153,8 +158,8 @@ UPDATE qgep.od_wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
-     , detail_geometry_geometry = NEW.detail_geometry_geometry
-     , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
+      , detail_geometry_geometry = NEW.detail_geometry_geometry
+      , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier
@@ -171,9 +176,9 @@ UPDATE qgep.od_wastewater_structure
      , subsidies = NEW.subsidies
      , year_of_construction = NEW.year_of_construction
      , year_of_replacement = NEW.year_of_replacement
-     , dataowner = NEW.dataowner
-     , provider = NEW.provider
-     , last_modification = NEW.last_modification
+           , dataowner = NEW.dataowner
+           , provider = NEW.provider
+           , last_modification = NEW.last_modification
      , fk_owner = NEW.fk_owner
      , fk_operator = NEW.fk_operator
   WHERE obj_id = OLD.obj_id;

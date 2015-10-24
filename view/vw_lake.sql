@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_lake;
 
+
+--------
+-- Subclass: od_lake
+-- Superclass: od_surface_water_bodies
+--------
 CREATE OR REPLACE VIEW qgep.vw_lake AS
 
 SELECT
@@ -42,9 +47,11 @@ BEGIN
 
 INSERT INTO qgep.od_lake (
              obj_id
+           , perimeter_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
+           , NEW.perimeter_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -62,11 +69,10 @@ CREATE TRIGGER vw_lake_ON_INSERT INSTEAD OF INSERT ON qgep.vw_lake
 -----------------------------------
 
 CREATE OR REPLACE RULE vw_lake_ON_UPDATE AS ON UPDATE TO qgep.vw_lake DO INSTEAD (
---------
--- UPDATE qgep.od_lake
---  SET
---  WHERE obj_id = OLD.obj_id;
---------
+UPDATE qgep.od_lake
+  SET
+     , perimeter_geometry = NEW.perimeter_geometry
+  WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_surface_water_bodies
   SET

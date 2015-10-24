@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_rock_ramp;
 
+
+--------
+-- Subclass: od_rock_ramp
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_rock_ramp AS
 
 SELECT

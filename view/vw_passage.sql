@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_passage;
 
+
+--------
+-- Subclass: od_passage
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_passage AS
 
 SELECT

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_municipality;
 
+
+--------
+-- Subclass: od_municipality
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_municipality AS
 
 SELECT
@@ -53,6 +58,7 @@ INSERT INTO qgep.od_municipality (
            , altitude
            , gwdp_year
            , municipality_number
+           , perimeter_geometry
            , population
            , total_surface
            )
@@ -61,6 +67,7 @@ INSERT INTO qgep.od_municipality (
            , NEW.altitude
            , NEW.gwdp_year
            , NEW.municipality_number
+           , NEW.perimeter_geometry
            , NEW.population
            , NEW.total_surface
            );
@@ -85,6 +92,7 @@ UPDATE qgep.od_municipality
        altitude = NEW.altitude
      , gwdp_year = NEW.gwdp_year
      , municipality_number = NEW.municipality_number
+     , perimeter_geometry = NEW.perimeter_geometry
      , population = NEW.population
      , total_surface = NEW.total_surface
   WHERE obj_id = OLD.obj_id;

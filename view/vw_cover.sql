@@ -4,9 +4,7 @@ DROP VIEW IF EXISTS qgep.vw_cover;
 --------
 -- Subclass: od_cover
 -- Superclass: od_structure_part
-
 --------
-
 CREATE OR REPLACE VIEW qgep.vw_cover AS
 
 SELECT

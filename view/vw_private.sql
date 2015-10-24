@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_private;
 
+
+--------
+-- Subclass: od_private
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_private AS
 
 SELECT

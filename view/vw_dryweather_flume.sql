@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_dryweather_flume;
 
+
+--------
+-- Subclass: od_dryweather_flume
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_dryweather_flume AS
 
 SELECT

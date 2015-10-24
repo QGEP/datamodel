@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_building;
 
+
+--------
+-- Subclass: od_building
+-- Superclass: od_connection_object
+--------
 CREATE OR REPLACE VIEW qgep.vw_building AS
 
 SELECT
@@ -59,11 +64,15 @@ INSERT INTO qgep.od_building (
              obj_id
            , house_number
            , location_name
+           , perimeter_geometry
+           , reference_point_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
            , NEW.house_number
            , NEW.location_name
+           , NEW.perimeter_geometry
+           , NEW.reference_point_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -85,6 +94,8 @@ UPDATE qgep.od_building
   SET
        house_number = NEW.house_number
      , location_name = NEW.location_name
+     , perimeter_geometry = NEW.perimeter_geometry
+     , reference_point_geometry = NEW.reference_point_geometry
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_connection_object
