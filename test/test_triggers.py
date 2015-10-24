@@ -62,7 +62,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = self.select('od_structure_part', obj_id)
 
         identifier = row['identifier']
-        assert identifier, "Identifier not set on insert: {}".format(repr(identifier))
+        assert identifier is not None, "Identifier not set on insert: {}".format(repr(identifier))
 
 if __name__ == '__main__':
     unittest.main()
