@@ -33,9 +33,16 @@ SELECT
 
 CREATE OR REPLACE FUNCTION qgep.vw_cover_insert()
   RETURNS trigger AS
-$BODY$
+$BODY$DECLARE objid character varying(100);
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+
+objid := qgep.generate_oid('od_cover') ;
+
+IF NEW.identifier IS NULL OR NEW.identifier='' THEN
+	NEW.identifier := objid;
+END IF;
+
+INSERT INTO qgep.od_structure_part (
              obj_id
            , identifier
            , remark
@@ -45,7 +52,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( qgep.generate_oid('od_cover') -- obj_id
+	VALUES ( objid
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -55,7 +62,7 @@ BEGIN
            , NEW.fk_wastewater_structure
            )
            RETURNING obj_id INTO NEW.obj_id;
-
+           
 INSERT INTO qgep.od_cover (
              obj_id
            , brand
