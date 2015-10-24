@@ -33,10 +33,10 @@ SELECT
 
 CREATE OR REPLACE FUNCTION qgep.vw_cover_insert()
   RETURNS trigger AS
-$BODY$DECLARE objid character varying(100);
+$BODY$DECLARE objid character varying(16);
 BEGIN
 
-objid := qgep.generate_oid('od_cover') ;
+objid := qgep.generate_oid('od_cover'::text) :: character varying(16);
 
 IF NEW.identifier IS NULL OR NEW.identifier='' THEN
 	NEW.identifier := objid;
