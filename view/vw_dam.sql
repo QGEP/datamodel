@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_dam;
 
+
+--------
+-- Subclass: od_dam
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_dam AS
 
 SELECT

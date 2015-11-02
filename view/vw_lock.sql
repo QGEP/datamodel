@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_lock;
 
+
+--------
+-- Subclass: od_lock
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_lock AS
 
 SELECT

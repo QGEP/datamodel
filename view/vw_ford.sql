@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_ford;
 
+
+--------
+-- Subclass: od_ford
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_ford AS
 
 SELECT

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_electric_equipment;
 
+
+--------
+-- Subclass: od_electric_equipment
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_electric_equipment AS
 
 SELECT

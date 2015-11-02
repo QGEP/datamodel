@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_param_ca_mouse1;
 
+
+--------
+-- Subclass: od_param_ca_mouse1
+-- Superclass: od_surface_runoff_parameters
+--------
 CREATE OR REPLACE VIEW qgep.vw_param_ca_mouse1 AS
 
 SELECT

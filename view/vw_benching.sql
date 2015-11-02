@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_benching;
 
+
+--------
+-- Subclass: od_benching
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_benching AS
 
 SELECT

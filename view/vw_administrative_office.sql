@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_administrative_office;
 
+
+--------
+-- Subclass: od_administrative_office
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_administrative_office AS
 
 SELECT
