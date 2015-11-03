@@ -1,6 +1,6 @@
- ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
+------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 20.10.2015 15:09:15
+------ version 03.11.2015 14:11:31
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -3587,9 +3587,9 @@ ALTER TABLE qgep.vl_sludge_treatment_stabilisation ADD CONSTRAINT pkey_qgep_vl_s
  REFERENCES qgep.vl_sludge_treatment_stabilisation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_sludge_treatment ADD CONSTRAINT rel_sludge_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id);
+ALTER TABLE qgep.od_sludge_treatment ADD CONSTRAINT rel_sludge_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_wwtp_energy_use ADD CONSTRAINT rel_wwtp_energy_use_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id);
+ALTER TABLE qgep.od_wwtp_energy_use ADD CONSTRAINT rel_wwtp_energy_use_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_waste_water_treatment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_waste_water_treatment_kind ADD CONSTRAINT pkey_qgep_vl_waste_water_treatment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_waste_water_treatment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3210,3210,'other','andere','autres', '', '', '', 'true');
@@ -3602,9 +3602,9 @@ ALTER TABLE qgep.vl_waste_water_treatment_kind ADD CONSTRAINT pkey_qgep_vl_waste
  REFERENCES qgep.vl_waste_water_treatment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_waste_water_treatment ADD CONSTRAINT rel_waste_water_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id);
+ALTER TABLE qgep.od_waste_water_treatment ADD CONSTRAINT rel_waste_water_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_bathing_area ADD CONSTRAINT rel_bathing_area_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id);
+ALTER TABLE qgep.od_bathing_area ADD CONSTRAINT rel_bathing_area_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_water_catchment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catchment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_water_catchment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (24,24,'process_water','Brauchwasser','eau_industrielle', '', '', '', 'true');
@@ -3614,11 +3614,11 @@ ALTER TABLE qgep.vl_water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catch
  REFERENCES qgep.vl_water_catchment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_aquifier varchar (16);
-ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id);
+ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id);
+ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_water_control_structure ADD CONSTRAINT rel_water_control_structure_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id);
+ALTER TABLE qgep.od_water_control_structure ADD CONSTRAINT rel_water_control_structure_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_sector_water_body_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_water_body_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_sector_water_body_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2657,2657,'waterbody','Gewaesser','lac_ou_cours_d_eau', '', '', '', 'true');
@@ -3630,7 +3630,7 @@ ALTER TABLE qgep.vl_sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_wa
  REFERENCES qgep.vl_sector_water_body_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_sector_water_body ADD CONSTRAINT rel_sector_water_body_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id);
+ALTER TABLE qgep.od_sector_water_body ADD CONSTRAINT rel_sector_water_body_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_water_course_segment_algae_growth () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_water_course_segment_algae_growth ADD CONSTRAINT pkey_qgep_vl_water_course_segment_algae_growth_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_water_course_segment_algae_growth (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2623,2623,'none_or_marginal','kein_gering','absent_faible', '', '', '', 'true');
@@ -3761,9 +3761,9 @@ ALTER TABLE qgep.vl_water_course_segment_width_variability ADD CONSTRAINT pkey_q
  REFERENCES qgep.vl_water_course_segment_width_variability (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_watercourse varchar (16);
-ALTER TABLE qgep.od_water_course_segment ADD CONSTRAINT rel_water_course_segment_watercourse FOREIGN KEY (fk_watercourse) REFERENCES qgep.od_river(obj_id);
+ALTER TABLE qgep.od_water_course_segment ADD CONSTRAINT rel_water_course_segment_watercourse FOREIGN KEY (fk_watercourse) REFERENCES qgep.od_river(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_water_control_structure varchar (16);
-ALTER TABLE qgep.od_fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep.od_water_control_structure(obj_id);
+ALTER TABLE qgep.od_fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_river_bank_control_grade_of_river () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_river_bank_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bank_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (341,341,'none','keine','nul', '', '', '', 'true');
@@ -3826,7 +3826,7 @@ ALTER TABLE qgep.vl_river_bank_vegetation ADD CONSTRAINT pkey_qgep_vl_river_bank
  REFERENCES qgep.vl_river_bank_vegetation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_river_bank ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_river_bank ADD CONSTRAINT rel_river_bank_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id);
+ALTER TABLE qgep.od_river_bank ADD CONSTRAINT rel_river_bank_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_river_bed_control_grade_of_river () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_river_bed_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bed_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_river_bed_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (142,142,'none','keine','nul', '', '', '', 'true');
@@ -3859,11 +3859,11 @@ ALTER TABLE qgep.vl_river_bed_river_control_type ADD CONSTRAINT pkey_qgep_vl_riv
  REFERENCES qgep.vl_river_bed_river_control_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_river_bed ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_river_bed ADD CONSTRAINT rel_river_bed_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id);
+ALTER TABLE qgep.od_river_bed ADD CONSTRAINT rel_river_bed_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_pipe_profile varchar (16);
-ALTER TABLE qgep.od_profile_geometry ADD CONSTRAINT rel_profile_geometry_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id);
+ALTER TABLE qgep.od_profile_geometry ADD CONSTRAINT rel_profile_geometry_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id);
+ALTER TABLE qgep.od_hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_reach_point_elevation_accuracy () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_reach_point_elevation_accuracy ADD CONSTRAINT pkey_qgep_vl_reach_point_elevation_accuracy_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_reach_point_elevation_accuracy (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3248,3248,'more_than_6cm','groesser_6cm','plusque_6cm', '', 'G06', 'S06', 'true');
@@ -3885,11 +3885,11 @@ ALTER TABLE qgep.vl_reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_p
  REFERENCES qgep.vl_reach_point_outlet_shape (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_reach_point ADD COLUMN fk_wastewater_networkelement varchar (16);
-ALTER TABLE qgep.od_reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id);
+ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_maintenance_event_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_maintenance_event_kind ADD CONSTRAINT pkey_qgep_vl_maintenance_event_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_maintenance_event_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2982,2982,'other','andere','autres', '', '', '', 'true');
@@ -3913,7 +3913,7 @@ ALTER TABLE qgep.vl_maintenance_event_status ADD CONSTRAINT pkey_qgep_vl_mainten
  REFERENCES qgep.vl_maintenance_event_status (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_operator_company varchar (16);
-ALTER TABLE qgep.od_maintenance_event ADD CONSTRAINT rel_maintenance_event_operator_company FOREIGN KEY (fk_operator_company) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_maintenance_event ADD CONSTRAINT rel_maintenance_event_operator_company FOREIGN KEY (fk_operator_company) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_structure_part_renovation_demand () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl_structure_part_renovation_demand_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (138,138,'not_necessary','nicht_notwendig','pas_necessaire', 'NN', 'NN', 'PN', 'true');
@@ -3923,7 +3923,7 @@ ALTER TABLE qgep.vl_structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl
  REFERENCES qgep.vl_structure_part_renovation_demand (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_structure_part ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_throttle_shut_off_unit_actuation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_throttle_shut_off_unit_actuation ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_actuation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_throttle_shut_off_unit_actuation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3213,3213,'other','andere','autres', '', '', '', 'true');
@@ -3985,11 +3985,11 @@ ALTER TABLE qgep.vl_throttle_shut_off_unit_signal_transmission ADD CONSTRAINT pk
  REFERENCES qgep.vl_throttle_shut_off_unit_signal_transmission (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_wastewater_node varchar (16);
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id);
+ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_control_center varchar (16);
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id);
+ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_overflow varchar (16);
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_overflow(obj_id);
+ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_overflow(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_pipe_profile_profile_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_profile_profile_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3351,3351,'egg','Eiprofil','ovoide', 'E', 'E', 'OV', 'true');
@@ -4003,7 +4003,7 @@ ALTER TABLE qgep.vl_pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_p
  REFERENCES qgep.vl_pipe_profile_profile_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_wastewater_networkelement ADD CONSTRAINT rel_wastewater_networkelement_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_wastewater_networkelement ADD CONSTRAINT rel_wastewater_networkelement_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_overflow_characteristic_kind_overflow_characteristic () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_overflow_characteristic_kind_overflow_characteristic ADD CONSTRAINT pkey_qgep_vl_overflow_characteristic_kind_overflow_characteristic_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_overflow_characteristic_kind_overflow_characteristic (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (6220,6220,'hq','HQ','HQ', '', '', '', 'true');
@@ -4032,9 +4032,9 @@ ALTER TABLE qgep.vl_mechanical_pretreatment_kind ADD CONSTRAINT pkey_qgep_vl_mec
  REFERENCES qgep.vl_mechanical_pretreatment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_infiltration_installation varchar (16);
-ALTER TABLE qgep.od_mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep.od_infiltration_installation(obj_id);
+ALTER TABLE qgep.od_mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep.od_infiltration_installation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_wastewater_structure_accessibility () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_wastewater_structure_accessibility ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_accessibility_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_wastewater_structure_accessibility (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3444,3444,'covered','ueberdeckt','couvert', '', 'UED', 'CO', 'true');
@@ -4102,9 +4102,9 @@ ALTER TABLE qgep.vl_wastewater_structure_structure_condition ADD CONSTRAINT pkey
  REFERENCES qgep.vl_wastewater_structure_structure_condition (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_owner varchar (16);
-ALTER TABLE qgep.od_wastewater_structure ADD CONSTRAINT rel_wastewater_structure_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_wastewater_structure ADD CONSTRAINT rel_wastewater_structure_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_operator varchar (16);
-ALTER TABLE qgep.od_wastewater_structure ADD CONSTRAINT rel_wastewater_structure_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_wastewater_structure ADD CONSTRAINT rel_wastewater_structure_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_hydraulic_characteristic_data_is_overflowing () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_hydraulic_characteristic_data_is_overflowing ADD CONSTRAINT pkey_qgep_vl_hydraulic_characteristic_data_is_overflowing_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_hydraulic_characteristic_data_is_overflowing (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5774,5774,'yes','ja','oui', '', '', '', 'true');
@@ -4154,9 +4154,9 @@ ALTER TABLE qgep.vl_hydraulic_characteristic_data_status ADD CONSTRAINT pkey_qge
  REFERENCES qgep.vl_hydraulic_characteristic_data_status (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_wastewater_node varchar (16);
-ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id);
+ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id);
+ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_retention_body_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_retention_body_kind ADD CONSTRAINT pkey_qgep_vl_retention_body_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_retention_body_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2992,2992,'other','andere','autres', '', '', '', 'true');
@@ -4169,11 +4169,11 @@ ALTER TABLE qgep.vl_retention_body_kind ADD CONSTRAINT pkey_qgep_vl_retention_bo
  REFERENCES qgep.vl_retention_body_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_retention_body ADD COLUMN fk_infiltration_installation varchar (16);
-ALTER TABLE qgep.od_retention_body ADD CONSTRAINT rel_retention_body_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep.od_infiltration_installation(obj_id);
+ALTER TABLE qgep.od_retention_body ADD CONSTRAINT rel_retention_body_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep.od_infiltration_installation(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_hydr_geometry varchar (16);
-ALTER TABLE qgep.od_hydr_geom_relation ADD CONSTRAINT rel_hydr_geom_relation_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id);
+ALTER TABLE qgep.od_hydr_geom_relation ADD CONSTRAINT rel_hydr_geom_relation_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_accident ADD COLUMN fk_hazard_source varchar (16);
-ALTER TABLE qgep.od_accident ADD CONSTRAINT rel_accident_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id);
+ALTER TABLE qgep.od_accident ADD CONSTRAINT rel_accident_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_overflow_actuation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_overflow_actuation ADD CONSTRAINT pkey_qgep_vl_overflow_actuation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_overflow_actuation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3667,3667,'other','andere','autres', '', '', '', 'true');
@@ -4226,27 +4226,27 @@ ALTER TABLE qgep.vl_overflow_signal_transmission ADD CONSTRAINT pkey_qgep_vl_ove
  REFERENCES qgep.vl_overflow_signal_transmission (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_wastewater_node varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id);
+ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_to varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_to FOREIGN KEY (fk_overflow_to) REFERENCES qgep.od_wastewater_node(obj_id);
+ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_to FOREIGN KEY (fk_overflow_to) REFERENCES qgep.od_wastewater_node(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id);
+ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_control_center varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id);
+ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_connection_object ADD COLUMN fk_wastewater_networkelement varchar (16);
-ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_connection_object ADD COLUMN fk_owner varchar (16);
-ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_connection_object ADD COLUMN fk_operator varchar (16);
-ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_connection_object ADD CONSTRAINT rel_connection_object_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_connection_object varchar (16);
-ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_connection_object FOREIGN KEY (fk_connection_object) REFERENCES qgep.od_connection_object(obj_id);
+ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_connection_object FOREIGN KEY (fk_connection_object) REFERENCES qgep.od_connection_object(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_owner varchar (16);
-ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_catchment_area varchar (16);
-ALTER TABLE qgep.od_surface_runoff_parameters ADD CONSTRAINT rel_surface_runoff_parameters_catchment_area FOREIGN KEY (fk_catchment_area) REFERENCES qgep.od_catchment_area(obj_id);
+ALTER TABLE qgep.od_surface_runoff_parameters ADD CONSTRAINT rel_surface_runoff_parameters_catchment_area FOREIGN KEY (fk_catchment_area) REFERENCES qgep.od_catchment_area(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_substance ADD COLUMN fk_hazard_source varchar (16);
-ALTER TABLE qgep.od_substance ADD CONSTRAINT rel_substance_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id);
+ALTER TABLE qgep.od_substance ADD CONSTRAINT rel_substance_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_catchment_area_direct_discharge_current () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_catchment_area_direct_discharge_current ADD CONSTRAINT pkey_qgep_vl_catchment_area_direct_discharge_current_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_catchment_area_direct_discharge_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5457,5457,'yes','ja','oui', '', '', '', 'true');
@@ -4318,13 +4318,13 @@ ALTER TABLE qgep.vl_catchment_area_retention_planned ADD CONSTRAINT pkey_qgep_vl
  REFERENCES qgep.vl_catchment_area_retention_planned (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_rw_current varchar (16);
-ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_current FOREIGN KEY (fk_wastewater_networkelement_rw_current) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_current FOREIGN KEY (fk_wastewater_networkelement_rw_current) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_rw_planned varchar (16);
-ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_planned FOREIGN KEY (fk_wastewater_networkelement_rw_planned) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_planned FOREIGN KEY (fk_wastewater_networkelement_rw_planned) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_ww_planned varchar (16);
-ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_planned FOREIGN KEY (fk_wastewater_networkelement_ww_planned) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_planned FOREIGN KEY (fk_wastewater_networkelement_ww_planned) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_ww_current varchar (16);
-ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_current FOREIGN KEY (fk_wastewater_networkelement_ww_current) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_current FOREIGN KEY (fk_wastewater_networkelement_ww_current) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_measurement_result_measurement_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measurement_result_measurement_type ADD CONSTRAINT pkey_qgep_vl_measurement_result_measurement_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measurement_result_measurement_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5732,5732,'other','andere','autres', '', '', '', 'true');
@@ -4335,9 +4335,9 @@ ALTER TABLE qgep.vl_measurement_result_measurement_type ADD CONSTRAINT pkey_qgep
  REFERENCES qgep.vl_measurement_result_measurement_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_measuring_device varchar (16);
-ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measuring_device FOREIGN KEY (fk_measuring_device) REFERENCES qgep.od_measuring_device(obj_id);
+ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measuring_device FOREIGN KEY (fk_measuring_device) REFERENCES qgep.od_measuring_device(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_measurement_series varchar (16);
-ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measurement_series FOREIGN KEY (fk_measurement_series) REFERENCES qgep.od_measurement_series(obj_id);
+ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measurement_series FOREIGN KEY (fk_measurement_series) REFERENCES qgep.od_measurement_series(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_measuring_device_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measuring_device_kind ADD CONSTRAINT pkey_qgep_vl_measuring_device_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measuring_device_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5702,5702,'other','andere','autres', '', '', '', 'true');
@@ -4353,7 +4353,7 @@ ALTER TABLE qgep.vl_measuring_device_kind ADD CONSTRAINT pkey_qgep_vl_measuring_
  REFERENCES qgep.vl_measuring_device_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_measuring_point varchar (16);
-ALTER TABLE qgep.od_measuring_device ADD CONSTRAINT rel_measuring_device_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id);
+ALTER TABLE qgep.od_measuring_device ADD CONSTRAINT rel_measuring_device_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id) ON DELETE set null;
 CREATE TABLE qgep.vl_measurement_series_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measurement_series_kind ADD CONSTRAINT pkey_qgep_vl_measurement_series_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measurement_series_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3217,3217,'other','andere','autres', '', '', '', 'true');
@@ -4364,7 +4364,7 @@ ALTER TABLE qgep.vl_measurement_series_kind ADD CONSTRAINT pkey_qgep_vl_measurem
  REFERENCES qgep.vl_measurement_series_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_measuring_point varchar (16);
-ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT rel_measurement_series_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id);
+ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT rel_measurement_series_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_measuring_point_damming_device () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measuring_point_damming_device ADD CONSTRAINT pkey_qgep_vl_measuring_point_damming_device_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measuring_point_damming_device (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5720,5720,'other','andere','autres', '', '', '', 'true');
@@ -4385,14 +4385,14 @@ ALTER TABLE qgep.vl_measuring_point_purpose ADD CONSTRAINT pkey_qgep_vl_measurin
  REFERENCES qgep.vl_measuring_point_purpose (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_operator varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id);
+ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id);
+ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id);
-ALTER TABLE qgep.od_planning_zone ADD CONSTRAINT oorel_od_planning_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
+ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_planning_zone ADD CONSTRAINT oorel_od_planning_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_planning_zone_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_planning_zone_kind ADD CONSTRAINT pkey_qgep_vl_planning_zone_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_planning_zone_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2990,2990,'other','andere','autres', '', '', '', 'true');
@@ -4404,7 +4404,7 @@ ALTER TABLE qgep.vl_planning_zone_kind ADD CONSTRAINT pkey_qgep_vl_planning_zone
  ALTER TABLE qgep.od_planning_zone ADD CONSTRAINT fkey_vl_planning_zone_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_planning_zone_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_groundwater_protection_zone ADD CONSTRAINT oorel_od_groundwater_protection_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
+ALTER TABLE qgep.od_groundwater_protection_zone ADD CONSTRAINT oorel_od_groundwater_protection_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_groundwater_protection_zone_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_groundwater_protection_zone_kind ADD CONSTRAINT pkey_qgep_vl_groundwater_protection_zone_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_groundwater_protection_zone_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (440,440,'S1','S1','S1', '', '', '', 'true');
@@ -4414,8 +4414,8 @@ ALTER TABLE qgep.vl_groundwater_protection_zone_kind ADD CONSTRAINT pkey_qgep_vl
  ALTER TABLE qgep.od_groundwater_protection_zone ADD CONSTRAINT fkey_vl_groundwater_protection_zone_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_groundwater_protection_zone_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_ground_water_protection_perimeter ADD CONSTRAINT oorel_od_ground_water_protection_perimeter_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
-ALTER TABLE qgep.od_water_body_protection_sector ADD CONSTRAINT oorel_od_water_body_protection_sector_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
+ALTER TABLE qgep.od_ground_water_protection_perimeter ADD CONSTRAINT oorel_od_ground_water_protection_perimeter_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_water_body_protection_sector ADD CONSTRAINT oorel_od_water_body_protection_sector_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_water_body_protection_sector_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_water_body_protection_sector_kind ADD CONSTRAINT pkey_qgep_vl_water_body_protection_sector_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_water_body_protection_sector_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (430,430,'A','A','A', '', '', '', 'true');
@@ -4429,7 +4429,7 @@ ALTER TABLE qgep.vl_water_body_protection_sector_kind ADD CONSTRAINT pkey_qgep_v
  ALTER TABLE qgep.od_water_body_protection_sector ADD CONSTRAINT fkey_vl_water_body_protection_sector_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_water_body_protection_sector_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_drainage_system ADD CONSTRAINT oorel_od_drainage_system_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
+ALTER TABLE qgep.od_drainage_system ADD CONSTRAINT oorel_od_drainage_system_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_drainage_system_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_drainage_system_kind ADD CONSTRAINT pkey_qgep_vl_drainage_system_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_drainage_system_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4783,4783,'amelioration','Melioration','melioration', '', '', '', 'true');
@@ -4441,7 +4441,7 @@ ALTER TABLE qgep.vl_drainage_system_kind ADD CONSTRAINT pkey_qgep_vl_drainage_sy
  ALTER TABLE qgep.od_drainage_system ADD CONSTRAINT fkey_vl_drainage_system_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_drainage_system_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_infiltration_zone ADD CONSTRAINT oorel_od_infiltration_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id);
+ALTER TABLE qgep.od_infiltration_zone ADD CONSTRAINT oorel_od_infiltration_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep.od_zone(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_infiltration_zone_infiltration_capacity () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_infiltration_zone_infiltration_capacity ADD CONSTRAINT pkey_qgep_vl_infiltration_zone_infiltration_capacity_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_infiltration_zone_infiltration_capacity (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (371,371,'good','gut','bonnes', '', '', '', 'true');
@@ -4453,8 +4453,8 @@ ALTER TABLE qgep.vl_infiltration_zone_infiltration_capacity ADD CONSTRAINT pkey_
  ALTER TABLE qgep.od_infiltration_zone ADD CONSTRAINT fkey_vl_infiltration_zone_infiltration_capacity FOREIGN KEY (infiltration_capacity)
  REFERENCES qgep.vl_infiltration_zone_infiltration_capacity (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_dryweather_downspout ADD CONSTRAINT oorel_od_dryweather_downspout_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
-ALTER TABLE qgep.od_cover ADD CONSTRAINT oorel_od_cover_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_dryweather_downspout ADD CONSTRAINT oorel_od_dryweather_downspout_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_cover ADD CONSTRAINT oorel_od_cover_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_cover_cover_shape () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_cover_cover_shape ADD CONSTRAINT pkey_qgep_vl_cover_cover_shape_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_cover_cover_shape (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5353,5353,'other','andere','autre', 'O', 'A', 'AU', 'true');
@@ -4509,7 +4509,7 @@ ALTER TABLE qgep.vl_cover_venting ADD CONSTRAINT pkey_qgep_vl_cover_venting_code
  ALTER TABLE qgep.od_cover ADD CONSTRAINT fkey_vl_cover_venting FOREIGN KEY (venting)
  REFERENCES qgep.vl_cover_venting (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_access_aid_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_access_aid_kind ADD CONSTRAINT pkey_qgep_vl_access_aid_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_access_aid_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5357,5357,'other','andere','autre', 'O', 'A', 'AU', 'true');
@@ -4524,7 +4524,7 @@ ALTER TABLE qgep.vl_access_aid_kind ADD CONSTRAINT pkey_qgep_vl_access_aid_kind_
  ALTER TABLE qgep.od_access_aid ADD CONSTRAINT fkey_vl_access_aid_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_access_aid_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_electric_equipment ADD CONSTRAINT oorel_od_electric_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_electric_equipment ADD CONSTRAINT oorel_od_electric_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_electric_equipment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_electric_equipment_kind ADD CONSTRAINT pkey_qgep_vl_electric_equipment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_electric_equipment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2980,2980,'other','andere','autres', '', '', '', 'true');
@@ -4536,7 +4536,7 @@ ALTER TABLE qgep.vl_electric_equipment_kind ADD CONSTRAINT pkey_qgep_vl_electric
  ALTER TABLE qgep.od_electric_equipment ADD CONSTRAINT fkey_vl_electric_equipment_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_electric_equipment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_dryweather_flume ADD CONSTRAINT oorel_od_dryweather_flume_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_dryweather_flume ADD CONSTRAINT oorel_od_dryweather_flume_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_dryweather_flume_material () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_dryweather_flume_material ADD CONSTRAINT pkey_qgep_vl_dryweather_flume_material_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_dryweather_flume_material (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3221,3221,'other','andere','autres', 'O', 'A', 'AU', 'true');
@@ -4548,7 +4548,7 @@ ALTER TABLE qgep.vl_dryweather_flume_material ADD CONSTRAINT pkey_qgep_vl_drywea
  ALTER TABLE qgep.od_dryweather_flume ADD CONSTRAINT fkey_vl_dryweather_flume_material FOREIGN KEY (material)
  REFERENCES qgep.vl_dryweather_flume_material (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT oorel_od_tank_emptying_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT oorel_od_tank_emptying_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_tank_emptying_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_tank_emptying_type ADD CONSTRAINT pkey_qgep_vl_tank_emptying_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_tank_emptying_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5626,5626,'other','andere','autre', '', '', '', 'true');
@@ -4559,10 +4559,10 @@ ALTER TABLE qgep.vl_tank_emptying_type ADD CONSTRAINT pkey_qgep_vl_tank_emptying
  REFERENCES qgep.vl_tank_emptying_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_tank_emptying ADD COLUMN fk_throttle_shut_off_unit varchar (16);
-ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id);
+ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_tank_emptying ADD COLUMN fk_overflow varchar (16);
-ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_pump(obj_id);
-ALTER TABLE qgep.od_electromechanical_equipment ADD CONSTRAINT oorel_od_electromechanical_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_pump(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_electromechanical_equipment ADD CONSTRAINT oorel_od_electromechanical_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_electromechanical_equipment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_electromechanical_equipment_kind ADD CONSTRAINT pkey_qgep_vl_electromechanical_equipment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_electromechanical_equipment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2981,2981,'other','andere','autres', '', '', '', 'true');
@@ -4573,7 +4573,7 @@ ALTER TABLE qgep.vl_electromechanical_equipment_kind ADD CONSTRAINT pkey_qgep_vl
  ALTER TABLE qgep.od_electromechanical_equipment ADD CONSTRAINT fkey_vl_electromechanical_equipment_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_electromechanical_equipment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_benching ADD CONSTRAINT oorel_od_benching_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_benching ADD CONSTRAINT oorel_od_benching_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_benching_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_benching_kind ADD CONSTRAINT pkey_qgep_vl_benching_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_benching_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5319,5319,'other','andere','autre', '', '', '', 'true');
@@ -4584,7 +4584,7 @@ ALTER TABLE qgep.vl_benching_kind ADD CONSTRAINT pkey_qgep_vl_benching_kind_code
  ALTER TABLE qgep.od_benching ADD CONSTRAINT fkey_vl_benching_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_benching_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT oorel_od_backflow_prevention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT oorel_od_backflow_prevention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_backflow_prevention_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflow_prevention_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_backflow_prevention_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5760,5760,'other','andere','autres', '', '', '', 'true');
@@ -4595,10 +4595,10 @@ ALTER TABLE qgep.vl_backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflo
  REFERENCES qgep.vl_backflow_prevention_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_backflow_prevention ADD COLUMN fk_throttle_shut_off_unit varchar (16);
-ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id);
+ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id) ON DELETE set null;
 ALTER TABLE qgep.od_backflow_prevention ADD COLUMN fk_pomp varchar (16);
-ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_pomp FOREIGN KEY (fk_pomp) REFERENCES qgep.od_pump(obj_id);
-ALTER TABLE qgep.od_tank_cleaning ADD CONSTRAINT oorel_od_tank_cleaning_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_pomp FOREIGN KEY (fk_pomp) REFERENCES qgep.od_pump(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_tank_cleaning ADD CONSTRAINT oorel_od_tank_cleaning_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_tank_cleaning_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_tank_cleaning_type ADD CONSTRAINT pkey_qgep_vl_tank_cleaning_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_tank_cleaning_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5621,5621,'airjet','Air_Jet','aeration_et_brassage', '', '', '', 'true');
@@ -4609,7 +4609,7 @@ ALTER TABLE qgep.vl_tank_cleaning_type ADD CONSTRAINT pkey_qgep_vl_tank_cleaning
  ALTER TABLE qgep.od_tank_cleaning ADD CONSTRAINT fkey_vl_tank_cleaning_type FOREIGN KEY (type)
  REFERENCES qgep.vl_tank_cleaning_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_solids_retention ADD CONSTRAINT oorel_od_solids_retention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id);
+ALTER TABLE qgep.od_solids_retention ADD CONSTRAINT oorel_od_solids_retention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_solids_retention_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_solids_retention_type ADD CONSTRAINT pkey_qgep_vl_solids_retention_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_solids_retention_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5664,5664,'other','andere','autres', '', '', '', 'true');
@@ -4621,7 +4621,7 @@ ALTER TABLE qgep.vl_solids_retention_type ADD CONSTRAINT pkey_qgep_vl_solids_ret
  ALTER TABLE qgep.od_solids_retention ADD CONSTRAINT fkey_vl_solids_retention_type FOREIGN KEY (type)
  REFERENCES qgep.vl_solids_retention_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_wwtp_structure ADD CONSTRAINT oorel_od_wwtp_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_wwtp_structure ADD CONSTRAINT oorel_od_wwtp_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_wwtp_structure_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_wwtp_structure_kind ADD CONSTRAINT pkey_qgep_vl_wwtp_structure_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_wwtp_structure_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (331,331,'sedimentation_basin','Absetzbecken','bassin_de_decantation', '', '', '', 'true');
@@ -4635,7 +4635,7 @@ ALTER TABLE qgep.vl_wwtp_structure_kind ADD CONSTRAINT pkey_qgep_vl_wwtp_structu
  ALTER TABLE qgep.od_wwtp_structure ADD CONSTRAINT fkey_vl_wwtp_structure_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_wwtp_structure_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_manhole ADD CONSTRAINT oorel_od_manhole_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_manhole ADD CONSTRAINT oorel_od_manhole_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_manhole_function () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_manhole_function ADD CONSTRAINT pkey_qgep_vl_manhole_function_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_manhole_function (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4532,4532,'drop_structure','Absturzbauwerk','ouvrage_de_chute', 'DS', 'AK', 'OC', 'true');
@@ -4676,7 +4676,7 @@ ALTER TABLE qgep.vl_manhole_surface_inflow ADD CONSTRAINT pkey_qgep_vl_manhole_s
  ALTER TABLE qgep.od_manhole ADD CONSTRAINT fkey_vl_manhole_surface_inflow FOREIGN KEY (surface_inflow)
  REFERENCES qgep.vl_manhole_surface_inflow (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_special_structure ADD CONSTRAINT oorel_od_special_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_special_structure ADD CONSTRAINT oorel_od_special_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_special_structure_bypass () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_special_structure_bypass ADD CONSTRAINT pkey_qgep_vl_special_structure_bypass_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_special_structure_bypass (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2682,2682,'inexistent','nicht_vorhanden','inexistant', '', 'NV', 'IE', 'true');
@@ -4739,7 +4739,7 @@ ALTER TABLE qgep.vl_special_structure_stormwater_tank_arrangement ADD CONSTRAINT
  ALTER TABLE qgep.od_special_structure ADD CONSTRAINT fkey_vl_special_structure_stormwater_tank_arrangement FOREIGN KEY (stormwater_tank_arrangement)
  REFERENCES qgep.vl_special_structure_stormwater_tank_arrangement (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_channel ADD CONSTRAINT oorel_od_channel_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_channel ADD CONSTRAINT oorel_od_channel_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_channel_bedding_encasement () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_channel_bedding_encasement ADD CONSTRAINT pkey_qgep_vl_channel_bedding_encasement_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_channel_bedding_encasement (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5325,5325,'other','andere','autre', '', '', '', 'true');
@@ -4840,7 +4840,7 @@ ALTER TABLE qgep.vl_channel_usage_planned ADD CONSTRAINT pkey_qgep_vl_channel_us
  ALTER TABLE qgep.od_channel ADD CONSTRAINT fkey_vl_channel_usage_planned FOREIGN KEY (usage_planned)
  REFERENCES qgep.vl_channel_usage_planned (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT oorel_od_discharge_point_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT oorel_od_discharge_point_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_discharge_point_relevance () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_discharge_point_relevance ADD CONSTRAINT pkey_qgep_vl_discharge_point_relevance_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_discharge_point_relevance (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5580,5580,'relevant_for_water_course','gewaesserrelevant','pertinent_pour_milieu_recepteur', '', '', '', 'true');
@@ -4849,8 +4849,8 @@ ALTER TABLE qgep.vl_discharge_point_relevance ADD CONSTRAINT pkey_qgep_vl_discha
  REFERENCES qgep.vl_discharge_point_relevance (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_discharge_point ADD COLUMN fk_sector_water_body varchar (16);
-ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT rel_discharge_point_sector_water_body FOREIGN KEY (fk_sector_water_body) REFERENCES qgep.od_sector_water_body(obj_id);
-ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT oorel_od_infiltration_installation_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id);
+ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT rel_discharge_point_sector_water_body FOREIGN KEY (fk_sector_water_body) REFERENCES qgep.od_sector_water_body(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT oorel_od_infiltration_installation_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_infiltration_installation_defects () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_infiltration_installation_defects ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_defects_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_infiltration_installation_defects (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5361,5361,'none','keine','aucunes', '', 'K', 'AN', 'true');
@@ -4919,8 +4919,8 @@ ALTER TABLE qgep.vl_infiltration_installation_watertightness ADD CONSTRAINT pkey
  REFERENCES qgep.vl_infiltration_installation_watertightness (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_infiltration_installation ADD COLUMN fk_aquifier varchar (16);
-ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT rel_infiltration_installation_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id);
-ALTER TABLE qgep.od_river ADD CONSTRAINT oorel_od_river_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_water_bodies(obj_id);
+ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT rel_infiltration_installation_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_river ADD CONSTRAINT oorel_od_river_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_water_bodies(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_river_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_river_kind ADD CONSTRAINT pkey_qgep_vl_river_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_river_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3397,3397,'englacial_river','Gletscherbach','ruisseau_de_glacier', '', '', '', 'true');
@@ -4931,8 +4931,8 @@ ALTER TABLE qgep.vl_river_kind ADD CONSTRAINT pkey_qgep_vl_river_kind_code PRIMA
  ALTER TABLE qgep.od_river ADD CONSTRAINT fkey_vl_river_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_river_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_lake ADD CONSTRAINT oorel_od_lake_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_water_bodies(obj_id);
-ALTER TABLE qgep.od_dam ADD CONSTRAINT oorel_od_dam_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
+ALTER TABLE qgep.od_lake ADD CONSTRAINT oorel_od_lake_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_water_bodies(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_dam ADD CONSTRAINT oorel_od_dam_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_dam_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_dam_kind ADD CONSTRAINT pkey_qgep_vl_dam_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_dam_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (416,416,'retaining_weir','Stauwehr','digue_reservoir', '', '', '', 'true');
@@ -4943,7 +4943,7 @@ ALTER TABLE qgep.vl_dam_kind ADD CONSTRAINT pkey_qgep_vl_dam_kind_code PRIMARY K
  ALTER TABLE qgep.od_dam ADD CONSTRAINT fkey_vl_dam_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_dam_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_chute ADD CONSTRAINT oorel_od_chute_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
+ALTER TABLE qgep.od_chute ADD CONSTRAINT oorel_od_chute_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_chute_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_chute_kind ADD CONSTRAINT pkey_qgep_vl_chute_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_chute_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3591,3591,'artificial','kuenstlich','artificiel', '', '', '', 'true');
@@ -4963,7 +4963,7 @@ ALTER TABLE qgep.vl_chute_material ADD CONSTRAINT pkey_qgep_vl_chute_material_co
  ALTER TABLE qgep.od_chute ADD CONSTRAINT fkey_vl_chute_material FOREIGN KEY (material)
  REFERENCES qgep.vl_chute_material (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_rock_ramp ADD CONSTRAINT oorel_od_rock_ramp_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
+ALTER TABLE qgep.od_rock_ramp ADD CONSTRAINT oorel_od_rock_ramp_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_rock_ramp_stabilisation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ramp_stabilisation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_rock_ramp_stabilisation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2635,2635,'other_smooth','andere_glatt','autres_lisse', '', '', '', 'true');
@@ -4976,23 +4976,23 @@ ALTER TABLE qgep.vl_rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ram
  ALTER TABLE qgep.od_rock_ramp ADD CONSTRAINT fkey_vl_rock_ramp_stabilisation FOREIGN KEY (stabilisation)
  REFERENCES qgep.vl_rock_ramp_stabilisation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_blocking_debris ADD CONSTRAINT oorel_od_blocking_debris_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
-ALTER TABLE qgep.od_passage ADD CONSTRAINT oorel_od_passage_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
-ALTER TABLE qgep.od_lock ADD CONSTRAINT oorel_od_lock_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
-ALTER TABLE qgep.od_ford ADD CONSTRAINT oorel_od_ford_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id);
-ALTER TABLE qgep.od_param_ca_mouse1 ADD CONSTRAINT oorel_od_param_ca_mouse1_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id);
-ALTER TABLE qgep.od_param_ca_general ADD CONSTRAINT oorel_od_param_ca_general_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id);
-ALTER TABLE qgep.od_private ADD CONSTRAINT oorel_od_private_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_administrative_office ADD CONSTRAINT oorel_od_administrative_office_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_canton ADD CONSTRAINT oorel_od_canton_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_cooperative ADD CONSTRAINT oorel_od_cooperative_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_municipality ADD CONSTRAINT oorel_od_municipality_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_waste_water_association ADD CONSTRAINT oorel_od_waste_water_association_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_waste_water_treatment_plant ADD CONSTRAINT oorel_od_waste_water_treatment_plant_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id);
-ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_blocking_debris ADD CONSTRAINT oorel_od_blocking_debris_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_passage ADD CONSTRAINT oorel_od_passage_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_lock ADD CONSTRAINT oorel_od_lock_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_ford ADD CONSTRAINT oorel_od_ford_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_param_ca_mouse1 ADD CONSTRAINT oorel_od_param_ca_mouse1_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_param_ca_general ADD CONSTRAINT oorel_od_param_ca_general_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_private ADD CONSTRAINT oorel_od_private_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_administrative_office ADD CONSTRAINT oorel_od_administrative_office_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_canton ADD CONSTRAINT oorel_od_canton_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_cooperative ADD CONSTRAINT oorel_od_cooperative_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_municipality ADD CONSTRAINT oorel_od_municipality_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_waste_water_association ADD CONSTRAINT oorel_od_waste_water_association_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_waste_water_treatment_plant ADD CONSTRAINT oorel_od_waste_water_treatment_plant_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_wastewater_node ADD COLUMN fk_hydr_geometry varchar (16);
-ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT rel_wastewater_node_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id);
-ALTER TABLE qgep.od_reach ADD CONSTRAINT oorel_od_reach_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id);
+ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT rel_wastewater_node_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_reach ADD CONSTRAINT oorel_od_reach_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_reach_elevation_determination () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_reach_elevation_determination ADD CONSTRAINT pkey_qgep_vl_reach_elevation_determination_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4780,4780,'accurate','genau','precise', '', 'LG', 'P', 'true');
@@ -5093,12 +5093,12 @@ ALTER TABLE qgep.vl_reach_relining_kind ADD CONSTRAINT pkey_qgep_vl_reach_relini
  REFERENCES qgep.vl_reach_relining_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_reach ADD COLUMN fk_reach_point_from varchar (16);
-ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_reach_point_from FOREIGN KEY (fk_reach_point_from) REFERENCES qgep.od_reach_point(obj_id);
+ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_reach_point_from FOREIGN KEY (fk_reach_point_from) REFERENCES qgep.od_reach_point(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_reach ADD COLUMN fk_reach_point_to varchar (16);
-ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_reach_point_to FOREIGN KEY (fk_reach_point_to) REFERENCES qgep.od_reach_point(obj_id);
+ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_reach_point_to FOREIGN KEY (fk_reach_point_to) REFERENCES qgep.od_reach_point(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_reach ADD COLUMN fk_pipe_profile varchar (16);
-ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id);
-ALTER TABLE qgep.od_pump ADD CONSTRAINT oorel_od_pump_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id);
+ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id) ON DELETE set null;
+ALTER TABLE qgep.od_pump ADD CONSTRAINT oorel_od_pump_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_pump_contruction_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_pump_contruction_type ADD CONSTRAINT pkey_qgep_vl_pump_contruction_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_pump_contruction_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2983,2983,'other','andere','autres', '', '', '', 'true');
@@ -5141,7 +5141,7 @@ ALTER TABLE qgep.vl_pump_usage_current ADD CONSTRAINT pkey_qgep_vl_pump_usage_cu
  ALTER TABLE qgep.od_pump ADD CONSTRAINT fkey_vl_pump_usage_current FOREIGN KEY (usage_current)
  REFERENCES qgep.vl_pump_usage_current (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_leapingweir ADD CONSTRAINT oorel_od_leapingweir_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id);
+ALTER TABLE qgep.od_leapingweir ADD CONSTRAINT oorel_od_leapingweir_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_leapingweir_opening_shape () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_leapingweir_opening_shape ADD CONSTRAINT pkey_qgep_vl_leapingweir_opening_shape_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_leapingweir_opening_shape (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3581,3581,'other','andere','autres', '', '', '', 'true');
@@ -5152,7 +5152,7 @@ ALTER TABLE qgep.vl_leapingweir_opening_shape ADD CONSTRAINT pkey_qgep_vl_leapin
  ALTER TABLE qgep.od_leapingweir ADD CONSTRAINT fkey_vl_leapingweir_opening_shape FOREIGN KEY (opening_shape)
  REFERENCES qgep.vl_leapingweir_opening_shape (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_prank_weir ADD CONSTRAINT oorel_od_prank_weir_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id);
+ALTER TABLE qgep.od_prank_weir ADD CONSTRAINT oorel_od_prank_weir_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_prank_weir_weir_edge () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_prank_weir_weir_edge ADD CONSTRAINT pkey_qgep_vl_prank_weir_weir_edge_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_prank_weir_weir_edge (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2995,2995,'other','andere','autres', '', '', '', 'true');
@@ -5170,7 +5170,7 @@ ALTER TABLE qgep.vl_prank_weir_weir_kind ADD CONSTRAINT pkey_qgep_vl_prank_weir_
  ALTER TABLE qgep.od_prank_weir ADD CONSTRAINT fkey_vl_prank_weir_weir_kind FOREIGN KEY (weir_kind)
  REFERENCES qgep.vl_prank_weir_weir_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_individual_surface ADD CONSTRAINT oorel_od_individual_surface_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
+ALTER TABLE qgep.od_individual_surface ADD CONSTRAINT oorel_od_individual_surface_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_individual_surface_function () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_individual_surface_function ADD CONSTRAINT pkey_qgep_vl_individual_surface_function_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_individual_surface_function (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2979,2979,'other','andere','autres', '', '', '', 'true');
@@ -5197,9 +5197,9 @@ ALTER TABLE qgep.vl_individual_surface_pavement ADD CONSTRAINT pkey_qgep_vl_indi
  ALTER TABLE qgep.od_individual_surface ADD CONSTRAINT fkey_vl_individual_surface_pavement FOREIGN KEY (pavement)
  REFERENCES qgep.vl_individual_surface_pavement (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_building ADD CONSTRAINT oorel_od_building_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
-ALTER TABLE qgep.od_reservoir ADD CONSTRAINT oorel_od_reservoir_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
-ALTER TABLE qgep.od_fountain ADD CONSTRAINT oorel_od_fountain_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id);
+ALTER TABLE qgep.od_building ADD CONSTRAINT oorel_od_building_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_reservoir ADD CONSTRAINT oorel_od_reservoir_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id) ON DELETE cascade;
+ALTER TABLE qgep.od_fountain ADD CONSTRAINT oorel_od_fountain_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id) ON DELETE cascade;
 --------- Relations to class organisation for dataowner and provider (new 3.11.2014);
 
 ALTER TABLE qgep.txt_symbol ADD CONSTRAINT rel_txt_symbol_fk_dataowner FOREIGN KEY (fk_dataowner) REFERENCES qgep.od_organisation(obj_id);
