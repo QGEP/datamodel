@@ -3,7 +3,8 @@ SELECT qgep.fn_inherited_table_view(
                 "overflow": {
                         "table_name":"qgep.od_overflow",
                         "pkey": "obj_id",
-                        "pkey_nextval":" qgep.generate_oid(''od_reach_point'')",
+                        "pkey_value":" qgep.generate_oid(''od_reach_point'')",
+                        "destination_schema": "qgep",
                         "inherited_by": {
                                 "leapingweir": {
                                         "table_name":"qgep.od_leapingweir",
@@ -20,7 +21,6 @@ SELECT qgep.fn_inherited_table_view(
                         },
                         "merge_view": {
                                 "view_name":"vw_qgep_overflow",
-                                "destination_schema": "qgep",
                                 "additional_columns": {
                                         "geometry": "ST_MakeLine(n1.situation_geometry,n2.situation_geometry)::geometry(LineString,21781)"
                                 },
