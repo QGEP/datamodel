@@ -38,6 +38,14 @@ class TestRelations(unittest.TestCase, DbTestBase):
         obj_id2 = self.insert_check('vw_cover', row)
         print "obj_id2 =", obj_id2
         
+        # count objects
+        amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        
+        print "Count after creation"
+        print "amount_structure_part = ", amount_structure_part
+        print "amount_cover =", amount_cover
+        
         # delete od_structure_part with obj_id
         row = self.select('od_structure_part', obj_id)
 
@@ -52,6 +60,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
 
         amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         
+        print "Count after deleting cover obj_id = 00000000CO000000"
         print "amount_structure_part = ", amount_structure_part
         print "amount_cover =", amount_cover
         assert amount_structure_part != amount_cover, "Relation test for structure_part - cover failed"
