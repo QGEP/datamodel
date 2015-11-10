@@ -46,10 +46,11 @@ class TestRelations(unittest.TestCase, DbTestBase):
         cur.execute("DELETE FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
         
         # count amount of structure part elements and cover elements - should be one each
-        # 10.11.2015 amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('CO123', 'CO456')")
-        amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE identifier IN ('CO123', 'CO456')")
-        # 10.11.2015 amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('CO123', 'CO456')")
-        amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE identifier IN ('CO123', 'CO456')")
+        # obj_id are 00000000CO000000 or 00000000CO000001
+        amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        # amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE identifier IN ('CO123', 'CO456')")
+
+        amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         
         print "amount_structure_part = ", amount_structure_part
         print "amount_cover =", amount_cover
