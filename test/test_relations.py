@@ -42,7 +42,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
 
         cur = self.cursor()
 
-        cur.execute("DELETE (*) FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
+        cur.execute("DELETE FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
         
         # count amount of structure part elements and cover elements - should be one each
         amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('CO123', 'CO456')")
