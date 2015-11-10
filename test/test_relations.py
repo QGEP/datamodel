@@ -43,7 +43,8 @@ class TestRelations(unittest.TestCase, DbTestBase):
         cur = self.cursor()
 
         # count objects
-        amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        amount_structure_part = cur.fetchone()
         amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         
         print "Count after creation"
