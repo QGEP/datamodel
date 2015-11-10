@@ -38,6 +38,10 @@ class TestRelations(unittest.TestCase, DbTestBase):
         obj_id2 = self.insert_check('vw_cover', row)
         print "obj_id2 =", obj_id2
         
+        row = self.select('od_structure_part', obj_id)
+
+        cur = self.cursor()
+
         # count objects
         amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
@@ -47,10 +51,6 @@ class TestRelations(unittest.TestCase, DbTestBase):
         print "amount_cover =", amount_cover
         
         # delete od_structure_part with obj_id
-        row = self.select('od_structure_part', obj_id)
-
-        cur = self.cursor()
-
         cur.execute("DELETE FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
         
         # count amount of structure part elements and cover elements - should be one each
