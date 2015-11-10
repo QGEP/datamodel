@@ -45,7 +45,8 @@ class TestRelations(unittest.TestCase, DbTestBase):
         # count objects
         cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         amount_structure_part = cur.fetchone()
-        amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        amount_cover = cur.fetchone()
         
         print "Count after creation"
         print "amount_structure_part = ", amount_structure_part
@@ -56,10 +57,12 @@ class TestRelations(unittest.TestCase, DbTestBase):
         
         # count amount of structure part elements and cover elements - should be one each
         # obj_id are 00000000CO000000 or 00000000CO000001
-        amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        amount_structure_part = cur.fetchone()
         # amount_structure_part = cur.execute("SELECT COUNT(*) FROM qgep.od_structure_part WHERE identifier IN ('CO123', 'CO456')")
 
-        amount_cover = cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
+        amount_cover = cur.fetchone()
         
         print "Count after deleting cover obj_id = 00000000CO000000"
         print "amount_structure_part = ", amount_structure_part
