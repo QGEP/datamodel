@@ -80,7 +80,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
                 return float(s)
         
         amount_cover_int = num(amount_cover_str)
-        amount_structure_int = num(amount_structure_part_str)
+        amount_structure_part_int = num(amount_structure_part_str)
         
         print 'int comparison is', (amount_structure_part_int is amount_cover_int)
         print 'int comparison !=', (amount_structure_part_int != amount_cover_int)
