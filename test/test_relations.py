@@ -64,8 +64,8 @@ class TestRelations(unittest.TestCase, DbTestBase):
         cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         amount_cover = cur.fetchone()
         
-        print type(amount_structure_part)
-        type(amount_cover) 
+        print 'amount_structure is type list = ',isinstance(amount_structure_part, list)
+        # type(amount_cover) 
         
         print "Count after deleting cover obj_id = 00000000CO000000"
         print "amount_structure_part = ", amount_structure_part
