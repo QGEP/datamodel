@@ -67,6 +67,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
         print 'amount_structure is type list = ',isinstance(amount_structure_part, list)
         # type(amount_cover) 
         
+        print "amount_cover[0] =", amount_cover[0]
         print "Count after deleting cover obj_id = 00000000CO000000"
         print "amount_structure_part = ", amount_structure_part
         print "amount_cover =", amount_cover
