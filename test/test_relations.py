@@ -65,8 +65,8 @@ class TestRelations(unittest.TestCase, DbTestBase):
         amount_cover = cur.fetchone()
         
         
-        amount_cover_str = amount_cover[0]
-        amount_structure_part_str = amount_structure_part[0]
+        amount_cover_str = str(amount_cover[0])
+        amount_structure_part_str = str(amount_structure_part[0])
         print 'amount_structure is type string = ',isinstance(amount_structure_part_str, str)
         print 'amount_structure is type string = ',isinstance(amount_cover_str, str)
         
