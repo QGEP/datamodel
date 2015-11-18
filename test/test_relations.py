@@ -71,7 +71,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
         print 'amount_structure is type string = ',isinstance(amount_cover_str, str)
         
         print 'comparison is', (amount_structure_part_str is amount_cover_str)
-        print 'comparison !=', (amount_structure_part_str != amount_cover_str)
+        print 'comparison !=', (amount_structure_part_str == amount_cover_str)
         
         def num(s):
             try:
@@ -83,7 +83,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
         amount_structure_part_int = num(amount_structure_part_str)
         
         print 'int comparison is', (amount_structure_part_int is amount_cover_int)
-        print 'int comparison !=', (amount_structure_part_int != amount_cover_int)
+        print 'int comparison !=', (amount_structure_part_int == amount_cover_int)
         
         # print "amount_cover[0] =", amount_cover[0]
         print "Count after deleting cover obj_id = 00000000CO000000"
@@ -92,7 +92,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
         print "amount_structure_part_str = ", amount_structure_part_int
         print "amount_cover_str =", amount_cover_int
         
-        assert amount_structure_part_in != amount_cover_int, "Relation test for structure_part - cover failed"
+        assert amount_structure_part_in == amount_cover_int, "Relation test for structure_part - cover failed"
         # assert amount_structure_part_str is amount_cover_str, "Relation test for structure_part - cover failed"
         # assert amount_structure_part != amount_cover, "Relation test for structure_part - cover failed"
 
