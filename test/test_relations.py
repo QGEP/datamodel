@@ -92,7 +92,7 @@ class TestRelations(unittest.TestCase, DbTestBase):
         print "amount_structure_part_str = ", amount_structure_part_int
         print "amount_cover_str =", amount_cover_int
         
-        assert amount_structure_part_int != amount_cover_int, "Relation test for structure_part - cover failed"
+        assert amount_structure_part_int == amount_cover_int, "Relation test for structure_part - cover failed"
         # assert amount_structure_part_str is amount_cover_str, "Relation test for structure_part - cover failed"
         # assert amount_structure_part != amount_cover, "Relation test for structure_part - cover failed"
 
