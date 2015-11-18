@@ -67,12 +67,13 @@ class TestRelations(unittest.TestCase, DbTestBase):
         # print 'amount_structure is type list = ',isinstance(amount_structure_part, list)
         amount_cover_str = amount_cover[0]
         amount_structure_part_str = amount_structure_part[0]
-        print 'comparison', (amount_structure_part_str is amount_cover_str)
+        print 'comparison is', (amount_structure_part_str is amount_cover_str)
+        print 'comparison !=', (amount_structure_part_str != amount_cover_str)
         
         # print "amount_cover[0] =", amount_cover[0]
         print "Count after deleting cover obj_id = 00000000CO000000"
-        print "amount_structure_part = ", amount_structure_part
-        print "amount_cover =", amount_cover
+        print "amount_structure_part_str = ", amount_structure_part_str
+        print "amount_cover_str =", amount_cover_str
         assert amount_structure_part_str is amount_cover_str, "Relation test for structure_part - cover failed"
         # assert amount_structure_part != amount_cover, "Relation test for structure_part - cover failed"
 
