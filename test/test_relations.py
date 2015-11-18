@@ -64,17 +64,36 @@ class TestRelations(unittest.TestCase, DbTestBase):
         cur.execute("SELECT COUNT(*) FROM qgep.od_cover WHERE obj_id IN ('00000000CO000000', '00000000CO000001')")
         amount_cover = cur.fetchone()
         
-        # print 'amount_structure is type list = ',isinstance(amount_structure_part, list)
+        
         amount_cover_str = amount_cover[0]
         amount_structure_part_str = amount_structure_part[0]
+        print 'amount_structure is type string = ',isinstance(amount_structure_part_str, str)
+        print 'amount_structure is type string = ',isinstance(amount_cover_str, str)
+        
         print 'comparison is', (amount_structure_part_str is amount_cover_str)
         print 'comparison !=', (amount_structure_part_str != amount_cover_str)
+        
+        def num(s):
+            try:
+                return int(s)
+            except ValueError:
+                return float(s)
+        
+        amount_cover_int = num(amount_cover_str)
+        amount_structure_int = num(amount_structure_part_str)
+        
+        print 'int comparison is', (amount_structure_part_int is amount_cover_int)
+        print 'int comparison !=', (amount_structure_part_int != amount_cover_int)
         
         # print "amount_cover[0] =", amount_cover[0]
         print "Count after deleting cover obj_id = 00000000CO000000"
         print "amount_structure_part_str = ", amount_structure_part_str
         print "amount_cover_str =", amount_cover_str
-        assert amount_structure_part_str is amount_cover_str, "Relation test for structure_part - cover failed"
+        print "amount_structure_part_str = ", amount_structure_part_int
+        print "amount_cover_str =", amount_cover_int
+        
+        assert amount_structure_part_in != amount_cover_int, "Relation test for structure_part - cover failed"
+        # assert amount_structure_part_str is amount_cover_str, "Relation test for structure_part - cover failed"
         # assert amount_structure_part != amount_cover, "Relation test for structure_part - cover failed"
 
         
