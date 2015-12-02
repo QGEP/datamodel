@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_blocking_debris;
 
+
+--------
+-- Subclass: od_blocking_debris
+-- Superclass: od_water_control_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_blocking_debris AS
 
 SELECT

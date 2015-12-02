@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_solids_retention;
 
+
+--------
+-- Subclass: od_solids_retention
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_solids_retention AS
 
 SELECT

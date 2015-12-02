@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_fountain;
 
+
+--------
+-- Subclass: od_fountain
+-- Superclass: od_connection_object
+--------
 CREATE OR REPLACE VIEW qgep.vw_fountain AS
 
 SELECT
@@ -56,10 +61,12 @@ BEGIN
 INSERT INTO qgep.od_fountain (
              obj_id
            , location_name
+           , situation_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
            , NEW.location_name
+           , NEW.situation_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -80,6 +87,7 @@ CREATE OR REPLACE RULE vw_fountain_ON_UPDATE AS ON UPDATE TO qgep.vw_fountain DO
 UPDATE qgep.od_fountain
   SET
        location_name = NEW.location_name
+     , situation_geometry = NEW.situation_geometry
   WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_connection_object

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_access_aid;
 
+
+--------
+-- Subclass: od_access_aid
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_access_aid AS
 
 SELECT

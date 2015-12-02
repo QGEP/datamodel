@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_backflow_prevention;
 
+
+--------
+-- Subclass: od_backflow_prevention
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_backflow_prevention AS
 
 SELECT

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_infiltration_installation;
 
+
+--------
+-- Subclass: od_infiltration_installation
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_infiltration_installation AS
 
 SELECT

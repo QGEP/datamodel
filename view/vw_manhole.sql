@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_manhole;
 
+
+--------
+-- Subclass: od_manhole
+-- Superclass: od_wastewater_structure
+--------
 CREATE OR REPLACE VIEW qgep.vw_manhole AS
 
 SELECT

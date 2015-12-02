@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_pump;
 
+
+--------
+-- Subclass: od_pump
+-- Superclass: od_overflow
+--------
 CREATE OR REPLACE VIEW qgep.vw_pump AS
 
 SELECT

@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_waste_water_treatment_plant;
 
+
+--------
+-- Subclass: od_waste_water_treatment_plant
+-- Superclass: od_organisation
+--------
 CREATE OR REPLACE VIEW qgep.vw_waste_water_treatment_plant AS
 
 SELECT

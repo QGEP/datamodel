@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_dryweather_downspout;
 
+
+--------
+-- Subclass: od_dryweather_downspout
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_dryweather_downspout AS
 
 SELECT

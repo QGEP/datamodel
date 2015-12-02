@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_electromechanical_equipment;
 
+
+--------
+-- Subclass: od_electromechanical_equipment
+-- Superclass: od_structure_part
+--------
 CREATE OR REPLACE VIEW qgep.vw_electromechanical_equipment AS
 
 SELECT

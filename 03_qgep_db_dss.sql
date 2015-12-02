@@ -1,29 +1,30 @@
------- This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
+ ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 13.08.2015 21:09:44
+------ version 20.10.2015 15:09:15
 BEGIN;
 ------ CREATE SCHEMA qgep;
+
 ------ LAST MODIFIED -----
 CREATE FUNCTION qgep.update_last_modified() RETURNS trigger AS $$
 BEGIN
-  NEW.last_modification := TIMEOFDAY();
+ NEW.last_modification := TIMEOFDAY();
 
-  RETURN NEW;
+ RETURN NEW;
 END;
 $$ LANGUAGE PLPGSQL;
 
 CREATE FUNCTION qgep.update_last_modified_parent() RETURNS trigger AS $$
 DECLARE
-  table_name TEXT;
+ table_name TEXT;
 BEGIN
-  table_name = TG_ARGV[0];
+ table_name = TG_ARGV[0];
 
-  EXECUTE '
-  UPDATE ' || table_name || '
-  SET last_modification = TIMEOFDAY()::timestamp
-  WHERE obj_id = ''' || NEW.obj_id || '''
+ EXECUTE '
+ UPDATE ' || table_name || '
+ SET last_modification = TIMEOFDAY()::timestamp
+ WHERE obj_id = ''' || NEW.obj_id || '''
 ';
-  RETURN NEW;
+ RETURN NEW;
 END;
 $$ LANGUAGE PLPGSQL;
 ---------------------------
@@ -47,7 +48,7 @@ WITH (
 -------
 CREATE TABLE qgep.txt_symbol
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_txt_symbol_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -70,7 +71,7 @@ COMMENT ON COLUMN qgep.txt_symbol.symbol_scaling_width IS '';
 COMMENT ON COLUMN qgep.txt_symbol.symbolhali IS '';
  ALTER TABLE qgep.txt_symbol ADD COLUMN symbolori  decimal(4,1) ;
 COMMENT ON COLUMN qgep.txt_symbol.symbolori IS '';
-ALTER TABLE qgep.txt_symbol ADD COLUMN symbolpos_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'txt_symbol', 'symbolpos_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_txt_symbol_symbolpos_geometry ON qgep.txt_symbol USING gist (symbolpos_geometry );
 COMMENT ON COLUMN qgep.txt_symbol.symbolpos_geometry IS '';
  ALTER TABLE qgep.txt_symbol ADD COLUMN symbolvali  smallint ;
@@ -80,15 +81,24 @@ COMMENT ON COLUMN qgep.txt_symbol.last_modification IS 'Last modification / Letz
  ALTER TABLE qgep.txt_symbol ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.txt_symbol.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.txt_symbol ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.txt_symbol ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.txt_symbol.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.txt_symbol ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_symbol
+BEFORE UPDATE OR INSERT ON
+ qgep.txt_symbol
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.txt_text
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_txt_text_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -104,12 +114,12 @@ COMMENT ON COLUMN qgep.txt_text.plantype IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.txt_text.remark IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN text  text ;
-COMMENT ON COLUMN qgep.txt_text.text IS 'yyy_Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / valeur calculée à partir dattributs, plusieurs lignes possible';
+COMMENT ON COLUMN qgep.txt_text.text IS 'yyy_Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / Aus Attributwerten zusammengesetzter Wert, mehrzeilig möglich / valeur calculée à partir d’attributs, plusieurs lignes possible';
  ALTER TABLE qgep.txt_text ADD COLUMN texthali  smallint ;
 COMMENT ON COLUMN qgep.txt_text.texthali IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN textori  decimal(4,1) ;
 COMMENT ON COLUMN qgep.txt_text.textori IS '';
-ALTER TABLE qgep.txt_text ADD COLUMN textpos_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'txt_text', 'textpos_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_txt_text_textpos_geometry ON qgep.txt_text USING gist (textpos_geometry );
 COMMENT ON COLUMN qgep.txt_text.textpos_geometry IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN textvali  smallint ;
@@ -119,11 +129,20 @@ COMMENT ON COLUMN qgep.txt_text.last_modification IS 'Last modification / Letzte
  ALTER TABLE qgep.txt_text ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.txt_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.txt_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.txt_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.txt_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_text
+BEFORE UPDATE OR INSERT ON
+ qgep.txt_text
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_mutation
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_mutation_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -157,15 +176,24 @@ COMMENT ON COLUMN qgep.od_mutation.last_modification IS 'Last modification / Let
  ALTER TABLE qgep.od_mutation ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_mutation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mutation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_mutation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_mutation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_mutation ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_mutation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mutation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_mutation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_mutation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_mutation
+BEFORE UPDATE OR INSERT ON
+ qgep.od_mutation
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_organisation
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_organisation_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -179,21 +207,30 @@ COMMENT ON COLUMN qgep.od_organisation.identifier IS 'It is suggested to use rea
  ALTER TABLE qgep.od_organisation ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_organisation.remark IS 'yyy Fehler bei Zuordnung / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_organisation ADD COLUMN uid  varchar(12) ;
-COMMENT ON COLUMN qgep.od_organisation.uid IS 'yyyReferenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), e.g. z.B. CHE123456789 / Referenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), z.B. CHE123456789 / Référence pour lidentification des entreprises selon lOffice fédéral de la statistique OFS (www.uid.admin.ch), par exemple: CHE123456789';
+COMMENT ON COLUMN qgep.od_organisation.uid IS 'yyyReferenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), e.g. z.B. CHE123456789 / Referenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), z.B. CHE123456789 / Référence pour l’identification des entreprises selon l’Office fédéral de la statistique OFS (www.uid.admin.ch), par exemple: CHE123456789';
  ALTER TABLE qgep.od_organisation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_organisation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_organisation ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_organisation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_organisation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_organisation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_organisation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_organisation ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_organisation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_organisation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_organisation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_organisation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_organisation
+BEFORE UPDATE OR INSERT ON
+ qgep.od_organisation
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_zone
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_zone_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -211,15 +248,24 @@ COMMENT ON COLUMN qgep.od_zone.last_modification IS 'Last modification / Letzte_
  ALTER TABLE qgep.od_zone ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_zone.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_zone ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_zone.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_zone.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_zone ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_zone.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_zone ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_zone.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_zone.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_zone
+BEFORE UPDATE OR INSERT ON
+ qgep.od_zone
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_sludge_treatment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_sludge_treatment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -261,15 +307,24 @@ COMMENT ON COLUMN qgep.od_sludge_treatment.last_modification IS 'Last modificati
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_sludge_treatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_sludge_treatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_sludge_treatment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_sludge_treatment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_wwtp_energy_use
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_wwtp_energy_use_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -293,15 +348,24 @@ COMMENT ON COLUMN qgep.od_wwtp_energy_use.last_modification IS 'Last modificatio
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_wwtp_energy_use.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_wwtp_energy_use.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_wwtp_energy_use
+BEFORE UPDATE OR INSERT ON
+ qgep.od_wwtp_energy_use
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_waste_water_treatment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_waste_water_treatment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -321,15 +385,24 @@ COMMENT ON COLUMN qgep.od_waste_water_treatment.last_modification IS 'Last modif
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_waste_water_treatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_waste_water_treatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_waste_water_treatment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_waste_water_treatment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_control_center
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_control_center_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -340,7 +413,7 @@ CREATE SEQUENCE qgep.seq_od_control_center_oid INCREMENT 1 MINVALUE 0 MAXVALUE 9
 COMMENT ON COLUMN qgep.od_control_center.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_control_center ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep.od_control_center.identifier IS '';
-ALTER TABLE qgep.od_control_center ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_control_center', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_control_center_situation_geometry ON qgep.od_control_center USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_control_center.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_control_center ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -348,15 +421,24 @@ COMMENT ON COLUMN qgep.od_control_center.last_modification IS 'Last modification
  ALTER TABLE qgep.od_control_center ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_control_center.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_control_center ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_control_center.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_control_center.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_control_center ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_control_center.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_control_center ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_control_center.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_control_center.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_control_center
+BEFORE UPDATE OR INSERT ON
+ qgep.od_control_center
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_bathing_area
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_bathing_area_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -369,7 +451,7 @@ COMMENT ON COLUMN qgep.od_bathing_area.obj_id IS 'INTERLIS STANDARD OID (with Po
 COMMENT ON COLUMN qgep.od_bathing_area.identifier IS '';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_bathing_area.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_bathing_area ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_bathing_area', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_bathing_area_situation_geometry ON qgep.od_bathing_area USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_bathing_area.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -377,15 +459,24 @@ COMMENT ON COLUMN qgep.od_bathing_area.last_modification IS 'Last modification /
  ALTER TABLE qgep.od_bathing_area ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_bathing_area.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_bathing_area.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_bathing_area
+BEFORE UPDATE OR INSERT ON
+ qgep.od_bathing_area
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_aquifier
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_aquifier_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -402,7 +493,7 @@ COMMENT ON COLUMN qgep.od_aquifier.identifier IS '';
 COMMENT ON COLUMN qgep.od_aquifier.maximal_groundwater_level IS 'Maximal level of ground water table / Maximale Lage des Grundwasserspiegels / Niveau maximal de la nappe';
  ALTER TABLE qgep.od_aquifier ADD COLUMN minimal_groundwater_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_aquifier.minimal_groundwater_level IS 'Minimal level of groundwater table / Minimale Lage des Grundwasserspiegels / Niveau minimal de la nappe';
-ALTER TABLE qgep.od_aquifier ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_aquifier', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_aquifier_perimeter_geometry ON qgep.od_aquifier USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_aquifier.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
  ALTER TABLE qgep.od_aquifier ADD COLUMN remark  varchar(80) ;
@@ -412,15 +503,24 @@ COMMENT ON COLUMN qgep.od_aquifier.last_modification IS 'Last modification / Let
  ALTER TABLE qgep.od_aquifier ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_aquifier.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_aquifier ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_aquifier ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_aquifier.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_aquifier ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_aquifier
+BEFORE UPDATE OR INSERT ON
+ qgep.od_aquifier
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_water_catchment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_water_catchment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -435,7 +535,7 @@ COMMENT ON COLUMN qgep.od_water_catchment.identifier IS '';
 COMMENT ON COLUMN qgep.od_water_catchment.kind IS 'Type of water catchment / Art der Trinkwasserfassung / Genre de prise d''eau';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_catchment.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_water_catchment ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_water_catchment', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_catchment_situation_geometry ON qgep.od_water_catchment USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_water_catchment.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -443,15 +543,24 @@ COMMENT ON COLUMN qgep.od_water_catchment.last_modification IS 'Last modificatio
  ALTER TABLE qgep.od_water_catchment ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_catchment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_water_catchment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_water_catchment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_water_catchment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_water_control_structure
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_water_control_structure_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -464,7 +573,7 @@ COMMENT ON COLUMN qgep.od_water_control_structure.obj_id IS 'INTERLIS STANDARD O
 COMMENT ON COLUMN qgep.od_water_control_structure.identifier IS '';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_control_structure.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_water_control_structure ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_water_control_structure', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_control_structure_situation_geometry ON qgep.od_water_control_structure USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_water_control_structure.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -472,15 +581,24 @@ COMMENT ON COLUMN qgep.od_water_control_structure.last_modification IS 'Last mod
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_control_structure.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_water_control_structure.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_water_control_structure
+BEFORE UPDATE OR INSERT ON
+ qgep.od_water_control_structure
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_sector_water_body
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_sector_water_body_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -499,7 +617,7 @@ COMMENT ON COLUMN qgep.od_sector_water_body.kind IS 'Shore or water course line.
 COMMENT ON COLUMN qgep.od_sector_water_body.km_down IS 'yyy_Adresskilometer beim Sektorende (nur definieren, falls es sich um den letzten Sektor handelt oder ein Sprung in der Adresskilometrierung von einem Sektor zum nächsten  existiert) / Adresskilometer beim Sektorende (nur definieren, falls es sich um den letzten Sektor handelt oder ein Sprung in der Adresskilometrierung von einem Sektor zum nächsten  existiert) / Kilomètre de la fin du secteur (à définir uniquement s''il s''agit du dernier secteur ou lors d''un saut dans le kilométrage d''un secteur à un autre)';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN km_up  decimal(9,3) ;
 COMMENT ON COLUMN qgep.od_sector_water_body.km_up IS 'yyy_Adresskilometer beim Sektorbeginn / Adresskilometer beim Sektorbeginn / Kilomètre du début du secteur';
-ALTER TABLE qgep.od_sector_water_body ADD COLUMN progression_geometry geometry('LINESTRING', 21781);
+SELECT AddGeometryColumn('qgep', 'od_sector_water_body', 'progression_geometry', 21781, 'LINESTRING', 2, true);
 CREATE INDEX in_qgep_od_sector_water_body_progression_geometry ON qgep.od_sector_water_body USING gist (progression_geometry );
 COMMENT ON COLUMN qgep.od_sector_water_body.progression_geometry IS 'yyy_Reihenfolge von Punkten die den Verlauf eines Gewässersektors beschreiben / Reihenfolge von Punkten die den Verlauf eines Gewässersektors beschreiben / Suite de points qui décrivent le tracé d''un secteur d''un cours d''eau';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN ref_length  decimal(7,2) ;
@@ -511,15 +629,24 @@ COMMENT ON COLUMN qgep.od_sector_water_body.last_modification IS 'Last modificat
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_sector_water_body.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_sector_water_body.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_sector_water_body
+BEFORE UPDATE OR INSERT ON
+ qgep.od_sector_water_body
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_water_course_segment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_water_course_segment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -542,7 +669,7 @@ COMMENT ON COLUMN qgep.od_water_course_segment.depth_variability IS 'Variability
 COMMENT ON COLUMN qgep.od_water_course_segment.discharge_regime IS 'yyy_Grad der antropogenen Beeinflussung des charakteristischen Ganges des Abflusses. / Grad der antropogenen Beeinflussung des charakteristischen Ganges des Abflusses. / Degré d''intervention anthropogène sur le régime hydraulique';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN ecom_classification  integer ;
 COMMENT ON COLUMN qgep.od_water_course_segment.ecom_classification IS 'Summary attribut of ecomorphological classification of level F / Summenattribut aus der ökomorphologischen Klassifizierung nach Stufe F / Attribut issu de la classification écomorphologique du niveau R';
-ALTER TABLE qgep.od_water_course_segment ADD COLUMN from_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'from_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_course_segment_from_geometry ON qgep.od_water_course_segment USING gist (from_geometry );
 COMMENT ON COLUMN qgep.od_water_course_segment.from_geometry IS 'Position of segment start point in water course / Lage des Abschnittanfangs  im Gewässerverlauf / Situation du début du tronçon';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN identifier  varchar(41) ;
@@ -561,7 +688,7 @@ COMMENT ON COLUMN qgep.od_water_course_segment.section_morphology IS 'yyy_Linien
 COMMENT ON COLUMN qgep.od_water_course_segment.size IS 'Classification by Strahler / Ordnungszahl nach Strahler / Classification selon Strahler';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN slope  integer ;
 COMMENT ON COLUMN qgep.od_water_course_segment.slope IS 'Average slope of water course segment / Mittleres Gefälle des Gewässerabschnittes / Pente moyenne du fond du tronçon cours d''eau';
-ALTER TABLE qgep.od_water_course_segment ADD COLUMN to_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'to_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_course_segment_to_geometry ON qgep.od_water_course_segment USING gist (to_geometry );
 COMMENT ON COLUMN qgep.od_water_course_segment.to_geometry IS 'Position of segment end point in water course / Lage Abschnitt-Ende im Gewässerverlauf / Situation de la fin du tronçon';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN utilisation  integer ;
@@ -575,15 +702,24 @@ COMMENT ON COLUMN qgep.od_water_course_segment.last_modification IS 'Last modifi
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_course_segment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_water_course_segment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_water_course_segment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_water_course_segment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_fish_pass
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_fish_pass_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -603,15 +739,24 @@ COMMENT ON COLUMN qgep.od_fish_pass.last_modification IS 'Last modification / Le
  ALTER TABLE qgep.od_fish_pass ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_fish_pass.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_fish_pass.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_fish_pass
+BEFORE UPDATE OR INSERT ON
+ qgep.od_fish_pass
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_river_bank
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_river_bank_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -643,15 +788,24 @@ COMMENT ON COLUMN qgep.od_river_bank.last_modification IS 'Last modification / L
  ALTER TABLE qgep.od_river_bank ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_river_bank.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bank ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_river_bank ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_river_bank.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bank ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_river_bank
+BEFORE UPDATE OR INSERT ON
+ qgep.od_river_bank
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_surface_water_bodies
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_surface_water_bodies_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -669,15 +823,24 @@ COMMENT ON COLUMN qgep.od_surface_water_bodies.last_modification IS 'Last modifi
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_surface_water_bodies.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_surface_water_bodies.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_surface_water_bodies
+BEFORE UPDATE OR INSERT ON
+ qgep.od_surface_water_bodies
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_river_bed
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_river_bed_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -703,15 +866,24 @@ COMMENT ON COLUMN qgep.od_river_bed.last_modification IS 'Last modification / Le
  ALTER TABLE qgep.od_river_bed ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_river_bed.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bed ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_river_bed ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_river_bed.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bed ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_river_bed
+BEFORE UPDATE OR INSERT ON
+ qgep.od_river_bed
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_profile_geometry
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_profile_geometry_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -731,15 +903,24 @@ COMMENT ON COLUMN qgep.od_profile_geometry.last_modification IS 'Last modificati
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_profile_geometry.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_profile_geometry.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_profile_geometry
+BEFORE UPDATE OR INSERT ON
+ qgep.od_profile_geometry
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_hydr_geometry
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_hydr_geometry_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -753,29 +934,38 @@ COMMENT ON COLUMN qgep.od_hydr_geometry.identifier IS '';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydr_geometry.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN storage_volume  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.storage_volume IS 'yyy_Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil  / Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps / Volume de stockage dans un bassin et dans la canalisation damenée entre la crête et le niveau deau de Qdim (débit conservé). Lors de bassins deaux pluviales en connexion latérale, le volume de stockage est à saisir à louvrage de répartition, resp. dév';
+COMMENT ON COLUMN qgep.od_hydr_geometry.storage_volume IS 'yyy_Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil  / Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps / Volume de stockage dans un bassin et dans la canalisation d’amenée entre la crête et le niveau d’eau de Qdim (débit conservé). Lors de bassins d’eaux pluviales en connexion latérale, le volume de stockage est à saisir à l’ouvrage de répartition, resp. dév';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN usable_capacity_storage  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_storage IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorge / Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelage / Volume de la chambre sous la crête, sans volume de stockage de la canalisation damenée. Ce dernier est saisi par lattribut volume de stockage (lors de disposition en connexion directe ceci se fait dans la fiche technique de louvrage principal, lors de ';
+COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_storage IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorge / Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelage / Volume de la chambre sous la crête, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait dans la fiche technique de l’ouvrage principal, lors de ';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN usable_capacity_treatment  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_treatment IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal.  Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauw / Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes / Volume de la chambre sous la crête, incl. lentrée, la sortie et la partie de sédimentation, sans volume de stockage de la canalisation damenée. Ce dernier est saisi par lattribut volume de stockage (lors de disposition en connexion directe ceci se fait';
+COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_treatment IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal.  Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauw / Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes / Volume de la chambre sous la crête, incl. l’entrée, la sortie et la partie de sédimentation, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN utilisable_capacity  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.utilisable_capacity IS 'yyy_Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Pour les bassins et canalisations daccumulation : Volume de la chambre sous la surverse de secours ou bypass (volume mobilisable maximum, incl. le volume de stockage de la canalisation damenée). Pour les BEP il sagit du VOLUME_UTILE_STOCKAGE et du VOLU';
+COMMENT ON COLUMN qgep.od_hydr_geometry.utilisable_capacity IS 'yyy_Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Pour les bassins et canalisations d’accumulation : Volume de la chambre sous la surverse de secours ou bypass (volume mobilisable maximum, incl. le volume de stockage de la canalisation d’amenée). Pour les BEP il s’agit du VOLUME_UTILE_STOCKAGE et du VOLU';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN volume_pump_sump  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.volume_pump_sump IS 'yyy_Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volume du puisard calculée à partir du radier jusquau niveau deau maximum possible (incl. le volume de stockage de la canalisation damenée).';
+COMMENT ON COLUMN qgep.od_hydr_geometry.volume_pump_sump IS 'yyy_Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volume du puisard calculée à partir du radier jusqu’au niveau d’eau maximum possible (incl. le volume de stockage de la canalisation d’amenée).';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hydr_geometry.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydr_geometry.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_hydr_geometry.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_hydr_geometry
+BEFORE UPDATE OR INSERT ON
+ qgep.od_hydr_geometry
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_hq_relation
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_hq_relation_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -789,21 +979,30 @@ COMMENT ON COLUMN qgep.od_hq_relation.altitude IS 'yyy_Zum Abfluss (Q2) korrelie
  ALTER TABLE qgep.od_hq_relation ADD COLUMN flow  decimal(9,3) ;
 COMMENT ON COLUMN qgep.od_hq_relation.flow IS 'Flow (Q2) in direction of WWTP / Abflussmenge (Q2) Richtung ARA / Débit d''eau (Q2) en direction de la STEP';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN flow_from  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_hq_relation.flow_from IS 'yyy_Zufluss (Q1) / Zufluss (Q1) / Débit dentrée  (Q1)';
+COMMENT ON COLUMN qgep.od_hq_relation.flow_from IS 'yyy_Zufluss (Q1) / Zufluss (Q1) / Débit d’entrée  (Q1)';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hq_relation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_hq_relation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_hq_relation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_hq_relation
+BEFORE UPDATE OR INSERT ON
+ qgep.od_hq_relation
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_reach_point
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_reach_point_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -821,10 +1020,10 @@ COMMENT ON COLUMN qgep.od_reach_point.level IS 'yyy_Sohlenhöhe des Haltungsende
  ALTER TABLE qgep.od_reach_point ADD COLUMN outlet_shape  integer ;
 COMMENT ON COLUMN qgep.od_reach_point.outlet_shape IS 'Kind of outlet shape / Art des Auslaufs / Types de sortie';
  ALTER TABLE qgep.od_reach_point ADD COLUMN position_of_connection  smallint ;
-COMMENT ON COLUMN qgep.od_reach_point.position_of_connection IS 'yyy_Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Emplacement de raccordement Référence à la section transversale dans le canal dans le sens découlement (pour les raccordements domestiques et de rue).';
+COMMENT ON COLUMN qgep.od_reach_point.position_of_connection IS 'yyy_Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Emplacement de raccordement Référence à la section transversale dans le canal dans le sens d’écoulement (pour les raccordements domestiques et de rue).';
  ALTER TABLE qgep.od_reach_point ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_reach_point.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_reach_point ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_reach_point', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_reach_point_situation_geometry ON qgep.od_reach_point USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_reach_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_reach_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -832,15 +1031,24 @@ COMMENT ON COLUMN qgep.od_reach_point.last_modification IS 'Last modification / 
  ALTER TABLE qgep.od_reach_point ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_reach_point.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_reach_point ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_reach_point ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_reach_point.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_reach_point ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_reach_point
+BEFORE UPDATE OR INSERT ON
+ qgep.od_reach_point
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.re_maintenance_event_wastewater_structure
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_re_maintenance_event_wastewater_structure_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -852,7 +1060,7 @@ COMMENT ON COLUMN qgep.re_maintenance_event_wastewater_structure.obj_id IS 'INTE
 -------
 CREATE TABLE qgep.od_maintenance_event
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_maintenance_event_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -890,15 +1098,24 @@ COMMENT ON COLUMN qgep.od_maintenance_event.last_modification IS 'Last modificat
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_maintenance_event.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_maintenance_event.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_maintenance_event
+BEFORE UPDATE OR INSERT ON
+ qgep.od_maintenance_event
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_structure_part
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_structure_part_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -918,22 +1135,24 @@ COMMENT ON COLUMN qgep.od_structure_part.last_modification IS 'Last modification
  ALTER TABLE qgep.od_structure_part ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_structure_part.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_structure_part ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_structure_part ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_structure_part.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_structure_part ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
 CREATE TRIGGER
-  update_last_modified_structure_part
+update_last_modified_structure_part
 BEFORE UPDATE OR INSERT ON
-  qgep.od_structure_part
+ qgep.od_structure_part
 FOR EACH ROW EXECUTE PROCEDURE
-  qgep.update_last_modified();
+ qgep.update_last_modified();
 
+-------
 -------
 CREATE TABLE qgep.od_throttle_shut_off_unit
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_throttle_shut_off_unit_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -967,23 +1186,32 @@ COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.signal_transmission IS 'Signal 
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN subsidies  decimal(10,2) ;
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.subsidies IS 'yyy_Staats- und Bundesbeiträge / Staats- und Bundesbeiträge / Contributions des cantons et de la confédération';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN throttle_unit_opening_current  integer ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine z / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusät / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. détranglement : aucune indication suppl., Vanne : hauteur max de louverture (du radier jusquau bord inférieur plaque, point le plus bas), Régulateur de débit ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine z / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusät / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit ';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN throttle_unit_opening_current_optimized  integer ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current_optimized IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine z / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusät / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. détranglement : aucune indication suppl., Vanne : hauteur max de louverture (du radier jusquau bord inférieur plaque, point le plus bas), Régulateur de débit ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current_optimized IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine z / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusät / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit ';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_throttle_shut_off_unit
+BEFORE UPDATE OR INSERT ON
+ qgep.od_throttle_shut_off_unit
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_pipe_profile
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_pipe_profile_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1005,15 +1233,24 @@ COMMENT ON COLUMN qgep.od_pipe_profile.last_modification IS 'Last modification /
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_pipe_profile.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_pipe_profile.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_pipe_profile
+BEFORE UPDATE OR INSERT ON
+ qgep.od_pipe_profile
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_wastewater_networkelement
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_wastewater_networkelement_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1031,15 +1268,24 @@ COMMENT ON COLUMN qgep.od_wastewater_networkelement.last_modification IS 'Last m
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_wastewater_networkelement.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_wastewater_networkelement.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_wastewater_networkelement
+BEFORE UPDATE OR INSERT ON
+ qgep.od_wastewater_networkelement
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_overflow_characteristic
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_overflow_characteristic_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1051,7 +1297,7 @@ COMMENT ON COLUMN qgep.od_overflow_characteristic.obj_id IS 'INTERLIS STANDARD O
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep.od_overflow_characteristic.identifier IS '';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN kind_overflow_characteristic  integer ;
-COMMENT ON COLUMN qgep.od_overflow_characteristic.kind_overflow_characteristic IS 'yyy_Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat / Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in  / La courbe est à documenter sous forme de rapport Q/Q (Leaping weir) ou H/Q (déversoir latéral). Les conditions découlement dans la chambre daccumulation sont à fournir en annexe.';
+COMMENT ON COLUMN qgep.od_overflow_characteristic.kind_overflow_characteristic IS 'yyy_Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat / Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in  / La courbe est à documenter sous forme de rapport Q/Q (Leaping weir) ou H/Q (déversoir latéral). Les conditions d’écoulement dans la chambre d’accumulation sont à fournir en annexe.';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN overflow_characteristic_digital  integer ;
 COMMENT ON COLUMN qgep.od_overflow_characteristic.overflow_characteristic_digital IS 'yyy_Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung  in Ueberlaufcharakteristik ausgefüllt sein in HQ_Relation. / Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung in HQ_Relation ausgefüllt sein. / Si courbe de fonctionnement numérique = oui, les attributs pour les relations Q-Q et H-Q doivent être saisis dans la classe RELATION_HQ.';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN remark  varchar(80) ;
@@ -1061,15 +1307,24 @@ COMMENT ON COLUMN qgep.od_overflow_characteristic.last_modification IS 'Last mod
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_overflow_characteristic.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_overflow_characteristic.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_overflow_characteristic
+BEFORE UPDATE OR INSERT ON
+ qgep.od_overflow_characteristic
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_mechanical_pretreatment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_mechanical_pretreatment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1089,15 +1344,24 @@ COMMENT ON COLUMN qgep.od_mechanical_pretreatment.last_modification IS 'Last mod
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_mechanical_pretreatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_mechanical_pretreatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_mechanical_pretreatment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_mechanical_pretreatment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_wastewater_structure
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_wastewater_structure_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1107,15 +1371,15 @@ CREATE SEQUENCE qgep.seq_od_wastewater_structure_oid INCREMENT 1 MINVALUE 0 MAXV
  ALTER TABLE qgep.od_wastewater_structure ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure');
 COMMENT ON COLUMN qgep.od_wastewater_structure.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN accessibility  integer ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.accessibility IS 'yyy_Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Possibilités daccès à louvrage dassainissement pour une personne (non pour un véhicule)';
+COMMENT ON COLUMN qgep.od_wastewater_structure.accessibility IS 'yyy_Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Possibilités d’accès à l’ouvrage d’assainissement pour une personne (non pour un véhicule)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN contract_section  varchar(50) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.contract_section IS 'Number of contract section / Nummer des Bauloses / Numéro du lot de construction';
-ALTER TABLE qgep.od_wastewater_structure ADD COLUMN detail_geometry_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_geometry );
-COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_geometry IS 'Detail geometry especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie insbesondere bei Spezialbauwerken. Für Normschächte i.d. R.  Dimension1 und 2 verwenden. Dito bei normierten Versickerungsanlagen.  Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée particulièrement pour un OUVRAGE_SPECIAL. Pour lattribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.  Les canalisations nont en général pas de géométrie détaillée.';
-ALTER TABLE qgep.od_wastewater_structure ADD COLUMN detail_geometry_3d_geometry geometry('POLYGONZ', 21781);
+COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_geometry IS 'Detail geometry especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie insbesondere bei Spezialbauwerken. Für Normschächte i.d. R.  Dimension1 und 2 verwenden. Dito bei normierten Versickerungsanlagen.  Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.  Les canalisations n’ont en général pas de géométrie détaillée.';
+SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_3d_geometry', 21781, 'POLYGON', 3, true);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_3d_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_3d_geometry );
-COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_3d_geometry IS 'Detail geometry (3D) especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie (3D) insbesondere bei Spezialbauwerken. Bei Normschächten mit Dimension1 und 2 arbeiten. Dito bei normierten Versickerungsanlagen. Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée (3D) particulièrement pour un OUVRAGE_SPECIAL. Pour lattribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.Les canalisations nont en général pas de géométrie détaillée.';
+COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_3d_geometry IS 'Detail geometry (3D) especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie (3D) insbesondere bei Spezialbauwerken. Bei Normschächten mit Dimension1 und 2 arbeiten. Dito bei normierten Versickerungsanlagen. Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée (3D) particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.Les canalisations n’ont en général pas de géométrie détaillée.';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN financing  integer ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.financing IS ' Method of financing  (Financing based on GschG Art. 60a). / Finanzierungart (Finanzierung gemäss GschG Art. 60a). / Type de financement (financement selon LEaux Art. 60a)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN gross_costs  decimal(10,2) ;
@@ -1123,15 +1387,15 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.gross_costs IS 'Gross costs of co
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.identifier IS 'yyy_Pro Datenherr eindeutige Bezeichnung / Pro Datenherr eindeutige Bezeichnung / Désignation unique pour chaque maître des données';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN inspection_interval  decimal(4,2) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.inspection_interval IS 'yyy_Abstände, in welchen das Abwasserbauwerk inspiziert werden sollte (Jahre) / Abstände, in welchen das Abwasserbauwerk inspiziert werden sollte (Jahre) / Fréquence à laquelle un ouvrage du réseau dassainissement devrait subir une inspection (années)';
+COMMENT ON COLUMN qgep.od_wastewater_structure.inspection_interval IS 'yyy_Abstände, in welchen das Abwasserbauwerk inspiziert werden sollte (Jahre) / Abstände, in welchen das Abwasserbauwerk inspiziert werden sollte (Jahre) / Fréquence à laquelle un ouvrage du réseau d‘assainissement devrait subir une inspection (années)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.location_name IS 'Street name or name of the location of the structure / Strassenname oder Ortsbezeichnung  zum Bauwerk / Nom de la route ou du lieu de l''ouvrage';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN records  varchar(255) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.records IS 'yyy_Plan Nr. der Ausführungsdokumentation. Kurzbeschrieb weiterer Akten (Betriebsanleitung vom , etc.) / Plan Nr. der Ausführungsdokumentation. Kurzbeschrieb weiterer Akten (Betriebsanleitung vom , etc.) / N° de plan de la documentation dexécution, description de dossiers, manuels, etc.';
+COMMENT ON COLUMN qgep.od_wastewater_structure.records IS 'yyy_Plan Nr. der Ausführungsdokumentation. Kurzbeschrieb weiterer Akten (Betriebsanleitung vom …, etc.) / Plan Nr. der Ausführungsdokumentation. Kurzbeschrieb weiterer Akten (Betriebsanleitung vom …, etc.) / N° de plan de la documentation d’exécution, description de dossiers, manuels, etc.';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN renovation_necessity  integer ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.renovation_necessity IS 'yyy_Dringlichkeitsstufen und Zeithorizont für bauliche Massnahmen gemäss VSA-Richtline "Erhaltung von Kanalisationen" / Dringlichkeitsstufen und Zeithorizont für bauliche Massnahmen gemäss VSA-Richtline "Erhaltung von Kanalisationen" / 	Degrés durgence et délai de réalisation des mesures constructives selon la directive VSA "Maintien des canalisations"';
+COMMENT ON COLUMN qgep.od_wastewater_structure.renovation_necessity IS 'yyy_Dringlichkeitsstufen und Zeithorizont für bauliche Massnahmen gemäss VSA-Richtline "Erhaltung von Kanalisationen" / Dringlichkeitsstufen und Zeithorizont für bauliche Massnahmen gemäss VSA-Richtline "Erhaltung von Kanalisationen" / 	Degrés d’urgence et délai de réalisation des mesures constructives selon la directive VSA "Maintien des canalisations"';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN replacement_value  decimal(10,2) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.replacement_value IS 'yyy_Wiederbeschaffungswert des Bauwerks. Zusätzlich muss auch das Attribut WBW_Basisjahr erfasst werden / Wiederbeschaffungswert des Bauwerks. Zusätzlich muss auch das Attribut WBW_Basisjahr erfasst werden / Valeur de remplacement de l''OUVRAGE_RESEAU_AS. On à besoin aussi de saisir l''attribut VR_ANNEE_REFERENCE';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN rv_base_year  smallint ;
@@ -1139,7 +1403,7 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.rv_base_year IS 'yyy_Basisjahr f�
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN rv_construction_type  integer ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.rv_construction_type IS 'yyy_Grobe Einteilung der Bauart des Abwasserbauwerks als Inputwert für die Berechnung des Wiederbeschaffungswerts. / Grobe Einteilung der Bauart des Abwasserbauwerks als Inputwert für die Berechnung des Wiederbeschaffungswerts. / Valeur de remplacement du type de construction';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN status  integer ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.status IS 'Operating and planning status of the structure / Betriebs- bzw. Planungszustand des Bauwerks / Etat de fonctionnement et de planification de louvrage';
+COMMENT ON COLUMN qgep.od_wastewater_structure.status IS 'Operating and planning status of the structure / Betriebs- bzw. Planungszustand des Bauwerks / Etat de fonctionnement et de planification de l’ouvrage';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN structure_condition  integer ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.structure_condition IS 'yyy_Zustandsklassen. Beschreibung des baulichen Zustands des Kanals. Nicht zu verwechseln mit den Sanierungsstufen, welche die Prioritäten der Massnahmen bezeichnen (Attribut Sanierungsbedarf). / Zustandsklassen 0 bis 4 gemäss VSA-Richtline "Erhaltung von Kanalisationen". Beschreibung des baulichen Zustands des Abwasserbauwerks. Nicht zu verwechseln mit den Sanierungsstufen, welche die Prioritäten der Massnahmen bezeichnen (Attribut Sanierungsbeda / Classes d''état. Description de l''état constructif selon la directive VSA "Maintien des canalisations" (2007/2009). Ne pas confondre avec les degrés de remise en état (attribut NECESSITE_ASSAINIR)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN subsidies  decimal(10,2) ;
@@ -1153,15 +1417,24 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.last_modification IS 'Last modifi
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_wastewater_structure.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_wastewater_structure
+BEFORE UPDATE OR INSERT ON
+ qgep.od_wastewater_structure
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_hydraulic_characteristic_data
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_hydraulic_characteristic_data_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1181,21 +1454,21 @@ COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.is_overflowing IS 'yyy_A
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN main_weir_kind  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.main_weir_kind IS 'yyy_Art des Hauptwehrs am Knoten, falls mehrere Überläufe / Art des Hauptwehrs am Knoten, falls mehrere Überläufe / Genre du déversoir principal du noeud concerné s''il y a plusieurs déversoirs.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overcharge  decimal (5,2) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overcharge IS 'yyy_Optimale Mehrbelastung nach der Umsetzung der Massnahmen. / Ist: Mehrbelastung der untenliegenden Kanäle beim Dimensionierungsereignis = 100 * (Qab  Qan) / Qan 	[%]. Verhältnis zwischen der abgeleiteten Abwassermengen Richtung ARA beim Anspringen des Entlastungsbauwerkes (Qan) und Qab (Abwassermenge, welche beim  / Etat actuel: Surcharge optimale à létat actuel avant la réalisation déventuelles mesures;  actuel optimisé: Surcharge optimale à létat actuel avant la réalisation déventuelles mesures; prévu: Optimale Mehrbelastung nach der Umsetzung der Massnahmen.';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overcharge IS 'yyy_Optimale Mehrbelastung nach der Umsetzung der Massnahmen. / Ist: Mehrbelastung der untenliegenden Kanäle beim Dimensionierungsereignis = 100 * (Qab – Qan) / Qan 	[%]. Verhältnis zwischen der abgeleiteten Abwassermengen Richtung ARA beim Anspringen des Entlastungsbauwerkes (Qan) und Qab (Abwassermenge, welche beim  / Etat actuel: Surcharge optimale à l’état actuel avant la réalisation d’éventuelles mesures;  actuel optimisé: Surcharge optimale à l’état actuel avant la réalisation d’éventuelles mesures; prévu: Optimale Mehrbelastung nach der Umsetzung der Massnahmen.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_duration  decimal(6,1) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_duration IS 'yyy_Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit g / Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit gepla / Durée moyenne de déversement par an.  Actuel: Durée moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à létat actuel avant la réalisation déventuelles mesures. Prévu: Calc';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_duration IS 'yyy_Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit g / Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit gepla / Durée moyenne de déversement par an.  Actuel: Durée moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calc';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_freight  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_freight IS 'yyy_Mittlere Ueberlaufschmutzfracht pro Jahr / Mittlere Ueberlaufschmutzfracht pro Jahr / Charge polluante moyenne déversée par année';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_frequency  decimal(3,1) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_frequency IS 'yyy_Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor d / Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der U / Fréquence moyenne de déversement par an. Fréquence moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à létat actuel avant la réalisation déventuelles mesures. Prévu: Calcu';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_frequency IS 'yyy_Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor d / Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der U / Fréquence moyenne de déversement par an. Fréquence moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcu';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_volume  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_volume IS 'yyy_Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von  / Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allf / Volume moyen déversé par an. Volume moyen déversé par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à létat actuel avant la réalisation déventuelles mesures. Prévu: Calcul après la réalisation d';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_volume IS 'yyy_Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von  / Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allf / Volume moyen déversé par an. Volume moyen déversé par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcul après la réalisation d';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_characteristics  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_characteristics IS 'yyy_Bei speziellen Betriebsarten ist die Funktion separat zu dokumentieren und der Stammkarte beizulegen. / Bei speziellen Betriebsarten ist die Funktion separat zu dokumentieren und der Stammkarte beizulegen. / Pour de régime de fonctionnement spéciaux, cette fonction doit être documentée séparément et annexée à la fiche technique';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_flow_max  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_flow_max IS 'yyy_Maximaler Förderstrom der Pumpen (gesamtes Bauwerk). Tritt in der Regel bei der minimalen Förderhöhe ein. / Maximaler Förderstrom der Pumpen (gesamtes Bauwerk). Tritt in der Regel bei der minimalen Förderhöhe ein. / Débit de refoulement maximal de toutes les pompes de louvrage. Survient normalement à la hauteur min de refoulement.';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_flow_max IS 'yyy_Maximaler Förderstrom der Pumpen (gesamtes Bauwerk). Tritt in der Regel bei der minimalen Förderhöhe ein. / Maximaler Förderstrom der Pumpen (gesamtes Bauwerk). Tritt in der Regel bei der minimalen Förderhöhe ein. / Débit de refoulement maximal de toutes les pompes de l’ouvrage. Survient normalement à la hauteur min de refoulement.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_flow_min  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_flow_min IS 'yyy_Minimaler Förderstrom der Pumpen zusammen (gesamtes Bauwerk). Tritt in der Regel bei der maximalen Förderhöhe ein. / Minimaler Förderstrom der Pumpen zusammen (gesamtes Bauwerk). Tritt in der Regel bei der maximalen Förderhöhe ein. / Débit de refoulement minimal de toutes les pompes de louvrage. Survient normalement à la hauteur max de refoulement.';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_flow_min IS 'yyy_Minimaler Förderstrom der Pumpen zusammen (gesamtes Bauwerk). Tritt in der Regel bei der maximalen Förderhöhe ein. / Minimaler Förderstrom der Pumpen zusammen (gesamtes Bauwerk). Tritt in der Regel bei der maximalen Förderhöhe ein. / Débit de refoulement minimal de toutes les pompes de l’ouvrage. Survient normalement à la hauteur max de refoulement.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_usage_current  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_usage_current IS 'yyy_Nutzungsart_Ist des gepumpten Abwassers. / Nutzungsart_Ist des gepumpten Abwassers. / Genre d''utilisation actuel de l''eau usée pompée';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN q_discharge  decimal(9,3) ;
@@ -1205,21 +1478,30 @@ COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.qon IS 'yyy_Wassermenge,
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.remark IS ' / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN status  integer ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.status IS 'yyy_Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Etat prévu des caractéristiques hydrauliques (obligatoire). Les caractéristiques de déversement et le bassin versant global peuvent être représentés à différents états et se laissent déduire à partir de lattribut PARAMETRES_HYDR';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.status IS 'yyy_Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Etat prévu des caractéristiques hydrauliques (obligatoire). Les caractéristiques de déversement et le bassin versant global peuvent être représentés à différents états et se laissent déduire à partir de l’attribut PARAMETRES_HYDR';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_hydraulic_characteristic_data
+BEFORE UPDATE OR INSERT ON
+ qgep.od_hydraulic_characteristic_data
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_retention_body
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_retention_body_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1241,15 +1523,24 @@ COMMENT ON COLUMN qgep.od_retention_body.last_modification IS 'Last modification
  ALTER TABLE qgep.od_retention_body ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_retention_body.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_retention_body ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_retention_body ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_retention_body.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_retention_body ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_retention_body
+BEFORE UPDATE OR INSERT ON
+ qgep.od_retention_body
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_hydr_geom_relation
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_hydr_geom_relation_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1269,15 +1560,24 @@ COMMENT ON COLUMN qgep.od_hydr_geom_relation.last_modification IS 'Last modifica
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydr_geom_relation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_hydr_geom_relation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_hydr_geom_relation
+BEFORE UPDATE OR INSERT ON
+ qgep.od_hydr_geom_relation
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_accident
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_accident_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1296,7 +1596,7 @@ COMMENT ON COLUMN qgep.od_accident.place IS 'Adress of the location of accident 
 COMMENT ON COLUMN qgep.od_accident.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_accident ADD COLUMN responsible  varchar(50) ;
 COMMENT ON COLUMN qgep.od_accident.responsible IS 'Name of the responsible of the accident / Name Adresse des Verursachers / Nom et adresse de l''auteur';
-ALTER TABLE qgep.od_accident ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_accident', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_accident_situation_geometry ON qgep.od_accident USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_accident.situation_geometry IS 'National position coordinates (North, East) of accident / Landeskoordinate Ost/Nord des Unfallortes / Coordonnées nationales Est/Nord du lieu d''accident';
  ALTER TABLE qgep.od_accident ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1304,15 +1604,24 @@ COMMENT ON COLUMN qgep.od_accident.last_modification IS 'Last modification / Let
  ALTER TABLE qgep.od_accident ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_accident.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_accident ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_accident.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_accident.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_accident ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_accident.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_accident ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_accident.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_accident.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_accident
+BEFORE UPDATE OR INSERT ON
+ qgep.od_accident
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_overflow
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_overflow_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1330,7 +1639,7 @@ COMMENT ON COLUMN qgep.od_overflow.brand IS 'Manufacturer of the electro-mechani
  ALTER TABLE qgep.od_overflow ADD COLUMN control  integer ;
 COMMENT ON COLUMN qgep.od_overflow.control IS 'yyy_Steuer- und Regelorgan für die Einbaute / Steuer- und Regelorgan für die Einbaute / Dispositifs de commande et de régulation des installations';
  ALTER TABLE qgep.od_overflow ADD COLUMN discharge_point  varchar(41) ;
-COMMENT ON COLUMN qgep.od_overflow.discharge_point IS 'Identifier of discharge_point in which the overflow is discharging (redundant attribute with network follow up or result of that). Is only needed if overflow is discharging into a river (directly or via a rainwater drainage). / Bezeichnung der Einleitstelle in die der Ueberlauf entlastet (redundantes Attribut zur Netzverfolgung oder Resultat davon). Muss nur erfasst werden, wenn das Abwasser vom Notüberlauf in ein Gewässer eingeleitet wird (direkt oder über eine Regenabwasserlei / Désignation de l''exutoire: A indiquer uniquement lorsque leau déversée est rejetée dans un cours deau (directement ou indirectement via une conduite deaux pluviales).';
+COMMENT ON COLUMN qgep.od_overflow.discharge_point IS 'Identifier of discharge_point in which the overflow is discharging (redundant attribute with network follow up or result of that). Is only needed if overflow is discharging into a river (directly or via a rainwater drainage). / Bezeichnung der Einleitstelle in die der Ueberlauf entlastet (redundantes Attribut zur Netzverfolgung oder Resultat davon). Muss nur erfasst werden, wenn das Abwasser vom Notüberlauf in ein Gewässer eingeleitet wird (direkt oder über eine Regenabwasserlei / Désignation de l''exutoire: A indiquer uniquement lorsque l’eau déversée est rejetée dans un cours d’eau (directement ou indirectement via une conduite d’eaux pluviales).';
  ALTER TABLE qgep.od_overflow ADD COLUMN function  integer ;
 COMMENT ON COLUMN qgep.od_overflow.function IS 'yyy_Teil des Mischwasserabflusses, der aus einem Überlauf in einen Vorfluter oder in ein Abwasserbauwerk abgeleitet wird / Teil des Mischwasserabflusses, der aus einem Überlauf in einen Vorfluter oder in ein Abwasserbauwerk abgeleitet wird / Type de déversoir';
  ALTER TABLE qgep.od_overflow ADD COLUMN gross_costs  decimal(10,2) ;
@@ -1350,15 +1659,24 @@ COMMENT ON COLUMN qgep.od_overflow.last_modification IS 'Last modification / Let
  ALTER TABLE qgep.od_overflow ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_overflow.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_overflow.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_overflow ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_overflow.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_overflow.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_overflow.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_overflow
+BEFORE UPDATE OR INSERT ON
+ qgep.od_overflow
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_connection_object
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_connection_object_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1378,15 +1696,24 @@ COMMENT ON COLUMN qgep.od_connection_object.last_modification IS 'Last modificat
  ALTER TABLE qgep.od_connection_object ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_connection_object.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_connection_object ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_connection_object ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_connection_object.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_connection_object ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_connection_object
+BEFORE UPDATE OR INSERT ON
+ qgep.od_connection_object
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_hazard_source
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_hazard_source_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1399,7 +1726,7 @@ COMMENT ON COLUMN qgep.od_hazard_source.obj_id IS 'INTERLIS STANDARD OID (with P
 COMMENT ON COLUMN qgep.od_hazard_source.identifier IS '';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_hazard_source.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_hazard_source ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_hazard_source', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_hazard_source_situation_geometry ON qgep.od_hazard_source USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_hazard_source.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1407,15 +1734,24 @@ COMMENT ON COLUMN qgep.od_hazard_source.last_modification IS 'Last modification 
  ALTER TABLE qgep.od_hazard_source ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_hazard_source.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_hazard_source.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_hazard_source
+BEFORE UPDATE OR INSERT ON
+ qgep.od_hazard_source
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_surface_runoff_parameters
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_surface_runoff_parameters_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1441,15 +1777,24 @@ COMMENT ON COLUMN qgep.od_surface_runoff_parameters.last_modification IS 'Last m
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_surface_runoff_parameters.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_surface_runoff_parameters.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_surface_runoff_parameters
+BEFORE UPDATE OR INSERT ON
+ qgep.od_surface_runoff_parameters
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_substance
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_substance_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1471,15 +1816,24 @@ COMMENT ON COLUMN qgep.od_substance.last_modification IS 'Last modification / Le
  ALTER TABLE qgep.od_substance ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_substance.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_substance ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_substance.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_substance.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_substance ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_substance.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_substance ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_substance.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_substance.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_substance
+BEFORE UPDATE OR INSERT ON
+ qgep.od_substance
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_catchment_area
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_catchment_area_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1489,9 +1843,9 @@ CREATE SEQUENCE qgep.seq_od_catchment_area_oid INCREMENT 1 MINVALUE 0 MAXVALUE 9
  ALTER TABLE qgep.od_catchment_area ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_catchment_area');
 COMMENT ON COLUMN qgep.od_catchment_area.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN direct_discharge_current  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.direct_discharge_current IS 'The rain water is currently fully or partially discharged into a water body / Das Regenabwasser wird ganz oder teilweise über eine SAA-Leitung in ein Gewässer eingeleitet / Les eaux pluviales sont rejetées complètement ou partiellement via une conduite OAS dans un cours deau';
+COMMENT ON COLUMN qgep.od_catchment_area.direct_discharge_current IS 'The rain water is currently fully or partially discharged into a water body / Das Regenabwasser wird ganz oder teilweise über eine SAA-Leitung in ein Gewässer eingeleitet / Les eaux pluviales sont rejetées complètement ou partiellement via une conduite OAS dans un cours d’eau';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN direct_discharge_planned  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.direct_discharge_planned IS 'The rain water will be discharged fully or partially over a SAA pipe into a water body / Das Regenabwasser wird in Zukunft ganz oder teilweise über eine SAA-Leitung in ein Gewässer eingeleitet / Les eaux pluviales seront rejetées complètement ou partiellement via une conduite OAS dans un cours deau';
+COMMENT ON COLUMN qgep.od_catchment_area.direct_discharge_planned IS 'The rain water will be discharged fully or partially over a SAA pipe into a water body / Das Regenabwasser wird in Zukunft ganz oder teilweise über eine SAA-Leitung in ein Gewässer eingeleitet / Les eaux pluviales seront rejetées complètement ou partiellement via une conduite OAS dans un cours d’eau';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN discharge_coefficient_rw_current  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_catchment_area.discharge_coefficient_rw_current IS 'yyy_Abflussbeiwert für den Regenabwasseranschluss im Ist-Zustand / Abflussbeiwert für den Regenabwasseranschluss im Ist-Zustand / Coefficient de ruissellement pour le raccordement actuel des eaux pluviales';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN discharge_coefficient_rw_planned  decimal (5,2) ;
@@ -1501,16 +1855,16 @@ COMMENT ON COLUMN qgep.od_catchment_area.discharge_coefficient_ww_current IS 'yy
  ALTER TABLE qgep.od_catchment_area ADD COLUMN discharge_coefficient_ww_planned  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_catchment_area.discharge_coefficient_ww_planned IS 'yyy_Abflussbeiwert für den Schmutz- oder Mischabwasseranschluss im Planungszustand / Abflussbeiwert für den Schmutz- oder Mischabwasseranschluss im Planungszustand / Coefficient de ruissellement pour le raccordement prévu des eaux usées ou mixtes';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN drainage_system_current  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.drainage_system_current IS 'yyy_Effektive Entwässerungsart im Ist-Zustand / Effektive Entwässerungsart im Ist-Zustand / Genre dévacuation des eaux réel à létat actuel';
+COMMENT ON COLUMN qgep.od_catchment_area.drainage_system_current IS 'yyy_Effektive Entwässerungsart im Ist-Zustand / Effektive Entwässerungsart im Ist-Zustand / Genre d’évacuation des eaux réel à l’état actuel';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN drainage_system_planned  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.drainage_system_planned IS 'yyy_Entwässerungsart im Planungszustand (nach Umsetzung des Entwässerungskonzepts). Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Entwässerungsart im Planungszustand (nach Umsetzung des Entwässerungskonzepts). Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Genre dévacuation des eaux à létat de planification (mise en uvre du concept dévacuation). Cet attribut est exigé. Il est obligatoire pour lexamen des demandes de permit de construire';
+COMMENT ON COLUMN qgep.od_catchment_area.drainage_system_planned IS 'yyy_Entwässerungsart im Planungszustand (nach Umsetzung des Entwässerungskonzepts). Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Entwässerungsart im Planungszustand (nach Umsetzung des Entwässerungskonzepts). Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Genre d’évacuation des eaux à l’état de planification (mise en œuvre du concept d’évacuation). Cet attribut est exigé. Il est obligatoire pour l’examen des demandes de permit de construire';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep.od_catchment_area.identifier IS '';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN infiltration_current  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.infiltration_current IS 'yyy_Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales sont amenées complètement ou partiellement à une installation dinfiltration';
+COMMENT ON COLUMN qgep.od_catchment_area.infiltration_current IS 'yyy_Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales sont amenées complètement ou partiellement à une installation d’infiltration';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN infiltration_planned  integer ;
-COMMENT ON COLUMN qgep.od_catchment_area.infiltration_planned IS 'In the future the rain water will  be completly or partially infiltrated in a infiltration unit. / Das Regenabwasser wird in Zukunft ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales seront amenées complètement ou partiellement à une installation dinfiltration';
-ALTER TABLE qgep.od_catchment_area ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+COMMENT ON COLUMN qgep.od_catchment_area.infiltration_planned IS 'In the future the rain water will  be completly or partially infiltrated in a infiltration unit. / Das Regenabwasser wird in Zukunft ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales seront amenées complètement ou partiellement à une installation d’infiltration';
+SELECT AddGeometryColumn('qgep', 'od_catchment_area', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_catchment_area_perimeter_geometry ON qgep.od_catchment_area USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_catchment_area.perimeter_geometry IS 'Boundary points of the perimeter sub catchement area / Begrenzungspunkte des Teileinzugsgebiets / Points de délimitation du bassin versant partiel';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN population_density_current  smallint ;
@@ -1524,9 +1878,9 @@ COMMENT ON COLUMN qgep.od_catchment_area.retention_current IS 'yyy_Das Regen- od
  ALTER TABLE qgep.od_catchment_area ADD COLUMN retention_planned  integer ;
 COMMENT ON COLUMN qgep.od_catchment_area.retention_planned IS 'yyy_Das Regen- oder Mischabwasser wird in Zukunft über Rückhalteeinrichtungen verzögert ins Kanalnetz eingeleitet. / Das Regen- oder Mischabwasser wird in Zukunft über Rückhalteeinrichtungen verzögert ins Kanalnetz eingeleitet. / Les eaux pluviales et mixtes seront rejetées de manière régulée dans le réseau des canalisations par un ouvrage de rétention.';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN runoff_limit_current  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_catchment_area.runoff_limit_current IS 'yyy_Abflussbegrenzung, falls eine entsprechende Auflage bereits umgesetzt ist. / Abflussbegrenzung, falls eine entsprechende Auflage bereits umgesetzt ist. / Restriction de débit, si une exigence est déjà mise en uvre';
+COMMENT ON COLUMN qgep.od_catchment_area.runoff_limit_current IS 'yyy_Abflussbegrenzung, falls eine entsprechende Auflage bereits umgesetzt ist. / Abflussbegrenzung, falls eine entsprechende Auflage bereits umgesetzt ist. / Restriction de débit, si une exigence est déjà mise en œuvre';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN runoff_limit_planned  decimal(4,1) ;
-COMMENT ON COLUMN qgep.od_catchment_area.runoff_limit_planned IS 'yyy_Abflussbegrenzung, falls eine entsprechende Auflage aus dem Entwässerungskonzept vorliegt. Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Abflussbegrenzung, falls eine entsprechende Auflage aus dem Entwässerungskonzept vorliegt. Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Restriction de débit, si une exigence correspondante existe dans le concept dévacuation des eaux. Cet attribut est une exigence et obligatoire pour lexamen de demandes de permit de construire';
+COMMENT ON COLUMN qgep.od_catchment_area.runoff_limit_planned IS 'yyy_Abflussbegrenzung, falls eine entsprechende Auflage aus dem Entwässerungskonzept vorliegt. Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Abflussbegrenzung, falls eine entsprechende Auflage aus dem Entwässerungskonzept vorliegt. Dieses Attribut hat Auflagecharakter. Es ist verbindlich für die Beurteilung von Baugesuchen / Restriction de débit, si une exigence correspondante existe dans le concept d’évacuation des eaux. Cet attribut est une exigence et obligatoire pour l’examen de demandes de permit de construire';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN seal_factor_rw_current  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_catchment_area.seal_factor_rw_current IS 'yyy_Befestigungsgrad für den Regenabwasseranschluss im Ist-Zustand / Befestigungsgrad für den Regenabwasseranschluss im Ist-Zustand / Taux d''imperméabilisation pour le raccordement eaux pluviales actuel';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN seal_factor_rw_planned  decimal (5,2) ;
@@ -1536,29 +1890,38 @@ COMMENT ON COLUMN qgep.od_catchment_area.seal_factor_ww_current IS 'yyy_Befestig
  ALTER TABLE qgep.od_catchment_area ADD COLUMN seal_factor_ww_planned  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_catchment_area.seal_factor_ww_planned IS 'yyy_Befestigungsgrad für den Schmutz- oder Mischabwasseranschluss im Planungszustand / Befestigungsgrad für den Schmutz- oder Mischabwasseranschluss im Planungszustand / Taux d''imperméabilisation pour les raccordements eaux usées et eaux mixtes prévus';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN sewer_infiltration_water_production_current  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_catchment_area.sewer_infiltration_water_production_current IS 'yyy_Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit  d''eaux claires parasites (ECP) moyen actuel, rejeté dans les canalisation deaux usées ou mixtes';
+COMMENT ON COLUMN qgep.od_catchment_area.sewer_infiltration_water_production_current IS 'yyy_Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit  d''eaux claires parasites (ECP) moyen actuel, rejeté dans les canalisation d’eaux usées ou mixtes';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN sewer_infiltration_water_production_planned  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_catchment_area.sewer_infiltration_water_production_planned IS 'yyy_Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit  d''eaux claires parasites (ECP) moyen prévu, rejeté dans les canalisation deaux usées ou mixtes';
+COMMENT ON COLUMN qgep.od_catchment_area.sewer_infiltration_water_production_planned IS 'yyy_Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit  d''eaux claires parasites (ECP) moyen prévu, rejeté dans les canalisation d’eaux usées ou mixtes';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN surface_area  decimal(8,2) ;
 COMMENT ON COLUMN qgep.od_catchment_area.surface_area IS 'yyy_redundantes Attribut Flaeche, welches die aus dem Perimeter errechnete Flaeche [ha] enthält / Redundantes Attribut Flaeche, welches die aus dem Perimeter errechnete Flaeche [ha] enthält / Attribut redondant indiquant la surface calculée à partir du périmètre en ha';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN waste_water_production_current  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_current IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit moyen actuel des eaux usées rejetées dans les canalisations deaux usées ou d''eaux mixtes';
+COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_current IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit moyen actuel des eaux usées rejetées dans les canalisations d’eaux usées ou d''eaux mixtes';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN waste_water_production_planned  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_planned IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit moyen prévu des eaux usées rejetées dans les canalisations deaux usées ou d''eaux mixtes.';
+COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_planned IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit moyen prévu des eaux usées rejetées dans les canalisations d’eaux usées ou d''eaux mixtes.';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_catchment_area.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_catchment_area.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_catchment_area.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_catchment_area
+BEFORE UPDATE OR INSERT ON
+ qgep.od_catchment_area
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_measurement_result
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_measurement_result_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1584,15 +1947,24 @@ COMMENT ON COLUMN qgep.od_measurement_result.last_modification IS 'Last modifica
  ALTER TABLE qgep.od_measurement_result ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_measurement_result.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_measurement_result.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_measurement_result
+BEFORE UPDATE OR INSERT ON
+ qgep.od_measurement_result
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_measuring_device
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_measuring_device_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1616,15 +1988,24 @@ COMMENT ON COLUMN qgep.od_measuring_device.last_modification IS 'Last modificati
  ALTER TABLE qgep.od_measuring_device ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_measuring_device.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_measuring_device.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_measuring_device
+BEFORE UPDATE OR INSERT ON
+ qgep.od_measuring_device
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_measurement_series
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_measurement_series_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1646,15 +2027,24 @@ COMMENT ON COLUMN qgep.od_measurement_series.last_modification IS 'Last modifica
  ALTER TABLE qgep.od_measurement_series ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_measurement_series.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_measurement_series.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_measurement_series
+BEFORE UPDATE OR INSERT ON
+ qgep.od_measurement_series
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_measuring_point
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_measuring_point_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1673,7 +2063,7 @@ COMMENT ON COLUMN qgep.od_measuring_point.kind IS 'yyy_Art der Untersuchungsstel
 COMMENT ON COLUMN qgep.od_measuring_point.purpose IS 'Purpose of measurement / Zweck der Messung / Objet de la mesure';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_measuring_point.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep.od_measuring_point ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_measuring_point', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_measuring_point_situation_geometry ON qgep.od_measuring_point USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_measuring_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1681,15 +2071,24 @@ COMMENT ON COLUMN qgep.od_measuring_point.last_modification IS 'Last modificatio
  ALTER TABLE qgep.od_measuring_point ADD COLUMN dataowner varchar(80) ;
 COMMENT ON COLUMN qgep.od_measuring_point.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep.od_measuring_point.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée lenregistrement de ces données ';
+COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+-------
+CREATE TRIGGER
+update_last_modified_measuring_point
+BEFORE UPDATE OR INSERT ON
+ qgep.od_measuring_point
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified();
+
+-------
 -------
 CREATE TABLE qgep.od_planning_zone
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_planning_zone_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1700,13 +2099,22 @@ CREATE SEQUENCE qgep.seq_od_planning_zone_oid INCREMENT 1 MINVALUE 0 MAXVALUE 99
 COMMENT ON COLUMN qgep.od_planning_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_planning_zone ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_planning_zone.kind IS 'Type of planning zone / Art der Bauzone / Genre de zones à bâtir';
-ALTER TABLE qgep.od_planning_zone ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_planning_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_planning_zone_perimeter_geometry ON qgep.od_planning_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_planning_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_planning_zone
+BEFORE UPDATE OR INSERT ON
+ qgep.od_planning_zone
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_groundwater_protection_zone
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_groundwater_protection_zone_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1717,13 +2125,22 @@ CREATE SEQUENCE qgep.seq_od_groundwater_protection_zone_oid INCREMENT 1 MINVALUE
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_groundwater_protection_zone ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.kind IS 'yyy_Zonenarten. Grundwasserschutzzonen bestehen aus dem Fassungsbereich (Zone S1), der Engeren Schutzzone (Zone S2) und der Weiteren Schutzzone (Zone S3). / Zonenarten. Grundwasserschutzzonen bestehen aus dem Fassungsbereich (Zone S1), der Engeren Schutzzone (Zone S2) und der Weiteren Schutzzone (Zone S3). / Genre de zones';
-ALTER TABLE qgep.od_groundwater_protection_zone ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_groundwater_protection_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_groundwater_protection_zone_perimeter_geometry ON qgep.od_groundwater_protection_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_groundwater_protection_zone
+BEFORE UPDATE OR INSERT ON
+ qgep.od_groundwater_protection_zone
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_ground_water_protection_perimeter
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_ground_water_protection_perimeter_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1732,13 +2149,22 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_ground_water_protection_perimeter_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_ground_water_protection_perimeter ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_ground_water_protection_perimeter');
 COMMENT ON COLUMN qgep.od_ground_water_protection_perimeter.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep.od_ground_water_protection_perimeter ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_ground_water_protection_perimeter', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_ground_water_protection_perimeter_perimeter_geometry ON qgep.od_ground_water_protection_perimeter USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_ground_water_protection_perimeter.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_ground_water_protection_perimeter
+BEFORE UPDATE OR INSERT ON
+ qgep.od_ground_water_protection_perimeter
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_water_body_protection_sector
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_water_body_protection_sector_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1749,13 +2175,22 @@ CREATE SEQUENCE qgep.seq_od_water_body_protection_sector_oid INCREMENT 1 MINVALU
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_water_body_protection_sector ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.kind IS 'yyy_Art des Schutzbereiches für  oberflächliches Gewässer und Grundwasser bezüglich Gefährdung / Art des Schutzbereiches für  oberflächliches Gewässer und Grundwasser bezüglich Gefährdung / Type de zones de protection des eaux superficielles et souterraines';
-ALTER TABLE qgep.od_water_body_protection_sector ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_water_body_protection_sector', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_water_body_protection_sector_perimeter_geometry ON qgep.od_water_body_protection_sector USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_water_body_protection_sector
+BEFORE UPDATE OR INSERT ON
+ qgep.od_water_body_protection_sector
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_drainage_system
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_drainage_system_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1766,13 +2201,22 @@ CREATE SEQUENCE qgep.seq_od_drainage_system_oid INCREMENT 1 MINVALUE 0 MAXVALUE 
 COMMENT ON COLUMN qgep.od_drainage_system.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_drainage_system ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_drainage_system.kind IS 'yyy_Art des Entwässerungssystems in dem ein bestimmtes Gebiet entwässert werden soll (SOLL Zustand) / Art des Entwässerungssystems in dem ein bestimmtes Gebiet entwässert werden soll (SOLL Zustand) / Genre de système d''évacuation choisi pour une région déterminée (Etat prévu)';
-ALTER TABLE qgep.od_drainage_system ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_drainage_system', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_drainage_system_perimeter_geometry ON qgep.od_drainage_system USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_drainage_system.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_drainage_system
+BEFORE UPDATE OR INSERT ON
+ qgep.od_drainage_system
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_infiltration_zone
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_infiltration_zone_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1783,13 +2227,22 @@ CREATE SEQUENCE qgep.seq_od_infiltration_zone_oid INCREMENT 1 MINVALUE 0 MAXVALU
 COMMENT ON COLUMN qgep.od_infiltration_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_infiltration_zone ADD COLUMN infiltration_capacity  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_zone.infiltration_capacity IS 'yyy_Versickerungsmöglichkeit im Bereich / Versickerungsmöglichkeit im Bereich / Potentiel d''infiltration de la zone';
-ALTER TABLE qgep.od_infiltration_zone ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_infiltration_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_infiltration_zone_perimeter_geometry ON qgep.od_infiltration_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_infiltration_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_infiltration_zone
+BEFORE UPDATE OR INSERT ON
+ qgep.od_infiltration_zone
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_zone");
+
+-------
+-------
 CREATE TABLE qgep.od_dryweather_downspout
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_dryweather_downspout_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1801,9 +2254,18 @@ COMMENT ON COLUMN qgep.od_dryweather_downspout.obj_id IS 'INTERLIS STANDARD OID 
  ALTER TABLE qgep.od_dryweather_downspout ADD COLUMN diameter  smallint ;
 COMMENT ON COLUMN qgep.od_dryweather_downspout.diameter IS 'yyy_Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Dimension du couvercle (dimension minimale pour couvercle anguleux)';
 -------
+CREATE TRIGGER
+update_last_modified_dryweather_downspout
+BEFORE UPDATE OR INSERT ON
+ qgep.od_dryweather_downspout
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_cover
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_cover_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1817,7 +2279,7 @@ COMMENT ON COLUMN qgep.od_cover.brand IS 'Name of manufacturer / Name der Herste
  ALTER TABLE qgep.od_cover ADD COLUMN cover_shape  integer ;
 COMMENT ON COLUMN qgep.od_cover.cover_shape IS 'shape of cover / Form des Deckels / Forme du couvercle';
  ALTER TABLE qgep.od_cover ADD COLUMN depth  smallint ;
-COMMENT ON COLUMN qgep.od_cover.depth IS 'yyy_redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Hal-tungspunkt.Kote) / redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote) / Attribut de fonction EPAISSEUR redondant, numérique [mm]. Fonction (valeur calculée) = COUVERCLE.COTE correspondant moins NUD_RESEAU.COTE_RADIER (si la cote radier ne peut pas être saisie séparément, prendre la POINT_TRONCON.COTE la plus basse.';
+COMMENT ON COLUMN qgep.od_cover.depth IS 'yyy_redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Hal-tungspunkt.Kote) / redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote) / Attribut de fonction EPAISSEUR redondant, numérique [mm]. Fonction (valeur calculée) = COUVERCLE.COTE correspondant moins NŒUD_RESEAU.COTE_RADIER (si la cote radier ne peut pas être saisie séparément, prendre la POINT_TRONCON.COTE la plus basse.';
  ALTER TABLE qgep.od_cover ADD COLUMN diameter  smallint ;
 COMMENT ON COLUMN qgep.od_cover.diameter IS 'yyy_Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Dimension du couvercle (dimension minimale pour couvercle anguleux)';
  ALTER TABLE qgep.od_cover ADD COLUMN fastening  integer ;
@@ -1828,23 +2290,26 @@ COMMENT ON COLUMN qgep.od_cover.level IS 'Height of cover / Deckelhöhe / Cote d
 COMMENT ON COLUMN qgep.od_cover.material IS 'Material of cover / Deckelmaterial / Matériau du couvercle';
  ALTER TABLE qgep.od_cover ADD COLUMN positional_accuracy  integer ;
 COMMENT ON COLUMN qgep.od_cover.positional_accuracy IS 'Quantfication of accuarcy of position of cover (center hole) / Quantifizierung der Genauigkeit der Lage des Deckels (Pickelloch) / Plage de précision des coordonnées planimétriques du couvercle.';
-ALTER TABLE qgep.od_cover ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_cover', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_cover_situation_geometry ON qgep.od_cover USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_cover.situation_geometry IS 'Situation of cover (cover hole), National position coordinates (East, North) / Lage des Deckels (Pickelloch) / Positionnement du couvercle (milieu du couvercle)';
  ALTER TABLE qgep.od_cover ADD COLUMN sludge_bucket  integer ;
 COMMENT ON COLUMN qgep.od_cover.sludge_bucket IS 'yyy_Angabe, ob der Deckel mit einem Schlammeimer versehen ist oder nicht / Angabe, ob der Deckel mit einem Schlammeimer versehen ist oder nicht / Indication si le couvercle est pourvu ou non d''un ramasse-boues';
  ALTER TABLE qgep.od_cover ADD COLUMN venting  integer ;
 COMMENT ON COLUMN qgep.od_cover.venting IS 'venting with wholes for aeration / Deckel mit Lüftungslöchern versehen / Couvercle pourvu de trous d''aération';
+-------
 CREATE TRIGGER
-  update_last_modified_cover
+update_last_modified_cover
 BEFORE UPDATE OR INSERT ON
-  qgep.od_cover
+ qgep.od_cover
 FOR EACH ROW EXECUTE PROCEDURE
-  qgep.update_last_modified_parent("qgep.od_structure_part");
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
 -------
 CREATE TABLE qgep.od_access_aid
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_access_aid_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1856,9 +2321,18 @@ COMMENT ON COLUMN qgep.od_access_aid.obj_id IS 'INTERLIS STANDARD OID (with Post
  ALTER TABLE qgep.od_access_aid ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_access_aid.kind IS 'yyy_Art des Einstiegs in das Bauwerk / Art des Einstiegs in das Bauwerk / Genre d''accès à l''ouvrage';
 -------
+CREATE TRIGGER
+update_last_modified_access_aid
+BEFORE UPDATE OR INSERT ON
+ qgep.od_access_aid
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_electric_equipment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_electric_equipment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1874,9 +2348,18 @@ COMMENT ON COLUMN qgep.od_electric_equipment.kind IS 'yyy_Elektrische Installati
  ALTER TABLE qgep.od_electric_equipment ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_electric_equipment.year_of_replacement IS 'yyy_Jahr, in dem die Lebensdauer der elektrischen Einrichtung voraussichtlich ausläuft / Jahr, in dem die Lebensdauer der elektrischen Einrichtung voraussichtlich ausläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_electric_equipment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_electric_equipment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_dryweather_flume
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_dryweather_flume_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1888,9 +2371,18 @@ COMMENT ON COLUMN qgep.od_dryweather_flume.obj_id IS 'INTERLIS STANDARD OID (wit
  ALTER TABLE qgep.od_dryweather_flume ADD COLUMN material  integer ;
 COMMENT ON COLUMN qgep.od_dryweather_flume.material IS 'yyy_Material der Ausbildung oder Auskleidung der Trockenwetterrinne / Material der Ausbildung oder Auskleidung der Trockenwetterrinne / Matériau de fabrication ou de revêtement de la cunette de débit temps sec';
 -------
+CREATE TRIGGER
+update_last_modified_dryweather_flume
+BEFORE UPDATE OR INSERT ON
+ qgep.od_dryweather_flume
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_tank_emptying
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_tank_emptying_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1908,9 +2400,18 @@ COMMENT ON COLUMN qgep.od_tank_emptying.type IS '';
  ALTER TABLE qgep.od_tank_emptying ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_tank_emptying.year_of_replacement IS 'yyy_Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_tank_emptying
+BEFORE UPDATE OR INSERT ON
+ qgep.od_tank_emptying
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_electromechanical_equipment
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_electromechanical_equipment_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1926,9 +2427,18 @@ COMMENT ON COLUMN qgep.od_electromechanical_equipment.kind IS 'yyy_Elektromechan
  ALTER TABLE qgep.od_electromechanical_equipment ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_electromechanical_equipment.year_of_replacement IS 'yyy_Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_electromechanical_equipment
+BEFORE UPDATE OR INSERT ON
+ qgep.od_electromechanical_equipment
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_benching
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_benching_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1940,9 +2450,18 @@ COMMENT ON COLUMN qgep.od_benching.obj_id IS 'INTERLIS STANDARD OID (with Postfi
  ALTER TABLE qgep.od_benching ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_benching.kind IS '';
 -------
+CREATE TRIGGER
+update_last_modified_benching
+BEFORE UPDATE OR INSERT ON
+ qgep.od_benching
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_backflow_prevention
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_backflow_prevention_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1958,9 +2477,18 @@ COMMENT ON COLUMN qgep.od_backflow_prevention.kind IS 'Ist keine Rückstausicher
  ALTER TABLE qgep.od_backflow_prevention ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_backflow_prevention.year_of_replacement IS 'yyy_Jahr in dem die Lebensdauer der Rückstausicherung voraussichtlich abläuft / Jahr in dem die Lebensdauer der Rückstausicherung voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_backflow_prevention
+BEFORE UPDATE OR INSERT ON
+ qgep.od_backflow_prevention
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_tank_cleaning
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_tank_cleaning_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1976,9 +2504,18 @@ COMMENT ON COLUMN qgep.od_tank_cleaning.type IS '';
  ALTER TABLE qgep.od_tank_cleaning ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_tank_cleaning.year_of_replacement IS 'yyy_Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_tank_cleaning
+BEFORE UPDATE OR INSERT ON
+ qgep.od_tank_cleaning
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_solids_retention
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_solids_retention_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -1994,13 +2531,22 @@ COMMENT ON COLUMN qgep.od_solids_retention.gross_costs IS 'Gross costs of electr
  ALTER TABLE qgep.od_solids_retention ADD COLUMN overflow_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_solids_retention.overflow_level IS 'Overflow level of solids retention in in m.a.sl. / Anspringkote Feststoffrückhalt in m.ü.M. / Cote du début du déversement de la retenue de matières solides en m.s.m.';
  ALTER TABLE qgep.od_solids_retention ADD COLUMN type  integer ;
-COMMENT ON COLUMN qgep.od_solids_retention.type IS 'yyy_(Elektromechanische) Teile zum Feststoffrückhalt eines Bauwerks / (Elektromechanische) Teile zum Feststoffrückhalt eines Bauwerks / Eléments (électromécaniques) pour la retenue de matières solides dun ouvrage';
+COMMENT ON COLUMN qgep.od_solids_retention.type IS 'yyy_(Elektromechanische) Teile zum Feststoffrückhalt eines Bauwerks / (Elektromechanische) Teile zum Feststoffrückhalt eines Bauwerks / Eléments (électromécaniques) pour la retenue de matières solides d’un ouvrage';
  ALTER TABLE qgep.od_solids_retention ADD COLUMN year_of_replacement  smallint ;
 COMMENT ON COLUMN qgep.od_solids_retention.year_of_replacement IS 'yyy_Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Jahr in dem die Lebensdauer der elektromechanischen Ausrüstung voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''équipement soit écoulée';
 -------
+CREATE TRIGGER
+update_last_modified_solids_retention
+BEFORE UPDATE OR INSERT ON
+ qgep.od_solids_retention
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_structure_part");
+
+-------
+-------
 CREATE TABLE qgep.od_wwtp_structure
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_wwtp_structure_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2010,11 +2556,20 @@ CREATE SEQUENCE qgep.seq_od_wwtp_structure_oid INCREMENT 1 MINVALUE 0 MAXVALUE 9
  ALTER TABLE qgep.od_wwtp_structure ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_wwtp_structure');
 COMMENT ON COLUMN qgep.od_wwtp_structure.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_wwtp_structure ADD COLUMN kind  integer ;
-COMMENT ON COLUMN qgep.od_wwtp_structure.kind IS 'yyy_Art des Beckens oder Verfahrens im ARA Bauwerk / Art des Beckens oder Verfahrens im ARA Bauwerk / Genre de l''louvrage ou genre de traitement dans l''ouvrage STEP';
+COMMENT ON COLUMN qgep.od_wwtp_structure.kind IS 'yyy_Art des Beckens oder Verfahrens im ARA Bauwerk / Art des Beckens oder Verfahrens im ARA Bauwerk / Genre de l''l’ouvrage ou genre de traitement dans l''ouvrage STEP';
+-------
+CREATE TRIGGER
+update_last_modified_wwtp_structure
+BEFORE UPDATE OR INSERT ON
+ qgep.od_wwtp_structure
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
 -------
 CREATE TABLE qgep.od_manhole
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_manhole_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2024,7 +2579,7 @@ CREATE SEQUENCE qgep.seq_od_manhole_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 S
  ALTER TABLE qgep.od_manhole ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_manhole');
 COMMENT ON COLUMN qgep.od_manhole.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_manhole ADD COLUMN depth  smallint ;
-COMMENT ON COLUMN qgep.od_manhole.depth IS 'yyy_Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER correspondant moins COUVERCLE.COTE (si le radier nest pas saisi séparément, cest la POINT_TRONCON.COTE le plus bas). Cf. SIA 405 cahier technique 2015 4.3.4.';
+COMMENT ON COLUMN qgep.od_manhole.depth IS 'yyy_Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER correspondant moins COUVERCLE.COTE (si le radier n’est pas saisi séparément, c’est la POINT_TRONCON.COTE le plus bas). Cf. SIA 405 cahier technique 2015 4.3.4.';
  ALTER TABLE qgep.od_manhole ADD COLUMN dimension1  smallint ;
 COMMENT ON COLUMN qgep.od_manhole.dimension1 IS 'Dimension2 of infiltration installations (largest inside dimension). / Dimension1 des Schachtes (grösstes Innenmass). / Dimension1 de la chambre (plus grande mesure intérieure).';
  ALTER TABLE qgep.od_manhole ADD COLUMN dimension2  smallint ;
@@ -2037,9 +2592,18 @@ COMMENT ON COLUMN qgep.od_manhole.material IS 'yyy_Hauptmaterial aus dem das Bau
  ALTER TABLE qgep.od_manhole ADD COLUMN surface_inflow  integer ;
 COMMENT ON COLUMN qgep.od_manhole.surface_inflow IS 'yyy_Zuflussmöglichkeit  von Oberflächenwasser direkt in den Schacht / Zuflussmöglichkeit  von Oberflächenwasser direkt in den Schacht / Arrivée directe d''eaux superficielles dans la chambre';
 -------
+CREATE TRIGGER
+update_last_modified_manhole
+BEFORE UPDATE OR INSERT ON
+ qgep.od_manhole
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_special_structure
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_special_structure_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2049,11 +2613,11 @@ CREATE SEQUENCE qgep.seq_od_special_structure_oid INCREMENT 1 MINVALUE 0 MAXVALU
  ALTER TABLE qgep.od_special_structure ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_special_structure');
 COMMENT ON COLUMN qgep.od_special_structure.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_special_structure ADD COLUMN bypass  integer ;
-COMMENT ON COLUMN qgep.od_special_structure.bypass IS 'yyy_Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass pour détourner les eaux (par exemple durant des opérations de maintenance ou en cas davaries)';
+COMMENT ON COLUMN qgep.od_special_structure.bypass IS 'yyy_Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass pour détourner les eaux (par exemple durant des opérations de maintenance ou en cas d’avaries)';
  ALTER TABLE qgep.od_special_structure ADD COLUMN depth  smallint ;
-COMMENT ON COLUMN qgep.od_special_structure.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de louvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de louvrage corresp';
+COMMENT ON COLUMN qgep.od_special_structure.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage corresp';
  ALTER TABLE qgep.od_special_structure ADD COLUMN emergency_spillway  integer ;
-COMMENT ON COLUMN qgep.od_special_structure.emergency_spillway IS 'zzz_Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / Lattribut décrit vers où le débit déversé sécoule. (bassin daccumulation / canal daccumulation)';
+COMMENT ON COLUMN qgep.od_special_structure.emergency_spillway IS 'zzz_Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / L’attribut décrit vers où le débit déversé s’écoule. (bassin d’accumulation / canal d’accumulation)';
  ALTER TABLE qgep.od_special_structure ADD COLUMN function  integer ;
 COMMENT ON COLUMN qgep.od_special_structure.function IS 'Kind of function / Art der Nutzung / Genre d''utilisation';
  CREATE INDEX in_od_special_structure_function ON qgep.od_special_structure USING btree (function);
@@ -2062,9 +2626,18 @@ COMMENT ON COLUMN qgep.od_special_structure.stormwater_tank_arrangement IS 'yyy_
  ALTER TABLE qgep.od_special_structure ADD COLUMN upper_elevation  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_special_structure.upper_elevation IS 'Highest point of structure (ceiling), outside / Höchster Punkt des Bauwerks (Decke), aussen / Point le plus élevé de la construction';
 -------
+CREATE TRIGGER
+update_last_modified_special_structure
+BEFORE UPDATE OR INSERT ON
+ qgep.od_special_structure
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_channel
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_channel_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2092,9 +2665,18 @@ COMMENT ON COLUMN qgep.od_channel.usage_current IS 'yyy_Für Primäre Abwasseran
 COMMENT ON COLUMN qgep.od_channel.usage_planned IS 'yyy_Durch das Konzept vorgesehene Nutzung (vergleiche auch Nutzungsart_Ist) / Durch das Konzept vorgesehene Nutzung (vergleiche auch Nutzungsart_Ist) / Utilisation prévue par le concept d''assainissement (voir aussi GENRE_UTILISATION_ACTUELLE)';
  CREATE INDEX in_od_channel_function_hierarchic_usage_current ON qgep.od_channel USING btree (function_hierarchic, usage_current);
 -------
+CREATE TRIGGER
+update_last_modified_channel
+BEFORE UPDATE OR INSERT ON
+ qgep.od_channel
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_discharge_point
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_discharge_point_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2104,21 +2686,30 @@ CREATE SEQUENCE qgep.seq_od_discharge_point_oid INCREMENT 1 MINVALUE 0 MAXVALUE 
  ALTER TABLE qgep.od_discharge_point ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_discharge_point');
 COMMENT ON COLUMN qgep.od_discharge_point.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN depth  smallint ;
-COMMENT ON COLUMN qgep.od_discharge_point.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de louvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de louvrage corresp';
+COMMENT ON COLUMN qgep.od_discharge_point.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage corresp';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN highwater_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.highwater_level IS 'yyy_Massgebliche Hochwasserkote der Einleitstelle. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik. / Massgebliche Hochwasserkote der Einleitstelle. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik. / Cote de crue déterminante au point de rejet. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik.';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN relevance  integer ;
-COMMENT ON COLUMN qgep.od_discharge_point.relevance IS 'Relevance of discharge point for water course / Gewässerrelevanz der Einleitstelle / Il est conseillé dutiliser des noms réels, tels qSignifiance pour milieu récepteur';
+COMMENT ON COLUMN qgep.od_discharge_point.relevance IS 'Relevance of discharge point for water course / Gewässerrelevanz der Einleitstelle / Il est conseillé d’utiliser des noms réels, tels qSignifiance pour milieu récepteur';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN terrain_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.terrain_level IS 'Terrain level if there is no cover at the discharge point (structure), e.g. just pipe ending / Terrainkote, falls kein Deckel vorhanden bei Einleitstelle (Kanalende ohne Bauwerk oder Bauwerk ohne Deckel) / Cote terrain s''il n''y a pas de couvercle à l''exutoire par example seulement fin du conduite';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN upper_elevation  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.upper_elevation IS 'Highest point of structure (ceiling), outside / Höchster Punkt des Bauwerks (Decke), aussen / Point le plus élevé de l''ouvrage';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN waterlevel_hydraulic  decimal(7,3) ;
-COMMENT ON COLUMN qgep.od_discharge_point.waterlevel_hydraulic IS 'yyy_Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Niveau deau calculé à lexutoire. Si aucun exigence est demandée, indiquer le niveau deau pour un HQ30.';
+COMMENT ON COLUMN qgep.od_discharge_point.waterlevel_hydraulic IS 'yyy_Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Niveau d’eau calculé à l’exutoire. Si aucun exigence est demandée, indiquer le niveau d’eau pour un HQ30.';
+-------
+CREATE TRIGGER
+update_last_modified_discharge_point
+BEFORE UPDATE OR INSERT ON
+ qgep.od_discharge_point
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
 -------
 CREATE TABLE qgep.od_infiltration_installation
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_infiltration_installation_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2132,9 +2723,9 @@ COMMENT ON COLUMN qgep.od_infiltration_installation.absorption_capacity IS 'yyy_
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN defects  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.defects IS 'yyy_Gibt die aktuellen Mängel der Versickerungsanlage an (IST-Zustand). / Gibt die aktuellen Mängel der Versickerungsanlage an (IST-Zustand). / Indique les défauts actuels de l''installation d''infiltration (etat_actuel).';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN depth  smallint ;
-COMMENT ON COLUMN qgep.od_infiltration_installation.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de louvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de louvrage corresp';
+COMMENT ON COLUMN qgep.od_infiltration_installation.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage corresp';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN dimension1  smallint ;
-COMMENT ON COLUMN qgep.od_infiltration_installation.dimension1 IS 'Dimension1 of infiltration installations (largest inside dimension) if used with norm elements. Else leave empty.. / Dimension1 der Versickerungsanlage (grösstes Innenmass) bei der Verwendung von Normbauteilen. Sonst leer lassen und mit Detailgeometrie beschreiben. / Dimension1 de linstallation dinfiltration (plus grande mesure intérieure) lorsquelle est utilisée pour des éléments douvrage normés. Sinon, à laisser libre et prendre la description de la géométrie détaillée.';
+COMMENT ON COLUMN qgep.od_infiltration_installation.dimension1 IS 'Dimension1 of infiltration installations (largest inside dimension) if used with norm elements. Else leave empty.. / Dimension1 der Versickerungsanlage (grösstes Innenmass) bei der Verwendung von Normbauteilen. Sonst leer lassen und mit Detailgeometrie beschreiben. / Dimension1 de l’installation d’infiltration (plus grande mesure intérieure) lorsqu’elle est utilisée pour des éléments d’ouvrage normés. Sinon, à laisser libre et prendre la description de la géométrie détaillée.';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN dimension2  smallint ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.dimension2 IS 'Dimension2 of infiltration installations (smallest inside dimension). With circle shaped installations leave dimension2 empty, with ovoid shaped ones fill it in. With rectangular shaped manholes use detailled_geometry to describe further. / Dimension2 der Versickerungsanlage (kleinstes Innenmass) bei der Verwendung von Normbauteilen. Sonst leer lassen und mit Detailgeometrie beschreiben. / Dimension2 de la chambre (plus petite mesure intérieure). La dimension2 est à saisir pour des chambres ovales et à laisser libre pour des chambres circulaires. Pour les chambres rectangulaires il faut utiliser la géométrie détaillée.';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN distance_to_aquifer  decimal(7,2) ;
@@ -2156,9 +2747,18 @@ COMMENT ON COLUMN qgep.od_infiltration_installation.vehicle_access IS 'yyy_Zugä
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN watertightness  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.watertightness IS 'yyy_Wasserdichtheit gegen Oberflächenwasser.  Nur bei Anlagen mit Schächten. / Wasserdichtheit gegen Oberflächenwasser.  Nur bei Anlagen mit Schächten. / Etanchéité contre des eaux superficielles. Uniquement pour des installations avec chambres';
 -------
+CREATE TRIGGER
+update_last_modified_infiltration_installation
+BEFORE UPDATE OR INSERT ON
+ qgep.od_infiltration_installation
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_river
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_river_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2170,9 +2770,18 @@ COMMENT ON COLUMN qgep.od_river.obj_id IS 'INTERLIS STANDARD OID (with Postfix/P
  ALTER TABLE qgep.od_river ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_river.kind IS 'yyy_Art des Fliessgewässers. Klassifizierung nach GEWISS / Art des Fliessgewässers. Klassifizierung nach GEWISS / Type de cours d''eau. Classification selon GEWISS';
 -------
+CREATE TRIGGER
+update_last_modified_river
+BEFORE UPDATE OR INSERT ON
+ qgep.od_river
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_surface_water_bodies");
+
+-------
+-------
 CREATE TABLE qgep.od_lake
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_lake_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2181,13 +2790,22 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_lake_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_lake ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_lake');
 COMMENT ON COLUMN qgep.od_lake.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep.od_lake ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_lake', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_lake_perimeter_geometry ON qgep.od_lake USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_lake.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_lake
+BEFORE UPDATE OR INSERT ON
+ qgep.od_lake
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_surface_water_bodies");
+
+-------
+-------
 CREATE TABLE qgep.od_dam
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_dam_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2201,9 +2819,18 @@ COMMENT ON COLUMN qgep.od_dam.kind IS 'Type of dam or weir / Art des Wehres / Ge
  ALTER TABLE qgep.od_dam ADD COLUMN vertical_drop  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_dam.vertical_drop IS 'Vertical difference of water level before and after chute / Differenz des Wasserspiegels vor und nach dem Absturz / Différence de la hauteur du plan d''eau avant et après la chute';
 -------
+CREATE TRIGGER
+update_last_modified_dam
+BEFORE UPDATE OR INSERT ON
+ qgep.od_dam
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_chute
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_chute_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2219,9 +2846,18 @@ COMMENT ON COLUMN qgep.od_chute.material IS 'Construction material of chute / Ma
  ALTER TABLE qgep.od_chute ADD COLUMN vertical_drop  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_chute.vertical_drop IS 'Vertical difference of water level before and after chute / Differenz des Wasserspiegels vor und nach dem Absturz / Différence de la hauteur du plan d''eau avant et après la chute';
 -------
+CREATE TRIGGER
+update_last_modified_chute
+BEFORE UPDATE OR INSERT ON
+ qgep.od_chute
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_rock_ramp
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_rock_ramp_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2235,9 +2871,18 @@ COMMENT ON COLUMN qgep.od_rock_ramp.stabilisation IS 'Type of stabilisation of r
  ALTER TABLE qgep.od_rock_ramp ADD COLUMN vertical_drop  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_rock_ramp.vertical_drop IS 'Vertical difference of water level before and after chute / Differenz des Wasserspiegels vor und nach dem Absturz / Différence de la hauteur du plan d''eau avant et après la chute';
 -------
+CREATE TRIGGER
+update_last_modified_rock_ramp
+BEFORE UPDATE OR INSERT ON
+ qgep.od_rock_ramp
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_blocking_debris
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_blocking_debris_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2249,9 +2894,18 @@ COMMENT ON COLUMN qgep.od_blocking_debris.obj_id IS 'INTERLIS STANDARD OID (with
  ALTER TABLE qgep.od_blocking_debris ADD COLUMN vertical_drop  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_blocking_debris.vertical_drop IS 'yyy_Vertical difference of water level before and after Sperre / Differenz des Wasserspiegels vor und nach der Sperre / Différence de la hauteur du plan d''eau avant et après le barrage';
 -------
+CREATE TRIGGER
+update_last_modified_blocking_debris
+BEFORE UPDATE OR INSERT ON
+ qgep.od_blocking_debris
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_passage
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_passage_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2261,9 +2915,18 @@ CREATE SEQUENCE qgep.seq_od_passage_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 S
  ALTER TABLE qgep.od_passage ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_passage');
 COMMENT ON COLUMN qgep.od_passage.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 -------
+CREATE TRIGGER
+update_last_modified_passage
+BEFORE UPDATE OR INSERT ON
+ qgep.od_passage
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_lock
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_lock_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2275,9 +2938,18 @@ COMMENT ON COLUMN qgep.od_lock.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Pr
  ALTER TABLE qgep.od_lock ADD COLUMN vertical_drop  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_lock.vertical_drop IS 'yyy_Vertical difference of water level before and after Schleuse / Differenz im Wasserspiegel oberhalb und unterhalb der Schleuse / Différence des plans d''eau entre l''amont et l''aval de l''écluse';
 -------
+CREATE TRIGGER
+update_last_modified_lock
+BEFORE UPDATE OR INSERT ON
+ qgep.od_lock
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_ford
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_ford_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2287,9 +2959,18 @@ CREATE SEQUENCE qgep.seq_od_ford_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 STAR
  ALTER TABLE qgep.od_ford ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_ford');
 COMMENT ON COLUMN qgep.od_ford.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 -------
+CREATE TRIGGER
+update_last_modified_ford
+BEFORE UPDATE OR INSERT ON
+ qgep.od_ford
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_water_control_structure");
+
+-------
+-------
 CREATE TABLE qgep.od_param_ca_mouse1
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_param_ca_mouse1_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2311,9 +2992,18 @@ COMMENT ON COLUMN qgep.od_param_ca_mouse1.surface_ca_mouse IS 'yyy_Parameter zur
  ALTER TABLE qgep.od_param_ca_mouse1 ADD COLUMN usage  varchar(50) ;
 COMMENT ON COLUMN qgep.od_param_ca_mouse1.usage IS 'Classification based on surface runoff modell MOUSE 2000/2001 / Klassifikation gemäss Oberflächenabflussmodell von MOUSE 2000/2001 / Classification selon le modèle surface de MOUSE 2000/2001';
 -------
+CREATE TRIGGER
+update_last_modified_param_ca_mouse1
+BEFORE UPDATE OR INSERT ON
+ qgep.od_param_ca_mouse1
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_surface_runoff_parameters");
+
+-------
+-------
 CREATE TABLE qgep.od_param_ca_general
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_param_ca_general_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2333,9 +3023,18 @@ COMMENT ON COLUMN qgep.od_param_ca_general.population_equivalent IS '';
  ALTER TABLE qgep.od_param_ca_general ADD COLUMN surface_ca  decimal(8,2) ;
 COMMENT ON COLUMN qgep.od_param_ca_general.surface_ca IS 'yyy_Surface bassin versant MOUSE1 / Fläche des Einzugsgebietes für MOUSE1 / Surface bassin versant MOUSE1';
 -------
+CREATE TRIGGER
+update_last_modified_param_ca_general
+BEFORE UPDATE OR INSERT ON
+ qgep.od_param_ca_general
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_surface_runoff_parameters");
+
+-------
+-------
 CREATE TABLE qgep.od_private
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_private_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2347,9 +3046,18 @@ COMMENT ON COLUMN qgep.od_private.obj_id IS 'INTERLIS STANDARD OID (with Postfix
  ALTER TABLE qgep.od_private ADD COLUMN kind  varchar(50) ;
 COMMENT ON COLUMN qgep.od_private.kind IS '';
 -------
+CREATE TRIGGER
+update_last_modified_private
+BEFORE UPDATE OR INSERT ON
+ qgep.od_private
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_administrative_office
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_administrative_office_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2359,9 +3067,18 @@ CREATE SEQUENCE qgep.seq_od_administrative_office_oid INCREMENT 1 MINVALUE 0 MAX
  ALTER TABLE qgep.od_administrative_office ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_administrative_office');
 COMMENT ON COLUMN qgep.od_administrative_office.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 -------
+CREATE TRIGGER
+update_last_modified_administrative_office
+BEFORE UPDATE OR INSERT ON
+ qgep.od_administrative_office
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_canton
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_canton_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2370,13 +3087,22 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_canton_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_canton ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_canton');
 COMMENT ON COLUMN qgep.od_canton.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep.od_canton ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_canton', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_canton_perimeter_geometry ON qgep.od_canton USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_canton.perimeter_geometry IS 'Border of canton / Kantonsgrenze / Limites cantonales';
 -------
+CREATE TRIGGER
+update_last_modified_canton
+BEFORE UPDATE OR INSERT ON
+ qgep.od_canton
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_cooperative
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_cooperative_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2386,9 +3112,18 @@ CREATE SEQUENCE qgep.seq_od_cooperative_oid INCREMENT 1 MINVALUE 0 MAXVALUE 9999
  ALTER TABLE qgep.od_cooperative ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_cooperative');
 COMMENT ON COLUMN qgep.od_cooperative.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 -------
+CREATE TRIGGER
+update_last_modified_cooperative
+BEFORE UPDATE OR INSERT ON
+ qgep.od_cooperative
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_municipality
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_municipality_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2403,7 +3138,7 @@ COMMENT ON COLUMN qgep.od_municipality.altitude IS 'Average altitude of settleme
 COMMENT ON COLUMN qgep.od_municipality.gwdp_year IS 'Year of legal validity of General Water Drainage Planning (GWDP) / Rechtsgültiges GEP aus dem Jahr / PGEE en vigueur depuis';
  ALTER TABLE qgep.od_municipality ADD COLUMN municipality_number  smallint ;
 COMMENT ON COLUMN qgep.od_municipality.municipality_number IS 'Official number of federal office for statistics / Offizielle Nummer gemäss Bundesamt für Statistik / Numéro officiel de la commune selon l''Office fédéral de la statistique';
-ALTER TABLE qgep.od_municipality ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_municipality', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_municipality_perimeter_geometry ON qgep.od_municipality USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_municipality.perimeter_geometry IS 'Border of the municipality / Gemeindegrenze / Limites communales';
  ALTER TABLE qgep.od_municipality ADD COLUMN population  integer ;
@@ -2411,9 +3146,18 @@ COMMENT ON COLUMN qgep.od_municipality.population IS 'Permanent opulation (based
  ALTER TABLE qgep.od_municipality ADD COLUMN total_surface  decimal(8,2) ;
 COMMENT ON COLUMN qgep.od_municipality.total_surface IS 'Total surface without lakes / Fläche ohne Seeanteil / Surface sans partie de lac';
 -------
+CREATE TRIGGER
+update_last_modified_municipality
+BEFORE UPDATE OR INSERT ON
+ qgep.od_municipality
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_waste_water_association
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_waste_water_association_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2423,9 +3167,18 @@ CREATE SEQUENCE qgep.seq_od_waste_water_association_oid INCREMENT 1 MINVALUE 0 M
  ALTER TABLE qgep.od_waste_water_association ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_waste_water_association');
 COMMENT ON COLUMN qgep.od_waste_water_association.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 -------
+CREATE TRIGGER
+update_last_modified_waste_water_association
+BEFORE UPDATE OR INSERT ON
+ qgep.od_waste_water_association
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_waste_water_treatment_plant
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_waste_water_treatment_plant_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2435,9 +3188,9 @@ CREATE SEQUENCE qgep.seq_od_waste_water_treatment_plant_oid INCREMENT 1 MINVALUE
  ALTER TABLE qgep.od_waste_water_treatment_plant ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_waste_water_treatment_plant');
 COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN bod5  smallint ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.bod5 IS '5 day biochemical oxygen demand measured at a temperatur of 20 degree celsius. YYY / Biochemischer Sauerstoffbedarf nach 5 Tagen Messzeit und bei einer Temperatur vom 20 Grad Celsius. Er stellt den Verbrauch an gelöstem Sauerstoff durch die Lebensvorgänge der im Wasser oder Abwasser enthaltenen Mikroorganismen (Bakterienprotozoen) beim  A / Elle représente la quantité doxygène dépensée par les phénomènes doxydation chimique, dune part, et, dautre part, la dégradation des matières organiques par voie aérobie, nécessaire à la destruction des composés organiques. Elle sexprime en milligram';
+COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.bod5 IS '5 day biochemical oxygen demand measured at a temperatur of 20 degree celsius. YYY / Biochemischer Sauerstoffbedarf nach 5 Tagen Messzeit und bei einer Temperatur vom 20 Grad Celsius. Er stellt den Verbrauch an gelöstem Sauerstoff durch die Lebensvorgänge der im Wasser oder Abwasser enthaltenen Mikroorganismen (Bakterienprotozoen) beim  A / Elle représente la quantité d’oxygène dépensée par les phénomènes d’oxydation chimique, d’une part, et, d’autre part, la dégradation des matières organiques par voie aérobie, nécessaire à la destruction des composés organiques. Elle s’exprime en milligram';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN cod  smallint ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.cod IS 'Abbreviation for chemical oxygen demand (COD). / Abkürzung für den chemischen Sauerstoffbedarf. Die englische Abkürzung lautet COD. Mit einem starken Oxydationsmittel wird mehr oder weniger erfolgreich versucht, die organischen Verbindungen der Abwasserprobe zu CO2 und H2O zu oxydieren. Als Oxydationsmi / Elle représente la teneur totale de leau en matières organiques, quelles soient ou non biodégradables. Le principe repose sur la recherche dun besoin doxygène de léchantillon pour dégrader la matière organique. Mais dans ce cas, loxygène est fourni ';
+COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.cod IS 'Abbreviation for chemical oxygen demand (COD). / Abkürzung für den chemischen Sauerstoffbedarf. Die englische Abkürzung lautet COD. Mit einem starken Oxydationsmittel wird mehr oder weniger erfolgreich versucht, die organischen Verbindungen der Abwasserprobe zu CO2 und H2O zu oxydieren. Als Oxydationsmi / Elle représente la teneur totale de l’eau en matières organiques, qu’elles soient ou non biodégradables. Le principe repose sur la recherche d’un besoin d’oxygène de l’échantillon pour dégrader la matière organique. Mais dans ce cas, l’oxygène est fourni ';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN elimination_cod  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.elimination_cod IS 'Dimensioning value elimination rate in percent / Dimensionierungswert Eliminationsrate in % / Valeur de dimensionnement, taux d''élimination en %';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN elimination_n  decimal (5,2) ;
@@ -2455,9 +3208,18 @@ COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.nh4 IS 'yyy_Dimensioning v
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN start_year  smallint ;
 COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.start_year IS 'Start of operation (year) / Jahr der Inbetriebnahme / Année de la mise en exploitation';
 -------
+CREATE TRIGGER
+update_last_modified_waste_water_treatment_plant
+BEFORE UPDATE OR INSERT ON
+ qgep.od_waste_water_treatment_plant
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_organisation");
+
+-------
+-------
 CREATE TABLE qgep.od_wastewater_node
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_wastewater_node_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2470,13 +3232,22 @@ COMMENT ON COLUMN qgep.od_wastewater_node.obj_id IS 'INTERLIS STANDARD OID (with
 COMMENT ON COLUMN qgep.od_wastewater_node.backflow_level IS 'yyy_1. Massgebende Rückstaukote bezogen auf den Berechnungsregen (dss)  2. Höhe, unter der innerhalb der Grundstücksentwässerung besondere Massnahmen gegen Rückstau zu treffen sind. (DIN 4045) / 1. Massgebende Rückstaukote bezogen auf den Berechnungsregen (dss)  2. Höhe, unter der innerhalb der Grundstücksentwässerung besondere Massnahmen gegen Rückstau zu treffen sind. (DIN 4045) / Cote de refoulement déterminante calculée à partir des pluies de projet';
  ALTER TABLE qgep.od_wastewater_node ADD COLUMN bottom_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_wastewater_node.bottom_level IS 'yyy_Tiefster Punkt des Abwasserbauwerks / Tiefster Punkt des Abwasserbauwerks / Point le plus bas du noeud';
-ALTER TABLE qgep.od_wastewater_node ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_wastewater_node', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_wastewater_node_situation_geometry ON qgep.od_wastewater_node USING gist (situation_geometry );
-COMMENT ON COLUMN qgep.od_wastewater_node.situation_geometry IS 'yyy Situation of node. Decisive reference point for sewer network simulation  (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslauf) / Lage des Knotens, massgebender Bezugspunkt für die Kanalnetzberechnung. (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslaufs) / Positionnement du nud. Point de référence déterminant pour le calcul de réseau de canalisations (en règle générale positionnement du milieu du couvercle ou de la sortie temps sec)';
+COMMENT ON COLUMN qgep.od_wastewater_node.situation_geometry IS 'yyy Situation of node. Decisive reference point for sewer network simulation  (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslauf) / Lage des Knotens, massgebender Bezugspunkt für die Kanalnetzberechnung. (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslaufs) / Positionnement du nœud. Point de référence déterminant pour le calcul de réseau de canalisations (en règle générale positionnement du milieu du couvercle ou de la sortie temps sec)';
+-------
+CREATE TRIGGER
+update_last_modified_wastewater_node
+BEFORE UPDATE OR INSERT ON
+ qgep.od_wastewater_node
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_networkelement");
+
+-------
 -------
 CREATE TABLE qgep.od_reach
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_reach_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2499,12 +3270,12 @@ COMMENT ON COLUMN qgep.od_reach.inside_coating IS 'yyy_Schutz der Innenwände de
 COMMENT ON COLUMN qgep.od_reach.length_effective IS 'yyy_Tatsächliche schräge Länge (d.h. nicht in horizontale Ebene projiziert)  inklusive Kanalkrümmungen / Tatsächliche schräge Länge (d.h. nicht in horizontale Ebene projiziert)  inklusive Kanalkrümmungen / Longueur effective (non projetée) incluant les parties incurvées';
  ALTER TABLE qgep.od_reach ADD COLUMN material  integer ;
 COMMENT ON COLUMN qgep.od_reach.material IS 'Material of reach / pipe / Rohrmaterial / Matériau du tuyau';
-ALTER TABLE qgep.od_reach ADD COLUMN progression_geometry geometry('LINESTRING', 21781);
+SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_geometry', 21781, 'LINESTRING', 2, true);
 CREATE INDEX in_qgep_od_reach_progression_geometry ON qgep.od_reach USING gist (progression_geometry );
-COMMENT ON COLUMN qgep.od_reach.progression_geometry IS 'Start, inflextion and endpoints of a pipe / Anfangs-, Knick- und Endpunkte der Leitung / Points de départ, intermédiaires et darrivée de la conduite.';
-ALTER TABLE qgep.od_reach ADD COLUMN progression_3d_geometry geometry('LINESTRINGZ', 21781);
+COMMENT ON COLUMN qgep.od_reach.progression_geometry IS 'Start, inflextion and endpoints of a pipe / Anfangs-, Knick- und Endpunkte der Leitung / Points de départ, intermédiaires et d’arrivée de la conduite.';
+SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_3d_geometry', 21781, 'LINESTRING', 3, true);
 CREATE INDEX in_qgep_od_reach_progression_3d_geometry ON qgep.od_reach USING gist (progression_3d_geometry );
-COMMENT ON COLUMN qgep.od_reach.progression_3d_geometry IS 'Start, inflextion and endpoints of a pipe (3D coordinates) / Anfangs-, Knick- und Endpunkte der Leitung (3D Koordinaten) / Points de départ, intermédiaires et darrivée de la conduite (coordonnées 3D)';
+COMMENT ON COLUMN qgep.od_reach.progression_3d_geometry IS 'Start, inflextion and endpoints of a pipe (3D coordinates) / Anfangs-, Knick- und Endpunkte der Leitung (3D Koordinaten) / Points de départ, intermédiaires et d’arrivée de la conduite (coordonnées 3D)';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_material  integer ;
 COMMENT ON COLUMN qgep.od_reach.reliner_material IS 'Material of reliner / Material des Reliners / Materiaux du relining';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_nominal_size  integer ;
@@ -2516,13 +3287,22 @@ COMMENT ON COLUMN qgep.od_reach.relining_kind IS 'Kind of relining / Art des Rel
  ALTER TABLE qgep.od_reach ADD COLUMN ring_stiffness  smallint ;
 COMMENT ON COLUMN qgep.od_reach.ring_stiffness IS 'yyy Ringsteifigkeitsklasse - Druckfestigkeit gegen Belastungen von aussen (gemäss ISO 13966 ) / Ringsteifigkeitsklasse - Druckfestigkeit gegen Belastungen von aussen (gemäss ISO 13966 ) / Rigidité annulaire pour des pressions extérieures (selon ISO 13966)';
  ALTER TABLE qgep.od_reach ADD COLUMN slope_building_plan  smallint ;
-COMMENT ON COLUMN qgep.od_reach.slope_building_plan IS 'yyy_Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Pente indiquée sur d''anciens plans non contrôlée [%o]. Ne peut pas être reprise pour des calculs hydrauliques. Indication pour des canalisations de biens-fonds ou d''amélioration foncière. Représentation sur de plan: 3.5 p';
+COMMENT ON COLUMN qgep.od_reach.slope_building_plan IS 'yyy_Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Pente indiquée sur d''anciens plans non contrôlée [%o]. Ne peut pas être reprise pour des calculs hydrauliques. Indication pour des canalisations de biens-fonds ou d''amélioration foncière. Représentation sur de plan: 3.5‰ p';
  ALTER TABLE qgep.od_reach ADD COLUMN wall_roughness  decimal(5,2) ;
 COMMENT ON COLUMN qgep.od_reach.wall_roughness IS 'yyy Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Coefficient de rugosité d''après Prandtl Colebrook (ks ou kb)';
 -------
+CREATE TRIGGER
+update_last_modified_reach
+BEFORE UPDATE OR INSERT ON
+ qgep.od_reach
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_wastewater_networkelement");
+
+-------
+-------
 CREATE TABLE qgep.od_pump
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_pump_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2540,9 +3320,9 @@ COMMENT ON COLUMN qgep.od_pump.placement_of_actuation IS 'Type of placement of t
  ALTER TABLE qgep.od_pump ADD COLUMN placement_of_pump  integer ;
 COMMENT ON COLUMN qgep.od_pump.placement_of_pump IS 'Type of placement of the pomp / Art der Aufstellung der Pumpe / Genre de montage de la pompe';
  ALTER TABLE qgep.od_pump ADD COLUMN pump_flow_max_single  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_pump.pump_flow_max_single IS 'yyy_Maximaler Förderstrom der Pumpen (einzeln als Bauwerkskomponente). Tritt in der Regel bei der minimalen Förderhöhe ein. / Maximaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der minimalen Förderhöhe ein. / Débit de refoulement maximal des pompes individuelles en tant que composante douvrage. Survient normalement à la hauteur min de refoulement.';
+COMMENT ON COLUMN qgep.od_pump.pump_flow_max_single IS 'yyy_Maximaler Förderstrom der Pumpen (einzeln als Bauwerkskomponente). Tritt in der Regel bei der minimalen Förderhöhe ein. / Maximaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der minimalen Förderhöhe ein. / Débit de refoulement maximal des pompes individuelles en tant que composante d’ouvrage. Survient normalement à la hauteur min de refoulement.';
  ALTER TABLE qgep.od_pump ADD COLUMN pump_flow_min_single  decimal(9,3) ;
-COMMENT ON COLUMN qgep.od_pump.pump_flow_min_single IS 'yyy_Minimaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der maximalen Förderhöhe ein. / Minimaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der maximalen Förderhöhe ein. / Débit de refoulement maximal de toutes les pompes de louvrage (STAP) ou des pompes individuelles en tant que composante douvrage. Survient normalement à la hauteur min de refoulement.';
+COMMENT ON COLUMN qgep.od_pump.pump_flow_min_single IS 'yyy_Minimaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der maximalen Förderhöhe ein. / Minimaler Förderstrom der Pumpe (einzeln als Bauwerkskomponente). Tritt in der Regel bei der maximalen Förderhöhe ein. / Débit de refoulement maximal de toutes les pompes de l’ouvrage (STAP) ou des pompes individuelles en tant que composante d’ouvrage. Survient normalement à la hauteur min de refoulement.';
  ALTER TABLE qgep.od_pump ADD COLUMN start_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_pump.start_level IS 'yyy_Kote des Wasserspiegels im Pumpensumpf, bei der die Pumpe eingeschaltet wird (Einschaltkote) / Kote des Wasserspiegels im Pumpensumpf, bei der die Pumpe eingeschaltet wird (Einschaltkote) / Cote du niveau d''eau dans le puisard à laquelle s''enclenche la pompe';
  ALTER TABLE qgep.od_pump ADD COLUMN stop_level  decimal(7,3) ;
@@ -2550,9 +3330,18 @@ COMMENT ON COLUMN qgep.od_pump.stop_level IS 'yyy_Kote des Wasserspiegels im Pum
  ALTER TABLE qgep.od_pump ADD COLUMN usage_current  integer ;
 COMMENT ON COLUMN qgep.od_pump.usage_current IS 'yyy_Nutzungsart_Ist des gepumpten Abwassers. / Nutzungsart_Ist des gepumpten Abwassers. / Genre d''utilisation actuel de l''eau usée pompée';
 -------
+CREATE TRIGGER
+update_last_modified_pump
+BEFORE UPDATE OR INSERT ON
+ qgep.od_pump
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_overflow");
+
+-------
+-------
 CREATE TABLE qgep.od_leapingweir
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_leapingweir_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2568,9 +3357,18 @@ COMMENT ON COLUMN qgep.od_leapingweir.opening_shape IS 'Shape of opening in the 
  ALTER TABLE qgep.od_leapingweir ADD COLUMN width  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_leapingweir.width IS 'yyy_Maximale Abmessung der Bodenöffnung quer zur Fliessrichtung / Maximale Abmessung der Bodenöffnung quer zur Fliessrichtung / Dimension maximale de l''ouverture de fond perpendiculairement à la direction d''écoulement';
 -------
+CREATE TRIGGER
+update_last_modified_leapingweir
+BEFORE UPDATE OR INSERT ON
+ qgep.od_leapingweir
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_overflow");
+
+-------
+-------
 CREATE TABLE qgep.od_prank_weir
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_prank_weir_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2590,9 +3388,18 @@ COMMENT ON COLUMN qgep.od_prank_weir.weir_edge IS 'yyy_Ausbildung der Überfallk
  ALTER TABLE qgep.od_prank_weir ADD COLUMN weir_kind  integer ;
 COMMENT ON COLUMN qgep.od_prank_weir.weir_kind IS 'yyy_Art der Wehrschweille des Streichwehrs / Art der Wehrschwelle des Streichwehrs / Genre de surverse du déversoir latéral';
 -------
+CREATE TRIGGER
+update_last_modified_prank_weir
+BEFORE UPDATE OR INSERT ON
+ qgep.od_prank_weir
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_overflow");
+
+-------
+-------
 CREATE TABLE qgep.od_individual_surface
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_individual_surface_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2607,13 +3414,22 @@ COMMENT ON COLUMN qgep.od_individual_surface.function IS 'Type of usage of surfa
 COMMENT ON COLUMN qgep.od_individual_surface.inclination IS 'yyy_Mittlere Neigung der Oberfläche in Promill / Mittlere Neigung der Oberfläche in Promill / Pente moyenne de la surface en promille';
  ALTER TABLE qgep.od_individual_surface ADD COLUMN pavement  integer ;
 COMMENT ON COLUMN qgep.od_individual_surface.pavement IS 'Type of pavement / Art der Befestigung / Genre de couverture du sol';
-ALTER TABLE qgep.od_individual_surface ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_individual_surface', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_individual_surface_perimeter_geometry ON qgep.od_individual_surface USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_individual_surface.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
+CREATE TRIGGER
+update_last_modified_individual_surface
+BEFORE UPDATE OR INSERT ON
+ qgep.od_individual_surface
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_connection_object");
+
+-------
+-------
 CREATE TABLE qgep.od_building
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_building_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2626,16 +3442,25 @@ COMMENT ON COLUMN qgep.od_building.obj_id IS 'INTERLIS STANDARD OID (with Postfi
 COMMENT ON COLUMN qgep.od_building.house_number IS 'House number based on cadastral register / Hausnummer gemäss Grundbuch / Numéro de bâtiment selon le registre foncier';
  ALTER TABLE qgep.od_building ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_building.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-ALTER TABLE qgep.od_building ADD COLUMN perimeter_geometry geometry('POLYGON', 21781);
+SELECT AddGeometryColumn('qgep', 'od_building', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_building_perimeter_geometry ON qgep.od_building USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_building.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
-ALTER TABLE qgep.od_building ADD COLUMN reference_point_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_building', 'reference_point_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_building_reference_point_geometry ON qgep.od_building USING gist (reference_point_geometry );
 COMMENT ON COLUMN qgep.od_building.reference_point_geometry IS 'National position coordinates (East, North) (relevant point for e.g. address) / Landeskoordinate Ost/Nord (massgebender Bezugspunkt für z.B. Adressdaten ) / Coordonnées nationales Est/Nord (Point de référence pour la détermination de l''adresse par exemple)';
 -------
+CREATE TRIGGER
+update_last_modified_building
+BEFORE UPDATE OR INSERT ON
+ qgep.od_building
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_connection_object");
+
+-------
+-------
 CREATE TABLE qgep.od_reservoir
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_reservoir_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2646,13 +3471,22 @@ CREATE SEQUENCE qgep.seq_od_reservoir_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999
 COMMENT ON COLUMN qgep.od_reservoir.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_reservoir ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_reservoir.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-ALTER TABLE qgep.od_reservoir ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_reservoir', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_reservoir_situation_geometry ON qgep.od_reservoir USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_reservoir.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
 -------
+CREATE TRIGGER
+update_last_modified_reservoir
+BEFORE UPDATE OR INSERT ON
+ qgep.od_reservoir
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_connection_object");
+
+-------
+-------
 CREATE TABLE qgep.od_fountain
 (
-   obj_id  varchar(16) NOT NULL,
+   obj_id varchar(16) NOT NULL,
    CONSTRAINT pkey_qgep_od_fountain_obj_id PRIMARY KEY (obj_id)
 )
 WITH (
@@ -2663,9 +3497,18 @@ CREATE SEQUENCE qgep.seq_od_fountain_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 
 COMMENT ON COLUMN qgep.od_fountain.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_fountain ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_fountain.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-ALTER TABLE qgep.od_fountain ADD COLUMN situation_geometry geometry('POINT', 21781);
+SELECT AddGeometryColumn('qgep', 'od_fountain', 'situation_geometry', 21781, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_fountain_situation_geometry ON qgep.od_fountain USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_fountain.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
+-------
+CREATE TRIGGER
+update_last_modified_fountain
+BEFORE UPDATE OR INSERT ON
+ qgep.od_fountain
+FOR EACH ROW EXECUTE PROCEDURE
+ qgep.update_last_modified_parent("qgep.od_connection_object");
+
+-------
 ------------ Relationships and Value Tables ----------- ;
 CREATE TABLE qgep.vl_symbol_plantype () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_symbol_plantype ADD CONSTRAINT pkey_qgep_vl_symbol_plantype_code PRIMARY KEY (code);
@@ -3069,8 +3912,6 @@ ALTER TABLE qgep.vl_maintenance_event_status ADD CONSTRAINT pkey_qgep_vl_mainten
  ALTER TABLE qgep.od_maintenance_event ADD CONSTRAINT fkey_vl_maintenance_event_status FOREIGN KEY (status)
  REFERENCES qgep.vl_maintenance_event_status (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.od_maintenance_event ADD CONSTRAINT rel_maintenance_event_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id);
 ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_operator_company varchar (16);
 ALTER TABLE qgep.od_maintenance_event ADD CONSTRAINT rel_maintenance_event_operator_company FOREIGN KEY (fk_operator_company) REFERENCES qgep.od_organisation(obj_id);
 CREATE TABLE qgep.vl_structure_part_renovation_demand () INHERITS (qgep.is_value_list_base);
@@ -3151,14 +3992,13 @@ ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_overflow varchar (16);
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_overflow(obj_id);
 CREATE TABLE qgep.vl_pipe_profile_profile_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_profile_profile_type_code PRIMARY KEY (code);
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5377,5377,'other','andere','autre', 'O', 'A', 'AU', 'true');
  INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3351,3351,'egg','Eiprofil','ovoide', 'E', 'E', 'OV', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3350,3350,'circle','Kreisprofil','circulaire', '', 'K', 'CI', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3352,3352,'mouth','Maulprofil','profil_en_voute', '', 'M', 'V', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3354,3354,'open','offenes_Profil','profil_ouvert', '', 'OP', 'PO', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3353,3353,'rectangular','Rechteckprofil','rectangulaire', '', 'R', 'R', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3355,3355,'special','Spezialprofil','profil_special', '', 'S', 'PS', 'true');
- INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3357,3357,'unknown','unbekannt','inconnu', '', 'U', 'I', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3350,3350,'circle','Kreisprofil','circulaire', 'CI', 'K', 'CI', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3352,3352,'mouth','Maulprofil','profil_en_voute', 'M', 'M', 'V', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3354,3354,'open','offenes_Profil','profil_ouvert', 'OP', 'OP', 'PO', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3353,3353,'rectangular','Rechteckprofil','rectangulaire', 'R', 'R', 'R', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3355,3355,'special','Spezialprofil','profil_special', 'S', 'S', 'PS', 'true');
+ INSERT INTO qgep.vl_pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3357,3357,'unknown','unbekannt','inconnu', 'U', 'U', 'I', 'true');
  ALTER TABLE qgep.od_pipe_profile ADD CONSTRAINT fkey_vl_pipe_profile_profile_type FOREIGN KEY (profile_type)
  REFERENCES qgep.vl_pipe_profile_profile_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
@@ -3237,7 +4077,7 @@ ALTER TABLE qgep.vl_wastewater_structure_rv_construction_type ADD CONSTRAINT pke
 CREATE TABLE qgep.vl_wastewater_structure_status () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_wastewater_structure_status ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_status_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3633,3633,'inoperative','ausser_Betrieb','hors_service', 'NO', 'AB', 'H', 'true');
- INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (6528,6528,'operational.operational','in_Betrieb.in_Betrieb','en_service.en_service', '', 'I', 'E', 'true');
+ INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (8493,8493,'operational','in_Betrieb','en_service', '', '', '', 'true');
  INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (6530,6530,'operational.tentative','in_Betrieb.provisorisch','en_service.provisoire', 'T', 'T', 'P', 'true');
  INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (6533,6533,'operational.will_be_suspended','in_Betrieb.wird_aufgehoben','en_service.sera_supprime', '', 'WA', 'SS', 'true');
  INSERT INTO qgep.vl_wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (6523,6523,'abanndoned.suspended_not_filled','tot.aufgehoben_nicht_verfuellt','abandonne.supprime_non_demoli', 'SN', 'AN', 'S', 'true');
@@ -3429,7 +4269,6 @@ ALTER TABLE qgep.vl_catchment_area_drainage_system_current ADD CONSTRAINT pkey_q
  INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5188,5188,'modified_system','ModifiziertesSystem','systeme_modifie', '', '', '', 'true');
  INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5185,5185,'not_connected','nicht_angeschlossen','non_raccorde', '', '', '', 'true');
  INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5537,5537,'not_drained','nicht_entwaessert','non_evacue', '', '', '', 'true');
- INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5392,5392,'rain_wastewater_system','Regenabwassersystem','systeme_eaux_pluviales', '', '', '', 'true');
  INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5187,5187,'separated_system','Trennsystem','systeme_separatif', '', '', '', 'true');
  INSERT INTO qgep.vl_catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5189,5189,'unknown','unbekannt','inconnu', '', '', '', 'true');
  ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT fkey_vl_catchment_area_drainage_system_current FOREIGN KEY (drainage_system_current)

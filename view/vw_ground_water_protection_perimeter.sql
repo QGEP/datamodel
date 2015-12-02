@@ -1,5 +1,10 @@
 DROP VIEW IF EXISTS qgep.vw_ground_water_protection_perimeter;
 
+
+--------
+-- Subclass: od_ground_water_protection_perimeter
+-- Superclass: od_zone
+--------
 CREATE OR REPLACE VIEW qgep.vw_ground_water_protection_perimeter AS
 
 SELECT
@@ -42,9 +47,11 @@ BEGIN
 
 INSERT INTO qgep.od_ground_water_protection_perimeter (
              obj_id
+           , perimeter_geometry
            )
           VALUES (
             NEW.obj_id -- obj_id
+           , NEW.perimeter_geometry
            );
   RETURN NEW;
 END; $BODY$
@@ -62,11 +69,10 @@ CREATE TRIGGER vw_ground_water_protection_perimeter_ON_INSERT INSTEAD OF INSERT 
 -----------------------------------
 
 CREATE OR REPLACE RULE vw_ground_water_protection_perimeter_ON_UPDATE AS ON UPDATE TO qgep.vw_ground_water_protection_perimeter DO INSTEAD (
---------
--- UPDATE qgep.od_ground_water_protection_perimeter
---  SET
---  WHERE obj_id = OLD.obj_id;
---------
+UPDATE qgep.od_ground_water_protection_perimeter
+  SET
+     , perimeter_geometry = NEW.perimeter_geometry
+  WHERE obj_id = OLD.obj_id;
 
 UPDATE qgep.od_zone
   SET
