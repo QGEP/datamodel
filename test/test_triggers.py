@@ -53,18 +53,11 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     def test_identifier(self):
         row = {
-<<<<<<< HEAD
-                'level': decimal.Decimal('50.000')
-        }
-
-        obj_id = self.insert_check('vw_cover', row)
-=======
                 'level': decimal.Decimal('50.000'),
                 'ws_type': 'manhole'
         }
 
         obj_id = self.insert_check('vw_qgep_cover', row)
->>>>>>> upstream/master
 
         row = self.select('od_structure_part', obj_id)
 
