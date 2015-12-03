@@ -326,3 +326,4 @@ ST_Dwithin(ST_StartPoint(qgep.vw_qgep_reach.progression_geometry),
 ) LIMIT 1;$BODY$
   LANGUAGE sql VOLATILE
   COST 100;
+  
