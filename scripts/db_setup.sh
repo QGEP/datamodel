@@ -49,7 +49,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/07_views_for_network_tr
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/08_qgep_functions.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries.sql
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SCHEMA=qgep -f ${DIR}/metaproject/postgresql/pg_inheritance_view/pg_inherited_table_view.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SCHEMA=qgep -f ${DIR}/metaproject/postgresql/pg_inherited_table_view/pg_inherited_table_view.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_access_aid.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_benching.sql
