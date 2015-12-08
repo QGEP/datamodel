@@ -50,7 +50,7 @@ BEGIN
            , last_modification
            , fk_catchment_area
            )
-     VALUES ( qgep.generate_oid('od_param_ca_general') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_param_ca_general')) -- obj_id
            , NEW.evaporation_loss
            , NEW.identifier
            , NEW.infiltration_loss
