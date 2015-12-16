@@ -43,8 +43,8 @@ WS.detail_geometry_3d_geometry
    , WS.subsidies
    , WS.year_of_construction
    , WS.year_of_replacement
-   , WS.dataowner
-   , WS.provider
+   , WS.fk_dataowner
+   , WS.fk_provider
    , WS.last_modification
   , WS.fk_owner
   , WS.fk_operator
@@ -83,8 +83,8 @@ BEGIN
            , subsidies
            , year_of_construction
            , year_of_replacement
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_owner
            , fk_operator
@@ -110,8 +110,8 @@ BEGIN
            , NEW.subsidies
            , NEW.year_of_construction
            , NEW.year_of_replacement
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_owner
            , NEW.fk_operator
@@ -208,8 +208,8 @@ UPDATE qgep.od_wastewater_structure
      , subsidies = NEW.subsidies
      , year_of_construction = NEW.year_of_construction
      , year_of_replacement = NEW.year_of_replacement
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_owner = NEW.fk_owner
      , fk_operator = NEW.fk_operator

@@ -27,8 +27,8 @@ SELECT
    , RE.wall_roughness
    , WE.identifier
    , WE.remark
-   , WE.dataowner
-   , WE.provider
+   , WE.fk_dataowner
+   , WE.fk_provider
    , WE.last_modification
   , WE.fk_wastewater_structure
   FROM qgep.od_reach RE
@@ -48,16 +48,16 @@ BEGIN
              obj_id
            , identifier
            , remark
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_wastewater_structure
            )
      VALUES ( qgep.generate_oid('od_reach') -- obj_id
            , NEW.identifier
            , NEW.remark
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_wastewater_structure
            )
@@ -141,8 +141,8 @@ UPDATE qgep.od_wastewater_networkelement
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;

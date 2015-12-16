@@ -23,8 +23,8 @@ SELECT
    , SP.identifier
    , SP.remark
    , SP.renovation_demand
-   , SP.dataowner
-   , SP.provider
+   , SP.fk_dataowner
+   , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
   FROM qgep.od_cover CO
@@ -45,8 +45,8 @@ BEGIN
            , identifier
            , remark
            , renovation_demand
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_wastewater_structure
            )
@@ -54,8 +54,8 @@ BEGIN
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_wastewater_structure
            )
@@ -125,8 +125,8 @@ UPDATE qgep.od_structure_part
        identifier = NEW.identifier
      , remark = NEW.remark
      , renovation_demand = NEW.renovation_demand
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;

@@ -13,8 +13,8 @@ SELECT
    , DS.perimeter_geometry
    , ZO.identifier
    , ZO.remark
-   , ZO.dataowner
-   , ZO.provider
+   , ZO.fk_dataowner
+   , ZO.fk_provider
    , ZO.last_modification
   FROM qgep.od_drainage_system DS
  LEFT JOIN qgep.od_zone ZO
@@ -33,15 +33,15 @@ BEGIN
              obj_id
            , identifier
            , remark
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            )
      VALUES ( qgep.generate_oid('od_drainage_system') -- obj_id
            , NEW.identifier
            , NEW.remark
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -82,8 +82,8 @@ UPDATE qgep.od_zone
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
   WHERE obj_id = OLD.obj_id;
 );

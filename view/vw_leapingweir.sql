@@ -24,8 +24,8 @@ SELECT
    , OF.remark
    , OF.signal_transmission
    , OF.subsidies
-   , OF.dataowner
-   , OF.provider
+   , OF.fk_dataowner
+   , OF.fk_provider
    , OF.last_modification
   , OF.fk_wastewater_node
   , OF.fk_overflow_to
@@ -58,8 +58,8 @@ BEGIN
            , remark
            , signal_transmission
            , subsidies
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_wastewater_node
            , fk_overflow_to
@@ -79,8 +79,8 @@ BEGIN
            , NEW.remark
            , NEW.signal_transmission
            , NEW.subsidies
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_wastewater_node
            , NEW.fk_overflow_to
@@ -138,8 +138,8 @@ UPDATE qgep.od_overflow
      , remark = NEW.remark
      , signal_transmission = NEW.signal_transmission
      , subsidies = NEW.subsidies
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_wastewater_node = NEW.fk_wastewater_node
      , fk_overflow_to = NEW.fk_overflow_to

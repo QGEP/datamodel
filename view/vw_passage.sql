@@ -12,8 +12,8 @@ SELECT
    , CS.identifier
    , CS.remark,
 CS.situation_geometry
-   , CS.dataowner
-   , CS.provider
+   , CS.fk_dataowner
+   , CS.fk_provider
    , CS.last_modification
   , CS.fk_water_course_segment
   FROM qgep.od_passage PA
@@ -34,8 +34,8 @@ BEGIN
            , identifier
            , remark
             , situation_geometry
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_water_course_segment
            )
@@ -43,8 +43,8 @@ BEGIN
            , NEW.identifier
            , NEW.remark
             , NEW.situation_geometry
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_water_course_segment
            )
@@ -83,8 +83,8 @@ UPDATE qgep.od_water_control_structure
        identifier = NEW.identifier
      , remark = NEW.remark
       , situation_geometry = NEW.situation_geometry
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_water_course_segment = NEW.fk_water_course_segment
   WHERE obj_id = OLD.obj_id;
