@@ -127,8 +127,16 @@ WITH (
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (99981,'od_symbol','SYMBOL','SX','Symbol','SX','Symbole','SX','zzz_SYMBOL','','','');
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (99982,'re_maintenance_event_wastewater_structure','maintenance event wastewater structure','','Erhaltungsereignis Abwasserbauwre','','Evénement de maintenance Ouvrage réseau AS','','zzz_Erhaltungsereignis_Abwasserbauwerk','','','');
 
+DO $$
+BEGIN
+IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'plantype') THEN
+
 DROP TYPE IF EXISTS plantype;
 CREATE TYPE plantype AS ENUM ('Leitungskataster','Werkinformation', 'GEP_Verband', 'GEP_Traegerschaft', 'PAA', 'SAA', 'kein_Plantyp_definiert');
+
+END IF;
+END$$;
+
 CREATE TABLE qgep.is_dictionary_od_field (
     id serial NOT NULL,
     class_id integer,
