@@ -68,7 +68,7 @@ BEGIN
            , fk_overflow_characteristic
            , fk_control_center
            )
-     VALUES ( qgep.generate_oid('od_prank_weir') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_prank_weir')) -- obj_id
            , NEW.actuation
            , NEW.adjustability
            , NEW.brand

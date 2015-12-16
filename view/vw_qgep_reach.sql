@@ -107,7 +107,7 @@ BEGIN
             , fk_wastewater_networkelement
           )
     VALUES (
-            qgep.generate_oid('od_reach_point') -- obj_id
+            COALESCE(NEW.rp_from_obj_id,qgep.generate_oid('od_reach_point')) -- obj_id
             , NEW.rp_from_elevation_accuracy -- elevation_accuracy
             , NEW.rp_from_identifier -- identifier
             , NEW.rp_from_level -- level
@@ -138,7 +138,7 @@ BEGIN
             , fk_wastewater_networkelement
           )
     VALUES (
-            qgep.generate_oid('od_reach_point') -- obj_id
+            COALESCE(NEW.rp_to_obj_id,qgep.generate_oid('od_reach_point')) -- obj_id
             , NEW.rp_to_elevation_accuracy -- elevation_accuracy
             , NEW.rp_to_identifier -- identifier
             , NEW.rp_to_level -- level
@@ -181,7 +181,7 @@ BEGIN
             , fk_owner
             , fk_operator )
 
-    VALUES ( qgep.generate_oid('od_channel') -- obj_id
+    VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep.generate_oid('od_channel')) -- obj_id
             , NEW.accessibility
             , NEW.contract_section
             -- , NEW.detail_geometry_geometry
@@ -241,7 +241,7 @@ BEGIN
             , dataowner
             , provider
             , fk_wastewater_structure )
-    VALUES ( qgep.generate_oid('od_reach') -- obj_id
+    VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_reach')) -- obj_id
             , NEW.identifier -- identifier
             , NEW.remark -- remark
             , NEW.last_modification -- last_modification

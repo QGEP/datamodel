@@ -37,7 +37,7 @@ BEGIN
            , provider
            , last_modification
            )
-     VALUES ( qgep.generate_oid('od_water_body_protection_sector') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_water_body_protection_sector')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.dataowner
