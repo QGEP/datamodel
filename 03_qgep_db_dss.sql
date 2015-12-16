@@ -4,6 +4,7 @@
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
+
 ------ LAST MODIFIED -----
 CREATE FUNCTION qgep.update_last_modified() RETURNS trigger AS $$
 BEGIN
@@ -71,7 +72,7 @@ COMMENT ON COLUMN qgep.txt_symbol.symbol_scaling_width IS '';
 COMMENT ON COLUMN qgep.txt_symbol.symbolhali IS '';
  ALTER TABLE qgep.txt_symbol ADD COLUMN symbolori  decimal(4,1) ;
 COMMENT ON COLUMN qgep.txt_symbol.symbolori IS '';
-SELECT AddGeometryColumn('qgep', 'txt_symbol', 'symbolpos_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'txt_symbol', 'symbolpos_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_txt_symbol_symbolpos_geometry ON qgep.txt_symbol USING gist (symbolpos_geometry );
 COMMENT ON COLUMN qgep.txt_symbol.symbolpos_geometry IS '';
  ALTER TABLE qgep.txt_symbol ADD COLUMN symbolvali  smallint ;
@@ -119,7 +120,7 @@ COMMENT ON COLUMN qgep.txt_text.text IS 'yyy_Aus Attributwerten zusammengesetzte
 COMMENT ON COLUMN qgep.txt_text.texthali IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN textori  decimal(4,1) ;
 COMMENT ON COLUMN qgep.txt_text.textori IS '';
-SELECT AddGeometryColumn('qgep', 'txt_text', 'textpos_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'txt_text', 'textpos_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_txt_text_textpos_geometry ON qgep.txt_text USING gist (textpos_geometry );
 COMMENT ON COLUMN qgep.txt_text.textpos_geometry IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN textvali  smallint ;
@@ -413,7 +414,7 @@ CREATE SEQUENCE qgep.seq_od_control_center_oid INCREMENT 1 MINVALUE 0 MAXVALUE 9
 COMMENT ON COLUMN qgep.od_control_center.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_control_center ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep.od_control_center.identifier IS '';
-SELECT AddGeometryColumn('qgep', 'od_control_center', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_control_center', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_control_center_situation_geometry ON qgep.od_control_center USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_control_center.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_control_center ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -451,7 +452,7 @@ COMMENT ON COLUMN qgep.od_bathing_area.obj_id IS 'INTERLIS STANDARD OID (with Po
 COMMENT ON COLUMN qgep.od_bathing_area.identifier IS '';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_bathing_area.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_bathing_area', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_bathing_area', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_bathing_area_situation_geometry ON qgep.od_bathing_area USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_bathing_area.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -493,7 +494,7 @@ COMMENT ON COLUMN qgep.od_aquifier.identifier IS '';
 COMMENT ON COLUMN qgep.od_aquifier.maximal_groundwater_level IS 'Maximal level of ground water table / Maximale Lage des Grundwasserspiegels / Niveau maximal de la nappe';
  ALTER TABLE qgep.od_aquifier ADD COLUMN minimal_groundwater_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_aquifier.minimal_groundwater_level IS 'Minimal level of groundwater table / Minimale Lage des Grundwasserspiegels / Niveau minimal de la nappe';
-SELECT AddGeometryColumn('qgep', 'od_aquifier', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_aquifier', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_aquifier_perimeter_geometry ON qgep.od_aquifier USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_aquifier.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
  ALTER TABLE qgep.od_aquifier ADD COLUMN remark  varchar(80) ;
@@ -535,7 +536,7 @@ COMMENT ON COLUMN qgep.od_water_catchment.identifier IS '';
 COMMENT ON COLUMN qgep.od_water_catchment.kind IS 'Type of water catchment / Art der Trinkwasserfassung / Genre de prise d''eau';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_catchment.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_water_catchment', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_water_catchment', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_catchment_situation_geometry ON qgep.od_water_catchment USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_water_catchment.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -573,7 +574,7 @@ COMMENT ON COLUMN qgep.od_water_control_structure.obj_id IS 'INTERLIS STANDARD O
 COMMENT ON COLUMN qgep.od_water_control_structure.identifier IS '';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_water_control_structure.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_water_control_structure', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_water_control_structure', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_control_structure_situation_geometry ON qgep.od_water_control_structure USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_water_control_structure.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -617,7 +618,7 @@ COMMENT ON COLUMN qgep.od_sector_water_body.kind IS 'Shore or water course line.
 COMMENT ON COLUMN qgep.od_sector_water_body.km_down IS 'yyy_Adresskilometer beim Sektorende (nur definieren, falls es sich um den letzten Sektor handelt oder ein Sprung in der Adresskilometrierung von einem Sektor zum nächsten  existiert) / Adresskilometer beim Sektorende (nur definieren, falls es sich um den letzten Sektor handelt oder ein Sprung in der Adresskilometrierung von einem Sektor zum nächsten  existiert) / Kilomètre de la fin du secteur (à définir uniquement s''il s''agit du dernier secteur ou lors d''un saut dans le kilométrage d''un secteur à un autre)';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN km_up  decimal(9,3) ;
 COMMENT ON COLUMN qgep.od_sector_water_body.km_up IS 'yyy_Adresskilometer beim Sektorbeginn / Adresskilometer beim Sektorbeginn / Kilomètre du début du secteur';
-SELECT AddGeometryColumn('qgep', 'od_sector_water_body', 'progression_geometry', 21781, 'LINESTRING', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_sector_water_body', 'progression_geometry', :SRID, 'LINESTRING', 2, true);
 CREATE INDEX in_qgep_od_sector_water_body_progression_geometry ON qgep.od_sector_water_body USING gist (progression_geometry );
 COMMENT ON COLUMN qgep.od_sector_water_body.progression_geometry IS 'yyy_Reihenfolge von Punkten die den Verlauf eines Gewässersektors beschreiben / Reihenfolge von Punkten die den Verlauf eines Gewässersektors beschreiben / Suite de points qui décrivent le tracé d''un secteur d''un cours d''eau';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN ref_length  decimal(7,2) ;
@@ -669,7 +670,7 @@ COMMENT ON COLUMN qgep.od_water_course_segment.depth_variability IS 'Variability
 COMMENT ON COLUMN qgep.od_water_course_segment.discharge_regime IS 'yyy_Grad der antropogenen Beeinflussung des charakteristischen Ganges des Abflusses. / Grad der antropogenen Beeinflussung des charakteristischen Ganges des Abflusses. / Degré d''intervention anthropogène sur le régime hydraulique';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN ecom_classification  integer ;
 COMMENT ON COLUMN qgep.od_water_course_segment.ecom_classification IS 'Summary attribut of ecomorphological classification of level F / Summenattribut aus der ökomorphologischen Klassifizierung nach Stufe F / Attribut issu de la classification écomorphologique du niveau R';
-SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'from_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'from_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_course_segment_from_geometry ON qgep.od_water_course_segment USING gist (from_geometry );
 COMMENT ON COLUMN qgep.od_water_course_segment.from_geometry IS 'Position of segment start point in water course / Lage des Abschnittanfangs  im Gewässerverlauf / Situation du début du tronçon';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN identifier  varchar(41) ;
@@ -688,7 +689,7 @@ COMMENT ON COLUMN qgep.od_water_course_segment.section_morphology IS 'yyy_Linien
 COMMENT ON COLUMN qgep.od_water_course_segment.size IS 'Classification by Strahler / Ordnungszahl nach Strahler / Classification selon Strahler';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN slope  integer ;
 COMMENT ON COLUMN qgep.od_water_course_segment.slope IS 'Average slope of water course segment / Mittleres Gefälle des Gewässerabschnittes / Pente moyenne du fond du tronçon cours d''eau';
-SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'to_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_water_course_segment', 'to_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_water_course_segment_to_geometry ON qgep.od_water_course_segment USING gist (to_geometry );
 COMMENT ON COLUMN qgep.od_water_course_segment.to_geometry IS 'Position of segment end point in water course / Lage Abschnitt-Ende im Gewässerverlauf / Situation de la fin du tronçon';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN utilisation  integer ;
@@ -1023,7 +1024,7 @@ COMMENT ON COLUMN qgep.od_reach_point.outlet_shape IS 'Kind of outlet shape / Ar
 COMMENT ON COLUMN qgep.od_reach_point.position_of_connection IS 'yyy_Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Anschlussstelle bezogen auf Querschnitt im Kanal; in Fliessrichtung  (für Haus- und Strassenanschlüsse) / Emplacement de raccordement Référence à la section transversale dans le canal dans le sens d’écoulement (pour les raccordements domestiques et de rue).';
  ALTER TABLE qgep.od_reach_point ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_reach_point.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_reach_point', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_reach_point', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_reach_point_situation_geometry ON qgep.od_reach_point USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_reach_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_reach_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1374,10 +1375,10 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.obj_id IS 'INTERLIS STANDARD OID 
 COMMENT ON COLUMN qgep.od_wastewater_structure.accessibility IS 'yyy_Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Möglichkeit der Zugänglichkeit ins Innere eines Abwasserbauwerks für eine Person (nicht für ein Fahrzeug) / Possibilités d’accès à l’ouvrage d’assainissement pour une personne (non pour un véhicule)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN contract_section  varchar(50) ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.contract_section IS 'Number of contract section / Nummer des Bauloses / Numéro du lot de construction';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_geometry IS 'Detail geometry especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie insbesondere bei Spezialbauwerken. Für Normschächte i.d. R.  Dimension1 und 2 verwenden. Dito bei normierten Versickerungsanlagen.  Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.  Les canalisations n’ont en général pas de géométrie détaillée.';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_3d_geometry', 21781, 'POLYGON', 3, true);
+SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_3d_geometry', :SRID, 'POLYGON', 3, true);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_3d_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_3d_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_3d_geometry IS 'Detail geometry (3D) especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie (3D) insbesondere bei Spezialbauwerken. Bei Normschächten mit Dimension1 und 2 arbeiten. Dito bei normierten Versickerungsanlagen. Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée (3D) particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.Les canalisations n’ont en général pas de géométrie détaillée.';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN financing  integer ;
@@ -1596,7 +1597,7 @@ COMMENT ON COLUMN qgep.od_accident.place IS 'Adress of the location of accident 
 COMMENT ON COLUMN qgep.od_accident.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_accident ADD COLUMN responsible  varchar(50) ;
 COMMENT ON COLUMN qgep.od_accident.responsible IS 'Name of the responsible of the accident / Name Adresse des Verursachers / Nom et adresse de l''auteur';
-SELECT AddGeometryColumn('qgep', 'od_accident', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_accident', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_accident_situation_geometry ON qgep.od_accident USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_accident.situation_geometry IS 'National position coordinates (North, East) of accident / Landeskoordinate Ost/Nord des Unfallortes / Coordonnées nationales Est/Nord du lieu d''accident';
  ALTER TABLE qgep.od_accident ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1726,7 +1727,7 @@ COMMENT ON COLUMN qgep.od_hazard_source.obj_id IS 'INTERLIS STANDARD OID (with P
 COMMENT ON COLUMN qgep.od_hazard_source.identifier IS '';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_hazard_source.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_hazard_source', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_hazard_source', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_hazard_source_situation_geometry ON qgep.od_hazard_source USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_hazard_source.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1864,7 +1865,7 @@ COMMENT ON COLUMN qgep.od_catchment_area.identifier IS '';
 COMMENT ON COLUMN qgep.od_catchment_area.infiltration_current IS 'yyy_Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Das Regenabwasser wird ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales sont amenées complètement ou partiellement à une installation d’infiltration';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN infiltration_planned  integer ;
 COMMENT ON COLUMN qgep.od_catchment_area.infiltration_planned IS 'In the future the rain water will  be completly or partially infiltrated in a infiltration unit. / Das Regenabwasser wird in Zukunft ganz oder teilweise einer Versickerungsanlage zugeführt / Les eaux pluviales seront amenées complètement ou partiellement à une installation d’infiltration';
-SELECT AddGeometryColumn('qgep', 'od_catchment_area', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_catchment_area', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_catchment_area_perimeter_geometry ON qgep.od_catchment_area USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_catchment_area.perimeter_geometry IS 'Boundary points of the perimeter sub catchement area / Begrenzungspunkte des Teileinzugsgebiets / Points de délimitation du bassin versant partiel';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN population_density_current  smallint ;
@@ -2063,7 +2064,7 @@ COMMENT ON COLUMN qgep.od_measuring_point.kind IS 'yyy_Art der Untersuchungsstel
 COMMENT ON COLUMN qgep.od_measuring_point.purpose IS 'Purpose of measurement / Zweck der Messung / Objet de la mesure';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_measuring_point.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-SELECT AddGeometryColumn('qgep', 'od_measuring_point', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_measuring_point', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_measuring_point_situation_geometry ON qgep.od_measuring_point USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_measuring_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -2099,7 +2100,7 @@ CREATE SEQUENCE qgep.seq_od_planning_zone_oid INCREMENT 1 MINVALUE 0 MAXVALUE 99
 COMMENT ON COLUMN qgep.od_planning_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_planning_zone ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_planning_zone.kind IS 'Type of planning zone / Art der Bauzone / Genre de zones à bâtir';
-SELECT AddGeometryColumn('qgep', 'od_planning_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_planning_zone', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_planning_zone_perimeter_geometry ON qgep.od_planning_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_planning_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2125,7 +2126,7 @@ CREATE SEQUENCE qgep.seq_od_groundwater_protection_zone_oid INCREMENT 1 MINVALUE
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_groundwater_protection_zone ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.kind IS 'yyy_Zonenarten. Grundwasserschutzzonen bestehen aus dem Fassungsbereich (Zone S1), der Engeren Schutzzone (Zone S2) und der Weiteren Schutzzone (Zone S3). / Zonenarten. Grundwasserschutzzonen bestehen aus dem Fassungsbereich (Zone S1), der Engeren Schutzzone (Zone S2) und der Weiteren Schutzzone (Zone S3). / Genre de zones';
-SELECT AddGeometryColumn('qgep', 'od_groundwater_protection_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_groundwater_protection_zone', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_groundwater_protection_zone_perimeter_geometry ON qgep.od_groundwater_protection_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_groundwater_protection_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2149,7 +2150,7 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_ground_water_protection_perimeter_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_ground_water_protection_perimeter ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_ground_water_protection_perimeter');
 COMMENT ON COLUMN qgep.od_ground_water_protection_perimeter.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-SELECT AddGeometryColumn('qgep', 'od_ground_water_protection_perimeter', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_ground_water_protection_perimeter', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_ground_water_protection_perimeter_perimeter_geometry ON qgep.od_ground_water_protection_perimeter USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_ground_water_protection_perimeter.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2175,7 +2176,7 @@ CREATE SEQUENCE qgep.seq_od_water_body_protection_sector_oid INCREMENT 1 MINVALU
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_water_body_protection_sector ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.kind IS 'yyy_Art des Schutzbereiches für  oberflächliches Gewässer und Grundwasser bezüglich Gefährdung / Art des Schutzbereiches für  oberflächliches Gewässer und Grundwasser bezüglich Gefährdung / Type de zones de protection des eaux superficielles et souterraines';
-SELECT AddGeometryColumn('qgep', 'od_water_body_protection_sector', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_water_body_protection_sector', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_water_body_protection_sector_perimeter_geometry ON qgep.od_water_body_protection_sector USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_water_body_protection_sector.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2201,7 +2202,7 @@ CREATE SEQUENCE qgep.seq_od_drainage_system_oid INCREMENT 1 MINVALUE 0 MAXVALUE 
 COMMENT ON COLUMN qgep.od_drainage_system.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_drainage_system ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep.od_drainage_system.kind IS 'yyy_Art des Entwässerungssystems in dem ein bestimmtes Gebiet entwässert werden soll (SOLL Zustand) / Art des Entwässerungssystems in dem ein bestimmtes Gebiet entwässert werden soll (SOLL Zustand) / Genre de système d''évacuation choisi pour une région déterminée (Etat prévu)';
-SELECT AddGeometryColumn('qgep', 'od_drainage_system', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_drainage_system', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_drainage_system_perimeter_geometry ON qgep.od_drainage_system USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_drainage_system.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2227,7 +2228,7 @@ CREATE SEQUENCE qgep.seq_od_infiltration_zone_oid INCREMENT 1 MINVALUE 0 MAXVALU
 COMMENT ON COLUMN qgep.od_infiltration_zone.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_infiltration_zone ADD COLUMN infiltration_capacity  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_zone.infiltration_capacity IS 'yyy_Versickerungsmöglichkeit im Bereich / Versickerungsmöglichkeit im Bereich / Potentiel d''infiltration de la zone';
-SELECT AddGeometryColumn('qgep', 'od_infiltration_zone', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_infiltration_zone', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_infiltration_zone_perimeter_geometry ON qgep.od_infiltration_zone USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_infiltration_zone.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -2290,7 +2291,7 @@ COMMENT ON COLUMN qgep.od_cover.level IS 'Height of cover / Deckelhöhe / Cote d
 COMMENT ON COLUMN qgep.od_cover.material IS 'Material of cover / Deckelmaterial / Matériau du couvercle';
  ALTER TABLE qgep.od_cover ADD COLUMN positional_accuracy  integer ;
 COMMENT ON COLUMN qgep.od_cover.positional_accuracy IS 'Quantfication of accuarcy of position of cover (center hole) / Quantifizierung der Genauigkeit der Lage des Deckels (Pickelloch) / Plage de précision des coordonnées planimétriques du couvercle.';
-SELECT AddGeometryColumn('qgep', 'od_cover', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_cover', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_cover_situation_geometry ON qgep.od_cover USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_cover.situation_geometry IS 'Situation of cover (cover hole), National position coordinates (East, North) / Lage des Deckels (Pickelloch) / Positionnement du couvercle (milieu du couvercle)';
  ALTER TABLE qgep.od_cover ADD COLUMN sludge_bucket  integer ;
@@ -2790,7 +2791,7 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_lake_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_lake ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_lake');
 COMMENT ON COLUMN qgep.od_lake.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-SELECT AddGeometryColumn('qgep', 'od_lake', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_lake', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_lake_perimeter_geometry ON qgep.od_lake USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_lake.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -3087,7 +3088,7 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_canton_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_canton ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_canton');
 COMMENT ON COLUMN qgep.od_canton.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-SELECT AddGeometryColumn('qgep', 'od_canton', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_canton', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_canton_perimeter_geometry ON qgep.od_canton USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_canton.perimeter_geometry IS 'Border of canton / Kantonsgrenze / Limites cantonales';
 -------
@@ -3138,7 +3139,7 @@ COMMENT ON COLUMN qgep.od_municipality.altitude IS 'Average altitude of settleme
 COMMENT ON COLUMN qgep.od_municipality.gwdp_year IS 'Year of legal validity of General Water Drainage Planning (GWDP) / Rechtsgültiges GEP aus dem Jahr / PGEE en vigueur depuis';
  ALTER TABLE qgep.od_municipality ADD COLUMN municipality_number  smallint ;
 COMMENT ON COLUMN qgep.od_municipality.municipality_number IS 'Official number of federal office for statistics / Offizielle Nummer gemäss Bundesamt für Statistik / Numéro officiel de la commune selon l''Office fédéral de la statistique';
-SELECT AddGeometryColumn('qgep', 'od_municipality', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_municipality', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_municipality_perimeter_geometry ON qgep.od_municipality USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_municipality.perimeter_geometry IS 'Border of the municipality / Gemeindegrenze / Limites communales';
  ALTER TABLE qgep.od_municipality ADD COLUMN population  integer ;
@@ -3232,7 +3233,7 @@ COMMENT ON COLUMN qgep.od_wastewater_node.obj_id IS 'INTERLIS STANDARD OID (with
 COMMENT ON COLUMN qgep.od_wastewater_node.backflow_level IS 'yyy_1. Massgebende Rückstaukote bezogen auf den Berechnungsregen (dss)  2. Höhe, unter der innerhalb der Grundstücksentwässerung besondere Massnahmen gegen Rückstau zu treffen sind. (DIN 4045) / 1. Massgebende Rückstaukote bezogen auf den Berechnungsregen (dss)  2. Höhe, unter der innerhalb der Grundstücksentwässerung besondere Massnahmen gegen Rückstau zu treffen sind. (DIN 4045) / Cote de refoulement déterminante calculée à partir des pluies de projet';
  ALTER TABLE qgep.od_wastewater_node ADD COLUMN bottom_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_wastewater_node.bottom_level IS 'yyy_Tiefster Punkt des Abwasserbauwerks / Tiefster Punkt des Abwasserbauwerks / Point le plus bas du noeud';
-SELECT AddGeometryColumn('qgep', 'od_wastewater_node', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_wastewater_node', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_wastewater_node_situation_geometry ON qgep.od_wastewater_node USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_node.situation_geometry IS 'yyy Situation of node. Decisive reference point for sewer network simulation  (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslauf) / Lage des Knotens, massgebender Bezugspunkt für die Kanalnetzberechnung. (In der Regel Lage des Pickellochs oder Lage des Trockenwetterauslaufs) / Positionnement du nœud. Point de référence déterminant pour le calcul de réseau de canalisations (en règle générale positionnement du milieu du couvercle ou de la sortie temps sec)';
 -------
@@ -3270,10 +3271,10 @@ COMMENT ON COLUMN qgep.od_reach.inside_coating IS 'yyy_Schutz der Innenwände de
 COMMENT ON COLUMN qgep.od_reach.length_effective IS 'yyy_Tatsächliche schräge Länge (d.h. nicht in horizontale Ebene projiziert)  inklusive Kanalkrümmungen / Tatsächliche schräge Länge (d.h. nicht in horizontale Ebene projiziert)  inklusive Kanalkrümmungen / Longueur effective (non projetée) incluant les parties incurvées';
  ALTER TABLE qgep.od_reach ADD COLUMN material  integer ;
 COMMENT ON COLUMN qgep.od_reach.material IS 'Material of reach / pipe / Rohrmaterial / Matériau du tuyau';
-SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_geometry', 21781, 'LINESTRING', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_geometry', :SRID, 'LINESTRING', 2, true);
 CREATE INDEX in_qgep_od_reach_progression_geometry ON qgep.od_reach USING gist (progression_geometry );
 COMMENT ON COLUMN qgep.od_reach.progression_geometry IS 'Start, inflextion and endpoints of a pipe / Anfangs-, Knick- und Endpunkte der Leitung / Points de départ, intermédiaires et d’arrivée de la conduite.';
-SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_3d_geometry', 21781, 'LINESTRING', 3, true);
+SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_3d_geometry', :SRID, 'LINESTRING', 3, true);
 CREATE INDEX in_qgep_od_reach_progression_3d_geometry ON qgep.od_reach USING gist (progression_3d_geometry );
 COMMENT ON COLUMN qgep.od_reach.progression_3d_geometry IS 'Start, inflextion and endpoints of a pipe (3D coordinates) / Anfangs-, Knick- und Endpunkte der Leitung (3D Koordinaten) / Points de départ, intermédiaires et d’arrivée de la conduite (coordonnées 3D)';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_material  integer ;
@@ -3414,7 +3415,7 @@ COMMENT ON COLUMN qgep.od_individual_surface.function IS 'Type of usage of surfa
 COMMENT ON COLUMN qgep.od_individual_surface.inclination IS 'yyy_Mittlere Neigung der Oberfläche in Promill / Mittlere Neigung der Oberfläche in Promill / Pente moyenne de la surface en promille';
  ALTER TABLE qgep.od_individual_surface ADD COLUMN pavement  integer ;
 COMMENT ON COLUMN qgep.od_individual_surface.pavement IS 'Type of pavement / Art der Befestigung / Genre de couverture du sol';
-SELECT AddGeometryColumn('qgep', 'od_individual_surface', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_individual_surface', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_individual_surface_perimeter_geometry ON qgep.od_individual_surface USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_individual_surface.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
 -------
@@ -3442,10 +3443,10 @@ COMMENT ON COLUMN qgep.od_building.obj_id IS 'INTERLIS STANDARD OID (with Postfi
 COMMENT ON COLUMN qgep.od_building.house_number IS 'House number based on cadastral register / Hausnummer gemäss Grundbuch / Numéro de bâtiment selon le registre foncier';
  ALTER TABLE qgep.od_building ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_building.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-SELECT AddGeometryColumn('qgep', 'od_building', 'perimeter_geometry', 21781, 'POLYGON', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_building', 'perimeter_geometry', :SRID, 'POLYGON', 2, true);
 CREATE INDEX in_qgep_od_building_perimeter_geometry ON qgep.od_building USING gist (perimeter_geometry );
 COMMENT ON COLUMN qgep.od_building.perimeter_geometry IS 'Boundary points of the perimeter / Begrenzungspunkte der Fläche / Points de délimitation de la surface';
-SELECT AddGeometryColumn('qgep', 'od_building', 'reference_point_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_building', 'reference_point_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_building_reference_point_geometry ON qgep.od_building USING gist (reference_point_geometry );
 COMMENT ON COLUMN qgep.od_building.reference_point_geometry IS 'National position coordinates (East, North) (relevant point for e.g. address) / Landeskoordinate Ost/Nord (massgebender Bezugspunkt für z.B. Adressdaten ) / Coordonnées nationales Est/Nord (Point de référence pour la détermination de l''adresse par exemple)';
 -------
@@ -3471,7 +3472,7 @@ CREATE SEQUENCE qgep.seq_od_reservoir_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999
 COMMENT ON COLUMN qgep.od_reservoir.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_reservoir ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_reservoir.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-SELECT AddGeometryColumn('qgep', 'od_reservoir', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_reservoir', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_reservoir_situation_geometry ON qgep.od_reservoir USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_reservoir.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
 -------
@@ -3497,7 +3498,7 @@ CREATE SEQUENCE qgep.seq_od_fountain_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 
 COMMENT ON COLUMN qgep.od_fountain.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_fountain ADD COLUMN location_name  varchar(50) ;
 COMMENT ON COLUMN qgep.od_fountain.location_name IS 'Street name or name of the location / Strassenname oder Ortsbezeichnung / Nom de la route ou du lieu';
-SELECT AddGeometryColumn('qgep', 'od_fountain', 'situation_geometry', 21781, 'POINT', 2, true);
+SELECT AddGeometryColumn('qgep', 'od_fountain', 'situation_geometry', :SRID, 'POINT', 2, true);
 CREATE INDEX in_qgep_od_fountain_situation_geometry ON qgep.od_fountain USING gist (situation_geometry );
 COMMENT ON COLUMN qgep.od_fountain.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
 -------
