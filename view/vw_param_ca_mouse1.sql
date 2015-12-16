@@ -21,8 +21,8 @@ SELECT
    , SR.remark
    , SR.surface_storage
    , SR.wetting_loss
-   , SR.dataowner
-   , SR.provider
+   , SR.fk_dataowner
+   , SR.fk_provider
    , SR.last_modification
   , SR.fk_catchment_area
   FROM qgep.od_param_ca_mouse1 PM
@@ -46,8 +46,8 @@ BEGIN
            , remark
            , surface_storage
            , wetting_loss
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_catchment_area
            )
@@ -58,8 +58,8 @@ BEGIN
            , NEW.remark
            , NEW.surface_storage
            , NEW.wetting_loss
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_catchment_area
            )
@@ -117,8 +117,8 @@ UPDATE qgep.od_surface_runoff_parameters
      , remark = NEW.remark
      , surface_storage = NEW.surface_storage
      , wetting_loss = NEW.wetting_loss
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_catchment_area = NEW.fk_catchment_area
   WHERE obj_id = OLD.obj_id;

@@ -16,8 +16,8 @@ SELECT
    , CN.identifier
    , CN.remark
    , CN.sewer_infiltration_water_production
-   , CN.dataowner
-   , CN.provider
+   , CN.fk_dataowner
+   , CN.fk_provider
    , CN.last_modification
   , CN.fk_wastewater_networkelement
   , CN.fk_owner
@@ -40,8 +40,8 @@ BEGIN
            , identifier
            , remark
            , sewer_infiltration_water_production
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            , fk_wastewater_networkelement
            , fk_owner
@@ -51,8 +51,8 @@ BEGIN
            , NEW.identifier
            , NEW.remark
            , NEW.sewer_infiltration_water_production
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            , NEW.fk_wastewater_networkelement
            , NEW.fk_owner
@@ -103,8 +103,8 @@ UPDATE qgep.od_connection_object
        identifier = NEW.identifier
      , remark = NEW.remark
      , sewer_infiltration_water_production = NEW.sewer_infiltration_water_production
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
      , fk_wastewater_networkelement = NEW.fk_wastewater_networkelement
      , fk_owner = NEW.fk_owner

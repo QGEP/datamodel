@@ -13,8 +13,8 @@ SELECT
    , OG.identifier
    , OG.remark
    , OG.uid
-   , OG.dataowner
-   , OG.provider
+   , OG.fk_dataowner
+   , OG.fk_provider
    , OG.last_modification
   FROM qgep.od_private PR
  LEFT JOIN qgep.od_organisation OG
@@ -34,16 +34,16 @@ BEGIN
            , identifier
            , remark
            , uid
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            )
      VALUES ( qgep.generate_oid('od_private') -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -82,8 +82,8 @@ UPDATE qgep.od_organisation
        identifier = NEW.identifier
      , remark = NEW.remark
      , uid = NEW.uid
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
   WHERE obj_id = OLD.obj_id;
 );

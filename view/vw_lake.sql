@@ -12,8 +12,8 @@ SELECT
    , LA.perimeter_geometry
    , CU.identifier
    , CU.remark
-   , CU.dataowner
-   , CU.provider
+   , CU.fk_dataowner
+   , CU.fk_provider
    , CU.last_modification
   FROM qgep.od_lake LA
  LEFT JOIN qgep.od_surface_water_bodies CU
@@ -32,15 +32,15 @@ BEGIN
              obj_id
            , identifier
            , remark
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , last_modification
            )
      VALUES ( qgep.generate_oid('od_lake') -- obj_id
            , NEW.identifier
            , NEW.remark
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.last_modification
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -78,8 +78,8 @@ UPDATE qgep.od_surface_water_bodies
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-           , dataowner = NEW.dataowner
-           , provider = NEW.provider
+           , fk_dataowner = NEW.fk_dataowner
+           , fk_provider = NEW.fk_provider
            , last_modification = NEW.last_modification
   WHERE obj_id = OLD.obj_id;
 );
