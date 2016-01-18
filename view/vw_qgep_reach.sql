@@ -52,8 +52,8 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
     ne.identifier,
     ne.remark,
     ne.last_modification,
-    ne.dataowner,
-    ne.provider,
+    ne.fk_dataowner,
+    ne.fk_provider,
     ne.fk_wastewater_structure,
     rp_from.obj_id AS rp_from_obj_id,
     rp_from.elevation_accuracy AS rp_from_elevation_accuracy,
@@ -63,8 +63,8 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
     rp_from.position_of_connection AS rp_from_position_of_connection,
     rp_from.remark AS rp_from_remark,
     rp_from.last_modification AS rp_from_last_modification,
-    rp_from.dataowner AS rp_from_dataowner,
-    rp_from.provider AS rp_from_provider,
+    rp_from.fk_dataowner AS rp_from_fk_dataowner,
+    rp_from.fk_provider AS rp_from_fk_provider,
     rp_from.fk_wastewater_networkelement AS rp_from_fk_wastewater_networkelement,
     rp_to.obj_id AS rp_to_obj_id,
     rp_to.elevation_accuracy AS rp_to_elevation_accuracy,
@@ -74,8 +74,8 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
     rp_to.position_of_connection AS rp_to_position_of_connection,
     rp_to.remark AS rp_to_remark,
     rp_to.last_modification AS rp_to_last_modification,
-    rp_to.dataowner AS rp_to_dataowner,
-    rp_to.provider AS rp_to_provider,
+    rp_to.fk_dataowner AS rp_to_fk_dataowner,
+    rp_to.fk_provider AS rp_to_fk_provider,
     rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement
    FROM qgep.od_reach re
      LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.obj_id = re.obj_id
@@ -102,8 +102,8 @@ BEGIN
             , remark
             , situation_geometry
             , last_modification
-            , dataowner
-            , provider
+            , fk_dataowner
+            , fk_provider
             , fk_wastewater_networkelement
           )
     VALUES (
@@ -116,8 +116,8 @@ BEGIN
             , NEW.rp_from_remark -- remark
             , ST_StartPoint( NEW.progression_geometry ) -- situation_geometry
             , NEW.rp_from_last_modification -- last_modification
-            , NEW.rp_from_dataowner -- dataowner
-            , NEW.rp_from_provider -- provider
+            , NEW.rp_from_fk_dataowner -- fk_dataowner
+            , NEW.rp_from_fk_provider -- fk_provider
             , NEW.rp_from_fk_wastewater_networkelement -- fk_wastewater_networkelement
           )
     RETURNING obj_id INTO NEW.rp_from_obj_id;
@@ -133,8 +133,8 @@ BEGIN
             , remark
             , situation_geometry
             , last_modification
-            , dataowner
-            , provider
+            , fk_dataowner
+            , fk_provider
             , fk_wastewater_networkelement
           )
     VALUES (
@@ -147,8 +147,8 @@ BEGIN
             , NEW.rp_to_remark -- remark
             , ST_EndPoint( NEW.progression_geometry ) -- situation_geometry
             , NEW.rp_to_last_modification -- last_modification
-            , NEW.rp_to_dataowner -- dataowner
-            , NEW.rp_to_provider -- provider
+            , NEW.rp_to_fk_dataowner -- fk_dataowner
+            , NEW.rp_to_fk_provider -- fk_provider
             , NEW.rp_to_fk_wastewater_networkelement -- fk_wastewater_networkelement
           )
     RETURNING obj_id INTO NEW.rp_to_obj_id;
@@ -176,8 +176,8 @@ BEGIN
             , year_of_construction
             , year_of_replacement
             , last_modification
-            , dataowner
-            , provider
+            , fk_dataowner
+            , fk_provider
             , fk_owner
             , fk_operator )
 
@@ -203,8 +203,8 @@ BEGIN
             , NEW.year_of_construction
             , NEW.year_of_replacement
             , NEW.last_modification
-            , NEW.dataowner
-            , NEW.provider
+            , NEW.fk_dataowner
+            , NEW.fk_provider
             , NEW.fk_owner
             , NEW.fk_operator
            )
@@ -238,15 +238,15 @@ BEGIN
             , identifier
             , remark
             , last_modification
-            , dataowner
-            , provider
+            , fk_dataowner
+            , fk_provider
             , fk_wastewater_structure )
     VALUES ( qgep.generate_oid('od_reach') -- obj_id
             , NEW.identifier -- identifier
             , NEW.remark -- remark
             , NEW.last_modification -- last_modification
-            , NEW.dataowner -- dataowner
-            , NEW.provider -- provider
+            , NEW.fk_dataowner -- fk_dataowner
+            , NEW.fk_provider -- fk_provider
             , NEW.fk_wastewater_structure -- fk_wastewater_structure
            )
            RETURNING obj_id INTO NEW.obj_id;
@@ -314,8 +314,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , remark = NEW.rp_from_remark
       , situation_geometry = ST_StartPoint( NEW.progression_geometry )
       , last_modification = NEW.rp_from_last_modification
-      , dataowner = NEW.rp_from_dataowner
-      , provider = NEW.rp_from_provider
+      , fk_dataowner = NEW.rp_from_fk_dataowner
+      , fk_provider = NEW.rp_from_fk_provider
       , fk_wastewater_networkelement = NEW.rp_from_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_from_obj_id;
     
@@ -329,8 +329,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , remark = NEW.rp_to_remark
       , situation_geometry = ST_EndPoint( NEW.progression_geometry )
       , last_modification = NEW.rp_to_last_modification
-      , dataowner = NEW.rp_to_dataowner
-      , provider = NEW.rp_to_provider
+      , fk_dataowner = NEW.rp_to_fk_dataowner
+      , fk_provider = NEW.rp_to_fk_provider
       , fk_wastewater_networkelement = NEW.rp_to_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_to_obj_id;
 
@@ -368,8 +368,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
      , subsidies = NEW.subsidies
      , year_of_construction = NEW.year_of_construction
      , year_of_replacement = NEW.year_of_replacement
-     , dataowner = NEW.dataowner
-     , provider = NEW.provider
+     , fk_dataowner = NEW.fk_dataowner
+     , fk_provider = NEW.fk_provider
      , last_modification = NEW.last_modification
      , fk_owner = NEW.fk_owner
      , fk_operator = NEW.fk_operator
@@ -381,8 +381,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
         identifier = NEW.identifier
       , remark = NEW.remark
       , last_modification = NEW.last_modification
-      , dataowner = NEW.dataowner
-      , provider = NEW.provider
+      , fk_dataowner = NEW.fk_dataowner
+      , fk_provider = NEW.fk_provider
       , fk_wastewater_structure = NEW.fk_wastewater_structure
     WHERE obj_id = OLD.obj_id;
 

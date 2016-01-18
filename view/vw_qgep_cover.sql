@@ -20,8 +20,8 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     co.remark,
     co.renovation_demand,
     co.last_modification,
-    co.dataowner,
-    co.provider,
+    co.fk_dataowner,
+    co.fk_provider,
 
     CASE
       WHEN mh.obj_id IS NOT NULL THEN 'manhole'
@@ -94,8 +94,8 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     wn.identifier AS wn_identifier,
     wn.remark AS wn_remark,
     wn.last_modification AS wn_last_modification,
-    wn.dataowner AS wn_dataowner,
-    wn.provider AS wn_provider
+    wn.fk_dataowner AS wn_fk_dataowner,
+    wn.fk_provider AS wn_fk_provider
 
    FROM qgep.vw_cover co
      LEFT JOIN qgep.od_wastewater_structure ws ON ws.obj_id = co.fk_wastewater_structure
@@ -143,8 +143,8 @@ BEGIN
            , year_of_construction
            , year_of_replacement
            , last_modification
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , fk_owner
            , fk_operator
            )
@@ -177,8 +177,8 @@ BEGIN
            , NEW.year_of_construction
            , NEW.year_of_replacement
            , NEW.last_modification
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
            ) RETURNING obj_id INTO NEW.ws_obj_id;
@@ -213,8 +213,8 @@ BEGIN
            , year_of_construction
            , year_of_replacement
            , last_modification
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , fk_owner
            , fk_operator
            )
@@ -248,8 +248,8 @@ BEGIN
            , NEW.year_of_construction
            , NEW.year_of_replacement
            , NEW.last_modification
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
            ) RETURNING obj_id INTO NEW.ws_obj_id;
@@ -285,8 +285,8 @@ BEGIN
            , year_of_construction
            , year_of_replacement
            , last_modification
-           , dataowner
-           , provider
+           , fk_dataowner
+           , fk_provider
            , fk_owner
            , fk_operator
            )
@@ -320,8 +320,8 @@ BEGIN
            , NEW.year_of_construction
            , NEW.year_of_replacement
            , NEW.last_modification
-           , NEW.dataowner
-           , NEW.provider
+           , NEW.fk_dataowner
+           , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
            ) RETURNING obj_id INTO NEW.ws_obj_id;
@@ -345,8 +345,8 @@ BEGIN
     , identifier
     , remark
     , last_modification
-    , dataowner
-    , provider
+    , fk_dataowner
+    , fk_provider
     , fk_wastewater_structure
   )
   VALUES
@@ -357,8 +357,8 @@ BEGIN
     , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
     , COALESCE(NULLIF(NEW.wn_remark,''), NEW.remark)
     , NOW()
-    , COALESCE(NULLIF(NEW.wn_provider,''), NEW.provider) -- TODO will need to be switched to fk
-    , COALESCE(NULLIF(NEW.wn_dataowner,''), NEW.dataowner) -- TODO will need to be switched to fk
+    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
+    , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
     , NEW.ws_obj_id
   );
 
@@ -377,8 +377,8 @@ BEGIN
     , remark
     , renovation_demand
     , last_modification
-    , dataowner
-    , provider
+    , fk_dataowner
+    , fk_provider
     , fk_wastewater_structure
   )
   VALUES
@@ -397,8 +397,8 @@ BEGIN
     , NEW.remark
     , NEW.renovation_demand
     , NOW()
-    , NEW.dataowner
-    , NEW.provider
+    , NEW.fk_dataowner
+    , NEW.fk_provider
     , NEW.ws_obj_id
   ) RETURNING obj_id INTO NEW.obj_id;
   RETURN NEW;
@@ -443,8 +443,8 @@ BEGIN
         remark = new.remark,
         renovation_demand = new.renovation_demand,
         last_modification = new.last_modification,
-        dataowner = new.dataowner,
-        provider = new.provider
+        fk_dataowner = new.fk_dataowner,
+        fk_provider = new.fk_provider
     WHERE od_structure_part.obj_id::text = old.obj_id::text;
 
     UPDATE qgep.od_wastewater_structure

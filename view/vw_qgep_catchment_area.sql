@@ -31,8 +31,8 @@ SELECT
   waste_water_production_current,
   waste_water_production_planned,
   CA.last_modification,
-  CA.dataowner,
-  CA.provider,
+  CA.fk_dataowner,
+  CA.fk_provider,
   fk_wastewater_networkelement_rw_current,
   fk_wastewater_networkelement_rw_planned,
   fk_wastewater_networkelement_ww_planned,
@@ -93,8 +93,8 @@ INSERT INTO qgep.od_catchment_area(
   , waste_water_production_current
   , waste_water_production_planned
   , last_modification
-  , dataowner
-  , provider
+  , fk_dataowner
+  , fk_provider
   , fk_wastewater_networkelement_rw_current
   , fk_wastewater_networkelement_rw_planned
   , fk_wastewater_networkelement_ww_planned
@@ -130,8 +130,8 @@ VALUES (
   , NEW.waste_water_production_current
   , NEW.waste_water_production_planned
   , NEW.last_modification
-  , NEW.dataowner
-  , NEW.provider
+  , NEW.fk_dataowner
+  , NEW.fk_provider
   , NEW.fk_wastewater_networkelement_rw_current
   , NEW.fk_wastewater_networkelement_rw_planned
   , NEW.fk_wastewater_networkelement_ww_planned
@@ -188,8 +188,8 @@ UPDATE qgep.od_catchment_area
   , waste_water_production_current=NEW.waste_water_production_current
   , waste_water_production_planned=NEW.waste_water_production_planned
   , last_modification=NEW.last_modification
-  , dataowner=NEW.dataowner
-  , provider=NEW.provider
+  , fk_dataowner=NEW.fk_dataowner
+  , fk_provider=NEW.fk_provider
   , fk_wastewater_networkelement_rw_current=NEW.fk_wastewater_networkelement_rw_current
   , fk_wastewater_networkelement_rw_planned=NEW.fk_wastewater_networkelement_rw_planned
   , fk_wastewater_networkelement_ww_planned=NEW.fk_wastewater_networkelement_ww_planned
