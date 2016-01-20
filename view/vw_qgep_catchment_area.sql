@@ -100,7 +100,7 @@ INSERT INTO qgep.od_catchment_area(
   , fk_wastewater_networkelement_ww_planned
   , fk_wastewater_networkelement_ww_current)
 VALUES (
-    qgep.generate_oid('od_catchment_area')
+    COALESCE(NEW.obj_id,qgep.generate_oid('od_catchment_area'))
   , NEW.direct_discharge_current
   , NEW.direct_discharge_planned=NEW.NEW.direct_discharge_planned
   , NEW.discharge_coefficient_rw_current

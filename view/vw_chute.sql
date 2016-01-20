@@ -42,7 +42,7 @@ BEGIN
            , last_modification
            , fk_water_course_segment
            )
-     VALUES ( qgep.generate_oid('od_chute') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_chute')) -- obj_id
            , NEW.identifier
            , NEW.remark
             , NEW.situation_geometry

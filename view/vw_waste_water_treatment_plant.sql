@@ -47,7 +47,7 @@ BEGIN
            , fk_provider
            , last_modification
            )
-     VALUES ( qgep.generate_oid('od_waste_water_treatment_plant') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_waste_water_treatment_plant')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid

@@ -83,7 +83,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( qgep.generate_oid('od_channel') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_channel')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry

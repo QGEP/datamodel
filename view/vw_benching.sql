@@ -40,7 +40,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( qgep.generate_oid('od_benching') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_benching')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand

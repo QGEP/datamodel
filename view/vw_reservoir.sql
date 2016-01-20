@@ -45,7 +45,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( qgep.generate_oid('od_reservoir') -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_reservoir')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.sewer_infiltration_water_production

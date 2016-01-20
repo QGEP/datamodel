@@ -116,7 +116,8 @@ BEGIN
   CASE
     WHEN NEW.ws_type = 'manhole' THEN
       INSERT INTO qgep.vw_manhole(
-             dimension1
+	     obj_id
+           , dimension1
            , dimension2
            , depth
            , function
@@ -150,7 +151,8 @@ BEGIN
            )
            VALUES
            (
-             NEW.dimension1
+	     NEW.ws_obj_id
+           , NEW.dimension1
            , NEW.dimension2
            , NEW.depth
            , NEW.manhole_function
@@ -186,7 +188,8 @@ BEGIN
     -- Special Structure
     WHEN NEW.ws_type = 'special_structure' THEN
       INSERT INTO qgep.vw_special_structure(
-             depth
+	     obj_id
+           , depth
            , emergency_spillway
            , function
            , stormwater_tank_arrangement
@@ -220,7 +223,8 @@ BEGIN
            )
            VALUES
            (
-             NEW.depth
+	     NEW.ws_obj_id
+           , NEW.depth
            , NEW.emergency_spillway
            , NEW.special_structure_function
            , NEW.stormwater_tank_arrangement
@@ -257,7 +261,8 @@ BEGIN
     -- Discharge Point
     WHEN NEW.ws_type = 'discharge_point' THEN
       INSERT INTO qgep.vw_discharge_point(
-             depth
+	     obj_id
+           , depth
            , highwater_level
            , relevance
            , terrain_level
@@ -292,7 +297,8 @@ BEGIN
            )
            VALUES
            (
-             NEW.depth
+	     NEW.ws_obj_id
+           , NEW.depth
            , NEW.highwater_level
            , NEW.relevance
            , NEW.terrain_level
@@ -339,7 +345,8 @@ BEGIN
   END IF;
 
   INSERT INTO qgep.vw_wastewater_node(
-      backflow_level
+      obj_id
+    , backflow_level
     , bottom_level
     , situation_geometry
     , identifier
@@ -351,7 +358,8 @@ BEGIN
   )
   VALUES
   (
-      NEW.backflow_level
+      NEW.wn_obj_id
+    , NEW.backflow_level
     , NEW.bottom_level
     , NEW.situation_geometry
     , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
@@ -363,7 +371,8 @@ BEGIN
   );
 
   INSERT INTO qgep.vw_cover(
-      brand
+      obj_id
+    , brand
     , cover_shape
     , diameter
     , fastening
@@ -383,7 +392,8 @@ BEGIN
   )
   VALUES
   (
-      NEW.brand
+      NEW.obj_id
+    , NEW.brand
     , NEW.cover_shape
     , NEW.diameter
     , NEW.fastening
