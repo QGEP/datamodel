@@ -137,10 +137,10 @@ COMMENT ON COLUMN qgep.od_damage_manhole.connection IS 'yyy_Feststellung bei zwe
 COMMENT ON COLUMN qgep.od_damage_manhole.damage_code_manhole IS 'yyy_Vorgegebener Wertebereich: Gültiger Code auf der Grundlage von SN EN 13508-2. Alle gültigen Codes sind in Kapitel 3 der Richtlinie "Schadencodierung" abschliessend aufgeführt. / Vorgegebener Wertebereich: Gültiger Code auf der Grundlage von SN EN 1350';
  ALTER TABLE qgep.od_damage_manhole ADD COLUMN damage_reach  varchar(3) ;
 COMMENT ON COLUMN qgep.od_damage_manhole.damage_reach IS 'yyy_Codes für den Anfang und das Ende eines Streckenschadens. Genaue Angaben unter 3.1.2 / Codes für den Anfang und das Ende eines Streckenschadens. Genaue Angaben unter 3.1.2 / Codes pour le début et la fin d’un dommage à un tronçon. Indica-tions exactes';
- ALTER TABLE qgep.od_damage_manhole ADD COLUMN dammage_begin  smallint ;
-COMMENT ON COLUMN qgep.od_damage_manhole.dammage_begin IS 'yyy_Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Début du dommage. Va';
- ALTER TABLE qgep.od_damage_manhole ADD COLUMN dammage_end  smallint ;
-COMMENT ON COLUMN qgep.od_damage_manhole.dammage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Fin du dommage. Valeurs ';
+ ALTER TABLE qgep.od_damage_manhole ADD COLUMN damage_begin  smallint ;
+COMMENT ON COLUMN qgep.od_damage_manhole.damage_begin IS 'yyy_Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Début du dommage. Va';
+ ALTER TABLE qgep.od_damage_manhole ADD COLUMN damage_end  smallint ;
+COMMENT ON COLUMN qgep.od_damage_manhole.damage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Fin du dommage. Valeurs ';
  ALTER TABLE qgep.od_damage_manhole ADD COLUMN distance  decimal(5,2) ;
 COMMENT ON COLUMN qgep.od_damage_manhole.distance IS 'yyy_Länge ab Oberkante Deckel bis zur Feststellung (siehe Absatz 3.1.1) in m mit zwei Nachkommastellen. / Länge ab Oberkante Deckel bis zur Feststellung (siehe Absatz 3.1.1) in m mit zwei Nachkommastellen. / Longueur entre le bord supérieur du couvercle e';
  ALTER TABLE qgep.od_damage_manhole ADD COLUMN quantification1  varchar(20) ;
@@ -174,8 +174,8 @@ COMMENT ON COLUMN qgep.od_damage_channel.connection IS 'yyy_Kennzeichen für ein
 COMMENT ON COLUMN qgep.od_damage_channel.damage_begin IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben. / Emplacement circonférentiel: Début du dommage. Valeurs et ';
  ALTER TABLE qgep.od_damage_channel ADD COLUMN damage_reach  varchar(3) ;
 COMMENT ON COLUMN qgep.od_damage_channel.damage_reach IS 'yyy_Codes für den Anfang und das Ende eines Streckenschadens. Genaue Angaben unter 2.1.2 / Codes für den Anfang und das Ende eines Streckenschadens. Genaue Angaben unter 2.1.2 / Codes pour le début et la fin d’un dommage à un tronçon. Indications exactes ';
- ALTER TABLE qgep.od_damage_channel ADD COLUMN dammage_end  smallint ;
-COMMENT ON COLUMN qgep.od_damage_channel.dammage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Emplacement circonférentiel: Fin du dommage. Valeurs et procé';
+ ALTER TABLE qgep.od_damage_channel ADD COLUMN damage_end  smallint ;
+COMMENT ON COLUMN qgep.od_damage_channel.damage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Emplacement circonférentiel: Fin du dommage. Valeurs et procé';
  ALTER TABLE qgep.od_damage_channel ADD COLUMN distance  decimal(5,2) ;
 COMMENT ON COLUMN qgep.od_damage_channel.distance IS 'yyy_Länge von Rohranfang bis zur Feststellung (siehe Richtlinie Optische Inspektion von Entwässerungsanlagen: Schadencodierung und Datentransfer, Absatz 2.1.1) in m mit zwei Nachkommastellen / Länge von Rohranfang bis zur Feststellung (siehe Richtlinie Op';
  ALTER TABLE qgep.od_damage_channel ADD COLUMN quantification1  integer ;
