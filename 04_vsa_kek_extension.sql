@@ -143,9 +143,9 @@ COMMENT ON COLUMN qgep.od_damage_manhole.damage_begin IS 'yyy_Lage am Umfang: Be
 COMMENT ON COLUMN qgep.od_damage_manhole.damage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Fin du dommage. Valeurs ';
  ALTER TABLE qgep.od_damage_manhole ADD COLUMN distance  decimal(5,2) ;
 COMMENT ON COLUMN qgep.od_damage_manhole.distance IS 'yyy_Länge ab Oberkante Deckel bis zur Feststellung (siehe Absatz 3.1.1) in m mit zwei Nachkommastellen. / Länge ab Oberkante Deckel bis zur Feststellung (siehe Absatz 3.1.1) in m mit zwei Nachkommastellen. / Longueur entre le bord supérieur du couvercle e';
- ALTER TABLE qgep.od_damage_manhole ADD COLUMN quantification1  varchar(20) ;
+ ALTER TABLE qgep.od_damage_manhole ADD COLUMN quantification1  integer ;
 COMMENT ON COLUMN qgep.od_damage_manhole.quantification1 IS 'yyy_Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantif';
- ALTER TABLE qgep.od_damage_manhole ADD COLUMN quantification2  varchar(20) ;
+ ALTER TABLE qgep.od_damage_manhole ADD COLUMN quantification2  integer ;
 COMMENT ON COLUMN qgep.od_damage_manhole.quantification2 IS 'yyy_Quantifizierung 2 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantifizierung 2 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantif';
  ALTER TABLE qgep.od_damage_manhole ADD COLUMN video_counter  varchar(11) ;
 COMMENT ON COLUMN qgep.od_damage_manhole.video_counter IS 'yyy_Zählerstand auf einem analogen Videoband oder in einer digitalen Videodatei, in Echtzeit / Zählerstand auf einem analogen Videoband oder in einer digitalen Videodatei, in Echtzeit / Relevé du compteur sur une bande vidéo analogique ou dans un fichier ';

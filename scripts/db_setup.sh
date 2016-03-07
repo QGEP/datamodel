@@ -49,13 +49,13 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/07_views_for_network_tr
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/08_qgep_functions.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries.sql
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SCHEMA=qgep -f ${DIR}/metaproject/postgresql/pg_inheritance_view/pg_inherited_table_view.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_access_aid.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_benching.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_backflow_prevention.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_channel.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_cover.sql
+psql -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${PGSERVICE})"
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_discharge_point.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_dryweather_downspout.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_dryweather_flume.sql
@@ -65,4 +65,4 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_special_structu
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_wastewater_node.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_cover.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_reach.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_oo_overflow.sql
+psql -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_oo_overflow.py ${PGSERVICE})"
