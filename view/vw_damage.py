@@ -10,7 +10,7 @@ pgiv = imp.load_source('PGInheritanceView', os.path.join(os.path.dirname(__file_
 if len(sys.argv) > 1:
 	pg_service = sys.argv[1]
 else:
-	pg_service = 'qgep_test'
+	pg_service = 'pg_qgep'
 
 
 damage = """
