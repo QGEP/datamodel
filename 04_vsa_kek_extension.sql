@@ -178,9 +178,9 @@ COMMENT ON COLUMN qgep.od_damage_channel.damage_reach IS 'yyy_Codes für den Anf
 COMMENT ON COLUMN qgep.od_damage_channel.damage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind in Absatz 2.1.6 genau beschrieben / Emplacement circonférentiel: Fin du dommage. Valeurs et procé';
  ALTER TABLE qgep.od_damage_channel ADD COLUMN distance  decimal(5,2) ;
 COMMENT ON COLUMN qgep.od_damage_channel.distance IS 'yyy_Länge von Rohranfang bis zur Feststellung (siehe Richtlinie Optische Inspektion von Entwässerungsanlagen: Schadencodierung und Datentransfer, Absatz 2.1.1) in m mit zwei Nachkommastellen / Länge von Rohranfang bis zur Feststellung (siehe Richtlinie Op';
- ALTER TABLE qgep.od_damage_channel ADD COLUMN quantification1  integer ;
+ ALTER TABLE qgep.od_damage_channel ADD COLUMN quantification1  varchar(20) ;
 COMMENT ON COLUMN qgep.od_damage_channel.quantification1 IS 'yyy_Quantifizierung 1 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 0 beschrieben / Quantifizierung 1 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 0 beschrieben / Quantification 1 selon la SN EN 13508-2. Les entrées auto';
- ALTER TABLE qgep.od_damage_channel ADD COLUMN quantification2  integer ;
+ ALTER TABLE qgep.od_damage_channel ADD COLUMN quantification2  varchar(20) ;
 COMMENT ON COLUMN qgep.od_damage_channel.quantification2 IS 'yyy_Quantifizierung 2 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 2.3 - 2.6  beschrieben / Quantifizierung 2 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 2.3 - 2.6  beschrieben / Quantification 2 selon la SN EN 13508. Les entrées auto';
  ALTER TABLE qgep.od_damage_channel ADD COLUMN video_counter  varchar(11) ;
 COMMENT ON COLUMN qgep.od_damage_channel.video_counter IS 'yyy_Zählerstand auf einem analogen Videoband oder in einer digitalen Videodatei, in Echtzeit (siehe auch 2.1.9). / Zählerstand auf einem analogen Videoband oder in einer digitalen Videodatei, in Echtzeit (siehe auch 2.1.9). / Relevé du compteur sur une ba';
