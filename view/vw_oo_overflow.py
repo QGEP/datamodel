@@ -12,6 +12,8 @@ if len(sys.argv) > 1:
 else:
 	pg_service = 'pg_qgep'
 	
+	
+
 overflow="""
 table: qgep.od_overflow
 alias: overflow
@@ -23,23 +25,32 @@ children:
   leapingweir:
     table: qgep.od_leapingweir
     pkey: obj_id
-  
+
   prank_weir:
     table: qgep.od_prank_weir
     pkey: obj_id
-  
+
   pump:
     table: qgep.od_pump
     pkey: obj_id
-  
+
 
 merge_view:
   name: vw_qgep_overflow
   additional_columns:
     geometry: ST_MakeLine(n1.situation_geometry, n2.situation_geometry)::geometry('LineString',21781)
-  
-  additional_join: LEFT JOIN qgep.od_wastewater_node n1 ON overflow.fk_wastewater_node = n1.obj_id LEFT JOIN qgep.od_wastewater_node n2 ON overflow.fk_overflow_to = n2.obj_id
+  additional_joins:
+    n1:
+      table: qgep.od_wastewater_node
+      type: left
+      key: obj_id
+      fkey: fk_wastewater_node
+    n2:
+      table: qgep.od_wastewater_node
+      type: left
+      key: obj_id
+      fkey: fk_overflow_to 
 """
 
 
-print pgiv.PGInheritanceView(pg_service, overflow).sql_all()
+print(pgiv.PGInheritanceView(pg_service, overflow).sql_all())
