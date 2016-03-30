@@ -45,6 +45,9 @@ merge_view:
     damage_end:
       channel: damage_end
       manhole: damage_end
+    damage_code:
+      channel: damage_code
+      manhole: damage_code
     distance:
       channel: distance
       manhole: distance
