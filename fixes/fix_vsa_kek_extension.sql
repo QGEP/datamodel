@@ -16,3 +16,6 @@ ALTER TABLE qgep.vl_damage_manhole_damage_code_manhole RENAME TO vl_damage_manho
 
 --fix typo
 ALTER TABLE qgep.od_examination RENAME inspected_lenght TO inspected_length;
+
+-- remove redundant field
+ALTER TABLE qgep.od_examination DROP COLUMN operator;

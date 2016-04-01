@@ -24,8 +24,6 @@ children:
   examination:
     table: qgep.od_examination
     pkey: obj_id
-    remap:
-      operator: examination_operator
 
 
 merge_view:
