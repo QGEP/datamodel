@@ -2,7 +2,14 @@
 
 CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
 
- SELECT re.obj_id,
+WITH active_maintenance_event AS (
+  SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep.od_maintenance_event me
+  LEFT JOIN
+    qgep.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
+    WHERE active_zone IS NOT NULL
+)
+
+SELECT DISTINCT ON (re.obj_id) re.obj_id,
     re.clear_height AS clear_height,
     CASE WHEN pp.height_width_ratio IS NOT NULL THEN round(re.clear_height::numeric * pp.height_width_ratio)::smallint ELSE clear_height END AS width,
     re.coefficient_of_friction,
@@ -76,14 +83,18 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
     rp_to.last_modification AS rp_to_last_modification,
     rp_to.fk_dataowner AS rp_to_fk_dataowner,
     rp_to.fk_provider AS rp_to_fk_provider,
-    rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement
+    rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement,
+    am.obj_id AS me_obj_id,
+    am.active_zone AS me_active_zone,
+    am.identifier AS me_identifier
    FROM qgep.od_reach re
      LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.obj_id = re.obj_id
      LEFT JOIN qgep.od_reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
      LEFT JOIN qgep.od_reach_point rp_to ON rp_to.obj_id = re.fk_reach_point_to
      LEFT JOIN qgep.od_wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
      LEFT JOIN qgep.od_channel ch ON ch.obj_id = ws.obj_id
-     LEFT JOIN qgep.od_pipe_profile pp ON re.fk_pipe_profile = pp.obj_id;
+     LEFT JOIN qgep.od_pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
+     LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id;
 
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
