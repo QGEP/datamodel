@@ -48,6 +48,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/06_symbology_functions.
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/07_views_for_network_tracking.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/08_qgep_functions.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries_kek.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SCHEMA=qgep -f ${DIR}/metaproject/postgresql/pg_inherited_table_view/pg_inherited_table_view.sql
 
