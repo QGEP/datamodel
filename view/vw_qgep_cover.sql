@@ -1,4 +1,4 @@
--- View: vw_qgep_cover
+﻿-- View: vw_qgep_cover
 
 BEGIN TRANSACTION;
 
@@ -535,6 +535,47 @@ BEGIN
     WHEN NEW.ws_type = 'infiltration_installation' THEN
     -- TODO
   END CASE;
+
+  -- Cover geometry has been moved
+  IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
+    -- Move wastewater node as well
+    UPDATE qgep.od_wastewater_node WN
+    SET situation_geometry = ST_TRANSLATE(WN.situation_geometry, ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+    WHERE obj_id IN 
+    (
+      SELECT obj_id FROM qgep.od_wastewater_networkelement
+      WHERE fk_wastewater_structure = NEW.ws_obj_id
+    );
+
+    -- Move reach(es) as well
+    UPDATE qgep.od_reach RE
+    SET progression_geometry = 
+      ST_SetPoint(
+        RE.progression_geometry,
+        0, -- SetPoint index is 0 based, PointN index is 1 based.
+        ST_TRANSLATE(ST_PointN(RE.progression_geometry, 1), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+      )
+    WHERE fk_reach_point_from IN 
+    (
+      SELECT RP.obj_id FROM qgep.od_reach_point RP
+      LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
+      WHERE NE.fk_wastewater_structure = NEW.ws_obj_id
+    );
+
+    UPDATE qgep.od_reach RE
+    SET progression_geometry = 
+      ST_SetPoint(
+        RE.progression_geometry,
+        ST_NumPoints(RE.progression_geometry) - 1,
+        ST_TRANSLATE(ST_EndPoint(RE.progression_geometry), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+      )
+    WHERE fk_reach_point_to IN 
+    (
+      SELECT RP.obj_id FROM qgep.od_reach_point RP
+      LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
+      WHERE NE.fk_wastewater_structure = NEW.ws_obj_id
+    );
+  END IF;
 
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
