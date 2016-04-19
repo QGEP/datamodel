@@ -3,6 +3,11 @@ ALTER TABLE qgep.od_cover ADD CONSTRAINT oorel_od_cover_structure_part FOREIGN K
       REFERENCES qgep.od_structure_part(obj_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE;
 
+ALTER TABLE qgep.od_access_aid DROP CONSTRAINT oorel_od_access_aid_structure_part;
+ALTER TABLE qgep.od_access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id)
+      REFERENCES qgep.od_structure_part(obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE;
+
 ALTER TABLE qgep.od_structure_part DROP CONSTRAINT rel_structure_part_wastewater_structure;
 ALTER TABLE qgep.od_structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure)
       REFERENCES qgep.od_wastewater_structure(obj_id) MATCH SIMPLE
@@ -23,3 +28,7 @@ ALTER TABLE qgep.od_wastewater_networkelement ADD CONSTRAINT rel_wastewater_netw
       REFERENCES qgep.od_wastewater_structure(obj_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE;
 
+ALTER TABLE qgep.od_reach_point DROP CONSTRAINT rel_reach_point_wastewater_networkelement;
+ALTER TABLE qgep.od_reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement)
+      REFERENCES qgep.od_wastewater_networkelement(obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE SET NULL;
