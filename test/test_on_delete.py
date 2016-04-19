@@ -19,18 +19,26 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
 
     def test_delete_wastewater_structure(self):
+        # Create a new cover(structure part) with manhole(wastewater structure)
         row = {
-                'identifier': 'CO123',
-                'level': decimal.Decimal('50.000')
+                'identifier': 'CO698',
+                'level': decimal.Decimal('50.000'),
+                'ws_type': 'manhole'
         }
 
-        obj_id = self.insert_check('vw_cover', row)
+        obj_id = self.insert_check('vw_qgep_cover', row)
 
+        # Get the new cover
         row = self.select('vw_cover', obj_id)
 
-        self.delete('od_wastewater_structure', row['ws_obj_id'])
+        # We work with the foreign key from the cover to the wastewater structure
+        self.delete('od_wastewater_structure', row['fk_wastewater_structure'])
 
-        print(self.select('vw_cover', obj_id))
+        # Just to be sure the structure really was deleted
+        self.assertIsNone(self.select('od_manhole', row['fk_wastewater_structure']))
+        self.assertIsNone(self.select('od_wastewater_structure', row['fk_wastewater_structure']))
+        # The cover should be delted as well. If not, the foreign key constraint action does not work properly
+        self.assertIsNone(self.select('vw_cover', obj_id))
 
 
 if __name__ == '__main__':
