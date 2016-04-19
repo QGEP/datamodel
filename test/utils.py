@@ -41,6 +41,13 @@ class DbTestBase:
             row.values() + [obj_id]
         )
 
+    def delete(self, table, obj_id):
+        cur = self.conn.cursor()
+
+        cur.execute(
+            "DELETE FROM qgep.{table} WHERE obj_id=%s".format(table = table), [obj_id]
+        )
+
     def insert_check(self, table, row):
         obj_id = self.insert(table, row)
         result = self.select(table, obj_id)
