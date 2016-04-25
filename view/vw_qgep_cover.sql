@@ -585,4 +585,28 @@ DROP TRIGGER IF EXISTS vw_qgep_cover_ON_UPDATE ON qgep.vw_qgep_cover;
 CREATE TRIGGER vw_qgep_cover_ON_UPDATE INSTEAD OF UPDATE ON qgep.vw_qgep_cover
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_UPDATE();
 
+
+/**************************************************************
+ * DELETE
+ *************************************************************/
+
+CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_DELETE()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+BEGIN
+  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.ws_obj_id;
+END; $BODY$ LANGUAGE plpgsql VOLATILE;
+
+DROP TRIGGER IF EXISTS vw_qgep_cover_ON_DELETE ON qgep.vw_qgep_cover;
+
+CREATE TRIGGER vw_qgep_cover_ON_DELETE INSTEAD OF DELETE ON qgep.vw_qgep_cover
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_DELETE();
+
+
+
+
+
+
+
 END TRANSACTION;
