@@ -2,7 +2,7 @@ language: python
 
 addons:
   postgresql: "9.4"
-  
+
 install:
   - pip install psycopg2 --quiet
   - pip install pyyaml --quiet
@@ -12,8 +12,8 @@ git:
     submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-    - sed -i 's|git@github.com:|https://github.com/|' .gitmodules
-    - git submodule update --init --recursive
+  - openssl aes-256-cbc -K $encrypted_a9c41dbba15f_key -iv $encrypted_a9c41dbba15f_iv -in qgep_rsa.enc -out qgep_rsa -d
+  - git submodule update --init --recursive
 
 before_script:
   - printf "[pg_qgep]\nhost=localhost\ndbname=qgep\nuser=postgres" > ~/.pg_service.conf
@@ -24,3 +24,6 @@ before_script:
 script:
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh > /dev/null
   - nosetests
+
+after_success:
+  - $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
