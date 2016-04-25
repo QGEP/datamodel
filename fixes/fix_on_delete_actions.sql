@@ -32,3 +32,20 @@ ALTER TABLE qgep.od_reach_point DROP CONSTRAINT rel_reach_point_wastewater_netwo
 ALTER TABLE qgep.od_reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement)
       REFERENCES qgep.od_wastewater_networkelement(obj_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE qgep.od_catchment_area DROP CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_current;
+ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_current FOREIGN KEY (fk_wastewater_networkelement_rw_current)
+      REFERENCES qgep.od_wastewater_networkelement (obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE SET NULL;
+ALTER TABLE qgep.od_catchment_area DROP CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_planned;
+ALTER TABLE qgep.od_catchment_area ADD  CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_planned FOREIGN KEY (fk_wastewater_networkelement_rw_planned)
+      REFERENCES qgep.od_wastewater_networkelement (obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE SET NULL;
+ALTER TABLE qgep.od_catchment_area DROP CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_current;
+ALTER TABLE qgep.od_catchment_area ADD  CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_current FOREIGN KEY (fk_wastewater_networkelement_ww_current)
+      REFERENCES qgep.od_wastewater_networkelement (obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE SET NULL;
+ALTER TABLE qgep.od_catchment_area DROP CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_planned;
+ALTER TABLE qgep.od_catchment_area ADD  CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_planned FOREIGN KEY (fk_wastewater_networkelement_ww_planned)
+      REFERENCES qgep.od_wastewater_networkelement (obj_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE SET NULL;
