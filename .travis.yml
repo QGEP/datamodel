@@ -7,12 +7,16 @@ install:
   - pip install psycopg2 --quiet
   - pip install pyyaml --quiet
 
+env:
+  # Github OAUTH token for creating pull requests
+  secure: "Lgo72FTFsrLNAZF0Xxlcarzf/u24SFJekHBfMPYAEHS3LzX9G8V6+HqG5qO/3Q0IZ9goez3yiBGOij77gGafHoaRyqzKgH9izqgrieXoB0kT62kJTjf3AXb35GqVCz7jTU6Io7Ara9cHadAvIx4EyGD1pq/70UZdNagkj6p8KI4DWzrTJsQ2s6IfcI461gLvunSyI3EqlKFV6lGZWOa1rws9BldvPhWeJJY62KhNx/9vv/o1qBYD5QWYUaoaaMgxtKqwafj5bicWzXjVUHJKQ0Gm+MTjGlagJli5661l3h90IVn6nsgLLEie1aDLMfAwlGanK4g1CX7tRCbhg4hUenTzO/VSuYdseoEUF24jDUqSQK0snRpeJTLFe3s/GwbjXB7RlaHDL0pD6+oWhuME0m7ztSp8jCvxiF5fer+ilF1BsyLBkA+0tO/FzQscSvL87RDWBCM9k7c57cBQOxS2I6/sj65LyTsgFrNS0vMMnUtdYk/4ixKbeZSoFjLerdkXGojlvpcklwuzRawPnk2eHt1HTeu5zqJZ3bsrSqMlmDoABK77dDAoVaQIdvP/3dcnxb7j5GRbGmmYHS+dsOR5oLAwgal/L/ilqJzLe8ZdD1yCUfCXPw9SRVP3k7vLI3lXgzPfXXlky3qzsvLqYAhugbq7t11ZgxBCBTblElFFB/Y="
+
 # Handle git submodules yourself
 git:
-    submodules: false
+  submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - openssl aes-256-cbc -K $encrypted_a9c41dbba15f_key -iv $encrypted_a9c41dbba15f_iv -in qgep_rsa.enc -out qgep_rsa -d
+  - ./scripts/setup_git.sh
   - git submodule update --init --recursive
 
 before_script:
