@@ -596,6 +596,7 @@ $BODY$
 DECLARE
 BEGIN
   DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.ws_obj_id;
+RETURN OLD;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
 DROP TRIGGER IF EXISTS vw_qgep_cover_ON_DELETE ON qgep.vw_qgep_cover;
