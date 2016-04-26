@@ -11,11 +11,11 @@ then
   echo " ... Creating pull request";
   echo "##########################";
 
-  git fetch origin master
-  printf "Datamodel update from https://github.com/QGEP/QGEP/commit/${TRAVIS_COMMIT}\n\n" > /tmp/commitmessage
-  git log --pretty --no-merges FETCH_HEAD..HEAD >> /tmp/commitmessage
-
   git clone git@github.com:qgep-bot/QGEP.git
+  master=`git -C QGEP submodule status | grep datamodel | cut -d' ' -f1 | cut -d'-' -f2`
+  printf "Datamodel update from https://github.com/QGEP/QGEP/commit/${TRAVIS_COMMIT}\n\n" > /tmp/commitmessage
+  git log --pretty --no-merges ${master}..HEAD >> /tmp/commitmessage
+
   pushd QGEP
   git submodule update --init
   git checkout -b pullRequest-${TRAVIS_COMMIT}
