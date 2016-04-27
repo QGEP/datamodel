@@ -20,7 +20,7 @@ SELECT
    , WS.accessibility
    , WS.contract_section,
 WS.detail_geometry_geometry,
--- WS.detail_geometry_3d_geometry
+WS.detail_geometry_3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -60,7 +60,7 @@ BEGIN
            , accessibility
            , contract_section
             , detail_geometry_geometry
-    --        , detail_geometry_3d_geometry
+            , detail_geometry_3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -87,7 +87,7 @@ BEGIN
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
-   --         , NEW.detail_geometry_3d_geometry
+            , NEW.detail_geometry_3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.identifier
@@ -167,7 +167,7 @@ UPDATE qgep.od_wastewater_structure
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
       , detail_geometry_geometry = NEW.detail_geometry_geometry
-     -- , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
+      , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier

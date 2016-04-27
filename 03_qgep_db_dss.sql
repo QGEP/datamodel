@@ -1,6 +1,6 @@
 ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 19.04.2016 20:37:07
+------ version 26.04.2016 18:13:50
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -594,7 +594,7 @@ CREATE SEQUENCE qgep.seq_od_organisation_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999
  ALTER TABLE qgep.od_organisation ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_organisation');
 COMMENT ON COLUMN qgep.od_organisation.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_organisation ADD COLUMN identifier  varchar(80) ;
-COMMENT ON COLUMN qgep.od_organisation.identifier IS 'It is suggested to use real names, e.g. Sample_Community and not only Community. Or "Waste Water Association WWTP Example" and not only Waste Water Association because there will be multiple objects / Es wird empfohlen reale Namen zu nehmen, z.B. Mustergemeinde und nicht Gemeinde. Oder Abwasserverband ARA Muster und nicht nur Abwasserverband, da es sonst Probleme gibt bei der Zusammenführung der Daten. / Utilisez les noms réels, par ex. commune "exemple" et pas seulement commune. Ou "Association pour l''épuration des eaux usées STEP XXX" et pas seulement  Association pour l''épuration des eaux usées. Sinon vous risquer des problèmes en réunissant les donnée';
+COMMENT ON COLUMN qgep.od_organisation.identifier IS 'It is suggested to use real names, e.g. Sample_Community and not only Community. Or "Waste Water Association WWTP Example" and not only Waste Water Association because there will be multiple objects / Es wird empfohlen reale Namen zu nehmen, z.B. Mustergemeinde und nicht Gemeinde. Oder Abwasserverband ARA Muster und nicht nur Abwasserverband, da es sonst Probleme gibt bei der Zusammenführung der Daten. / Utilisez les noms réels, par ex. commune "exemple" et pas seulement commune. Ou "Association pour l''épuration des eaux usées STEP XXX" et pas seulement  Association pour l''épuration des eaux usées. Sinon vous risquer des problèmes en réunissant les données de différentes communes.';
  ALTER TABLE qgep.od_organisation ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_organisation.remark IS 'yyy Fehler bei Zuordnung / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_organisation ADD COLUMN uid  varchar(12) ;
@@ -752,9 +752,9 @@ CREATE SEQUENCE qgep.seq_od_waste_water_treatment_plant_oid INCREMENT 1 MINVALUE
  ALTER TABLE qgep.od_waste_water_treatment_plant ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_waste_water_treatment_plant');
 COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN bod5  smallint ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.bod5 IS '5 day biochemical oxygen demand measured at a temperatur of 20 degree celsius. YYY / Biochemischer Sauerstoffbedarf nach 5 Tagen Messzeit und bei einer Temperatur vom 20 Grad Celsius. Er stellt den Verbrauch an gelöstem Sauerstoff durch die Lebensvorgänge der im Wasser oder Abwasser enthaltenen Mikroorganismen (Bakterienprotozoen) beim  Abbau organischer Substanzen dar. Der Wert stellt eine wichtige Grösse zur Beurteilung der  aerob abbaufähigen Substanzen dar. Der BSB5 wird in den Einheiten mg/l oder g/m3 angegeben. Ausser dem BSB5 wird der biochemische Sauerstoffbedarf auch an 20 Tagen und mehr bestimmt. Dann spricht man z.B. vom BSB20 usw. Siehe Sapromat, Winklerprobe, Verdünnungsmethode. (arb) / Elle représente la quantité d’oxygène dépensée par les phénomènes d’oxydation chimique, d’une part, et, d’autre part, la dégradation des matières organiques par voie aérobie, nécessaire à la destruction des composés organiques. Elle s’exprime en milligram';
+COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.bod5 IS '5 day biochemical oxygen demand measured at a temperatur of 20 degree celsius. YYY / Biochemischer Sauerstoffbedarf nach 5 Tagen Messzeit und bei einer Temperatur vom 20 Grad Celsius. Er stellt den Verbrauch an gelöstem Sauerstoff durch die Lebensvorgänge der im Wasser oder Abwasser enthaltenen Mikroorganismen (Bakterienprotozoen) beim  Abbau organischer Substanzen dar. Der Wert stellt eine wichtige Grösse zur Beurteilung der  aerob abbaufähigen Substanzen dar. Der BSB5 wird in den Einheiten mg/l oder g/m3 angegeben. Ausser dem BSB5 wird der biochemische Sauerstoffbedarf auch an 20 Tagen und mehr bestimmt. Dann spricht man z.B. vom BSB20 usw. Siehe Sapromat, Winklerprobe, Verdünnungsmethode. (arb) / Elle représente la quantité d’oxygène dépensée par les phénomènes d’oxydation chimique, d’une part, et, d’autre part, la dégradation des matières organiques par voie aérobie, nécessaire à la destruction des composés organiques. Elle s’exprime en milligrammes d’O2 consommé par litre d’effluent. Par convention, on retient le résultat de la consommation d’oxygène à 20° C au bout de 5 jours, ce qui donne l’appellation DBO5. (d’après M. Satin, B. Selmi, Guide technique de l’assainissement).';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN cod  smallint ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.cod IS 'Abbreviation for chemical oxygen demand (COD). / Abkürzung für den chemischen Sauerstoffbedarf. Die englische Abkürzung lautet COD. Mit einem starken Oxydationsmittel wird mehr oder weniger erfolgreich versucht, die organischen Verbindungen der Abwasserprobe zu CO2 und H2O zu oxydieren. Als Oxydationsmittel eignen sich Chromverbindungen verschiedener Wertigkeit (z.B. Kalium-Dichromat K2Cr2O7) und Manganverbindungen (z.B. KmnO4), wobei man unter dem CSB im Allgemeinen den chemischen Sauerstoffbedarf nach der Kalium-Dichromat-Methode) versteht. Das Resultat kann als Chromatverbrauch oder Kaliumpermanaganatverbrauch ausgedrückt werden (z.B. mg CrO4 2-/l oder mg KMnO4/l). Im allgemeinen ergibt die Kalium-Dichromat-Methode höhere Werte als mit Kaliumpermanganat. Das Verhältnis des CSB zum BSB5 gilt als Hinweis auf die Abbaubarkeit der organischen Abwasserinhaltsstoffe. Leicht abbaubare häusliche Abwässer haben einen DSB/BSB5-Verhältnis von 1 bis 1,5. Schweres abbaubares, industrielles Abwasser ein Verhältnis von über 2. (arb) / Elle représente la teneur totale de l’eau en matières organiques, qu’elles soient ou non biodégradables. Le principe repose sur la recherche d’un besoin d’oxygène de l’échantillon pour dégrader la matière organique. Mais dans ce cas, l’oxygène est fourni ';
+COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.cod IS 'Abbreviation for chemical oxygen demand (COD). / Abkürzung für den chemischen Sauerstoffbedarf. Die englische Abkürzung lautet COD. Mit einem starken Oxydationsmittel wird mehr oder weniger erfolgreich versucht, die organischen Verbindungen der Abwasserprobe zu CO2 und H2O zu oxydieren. Als Oxydationsmittel eignen sich Chromverbindungen verschiedener Wertigkeit (z.B. Kalium-Dichromat K2Cr2O7) und Manganverbindungen (z.B. KmnO4), wobei man unter dem CSB im Allgemeinen den chemischen Sauerstoffbedarf nach der Kalium-Dichromat-Methode) versteht. Das Resultat kann als Chromatverbrauch oder Kaliumpermanaganatverbrauch ausgedrückt werden (z.B. mg CrO4 2-/l oder mg KMnO4/l). Im allgemeinen ergibt die Kalium-Dichromat-Methode höhere Werte als mit Kaliumpermanganat. Das Verhältnis des CSB zum BSB5 gilt als Hinweis auf die Abbaubarkeit der organischen Abwasserinhaltsstoffe. Leicht abbaubare häusliche Abwässer haben einen DSB/BSB5-Verhältnis von 1 bis 1,5. Schweres abbaubares, industrielles Abwasser ein Verhältnis von über 2. (arb) / Elle représente la teneur totale de l’eau en matières organiques, qu’elles soient ou non biodégradables. Le principe repose sur la recherche d’un besoin d’oxygène de l’échantillon pour dégrader la matière organique. Mais dans ce cas, l’oxygène est fourni par un oxydant puissant (le bichromate de potassium). La réaction (Afnor T90-101) est pratiquée à chaud (150°C) en présence d’acide sulfurique, et après 2 h on mesure la quantité d’oxydant restant. Là encore, le résultat s’exprime en milligrammes d’O2 par litre d’effluent.  Le rapport entre DCO/DBO5 est d’environ 2 à 2.7 pour une eau usée domestique ; au-delà, il y a vraisemblablement présence d’eaux industrielles résiduaires.';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN elimination_cod  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_waste_water_treatment_plant.elimination_cod IS 'Dimensioning value elimination rate in percent / Dimensionierungswert Eliminationsrate in % / Valeur de dimensionnement, taux d''élimination en %';
  ALTER TABLE qgep.od_waste_water_treatment_plant ADD COLUMN elimination_n  decimal (5,2) ;
@@ -822,6 +822,9 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.contract_section IS 'Number of co
 SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry_geometry', 21781, 'CURVEPOLYGON', 2, true);
 CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry_geometry );
 COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry_geometry IS 'Detail geometry especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie insbesondere bei Spezialbauwerken. Für Normschächte i.d. R.  Dimension1 und 2 verwenden. Dito bei normierten Versickerungsanlagen.  Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.  Les canalisations n’ont en général pas de géométrie détaillée.';
+SELECT AddGeometryColumn('qgep', 'od_wastewater_structure', 'detail_geometry3d_geometry', 21781, 'CURVEPOLYGON', 3, true);
+CREATE INDEX in_qgep_od_wastewater_structure_detail_geometry3d_geometry ON qgep.od_wastewater_structure USING gist (detail_geometry3d_geometry );
+COMMENT ON COLUMN qgep.od_wastewater_structure.detail_geometry3d_geometry IS 'Detail geometry (3D) especially with special structures. For manhole usually use dimension1 and 2. Also with normed infiltratin structures.  Channels usually do not have a detail_geometry. / Detaillierte Geometrie (3D) insbesondere bei Spezialbauwerken. Bei Normschächten mit Dimension1 und 2 arbeiten. Dito bei normierten Versickerungsanlagen. Kanäle haben normalerweise keine Detailgeometrie. / Géométrie détaillée (3D) particulièrement pour un OUVRAGE_SPECIAL. Pour l’attribut CHAMBRE_STANDARD utilisez Dimension1 et 2, de même pour une INSTALLATION_INFILTRATION normée.Les canalisations n’ont en général pas de géométrie détaillée.';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN financing  integer ;
 COMMENT ON COLUMN qgep.od_wastewater_structure.financing IS ' Method of financing  (Financing based on GschG Art. 60a). / Finanzierungart (Finanzierung gemäss GschG Art. 60a). / Type de financement (financement selon LEaux Art. 60a)';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN gross_costs  decimal(10,2) ;
@@ -924,6 +927,8 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_manhole_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_manhole ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_manhole');
 COMMENT ON COLUMN qgep.od_manhole.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
+ ALTER TABLE qgep.od_manhole ADD COLUMN depth  smallint ;
+COMMENT ON COLUMN qgep.od_manhole.depth IS 'yyy_Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Funktion (berechneter Wert) = zugehöriger Abwasserknoten.Sohlenkote minus Deckel.Kote (falls Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote). Siehe auch SIA 405 2015 4.3.4. / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER correspondant moins COUVERCLE.COTE (si le radier n’est pas saisi séparément, c’est la POINT_TRONCON.COTE le plus bas). Cf. SIA 405 cahier technique 2015 4.3.4.';
  ALTER TABLE qgep.od_manhole ADD COLUMN dimension1  smallint ;
 COMMENT ON COLUMN qgep.od_manhole.dimension1 IS 'Dimension2 of infiltration installations (largest inside dimension). / Dimension1 des Schachtes (grösstes Innenmass). / Dimension1 de la chambre (plus grande mesure intérieure).';
  ALTER TABLE qgep.od_manhole ADD COLUMN dimension2  smallint ;
@@ -956,12 +961,16 @@ WITH (
 CREATE SEQUENCE qgep.seq_od_discharge_point_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep.od_discharge_point ALTER COLUMN obj_id SET DEFAULT qgep.generate_oid('od_discharge_point');
 COMMENT ON COLUMN qgep.od_discharge_point.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
+ ALTER TABLE qgep.od_discharge_point ADD COLUMN depth  smallint ;
+COMMENT ON COLUMN qgep.od_discharge_point.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage correspondant';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN highwater_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.highwater_level IS 'yyy_Massgebliche Hochwasserkote der Einleitstelle. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik. / Massgebliche Hochwasserkote der Einleitstelle. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik. / Cote de crue déterminante au point de rejet. Diese ist in der Regel grösser als der Wasserspiegel_Hydraulik.';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN relevance  integer ;
 COMMENT ON COLUMN qgep.od_discharge_point.relevance IS 'Relevance of discharge point for water course / Gewässerrelevanz der Einleitstelle / Il est conseillé d’utiliser des noms réels, tels qSignifiance pour milieu récepteur';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN terrain_level  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.terrain_level IS 'Terrain level if there is no cover at the discharge point (structure), e.g. just pipe ending / Terrainkote, falls kein Deckel vorhanden bei Einleitstelle (Kanalende ohne Bauwerk oder Bauwerk ohne Deckel) / Cote terrain s''il n''y a pas de couvercle à l''exutoire par example seulement fin du conduite';
+ ALTER TABLE qgep.od_discharge_point ADD COLUMN upper_elevation  decimal(7,3) ;
+COMMENT ON COLUMN qgep.od_discharge_point.upper_elevation IS 'Highest point of structure (ceiling), outside / Höchster Punkt des Bauwerks (Decke), aussen / Point le plus élevé de l''ouvrage';
  ALTER TABLE qgep.od_discharge_point ADD COLUMN waterlevel_hydraulic  decimal(7,3) ;
 COMMENT ON COLUMN qgep.od_discharge_point.waterlevel_hydraulic IS 'yyy_Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Wasserspiegelkote für die hydraulische Berechnung (IST-Zustand). Berechneter Wasserspiegel bei der Einleitstelle. Wo nichts anders gefordert, ist der Wasserspiegel bei einem HQ30 einzusetzen. / Niveau d’eau calculé à l’exutoire. Si aucun exigence est demandée, indiquer le niveau d’eau pour un HQ30.';
 -------
@@ -987,6 +996,8 @@ CREATE SEQUENCE qgep.seq_od_special_structure_oid INCREMENT 1 MINVALUE 0 MAXVALU
 COMMENT ON COLUMN qgep.od_special_structure.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep.od_special_structure ADD COLUMN bypass  integer ;
 COMMENT ON COLUMN qgep.od_special_structure.bypass IS 'yyy_Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass zur Umleitung des Wassers (z.B. während Unterhalt oder  im Havariefall) / Bypass pour détourner les eaux (par exemple durant des opérations de maintenance ou en cas d’avaries)';
+ ALTER TABLE qgep.od_special_structure ADD COLUMN depth  smallint ;
+COMMENT ON COLUMN qgep.od_special_structure.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage correspondant';
  ALTER TABLE qgep.od_special_structure ADD COLUMN emergency_spillway  integer ;
 COMMENT ON COLUMN qgep.od_special_structure.emergency_spillway IS 'zzz_Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / Das Attribut beschreibt, wohin die das Volumen übersteigende Menge abgeleitet wird (bei Regenrückhaltebecken / Regenrückhaltekanal). / L’attribut décrit vers où le débit déversé s’écoule. (bassin d’accumulation / canal d’accumulation)';
  ALTER TABLE qgep.od_special_structure ADD COLUMN function  integer ;
@@ -994,6 +1005,8 @@ COMMENT ON COLUMN qgep.od_special_structure.function IS 'Kind of function / Art 
  CREATE INDEX in_od_special_structure_function ON qgep.od_special_structure USING btree (function);
  ALTER TABLE qgep.od_special_structure ADD COLUMN stormwater_tank_arrangement  integer ;
 COMMENT ON COLUMN qgep.od_special_structure.stormwater_tank_arrangement IS 'yyy_Anordnung des Regenbeckens im System. Zusätzlich zu erfassen falls Spezialbauwerk.Funktion = Regenbecken_* / Anordnung des Regenbeckens im System. Zusätzlich zu erfassen falls Spezialbauwerk.Funktion = Regenbecken_* / Disposition d''un bassin d''eaux pluviales dans le réseau d''assainissement. Attribut additionnel pour les valeurs BEP_* de OUVRAGE_SPECIAL.FONCTION.';
+ ALTER TABLE qgep.od_special_structure ADD COLUMN upper_elevation  decimal(7,3) ;
+COMMENT ON COLUMN qgep.od_special_structure.upper_elevation IS 'Highest point of structure (ceiling), outside / Höchster Punkt des Bauwerks (Decke), aussen / Point le plus élevé de la construction';
 -------
 CREATE TRIGGER
 update_last_modified_special_structure
@@ -1019,6 +1032,8 @@ COMMENT ON COLUMN qgep.od_infiltration_installation.obj_id IS 'INTERLIS STANDARD
 COMMENT ON COLUMN qgep.od_infiltration_installation.absorption_capacity IS 'yyy_Schluckvermögen des Bodens. / Schluckvermögen des Bodens. / Capacité d''absorption du sol';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN defects  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.defects IS 'yyy_Gibt die aktuellen Mängel der Versickerungsanlage an (IST-Zustand). / Gibt die aktuellen Mängel der Versickerungsanlage an (IST-Zustand). / Indique les défauts actuels de l''installation d''infiltration (etat_actuel).';
+ ALTER TABLE qgep.od_infiltration_installation ADD COLUMN depth  smallint ;
+COMMENT ON COLUMN qgep.od_infiltration_installation.depth IS 'yyy_Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Funktion (berechneter Wert) = repräsentative Abwasserknoten.Sohlenkote minus zugehörige Deckenkote des Bauwerks falls Detailgeometrie vorhanden, sonst Funktion (berechneter Wert) = Abwasserknoten.Sohlenkote minus zugehörige Deckel.Kote des Bauwerks / Fonction (valeur calculée) = NOEUD_RESEAU.COTE_RADIER représentatif moins COTE_PLAFOND de l’ouvrage correspondant si la géométrie détaillée est disponible, sinon fonction (valeur calculée) = NŒUD_RESEAU.COT_RADIER moins COUVERCLE.COTE de l’ouvrage correspondant';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN dimension1  smallint ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.dimension1 IS 'Dimension1 of infiltration installations (largest inside dimension) if used with norm elements. Else leave empty.. / Dimension1 der Versickerungsanlage (grösstes Innenmass) bei der Verwendung von Normbauteilen. Sonst leer lassen und mit Detailgeometrie beschreiben. / Dimension1 de l’installation d’infiltration (plus grande mesure intérieure) lorsqu’elle est utilisée pour des éléments d’ouvrage normés. Sinon, à laisser libre et prendre la description de la géométrie détaillée.';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN dimension2  smallint ;
@@ -1035,6 +1050,8 @@ COMMENT ON COLUMN qgep.od_infiltration_installation.kind IS 'yyy_Arten von Versi
 COMMENT ON COLUMN qgep.od_infiltration_installation.labeling IS 'yyy_Kennzeichnung der Schachtdeckel der Anlage als Versickerungsanlage.  Nur bei Anlagen mit Schächten. / Kennzeichnung der Schachtdeckel der Anlage als Versickerungsanlage.  Nur bei Anlagen mit Schächten. / Désignation inscrite du couvercle de l''installation d''infiltration. Uniquement pour des installations avec couvercle';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN seepage_utilization  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.seepage_utilization IS 'yyy_Arten des zu versickernden Wassers. / Arten des zu versickernden Wassers. / Genre d''eau à infiltrer';
+ ALTER TABLE qgep.od_infiltration_installation ADD COLUMN upper_elevation  decimal(7,3) ;
+COMMENT ON COLUMN qgep.od_infiltration_installation.upper_elevation IS 'Highest point of structure (ceiling), outside / Höchster Punkt des Bauwerks (Decke), aussen / Point le plus élevé de la construction';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN vehicle_access  integer ;
 COMMENT ON COLUMN qgep.od_infiltration_installation.vehicle_access IS 'yyy_Zugänglichkeit für Saugwagen. Sie bezieht sich auf die gesamte Versickerungsanlage / Vorbehandlungsanlagen und kann in den Bemerkungen weiter spezifiziert werden / Zugänglichkeit für Saugwagen. Sie bezieht sich auf die gesamte Versickerungsanlage / Vorbehandlungsanlagen und kann in den Bemerkungen weiter spezifiziert werden / Accessibilité pour des camions de vidange. Se réfère à toute l''installation d''infiltration / de prétraitement et peut être spécifiée sous REMARQUE';
  ALTER TABLE qgep.od_infiltration_installation ADD COLUMN watertightness  integer ;
@@ -1822,13 +1839,13 @@ COMMENT ON COLUMN qgep.od_hydr_geometry.identifier IS '';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_hydr_geometry.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN storage_volume  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.storage_volume IS 'yyy_Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps. _Klaerteil). Bei Pumpen: Speicherinhalt im Zulaufkanal unter dem Wasserspiegel beim Einschalten der Pumpe (höchstes Einschaltniveau bei mehreren Pumpen) / Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps. _Klaerteil). Bei Pumpen: Speicherinhalt im Zulaufkanal unter dem Wasserspiegel beim Einschalten der Pumpe (höchstes Einschaltniveau bei mehreren Pumpen) / Volume de stockage dans un bassin et dans la canalisation d’amenée entre la crête et le niveau d’eau de Qdim (débit conservé). Lors de bassins d’eaux pluviales en connexion latérale, le volume de stockage est à saisir à l’ouvrage de répartition, resp. dév';
+COMMENT ON COLUMN qgep.od_hydr_geometry.storage_volume IS 'yyy_Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps. _Klaerteil). Bei Pumpen: Speicherinhalt im Zulaufkanal unter dem Wasserspiegel beim Einschalten der Pumpe (höchstes Einschaltniveau bei mehreren Pumpen) / Speicherinhalt im Becken und im Zulauf zwischen Wehrkrone und dem Wasserspiegel bei Qan. Bei Regenbeckenüberlaufbecken im Nebenschluss ist der Stauraum beim vorgelagerten Trennbauwerk bzw. Regenüberlauf zu erfassen (vgl. Erläuterungen Inhalt_Fangteil reps. _Klaerteil). Bei Pumpen: Speicherinhalt im Zulaufkanal unter dem Wasserspiegel beim Einschalten der Pumpe (höchstes Einschaltniveau bei mehreren Pumpen) / Volume de stockage dans un bassin et dans la canalisation d’amenée entre la crête et le niveau d’eau de Qdim (débit conservé). Lors de bassins d’eaux pluviales en connexion latérale, le volume de stockage est à saisir à l’ouvrage de répartition, resp. déversoir d’orage précédant (cf. explications volume utile clarification, resp. volume utile stockage). Pour les pompes, il s’agit du volume de stockage dans la canalisation d’amenée sous le niveau d’eau lorsque la pompe s’enclenche (niveau max d’enclenchement lorsqu’il y a plusieurs pompes). Pour les bassins d’eaux pluviales, à saisir uniquement en connexion directe.';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN usable_capacity_storage  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_storage IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs). / Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Volume de la chambre sous la crête, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait dans la fiche technique de l’ouvrage principal, lors de ';
+COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_storage IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs). / Inhalt der Kammer unterhalb der Wehrkrone ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Volume de la chambre sous la crête, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait dans la fiche technique de l’ouvrage principal, lors de connexion latérale, l’attribution se fait dans la fiche technique de l’ouvrage de répartition ou déversoir d’orage précédant).';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN usable_capacity_treatment  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_treatment IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal.  Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Volume de la chambre sous la crête, incl. l’entrée, la sortie et la partie de sédimentation, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait';
+COMMENT ON COLUMN qgep.od_hydr_geometry.usable_capacity_treatment IS 'yyy_Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal.  Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Inhalt der Kammer unterhalb der Wehrkrone inkl. Einlaufbereich, Auslaufbereich und Sedimentationsbereich, ohne Stauraum im Zulaufkanal. Letzterer wird unter dem Attribut Stauraum erfasst (bei Anordnung im Hauptschluss auf der Stammkarte des Hauptbauwerkes, bei Anordnung im Nebenschluss auf der Stammkarte des vorgelagerten Trennbauwerkes oder Regenüberlaufs) / Volume de la chambre sous la crête, incl. l’entrée, la sortie et la partie de sédimentation, sans volume de stockage de la canalisation d’amenée. Ce dernier est saisi par l’attribut volume de stockage (lors de disposition en connexion directe ceci se fait dans la fiche technique de l’ouvrage principal, lors de connexion latérale, l’attribution se fait dans la fiche technique de l’ouvrage de répartition ou déversoir d’orage précédant).';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN utilisable_capacity  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.utilisable_capacity IS 'yyy_Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Pour les bassins et canalisations d’accumulation : Volume de la chambre sous la surverse de secours ou bypass (volume mobilisable maximum, incl. le volume de stockage de la canalisation d’amenée). Pour les BEP il s’agit du VOLUME_UTILE_STOCKAGE et du VOLU';
+COMMENT ON COLUMN qgep.od_hydr_geometry.utilisable_capacity IS 'yyy_Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Inhalt der Kammer unterhalb Notüberlauf oder Bypass (maximal mobilisierbares Volumen, inkl. Stauraum im Zulaufkanal). Für RRB und RRK. Für RÜB Nutzinhalt_Fangteil und Nutzinhalt_Klaerteil benutzen. Zusätzlich auch Stauraum erfassen. / Pour les bassins et canalisations d’accumulation : Volume de la chambre sous la surverse de secours ou bypass (volume mobilisable maximum, incl. le volume de stockage de la canalisation d’amenée). Pour les BEP il s’agit du VOLUME_UTILE_STOCKAGE et du VOLUME_UTILE_CLARIFICATION. Il faut également saisir le VOLUME_DE_STOCKAGE.';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN volume_pump_sump  decimal(9,2) ;
 COMMENT ON COLUMN qgep.od_hydr_geometry.volume_pump_sump IS 'yyy_Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volume du puisard calculée à partir du radier jusqu’au niveau d’eau maximum possible (incl. le volume de stockage de la canalisation d’amenée).';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -1975,6 +1992,8 @@ COMMENT ON COLUMN qgep.od_reach.obj_id IS 'INTERLIS STANDARD OID (with Postfix/P
 COMMENT ON COLUMN qgep.od_reach.clear_height IS 'Maximal height (inside) of profile / Maximale Innenhöhe des Kanalprofiles / Hauteur intérieure maximale du profil';
  ALTER TABLE qgep.od_reach ADD COLUMN coefficient_of_friction  smallint ;
 COMMENT ON COLUMN qgep.od_reach.coefficient_of_friction IS 'yyy http://www.linguee.com/english-german/search?source=auto&query=reibungsbeiwert / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Manning-Strickler (K oder kstr) / Constante de rugosité selon Manning-Strickler (K ou kstr)';
+ ALTER TABLE qgep.od_reach ADD COLUMN elevation_determination  integer ;
+COMMENT ON COLUMN qgep.od_reach.elevation_determination IS 'yyy_Definiert die Hoehenbestimmung einer Haltung. / Definiert die Hoehenbestimmung einer Haltung. / Définition de la détermination altimétrique d''un tronçon.';
  ALTER TABLE qgep.od_reach ADD COLUMN horizontal_positioning  integer ;
 COMMENT ON COLUMN qgep.od_reach.horizontal_positioning IS 'yyy_Definiert die Lagegenauigkeit der Verlaufspunkte. / Definiert die Lagegenauigkeit der Verlaufspunkte. / Définit la précision de la détermination du tracé.';
  ALTER TABLE qgep.od_reach ADD COLUMN inside_coating  integer ;
@@ -1986,6 +2005,9 @@ COMMENT ON COLUMN qgep.od_reach.material IS 'Material of reach / pipe / Rohrmate
 SELECT AddGeometryColumn('qgep', 'od_reach', 'progression_geometry', 21781, 'COMPOUNDCURVE', 2, true);
 CREATE INDEX in_qgep_od_reach_progression_geometry ON qgep.od_reach USING gist (progression_geometry );
 COMMENT ON COLUMN qgep.od_reach.progression_geometry IS 'Start, inflextion and endpoints of a pipe / Anfangs-, Knick- und Endpunkte der Leitung / Points de départ, intermédiaires et d’arrivée de la conduite.';
+SELECT AddGeometryColumn('qgep', 'od_reach', 'progression3d_geometry', 21781, 'COMPOUNDCURVE', 3, true);
+CREATE INDEX in_qgep_od_reach_progression3d_geometry ON qgep.od_reach USING gist (progression3d_geometry );
+COMMENT ON COLUMN qgep.od_reach.progression3d_geometry IS 'Start, inflextion and endpoints of a pipe (3D coordinates) / Anfangs-, Knick- und Endpunkte der Leitung (3D Koordinaten) / Points de départ, intermédiaires et d’arrivée de la conduite (coordonnées 3D)';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_material  integer ;
 COMMENT ON COLUMN qgep.od_reach.reliner_material IS 'Material of reliner / Material des Reliners / Materiaux du relining';
  ALTER TABLE qgep.od_reach ADD COLUMN reliner_nominal_size  integer ;
@@ -2357,6 +2379,8 @@ COMMENT ON COLUMN qgep.od_cover.obj_id IS 'INTERLIS STANDARD OID (with Postfix/P
 COMMENT ON COLUMN qgep.od_cover.brand IS 'Name of manufacturer / Name der Herstellerfirma / Nom de l''entreprise de fabrication';
  ALTER TABLE qgep.od_cover ADD COLUMN cover_shape  integer ;
 COMMENT ON COLUMN qgep.od_cover.cover_shape IS 'shape of cover / Form des Deckels / Forme du couvercle';
+ ALTER TABLE qgep.od_cover ADD COLUMN depth  smallint ;
+COMMENT ON COLUMN qgep.od_cover.depth IS 'yyy_redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Hal-tungspunkt.Kote) / redundantes Funktionsattribut Maechtigkeit. Numerisch [mm]. Funktion (berechneter Wert) = zugehöriger Deckel.Kote minus Abwasserknoten.Sohlenkote.(falls die Sohlenkote nicht separat erfasst, dann ist es die tiefer liegende Haltungspunkt.Kote) / Attribut de fonction EPAISSEUR redondant, numérique [mm]. Fonction (valeur calculée) = COUVERCLE.COTE correspondant moins NŒUD_RESEAU.COTE_RADIER (si la cote radier ne peut pas être saisie séparément, prendre la POINT_TRONCON.COTE la plus basse.';
  ALTER TABLE qgep.od_cover ADD COLUMN diameter  smallint ;
 COMMENT ON COLUMN qgep.od_cover.diameter IS 'yyy_Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Abmessung des Deckels (bei eckigen Deckeln minimale Abmessung) / Dimension du couvercle (dimension minimale pour couvercle anguleux)';
  ALTER TABLE qgep.od_cover ADD COLUMN fastening  integer ;
@@ -3050,7 +3074,7 @@ COMMENT ON COLUMN qgep.od_overflow.brand IS 'Manufacturer of the electro-mechani
  ALTER TABLE qgep.od_overflow ADD COLUMN control  integer ;
 COMMENT ON COLUMN qgep.od_overflow.control IS 'yyy_Steuer- und Regelorgan für die Einbaute / Steuer- und Regelorgan für die Einbaute / Dispositifs de commande et de régulation des installations';
  ALTER TABLE qgep.od_overflow ADD COLUMN discharge_point  varchar(41) ;
-COMMENT ON COLUMN qgep.od_overflow.discharge_point IS 'Identifier of discharge_point in which the overflow is discharging (redundant attribute with network follow up or result of that). Is only needed if overflow is discharging into a river (directly or via a rainwater drainage). Foreignkey to discharge_point in class catchement_area_totals in extension Stammkarte. / Bezeichnung der Einleitstelle in die der Ueberlauf entlastet (redundantes Attribut zur Netzverfolgung oder Resultat davon). Muss nur erfasst werden, wenn das Abwasser vom Notüberlauf in ein Gewässer eingeleitet wird (direkt oder über eine Regenabwasserleitung). Verknüpfung mit Fremdschlüssel zu Einleitstelle in Klasse Gesamteinzugsgebiet in Erweiterung Stammkarte. / Désignation de l''exutoire: A indiquer uniquement lorsque l’eau déversée est rejetée dans un cours d’eau (directement ou indirectement via une conduite d’eaux pluviales). Association à l''exutoire dans la classe BASSIN_VERSANT_COMPLET de l''extension fichier';
+COMMENT ON COLUMN qgep.od_overflow.discharge_point IS 'Identifier of discharge_point in which the overflow is discharging (redundant attribute with network follow up or result of that). Is only needed if overflow is discharging into a river (directly or via a rainwater drainage). Foreignkey to discharge_point in class catchement_area_totals in extension Stammkarte. / Bezeichnung der Einleitstelle in die der Ueberlauf entlastet (redundantes Attribut zur Netzverfolgung oder Resultat davon). Muss nur erfasst werden, wenn das Abwasser vom Notüberlauf in ein Gewässer eingeleitet wird (direkt oder über eine Regenabwasserleitung). Verknüpfung mit Fremdschlüssel zu Einleitstelle in Klasse Gesamteinzugsgebiet in Erweiterung Stammkarte. / Désignation de l''exutoire: A indiquer uniquement lorsque l’eau déversée est rejetée dans un cours d’eau (directement ou indirectement via une conduite d’eaux pluviales). Association à l''exutoire dans la classe BASSIN_VERSANT_COMPLET de l''extension fichier technique.';
  ALTER TABLE qgep.od_overflow ADD COLUMN function  integer ;
 COMMENT ON COLUMN qgep.od_overflow.function IS 'yyy_Teil des Mischwasserabflusses, der aus einem Überlauf in einen Vorfluter oder in ein Abwasserbauwerk abgeleitet wird / Teil des Mischwasserabflusses, der aus einem Überlauf in einen Vorfluter oder in ein Abwasserbauwerk abgeleitet wird / Type de déversoir';
  ALTER TABLE qgep.od_overflow ADD COLUMN gross_costs  decimal(10,2) ;
@@ -3121,9 +3145,9 @@ COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.signal_transmission IS 'Signal 
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN subsidies  decimal(10,2) ;
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.subsidies IS 'yyy_Staats- und Bundesbeiträge / Staats- und Bundesbeiträge / Contributions des cantons et de la confédération';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN throttle_unit_opening_current  integer ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit : aucune indication suppl., Pompe : saisir fiche technique STAP';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN throttle_unit_opening_current_optimized  integer ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current_optimized IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit ';
+COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current_optimized IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit : aucune indication suppl., Pompe : saisir fiche technique STAP';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN dataowner varchar(80) ;
@@ -3265,13 +3289,13 @@ COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.main_weir_kind IS 'yyy_A
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overcharge  decimal (5,2) ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overcharge IS 'yyy_Optimale Mehrbelastung nach der Umsetzung der Massnahmen. / Ist: Mehrbelastung der untenliegenden Kanäle beim Dimensionierungsereignis = 100 * (Qab – Qan) / Qan 	[%]. Verhältnis zwischen der abgeleiteten Abwassermengen Richtung ARA beim Anspringen des Entlastungsbauwerkes (Qan) und Qab (Abwassermenge, welche beim Dimensionierungsereignis (z=5) weiter im Kanalnetz Richtung Abwasserreinigungsanlage abgeleitet wird). Beispiel: Qan = 100 l/s, Qab = 150 l/s -> Mehrbelastung = 50%; Ist_optimiert: Optimale Mehrbelastung im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen; geplant: Optimale Mehrbelastung nach der Umsetzung der Massnahmen. / Etat actuel: Surcharge optimale à l’état actuel avant la réalisation d’éventuelles mesures;  actuel optimisé: Surcharge optimale à l’état actuel avant la réalisation d’éventuelles mesures; prévu: Optimale Mehrbelastung nach der Umsetzung der Massnahmen.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_duration  decimal(6,1) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_duration IS 'yyy_Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit geplanten Massnahmen / Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit geplanten Massnahmen / Durée moyenne de déversement par an.  Actuel: Durée moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calc';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_duration IS 'yyy_Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit geplanten Massnahmen / Mittlere Überlaufdauer pro Jahr. Bei Ist_Zustand: Berechnung mit geplanten Massnahmen. Bei Ist_optimiert:  Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit geplanten Massnahmen / Durée moyenne de déversement par an.  Actuel: Durée moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcul selon les mesures planifiées';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_freight  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_freight IS 'yyy_Mittlere Ueberlaufschmutzfracht pro Jahr / Mittlere Ueberlaufschmutzfracht pro Jahr / Charge polluante moyenne déversée par année';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_frequency  decimal(3,1) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_frequency IS 'yyy_Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Fréquence moyenne de déversement par an. Fréquence moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcu';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_frequency IS 'yyy_Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Mittlere Überlaufhäufigkeit pro Jahr. Ist Zustand: Durchschnittliche Überlaufhäufigkeit pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Fréquence moyenne de déversement par an. Fréquence moyenne de déversement par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcul après la réalisation d’éventuelles mesures.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN overflow_volume  decimal(9,2) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_volume IS 'yyy_Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Volume moyen déversé par an. Volume moyen déversé par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcul après la réalisation d';
+COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.overflow_volume IS 'yyy_Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Mittlere Überlaufwassermenge pro Jahr. Durchschnittliche Überlaufmenge pro Jahr von Entlastungsanlagen gemäss Langzeitsimulation (Dauer mindestens 10 Jahre). Ist optimiert: Berechnung mit optimierten Einstellungen im Ist-Zustand vor der Umsetzung von allfälligen weiteren Massnahmen. Planungszustand: Berechnung mit Einstellungen nach der Umsetzung der Massnahmen / Volume moyen déversé par an. Volume moyen déversé par an selon des simulations pour de longs temps de retour (z > 10). Actuel optimizé: Calcul en mode optimal à l’état actuel avant la réalisation d’éventuelles mesures. Prévu: Calcul après la réalisation d’éventuelles mesures.';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_characteristics  integer ;
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.pump_characteristics IS 'yyy_Bei speziellen Betriebsarten ist die Funktion separat zu dokumentieren und der Stammkarte beizulegen. / Bei speziellen Betriebsarten ist die Funktion separat zu dokumentieren und der Stammkarte beizulegen. / Pour de régime de fonctionnement spéciaux, cette fonction doit être documentée séparément et annexée à la fiche technique';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN pump_flow_max  decimal(9,3) ;
@@ -3488,8 +3512,6 @@ FOR EACH ROW EXECUTE PROCEDURE
 ------------ Relationships and Value Tables ----------- ;
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_symbol_plantype () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_symbol_plantype ADD CONSTRAINT pkey_qgep_vl_symbol_plantype_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_symbol_plantype (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (7874,7874,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', '', '', '', 'true');
@@ -3695,8 +3717,6 @@ ALTER TABLE qgep.vl_water_course_segment_width_variability ADD CONSTRAINT pkey_q
  ALTER TABLE qgep.od_water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_width_variability FOREIGN KEY (width_variability)
  REFERENCES qgep.vl_water_course_segment_width_variability (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_watercourse varchar (16);
-ALTER TABLE qgep.od_water_course_segment ADD CONSTRAINT rel_water_course_segment_watercourse FOREIGN KEY (fk_watercourse) REFERENCES qgep.od_river(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_water_catchment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catchment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_water_catchment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (24,24,'process_water','Brauchwasser','eau_industrielle', '', '', '', 'true');
@@ -3705,10 +3725,6 @@ ALTER TABLE qgep.vl_water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catch
  ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT fkey_vl_water_catchment_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_water_catchment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_aquifier varchar (16);
-ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_water_catchment ADD CONSTRAINT rel_water_catchment_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_river_bank_control_grade_of_river () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_river_bank_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bank_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (341,341,'none','keine','nul', '', '', '', 'true');
@@ -3770,8 +3786,6 @@ ALTER TABLE qgep.vl_river_bank_vegetation ADD CONSTRAINT pkey_qgep_vl_river_bank
  ALTER TABLE qgep.od_river_bank ADD CONSTRAINT fkey_vl_river_bank_vegetation FOREIGN KEY (vegetation)
  REFERENCES qgep.vl_river_bank_vegetation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_river_bank ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_river_bank ADD CONSTRAINT rel_river_bank_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_river_bed_control_grade_of_river () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_river_bed_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bed_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_river_bed_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (142,142,'none','keine','nul', '', '', '', 'true');
@@ -3803,8 +3817,6 @@ ALTER TABLE qgep.vl_river_bed_river_control_type ADD CONSTRAINT pkey_qgep_vl_riv
  ALTER TABLE qgep.od_river_bed ADD CONSTRAINT fkey_vl_river_bed_river_control_type FOREIGN KEY (river_control_type)
  REFERENCES qgep.vl_river_bed_river_control_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_river_bed ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_river_bed ADD CONSTRAINT rel_river_bed_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_sector_water_body_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_water_body_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_sector_water_body_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (2657,2657,'waterbody','Gewaesser','lac_ou_cours_d_eau', '', '', '', 'true');
@@ -3815,8 +3827,6 @@ ALTER TABLE qgep.vl_sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_wa
  ALTER TABLE qgep.od_sector_water_body ADD CONSTRAINT fkey_vl_sector_water_body_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_sector_water_body_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_sector_water_body ADD CONSTRAINT rel_sector_water_body_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep.od_cooperative ADD CONSTRAINT oorel_od_cooperative_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_canton ADD CONSTRAINT oorel_od_canton_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_waste_water_association ADD CONSTRAINT oorel_od_waste_water_association_organisation FOREIGN KEY (obj_id) REFERENCES qgep.od_organisation(obj_id) ON DELETE cascade;
@@ -4044,8 +4054,6 @@ ALTER TABLE qgep.vl_discharge_point_relevance ADD CONSTRAINT pkey_qgep_vl_discha
  ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT fkey_vl_discharge_point_relevance FOREIGN KEY (relevance)
  REFERENCES qgep.vl_discharge_point_relevance (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_discharge_point ADD COLUMN fk_sector_water_body varchar (16);
-ALTER TABLE qgep.od_discharge_point ADD CONSTRAINT rel_discharge_point_sector_water_body FOREIGN KEY (fk_sector_water_body) REFERENCES qgep.od_sector_water_body(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_special_structure ADD CONSTRAINT oorel_od_special_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_special_structure_bypass () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_special_structure_bypass ADD CONSTRAINT pkey_qgep_vl_special_structure_bypass_code PRIMARY KEY (code);
@@ -4177,8 +4185,6 @@ ALTER TABLE qgep.vl_infiltration_installation_watertightness ADD CONSTRAINT pkey
  ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_watertightness FOREIGN KEY (watertightness)
  REFERENCES qgep.vl_infiltration_installation_watertightness (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_infiltration_installation ADD COLUMN fk_aquifier varchar (16);
-ALTER TABLE qgep.od_infiltration_installation ADD CONSTRAINT rel_infiltration_installation_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep.od_aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_wwtp_structure ADD CONSTRAINT oorel_od_wwtp_structure_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_wwtp_structure_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_wwtp_structure_kind ADD CONSTRAINT pkey_qgep_vl_wwtp_structure_kind_code PRIMARY KEY (code);
@@ -4290,8 +4296,6 @@ ALTER TABLE qgep.vl_pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_p
  ALTER TABLE qgep.od_pipe_profile ADD CONSTRAINT fkey_vl_pipe_profile_profile_type FOREIGN KEY (profile_type)
  REFERENCES qgep.vl_pipe_profile_profile_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_wwtp_energy_use ADD CONSTRAINT rel_wwtp_energy_use_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_waste_water_treatment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_waste_water_treatment_kind ADD CONSTRAINT pkey_qgep_vl_waste_water_treatment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_waste_water_treatment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3210,3210,'other','andere','autres', '', '', '', 'true');
@@ -4303,8 +4307,6 @@ ALTER TABLE qgep.vl_waste_water_treatment_kind ADD CONSTRAINT pkey_qgep_vl_waste
  ALTER TABLE qgep.od_waste_water_treatment ADD CONSTRAINT fkey_vl_waste_water_treatment_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_waste_water_treatment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_waste_water_treatment ADD CONSTRAINT rel_waste_water_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_sludge_treatment_stabilisation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_sludge_treatment_stabilisation ADD CONSTRAINT pkey_qgep_vl_sludge_treatment_stabilisation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_sludge_treatment_stabilisation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (141,141,'aerob_cold','aerobkalt','aerobie_froid', '', '', '', 'true');
@@ -4317,10 +4319,6 @@ ALTER TABLE qgep.vl_sludge_treatment_stabilisation ADD CONSTRAINT pkey_qgep_vl_s
  ALTER TABLE qgep.od_sludge_treatment ADD CONSTRAINT fkey_vl_sludge_treatment_stabilisation FOREIGN KEY (stabilisation)
  REFERENCES qgep.vl_sludge_treatment_stabilisation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_sludge_treatment ADD CONSTRAINT rel_sludge_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_water_control_structure ADD CONSTRAINT rel_water_control_structure_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_ford ADD CONSTRAINT oorel_od_ford_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_chute ADD CONSTRAINT oorel_od_chute_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep.od_water_control_structure(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_chute_kind () INHERITS (qgep.is_value_list_base);
@@ -4369,10 +4367,6 @@ ALTER TABLE qgep.vl_rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ram
  ALTER TABLE qgep.od_rock_ramp ADD CONSTRAINT fkey_vl_rock_ramp_stabilisation FOREIGN KEY (stabilisation)
  REFERENCES qgep.vl_rock_ramp_stabilisation (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_water_control_structure varchar (16);
-ALTER TABLE qgep.od_fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep.od_water_control_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep.od_bathing_area ADD CONSTRAINT rel_bathing_area_chute FOREIGN KEY (fk_chute) REFERENCES qgep.od_surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep.od_wastewater_networkelement ADD CONSTRAINT rel_wastewater_networkelement_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_reach_point_elevation_accuracy () INHERITS (qgep.is_value_list_base);
@@ -4398,9 +4392,15 @@ ALTER TABLE qgep.vl_reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_p
 ALTER TABLE qgep.od_reach_point ADD COLUMN fk_wastewater_networkelement varchar (16);
 ALTER TABLE qgep.od_reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE cascade;
-ALTER TABLE qgep.od_wastewater_node ADD COLUMN fk_hydr_geometry varchar (16);
-ALTER TABLE qgep.od_wastewater_node ADD CONSTRAINT rel_wastewater_node_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep.od_reach ADD CONSTRAINT oorel_od_reach_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON DELETE cascade;
+CREATE TABLE qgep.vl_reach_elevation_determination () INHERITS (qgep.is_value_list_base);
+ALTER TABLE qgep.vl_reach_elevation_determination ADD CONSTRAINT pkey_qgep_vl_reach_elevation_determination_code PRIMARY KEY (code);
+ INSERT INTO qgep.vl_reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4780,4780,'accurate','genau','precise', '', 'LG', 'P', 'true');
+ INSERT INTO qgep.vl_reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4778,4778,'unknown','unbekannt','inconnue', '', 'U', 'I', 'true');
+ INSERT INTO qgep.vl_reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4779,4779,'inaccurate','ungenau','imprecise', '', 'LU', 'IP', 'true');
+ ALTER TABLE qgep.od_reach ADD CONSTRAINT fkey_vl_reach_elevation_determination FOREIGN KEY (elevation_determination)
+ REFERENCES qgep.vl_reach_elevation_determination (code) MATCH SIMPLE 
+ ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep.vl_reach_horizontal_positioning () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_reach_horizontal_positioning ADD CONSTRAINT pkey_qgep_vl_reach_horizontal_positioning_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_reach_horizontal_positioning (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5378,5378,'accurate','genau','precise', '', 'LG', 'P', 'true');
@@ -4500,8 +4500,6 @@ ALTER TABLE qgep.od_reach ADD COLUMN fk_pipe_profile varchar (16);
 ALTER TABLE qgep.od_reach ADD CONSTRAINT rel_reach_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_pipe_profile varchar (16);
 ALTER TABLE qgep.od_profile_geometry ADD CONSTRAINT rel_profile_geometry_pipe_profile FOREIGN KEY (fk_pipe_profile) REFERENCES qgep.od_pipe_profile(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_hydr_geometry varchar (16);
-ALTER TABLE qgep.od_hydr_geom_relation ADD CONSTRAINT rel_hydr_geom_relation_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep.od_hydr_geometry(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_mechanical_pretreatment_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_mechanical_pretreatment_kind ADD CONSTRAINT pkey_qgep_vl_mechanical_pretreatment_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_mechanical_pretreatment_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3317,3317,'filter_bag','Filtersack','percolateur', '', '', '', 'true');
@@ -4546,8 +4544,6 @@ ALTER TABLE qgep.vl_overflow_characteristic_overflow_characteristic_digital ADD 
  ALTER TABLE qgep.od_overflow_characteristic ADD CONSTRAINT fkey_vl_overflow_characteristic_overflow_characteristic_digital FOREIGN KEY (overflow_characteristic_digital)
  REFERENCES qgep.vl_overflow_characteristic_overflow_characteristic_digital (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_structure_part_renovation_demand () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl_structure_part_renovation_demand_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (138,138,'not_necessary','nicht_notwendig','pas_necessaire', 'NN', 'NN', 'PN', 'true');
@@ -4711,14 +4707,8 @@ ALTER TABLE qgep.vl_individual_surface_pavement ADD CONSTRAINT pkey_qgep_vl_indi
  REFERENCES qgep.vl_individual_surface_pavement (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_fountain ADD CONSTRAINT oorel_od_fountain_connection_object FOREIGN KEY (obj_id) REFERENCES qgep.od_connection_object(obj_id) ON DELETE cascade;
-ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_connection_object varchar (16);
-ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_connection_object FOREIGN KEY (fk_connection_object) REFERENCES qgep.od_connection_object(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_owner varchar (16);
 ALTER TABLE qgep.od_hazard_source ADD CONSTRAINT rel_hazard_source_owner FOREIGN KEY (fk_owner) REFERENCES qgep.od_organisation(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_accident ADD COLUMN fk_hazard_source varchar (16);
-ALTER TABLE qgep.od_accident ADD CONSTRAINT rel_accident_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_substance ADD COLUMN fk_hazard_source varchar (16);
-ALTER TABLE qgep.od_substance ADD CONSTRAINT rel_substance_hazard_source FOREIGN KEY (fk_hazard_source) REFERENCES qgep.od_hazard_source(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_catchment_area_direct_discharge_current () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_catchment_area_direct_discharge_current ADD CONSTRAINT pkey_qgep_vl_catchment_area_direct_discharge_current_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_catchment_area_direct_discharge_current (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5457,5457,'yes','ja','oui', '', '', '', 'true');
@@ -4797,8 +4787,6 @@ ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_ww_pl
 ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_planned FOREIGN KEY (fk_wastewater_networkelement_ww_planned) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_wastewater_networkelement_ww_current varchar (16);
 ALTER TABLE qgep.od_catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_ww_current FOREIGN KEY (fk_wastewater_networkelement_ww_current) REFERENCES qgep.od_wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_catchment_area varchar (16);
-ALTER TABLE qgep.od_surface_runoff_parameters ADD CONSTRAINT rel_surface_runoff_parameters_catchment_area FOREIGN KEY (fk_catchment_area) REFERENCES qgep.od_catchment_area(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_measuring_point_damming_device () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measuring_point_damming_device ADD CONSTRAINT pkey_qgep_vl_measuring_point_damming_device_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measuring_point_damming_device (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5720,5720,'other','andere','autres', '', '', '', 'true');
@@ -4820,12 +4808,8 @@ ALTER TABLE qgep.vl_measuring_point_purpose ADD CONSTRAINT pkey_qgep_vl_measurin
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_operator varchar (16);
 ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_operator FOREIGN KEY (fk_operator) REFERENCES qgep.od_organisation(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_waste_water_treatment_plant varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep.od_waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_water_course_segment varchar (16);
-ALTER TABLE qgep.od_measuring_point ADD CONSTRAINT rel_measuring_point_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep.od_water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_measuring_device_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measuring_device_kind ADD CONSTRAINT pkey_qgep_vl_measuring_device_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measuring_device_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5702,5702,'other','andere','autres', '', '', '', 'true');
@@ -4840,8 +4824,6 @@ ALTER TABLE qgep.vl_measuring_device_kind ADD CONSTRAINT pkey_qgep_vl_measuring_
  ALTER TABLE qgep.od_measuring_device ADD CONSTRAINT fkey_vl_measuring_device_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_measuring_device_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_measuring_point varchar (16);
-ALTER TABLE qgep.od_measuring_device ADD CONSTRAINT rel_measuring_device_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_measurement_series_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measurement_series_kind ADD CONSTRAINT pkey_qgep_vl_measurement_series_kind_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measurement_series_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3217,3217,'other','andere','autres', '', '', '', 'true');
@@ -4851,8 +4833,6 @@ ALTER TABLE qgep.vl_measurement_series_kind ADD CONSTRAINT pkey_qgep_vl_measurem
  ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT fkey_vl_measurement_series_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_measurement_series_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_measuring_point varchar (16);
-ALTER TABLE qgep.od_measurement_series ADD CONSTRAINT rel_measurement_series_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep.od_measuring_point(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_measurement_result_measurement_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_measurement_result_measurement_type ADD CONSTRAINT pkey_qgep_vl_measurement_result_measurement_type_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_measurement_result_measurement_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (5732,5732,'other','andere','autres', '', '', '', 'true');
@@ -4862,10 +4842,6 @@ ALTER TABLE qgep.vl_measurement_result_measurement_type ADD CONSTRAINT pkey_qgep
  ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT fkey_vl_measurement_result_measurement_type FOREIGN KEY (measurement_type)
  REFERENCES qgep.vl_measurement_result_measurement_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_measuring_device varchar (16);
-ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measuring_device FOREIGN KEY (fk_measuring_device) REFERENCES qgep.od_measuring_device(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_measurement_series varchar (16);
-ALTER TABLE qgep.od_measurement_result ADD CONSTRAINT rel_measurement_result_measurement_series FOREIGN KEY (fk_measurement_series) REFERENCES qgep.od_measurement_series(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_overflow_actuation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_overflow_actuation ADD CONSTRAINT pkey_qgep_vl_overflow_actuation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_overflow_actuation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3667,3667,'other','andere','autres', '', '', '', 'true');
@@ -4921,10 +4897,6 @@ ALTER TABLE qgep.od_overflow ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_to varchar (16);
 ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_to FOREIGN KEY (fk_overflow_to) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_overflow ADD COLUMN fk_control_center varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_throttle_shut_off_unit_actuation () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_throttle_shut_off_unit_actuation ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_actuation_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_throttle_shut_off_unit_actuation (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3213,3213,'other','andere','autres', '', '', '', 'true');
@@ -4987,10 +4959,6 @@ ALTER TABLE qgep.vl_throttle_shut_off_unit_signal_transmission ADD CONSTRAINT pk
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_control_center varchar (16);
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_overflow varchar (16);
-ALTER TABLE qgep.od_throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_overflow(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_prank_weir ADD CONSTRAINT oorel_od_prank_weir_overflow FOREIGN KEY (obj_id) REFERENCES qgep.od_overflow(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_prank_weir_weir_edge () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_prank_weir_weir_edge ADD CONSTRAINT pkey_qgep_vl_prank_weir_weir_edge_code PRIMARY KEY (code);
@@ -5113,8 +5081,6 @@ ALTER TABLE qgep.vl_hydraulic_characteristic_data_status ADD CONSTRAINT pkey_qge
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hydraulic_characteristic_data ADD CONSTRAINT rel_hydraulic_characteristic_data_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_characteristic(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT oorel_od_backflow_prevention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_backflow_prevention_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflow_prevention_kind_code PRIMARY KEY (code);
@@ -5125,10 +5091,6 @@ ALTER TABLE qgep.vl_backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflo
  ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT fkey_vl_backflow_prevention_kind FOREIGN KEY (kind)
  REFERENCES qgep.vl_backflow_prevention_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_backflow_prevention ADD COLUMN fk_throttle_shut_off_unit varchar (16);
-ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_backflow_prevention ADD COLUMN fk_pump varchar (16);
-ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT rel_backflow_prevention_pump FOREIGN KEY (fk_pump) REFERENCES qgep.od_pump(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_solids_retention ADD CONSTRAINT oorel_od_solids_retention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE cascade;
 CREATE TABLE qgep.vl_solids_retention_type () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_solids_retention_type ADD CONSTRAINT pkey_qgep_vl_solids_retention_type_code PRIMARY KEY (code);
@@ -5162,10 +5124,6 @@ ALTER TABLE qgep.vl_tank_emptying_type ADD CONSTRAINT pkey_qgep_vl_tank_emptying
  ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT fkey_vl_tank_emptying_type FOREIGN KEY (type)
  REFERENCES qgep.vl_tank_emptying_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_tank_emptying ADD COLUMN fk_throttle_shut_off_unit varchar (16);
-ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep.od_throttle_shut_off_unit(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_tank_emptying ADD COLUMN fk_overflow varchar (16);
-ALTER TABLE qgep.od_tank_emptying ADD CONSTRAINT rel_tank_emptying_overflow FOREIGN KEY (fk_overflow) REFERENCES qgep.od_pump(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_param_ca_general ADD CONSTRAINT oorel_od_param_ca_general_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_param_ca_mouse1 ADD CONSTRAINT oorel_od_param_ca_mouse1_surface_runoff_parameters FOREIGN KEY (obj_id) REFERENCES qgep.od_surface_runoff_parameters(obj_id) ON DELETE cascade;
 
@@ -5350,8 +5308,6 @@ ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN fk_wastewater_structure
 ALTER TABLE qgep.od_wastewater_structure_text ADD CONSTRAINT rel_wastewater_structure_text_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_reach_text ADD COLUMN fk_reach varchar (16);
 ALTER TABLE qgep.od_reach_text ADD CONSTRAINT rel_reach_text_reach FOREIGN KEY (fk_reach) REFERENCES qgep.od_reach(obj_id) ON DELETE cascade;
-ALTER TABLE qgep.od_catchment_area_text ADD COLUMN fk_catchment_area varchar (16);
-ALTER TABLE qgep.od_catchment_area_text ADD CONSTRAINT rel_catchment_area_text_catchment_area FOREIGN KEY (fk_catchment_area) REFERENCES qgep.od_catchment_area(obj_id) ON DELETE cascade;
 ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep.od_wastewater_structure_symbol ADD CONSTRAINT rel_wastewater_structure_symbol_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON DELETE cascade;
 
