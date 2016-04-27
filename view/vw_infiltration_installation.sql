@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS qgep.vw_infiltration_installation;
 
-
+--- 27.4.2016 Changed detail_geometry_3d_geometry to detail_geometry3d_geometry - adaption to new datamodel 20160426
 --------
 -- Subclass: od_infiltration_installation
 -- Superclass: od_wastewater_structure
@@ -26,7 +26,7 @@ SELECT
    , WS.accessibility
    , WS.contract_section,
 WS.detail_geometry_geometry,
-WS.detail_geometry_3d_geometry
+WS.detail_geometry3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -66,7 +66,7 @@ BEGIN
            , accessibility
            , contract_section
             , detail_geometry_geometry
-            , detail_geometry_3d_geometry
+            , detail_geometry3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -93,7 +93,7 @@ BEGIN
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
-            , NEW.detail_geometry_3d_geometry
+            , NEW.detail_geometry3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.identifier
@@ -191,7 +191,7 @@ UPDATE qgep.od_wastewater_structure
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
       , detail_geometry_geometry = NEW.detail_geometry_geometry
-      , detail_geometry_3d_geometry = NEW.detail_geometry_3d_geometry
+      , detail_geometry3d_geometry = NEW.detail_geometry3d_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier
