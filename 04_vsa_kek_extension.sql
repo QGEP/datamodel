@@ -1,6 +1,9 @@
 ------ This file generates the VSA-DSS database (Modul VSA-KEK) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
 ------ version 26.04.2016 20:47:41
+
+---- 27.4.2016 qgep.od_examination ADD COLUMN operator commented out, duplicate allready in od_maintenance_event
+
 BEGIN;
 ------ CREATE SCHEMA qgep;
 --- CREATE FUNCTION qgep.update_last_modified() exists already
@@ -23,8 +26,8 @@ COMMENT ON COLUMN qgep.od_examination.equipment IS 'Name of used camera / Einges
 COMMENT ON COLUMN qgep.od_examination.from_point_identifier IS 'yyy_Bezeichnung des "von Punktes" einer Untersuchung, so wie sie auf dem Plan erscheint. Alternative zum Foreign key Haltungspunkt, wenn Topologie noch nicht definiert ist (Ersterfassung). Die vonPunktBezeichnung wird später vom Hydrauliker für den Aufbau der Kanalnetztopologie verwendet. Bei Schachtuntersuchungen bleibt dieser Wert leer. / Bezeichnung des "von Punktes" einer Untersuchung, so wie sie auf dem Plan erscheint. Alternative zum Fremdschlüssel Haltungspunkt, wenn Topologie noch nicht definiert ist (Ersterfassung). Die vonPunktBezeichnung wird später vom Hydrauliker für den Aufbau der Kanalnetztopologie verwendet. Bei Schachtuntersuchungen bleibt dieser Wert leer. / point (chambre ou nœud) auquel l’inspection termine. Désignation du « point départ » d’une inspection comme elle figure sur le plan. Elle sert d’alternative à la clé externe POINT_TRONCON, lorsque la topologie n’est pas encore définie (saisie initiale). La DESIGNATION_POINT_DE sera utilisée ultérieurement par l’hydraulicien pour la construction de la topologie du réseau. Cette valeur reste vide lors d’inspections de chambres.';
  ALTER TABLE qgep.od_examination ADD COLUMN inspected_length  decimal(7,2) ;
 COMMENT ON COLUMN qgep.od_examination.inspected_length IS 'yyy_Total untersuchte Länge in Metern mit zwei Nachkommastellen / Total untersuchte Länge in Metern mit zwei Nachkommastellen / Longueur totale examinée en mètres avec deux chiffres après la virgule';
- ALTER TABLE qgep.od_examination ADD COLUMN operator  varchar(50) ;
-COMMENT ON COLUMN qgep.od_examination.operator IS 'name of operator / Name des Operateurs / Nom de l’opérateur';
+-- ALTER TABLE qgep.od_examination ADD COLUMN operator  varchar(50) ;
+-- COMMENT ON COLUMN qgep.od_examination.operator IS 'name of operator / Name des Operateurs / Nom de l’opérateur';
  ALTER TABLE qgep.od_examination ADD COLUMN recording_type  integer ;
 COMMENT ON COLUMN qgep.od_examination.recording_type IS 'yyy_Aufnahmetechnik, beschreibt die Art der Aufnahme / Aufnahmetechnik, beschreibt die Art der Aufnahme / Technique de prise de vues, décrit le type de prise de vues';
  ALTER TABLE qgep.od_examination ADD COLUMN to_point_identifier  varchar(41) ;
