@@ -1,5 +1,7 @@
 ﻿-- View: vw_qgep_cover
 
+--- 27.4.2016 Changed detail_geometry_3d_geometry to detail_geometry3d_geometry - adaption to new datamodel 20160426
+
 BEGIN TRANSACTION;
 
 DROP VIEW IF EXISTS qgep.vw_qgep_cover;
@@ -126,7 +128,7 @@ BEGIN
            , accessibility
            , contract_section
     --       , detail_geometry_geometry
-    --       , detail_geometry_3d_geometry
+    --       , detail_geometry3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -161,7 +163,7 @@ BEGIN
            , NEW.accessibility
            , NEW.contract_section
     --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry_3d_geometry
+    --       , NEW.detail_geometry3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.ws_identifier
@@ -198,7 +200,7 @@ BEGIN
            , accessibility
            , contract_section
     --       , detail_geometry_geometry
-    --       , detail_geometry_3d_geometry
+    --       , detail_geometry3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -234,7 +236,7 @@ BEGIN
            , NEW.accessibility
            , NEW.contract_section
     --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry_3d_geometry
+    --       , NEW.detail_geometry3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.ws_identifier
@@ -272,7 +274,7 @@ BEGIN
            , accessibility
            , contract_section
     --       , detail_geometry_geometry
-    --       , detail_geometry_3d_geometry
+    --       , detail_geometry3d_geometry
            , financing
            , gross_costs
            , identifier
@@ -308,7 +310,7 @@ BEGIN
            , NEW.accessibility
            , NEW.contract_section
     --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry_3d_geometry
+    --       , NEW.detail_geometry3d_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.ws_identifier
