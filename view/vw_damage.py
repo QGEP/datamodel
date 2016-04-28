@@ -24,46 +24,15 @@ children:
   channel:
     table: qgep.od_damage_channel
     pkey: obj_id
-    remap:
-      damage_code: channel_damage_code
+    
   manhole:
     table: qgep.od_damage_manhole
-    pkey: obj_id
-    remap:
-      damage_code: manhole_damage_code 
+    pkey: obj_id 
 
 merge_view:
   name: vw_qgep_damage
   allow_type_change: false
   allow_parent_only: true
-  merge_columns:
-    connection:
-      channel: connection
-      manhole: connection
-    damage_reach:
-      channel: damage_reach
-      manhole: damage_reach
-    damage_begin:
-      channel: damage_begin
-      manhole: damage_begin
-    damage_end:
-      channel: damage_end
-      manhole: damage_end
-    distance:
-      channel: distance
-      manhole: distance
-    quantification1:
-      channel: quantification1
-      manhole: quantification1
-    quantification2:
-      channel: quantification2
-      manhole: quantification2
-    video_counter:
-      channel: video_counter
-      manhole: video_counter
-    view_parameters:
-      channel: view_parameters
-      manhole: view_parameters
 """
 
 
