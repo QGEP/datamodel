@@ -31,3 +31,4 @@ script:
 
 after_success:
   - $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
+  - python $TRAVIS_BUILD_DIR/scripts/release_db_template.py
