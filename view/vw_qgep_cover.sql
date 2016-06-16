@@ -7,7 +7,7 @@ BEGIN TRANSACTION;
 DROP VIEW IF EXISTS qgep.vw_qgep_cover;
 
 CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
- SELECT co.obj_id,
+ SELECT ws.obj_id,
     co.brand,
     co.cover_shape,
     co.diameter,
@@ -33,7 +33,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
       ELSE 'unknown'
     END AS ws_type,
 
-    ws.obj_id as ws_obj_id,
+    co.obj_id as co_obj_id,
     ws.identifier as ws_identifier,
     ws.accessibility,
     ws.contract_section,
@@ -153,7 +153,7 @@ BEGIN
            )
            VALUES
            (
-	     NEW.ws_obj_id
+	     NEW.obj_id
            , NEW.dimension1
            , NEW.dimension2
            , NEW.depth
@@ -185,7 +185,7 @@ BEGIN
            , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.ws_obj_id;
+           ) RETURNING obj_id INTO NEW.obj_id;
 
     -- Special Structure
     WHEN NEW.ws_type = 'special_structure' THEN
@@ -225,7 +225,7 @@ BEGIN
            )
            VALUES
            (
-	     NEW.ws_obj_id
+	     NEW.obj_id
            , NEW.depth
            , NEW.emergency_spillway
            , NEW.special_structure_function
@@ -258,7 +258,7 @@ BEGIN
            , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.ws_obj_id;
+           ) RETURNING obj_id INTO NEW.obj_id;
 
     -- Discharge Point
     WHEN NEW.ws_type = 'discharge_point' THEN
@@ -299,7 +299,7 @@ BEGIN
            )
            VALUES
            (
-	     NEW.ws_obj_id
+	     NEW.obj_id
            , NEW.depth
            , NEW.highwater_level
            , NEW.relevance
@@ -332,18 +332,51 @@ BEGIN
            , NEW.fk_provider
            , NEW.fk_owner
            , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.ws_obj_id;
+           ) RETURNING obj_id INTO NEW.obj_id;
 
     -- Infiltration Installation
     WHEN NEW.ws_type = 'infiltration_installation' THEN
-     RAISE NOTICE 'Wastewater structure type not known (%)', ws_type; -- ERROR
-     -- TODO
+      INSERT INTO qgep.vw_infiltration_installation(
+             obj_id
+           , absorption_capacity
+           , defects
+           , depth
+           , dimension1
+           , dimension2
+           , distance_to_aquifer
+           , effective_area
+           , emergency_spillway
+           , kind
+           , labeling
+           , seepage_utilization
+           , upper_elevation
+           , vehicle_access
+           , watertightness
+           )
+           VALUES
+           (
+             NEW.obj_id
+           , NEW.absorption_capacity
+           , NEW.defects
+           , NEW.depth
+           , NEW.dimension1
+           , NEW.dimension2
+           , NEW.distance_to_aquifer
+           , NEW.effective_area
+           , NEW.emergency_spillway
+           , NEW.kind
+           , NEW.labeling
+           , NEW.seepage_utilization
+           , NEW.upper_elevation
+           , NEW.vehicle_access
+           , NEW.watertightness
+           ) RETURNING obj_id INTO NEW.obj_id;
     ELSE
      RAISE NOTICE 'Wastewater structure type not known (%)', ws_type; -- ERROR
   END CASE;
 
   IF NEW.identifier IS NULL OR NEW.identifier='' THEN
-     NEW.identifier := NEW.ws_obj_id;
+     NEW.identifier := NEW.obj_id;
   END IF;
 
   INSERT INTO qgep.vw_wastewater_node(
@@ -369,7 +402,7 @@ BEGIN
     , NOW()
     , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
     , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
-    , NEW.ws_obj_id
+    , NEW.obj_id
   );
 
   INSERT INTO qgep.vw_cover(
@@ -394,7 +427,7 @@ BEGIN
   )
   VALUES
   (
-      NEW.obj_id
+      NEW.co_obj_id
     , NEW.brand
     , NEW.cover_shape
     , NEW.diameter
@@ -411,7 +444,7 @@ BEGIN
     , NOW()
     , NEW.fk_dataowner
     , NEW.fk_provider
-    , NEW.ws_obj_id
+    , NEW.obj_id
   ) RETURNING obj_id INTO NEW.obj_id;
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
@@ -428,10 +461,10 @@ CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
-  ws_obj_id character varying(16);
+  obj_id character varying(16);
 BEGIN
     IF NEW.identifier IS NULL OR NEW.identifier='' THEN
-       NEW.identifier := NEW.ws_obj_id;
+       NEW.identifier := NEW.obj_id;
     END IF;
 
     UPDATE qgep.od_cover
@@ -461,7 +494,7 @@ BEGIN
 
     UPDATE qgep.od_wastewater_structure
       SET
-        obj_id = NEW.ws_obj_id,
+        obj_id = NEW.obj_id,
         identifier = NEW.ws_identifier,
         accessibility = NEW.accessibility,
         contract_section = NEW.contract_section,
@@ -482,21 +515,21 @@ BEGIN
         year_of_replacement = NEW.year_of_replacement,
         fk_owner = NEW.fk_owner,
         fk_operator = NEW.fk_operator
-     WHERE od_wastewater_structure.obj_id::text = old.ws_obj_id::text;
+     WHERE od_wastewater_structure.obj_id::text = old.obj_id::text;
 
   IF OLD.ws_type <> NEW.ws_type THEN
     CASE
-      WHEN OLD.ws_type = 'manhole' THEN DELETE FROM qgep.od_manhole WHERE obj_id = OLD.ws_obj_id;
-      WHEN OLD.ws_type = 'special_structure' THEN DELETE FROM qgep.od_special_structure WHERE obj_id = OLD.ws_obj_id;
-      WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep.od_discharge_point WHERE obj_id = OLD.ws_obj_id;
-      WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep.infiltration_installation WHERE obj_id = OLD.ws_obj_id;
+      WHEN OLD.ws_type = 'manhole' THEN DELETE FROM qgep.od_manhole WHERE obj_id = OLD.obj_id;
+      WHEN OLD.ws_type = 'special_structure' THEN DELETE FROM qgep.od_special_structure WHERE obj_id = OLD.obj_id;
+      WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep.od_discharge_point WHERE obj_id = OLD.obj_id;
+      WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep.od_infiltration_installation WHERE obj_id = OLD.obj_id;
     END CASE;
 
     CASE
-      WHEN NEW.ws_type = 'manhole' THEN INSERT INTO qgep.od_manhole (obj_id) VALUES(OLD.ws_obj_id);
-      WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep.od_special_structure (obj_id) VALUES(OLD.ws_obj_id);
-      WHEN NEW.ws_type = 'discharge_point' THEN INSERT INTO qgep.od_discharge_point (obj_id) VALUES(OLD.ws_obj_id);
-      WHEN NEW.ws_type = 'infiltration_installation' THEN INSERT INTO qgep.infiltration_installation (obj_id) VALUES(OLD.ws_obj_id);
+      WHEN NEW.ws_type = 'manhole' THEN INSERT INTO qgep.od_manhole (obj_id) VALUES(OLD.obj_id);
+      WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep.od_special_structure (obj_id) VALUES(OLD.obj_id);
+      WHEN NEW.ws_type = 'discharge_point' THEN INSERT INTO qgep.od_discharge_point (obj_id) VALUES(OLD.obj_id);
+      WHEN NEW.ws_type = 'infiltration_installation' THEN INSERT INTO qgep.od_infiltration_installation (obj_id) VALUES(OLD.obj_id);
     END CASE;
   END IF;
 
@@ -510,7 +543,7 @@ BEGIN
         function = NEW.manhole_function,
         material = NEW.material,
         surface_inflow = NEW.surface_inflow
-      WHERE obj_id = OLD.ws_obj_id;
+      WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'special_structure' THEN
       UPDATE qgep.od_special_structure
@@ -521,7 +554,7 @@ BEGIN
         function = NEW.special_structure_function,
         stormwater_tank_arrangement = NEW.stormwater_tank_arrangement,
         upper_elevation = NEW.upper_elevation
-      WHERE obj_id = OLD.ws_obj_id;
+      WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'discharge_point' THEN
       UPDATE qgep.od_discharge_point
@@ -532,10 +565,26 @@ BEGIN
         terrain_level = NEW.terrain_level,
         upper_elevation = NEW.upper_elevation,
         waterlevel_hydraulic = NEW.waterlevel_hydraulic
-      WHERE obj_id = OLD.ws_obj_id;
+      WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'infiltration_installation' THEN
-    -- TODO
+      UPDATE qgep.od_infiltration_installation
+      SET
+	absorption_capacity = NEW.absorption_capacity,
+	defects = NEW.defects,
+	depth = NEW.depth,
+	dimension1 = NEW.dimension1,
+	dimension2 = NEW.dimension2,
+	distance_to_aquifer = NEW.distance_to_aquifer,
+	effective_area = NEW.effective_area,
+	emergency_spillway = NEW.emergency_spillway,
+	kind = NEW.kind,
+	labeling = NEW.labeling,
+	seepage_utilization = NEW.seepage_utilization,
+	upper_elevation = NEW.upper_elevation,
+	vehicle_access = NEW.vehicle_access,
+	watertightness = NEW.watertightness
+      WHERE obj_id = OLD.obj_id;
   END CASE;
 
   -- Cover geometry has been moved
@@ -546,7 +595,7 @@ BEGIN
     WHERE obj_id IN 
     (
       SELECT obj_id FROM qgep.od_wastewater_networkelement
-      WHERE fk_wastewater_structure = NEW.ws_obj_id
+      WHERE fk_wastewater_structure = NEW.obj_id
     );
 
     -- Move reach(es) as well
@@ -561,7 +610,7 @@ BEGIN
     (
       SELECT RP.obj_id FROM qgep.od_reach_point RP
       LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
-      WHERE NE.fk_wastewater_structure = NEW.ws_obj_id
+      WHERE NE.fk_wastewater_structure = NEW.obj_id
     );
 
     UPDATE qgep.od_reach RE
@@ -575,7 +624,7 @@ BEGIN
     (
       SELECT RP.obj_id FROM qgep.od_reach_point RP
       LEFT JOIN qgep.od_wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
-      WHERE NE.fk_wastewater_structure = NEW.ws_obj_id
+      WHERE NE.fk_wastewater_structure = NEW.obj_id
     );
   END IF;
 
@@ -597,7 +646,7 @@ CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_DELETE()
 $BODY$
 DECLARE
 BEGIN
-  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.ws_obj_id;
+  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
 RETURN OLD;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -606,9 +655,11 @@ DROP TRIGGER IF EXISTS vw_qgep_cover_ON_DELETE ON qgep.vw_qgep_cover;
 CREATE TRIGGER vw_qgep_cover_ON_DELETE INSTEAD OF DELETE ON qgep.vw_qgep_cover
   FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_DELETE();
 
+/**************************************************************
+ * DEFAULT VALUES
+ *************************************************************/
 
-
-
+ALTER VIEW qgep.vw_qgep_cover ALTER obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure');
 
 
 
