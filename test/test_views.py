@@ -90,12 +90,7 @@ class TestViews(unittest.TestCase, DbTestBase):
 
         cur = self.cursor()
 
-        cur.execute("SELECT * FROM qgep.od_structure_part WHERE obj_id='{obj_id}'".format(obj_id=obj_id))
-        row = cur.fetchone()
-
-        ws_obj_id = row['fk_wastewater_structure']
-
-        cur.execute("SELECT * FROM qgep.od_wastewater_networkelement NE LEFT JOIN qgep.od_wastewater_node NO ON NO.obj_id = NE.obj_id WHERE fk_wastewater_structure='{obj_id}' ".format(obj_id=ws_obj_id))
+        cur.execute("SELECT * FROM qgep.od_wastewater_networkelement NE LEFT JOIN qgep.od_wastewater_node NO ON NO.obj_id = NE.obj_id WHERE fk_wastewater_structure='{obj_id}' ".format(obj_id=obj_id))
         row = cur.fetchone()
 
         assert row['backflow_level'] == decimal.Decimal('100.000')

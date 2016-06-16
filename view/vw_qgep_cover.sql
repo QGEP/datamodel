@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     co.situation_geometry,
     co.sludge_bucket,
     co.venting,
-    co.identifier,
+    co.identifier AS co_identifier,
     co.remark,
     co.renovation_demand,
     co.last_modification,
@@ -34,7 +34,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     END AS ws_type,
 
     co.obj_id as co_obj_id,
-    ws.identifier as ws_identifier,
+    ws.identifier as identifier,
     ws.accessibility,
     ws.contract_section,
     ws.financing,
@@ -114,229 +114,131 @@ CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_INSERT()
   RETURNS trigger AS
 $BODY$
 BEGIN
+
+  NEW.identifier = COALESCE(NEW.identifier, NEW.obj_id);
+
+  INSERT INTO qgep.od_wastewater_structure(
+      obj_id
+    , accessibility
+    , contract_section
+    , financing
+    , gross_costs
+    , identifier
+    , inspection_interval
+    , location_name
+    , records
+    , remark
+    , renovation_necessity
+    , replacement_value
+    , rv_base_year
+    , rv_construction_type
+    , status
+    , structure_condition
+    , subsidies
+    , year_of_construction
+    , year_of_replacement
+    , last_modification
+    , fk_dataowner
+    , fk_provider
+    , fk_owner
+    , fk_operator
+  )
+  VALUES
+  (
+      NEW.obj_id
+    , NEW.accessibility
+    , NEW.contract_section
+    , NEW.financing
+    , NEW.gross_costs
+    , NEW.identifier
+    , NEW.inspection_interval
+    , NEW.location_name
+    , NEW.records
+    , NEW.remark
+    , NEW.renovation_necessity
+    , NEW.replacement_value
+    , NEW.rv_base_year
+    , NEW.rv_construction_type
+    , NEW.status
+    , NEW.structure_condition
+    , NEW.subsidies
+    , NEW.year_of_construction
+    , NEW.year_of_replacement
+    , NEW.last_modification
+    , NEW.fk_dataowner
+    , NEW.fk_provider
+    , NEW.fk_owner
+    , NEW.fk_operator
+  );
+
   -- Manhole
   CASE
     WHEN NEW.ws_type = 'manhole' THEN
-      INSERT INTO qgep.vw_manhole(
-	     obj_id
+      INSERT INTO qgep.od_manhole(
+             obj_id
            , dimension1
            , dimension2
            , depth
            , function
            , material
            , surface_inflow
-           , accessibility
-           , contract_section
-    --       , detail_geometry_geometry
-    --       , detail_geometry3d_geometry
-           , financing
-           , gross_costs
-           , identifier
-           , inspection_interval
-           , location_name
-           , records
-           , remark
-           , renovation_necessity
-           , replacement_value
-           , rv_base_year
-           , rv_construction_type
-           , status
-           , structure_condition
-           , subsidies
-           , year_of_construction
-           , year_of_replacement
-           , last_modification
-           , fk_dataowner
-           , fk_provider
-           , fk_owner
-           , fk_operator
            )
            VALUES
            (
-	     NEW.obj_id
+             NEW.obj_id
            , NEW.dimension1
            , NEW.dimension2
            , NEW.depth
            , NEW.manhole_function
            , NEW.material
            , NEW.surface_inflow
-           , NEW.accessibility
-           , NEW.contract_section
-    --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry3d_geometry
-           , NEW.financing
-           , NEW.gross_costs
-           , NEW.ws_identifier
-           , NEW.inspection_interval
-           , NEW.location_name
-           , NEW.records
-           , NEW.ws_remark
-           , NEW.renovation_necessity
-           , NEW.replacement_value
-           , NEW.rv_base_year
-           , NEW.rv_construction_type
-           , NEW.status
-           , NEW.structure_condition
-           , NEW.subsidies
-           , NEW.year_of_construction
-           , NEW.year_of_replacement
-           , NEW.last_modification
-           , NEW.fk_dataowner
-           , NEW.fk_provider
-           , NEW.fk_owner
-           , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.obj_id;
+           );
 
     -- Special Structure
     WHEN NEW.ws_type = 'special_structure' THEN
-      INSERT INTO qgep.vw_special_structure(
-	     obj_id
+      INSERT INTO qgep.od_special_structure(
+             obj_id
            , depth
            , emergency_spillway
            , function
            , stormwater_tank_arrangement
            , upper_elevation
-
-           , accessibility
-           , contract_section
-    --       , detail_geometry_geometry
-    --       , detail_geometry3d_geometry
-           , financing
-           , gross_costs
-           , identifier
-           , inspection_interval
-           , location_name
-           , records
-           , remark
-           , renovation_necessity
-           , replacement_value
-           , rv_base_year
-           , rv_construction_type
-           , status
-           , structure_condition
-           , subsidies
-           , year_of_construction
-           , year_of_replacement
-           , last_modification
-           , fk_dataowner
-           , fk_provider
-           , fk_owner
-           , fk_operator
            )
            VALUES
            (
-	     NEW.obj_id
+             NEW.obj_id
            , NEW.depth
            , NEW.emergency_spillway
            , NEW.special_structure_function
            , NEW.stormwater_tank_arrangement
            , NEW.upper_elevation
-
-
-           , NEW.accessibility
-           , NEW.contract_section
-    --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry3d_geometry
-           , NEW.financing
-           , NEW.gross_costs
-           , NEW.ws_identifier
-           , NEW.inspection_interval
-           , NEW.location_name
-           , NEW.records
-           , NEW.ws_remark
-           , NEW.renovation_necessity
-           , NEW.replacement_value
-           , NEW.rv_base_year
-           , NEW.rv_construction_type
-           , NEW.status
-           , NEW.structure_condition
-           , NEW.subsidies
-           , NEW.year_of_construction
-           , NEW.year_of_replacement
-           , NEW.last_modification
-           , NEW.fk_dataowner
-           , NEW.fk_provider
-           , NEW.fk_owner
-           , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.obj_id;
+           );
 
     -- Discharge Point
     WHEN NEW.ws_type = 'discharge_point' THEN
-      INSERT INTO qgep.vw_discharge_point(
-	     obj_id
+      INSERT INTO qgep.od_discharge_point(
+             obj_id
            , depth
            , highwater_level
            , relevance
            , terrain_level
            , upper_elevation
            , waterlevel_hydraulic
-
-           , accessibility
-           , contract_section
-    --       , detail_geometry_geometry
-    --       , detail_geometry3d_geometry
-           , financing
-           , gross_costs
-           , identifier
-           , inspection_interval
-           , location_name
-           , records
-           , remark
-           , renovation_necessity
-           , replacement_value
-           , rv_base_year
-           , rv_construction_type
-           , status
-           , structure_condition
-           , subsidies
-           , year_of_construction
-           , year_of_replacement
-           , last_modification
-           , fk_dataowner
-           , fk_provider
-           , fk_owner
-           , fk_operator
            )
            VALUES
            (
-	     NEW.obj_id
+             NEW.obj_id
            , NEW.depth
            , NEW.highwater_level
            , NEW.relevance
            , NEW.terrain_level
            , NEW.upper_elevation
            , NEW.waterlevel_hydraulic
-
-           , NEW.accessibility
-           , NEW.contract_section
-    --       , NEW.detail_geometry_geometry
-    --       , NEW.detail_geometry3d_geometry
-           , NEW.financing
-           , NEW.gross_costs
-           , NEW.ws_identifier
-           , NEW.inspection_interval
-           , NEW.location_name
-           , NEW.records
-           , NEW.ws_remark
-           , NEW.renovation_necessity
-           , NEW.replacement_value
-           , NEW.rv_base_year
-           , NEW.rv_construction_type
-           , NEW.status
-           , NEW.structure_condition
-           , NEW.subsidies
-           , NEW.year_of_construction
-           , NEW.year_of_replacement
-           , NEW.last_modification
-           , NEW.fk_dataowner
-           , NEW.fk_provider
-           , NEW.fk_owner
-           , NEW.fk_operator
-           ) RETURNING obj_id INTO NEW.obj_id;
+           );
 
     -- Infiltration Installation
     WHEN NEW.ws_type = 'infiltration_installation' THEN
-      INSERT INTO qgep.vw_infiltration_installation(
+      INSERT INTO qgep.od_infiltration_installation(
              obj_id
            , absorption_capacity
            , defects
@@ -370,14 +272,10 @@ BEGIN
            , NEW.upper_elevation
            , NEW.vehicle_access
            , NEW.watertightness
-           ) RETURNING obj_id INTO NEW.obj_id;
+           );
     ELSE
      RAISE NOTICE 'Wastewater structure type not known (%)', ws_type; -- ERROR
   END CASE;
-
-  IF NEW.identifier IS NULL OR NEW.identifier='' THEN
-     NEW.identifier := NEW.obj_id;
-  END IF;
 
   INSERT INTO qgep.vw_wastewater_node(
       obj_id
@@ -398,7 +296,7 @@ BEGIN
     , NEW.bottom_level
     , NEW.situation_geometry
     , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
-    , COALESCE(NULLIF(NEW.wn_remark,''), NEW.remark)
+    , NEW.wn_remark
     , NOW()
     , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
     , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
@@ -438,14 +336,14 @@ BEGIN
     , NEW.situation_geometry
     , NEW.sludge_bucket
     , NEW.venting
-    , NEW.identifier
+    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
     , NEW.remark
     , NEW.renovation_demand
     , NOW()
     , NEW.fk_dataowner
     , NEW.fk_provider
     , NEW.obj_id
-  ) RETURNING obj_id INTO NEW.obj_id;
+  );
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -461,12 +359,7 @@ CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
-  obj_id character varying(16);
 BEGIN
-    IF NEW.identifier IS NULL OR NEW.identifier='' THEN
-       NEW.identifier := NEW.obj_id;
-    END IF;
-
     UPDATE qgep.od_cover
       SET
         brand = NEW.brand,
@@ -480,11 +373,11 @@ BEGIN
         situation_geometry = new.situation_geometry,
         sludge_bucket = new.sludge_bucket,
         venting = new.venting
-    WHERE od_cover.obj_id::text = old.obj_id::text;
+    WHERE od_cover.obj_id::text = old.co_obj_id::text;
 
     UPDATE qgep.od_structure_part
       SET
-        identifier = new.identifier,
+        identifier = new.co_identifier,
         remark = new.remark,
         renovation_demand = new.renovation_demand,
         last_modification = new.last_modification,
@@ -495,7 +388,7 @@ BEGIN
     UPDATE qgep.od_wastewater_structure
       SET
         obj_id = NEW.obj_id,
-        identifier = NEW.ws_identifier,
+        identifier = NEW.identifier,
         accessibility = NEW.accessibility,
         contract_section = NEW.contract_section,
         financing = NEW.financing,
@@ -570,20 +463,20 @@ BEGIN
     WHEN NEW.ws_type = 'infiltration_installation' THEN
       UPDATE qgep.od_infiltration_installation
       SET
-	absorption_capacity = NEW.absorption_capacity,
-	defects = NEW.defects,
-	depth = NEW.depth,
-	dimension1 = NEW.dimension1,
-	dimension2 = NEW.dimension2,
-	distance_to_aquifer = NEW.distance_to_aquifer,
-	effective_area = NEW.effective_area,
-	emergency_spillway = NEW.emergency_spillway,
-	kind = NEW.kind,
-	labeling = NEW.labeling,
-	seepage_utilization = NEW.seepage_utilization,
-	upper_elevation = NEW.upper_elevation,
-	vehicle_access = NEW.vehicle_access,
-	watertightness = NEW.watertightness
+        absorption_capacity = NEW.absorption_capacity,
+        defects = NEW.defects,
+        depth = NEW.depth,
+        dimension1 = NEW.dimension1,
+        dimension2 = NEW.dimension2,
+        distance_to_aquifer = NEW.distance_to_aquifer,
+        effective_area = NEW.effective_area,
+        emergency_spillway = NEW.emergency_spillway,
+        kind = NEW.kind,
+        labeling = NEW.labeling,
+        seepage_utilization = NEW.seepage_utilization,
+        upper_elevation = NEW.upper_elevation,
+        vehicle_access = NEW.vehicle_access,
+        watertightness = NEW.watertightness
       WHERE obj_id = OLD.obj_id;
   END CASE;
 

@@ -52,6 +52,8 @@ class DbTestBase:
         obj_id = self.insert(table, row)
         result = self.select(table, obj_id)
 
+        assert result, obj_id
+
         self.check_result(row, result, table, 'insert')
 
         return obj_id
@@ -66,7 +68,7 @@ class DbTestBase:
     def check_result(self, expected, result, table, test_name):
         # TODO: don't convert to unicode, type inference for smallint is
         # currently broken, that's the reason at the moment.
-        assert result, "No result set received."
+        self.assertTrue(result, "No result set received.")
 
         for key, value in expected.iteritems():
           self.assertEquals(unicode(result[key]), unicode(value), """

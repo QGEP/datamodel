@@ -29,9 +29,9 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         obj_id = self.insert_check('vw_qgep_cover', row)
 
         # Get the new cover
-        row = self.select('vw_cover', obj_id)
+        row = self.select('vw_qgep_cover', obj_id)
+        row = self.select('vw_cover', row['co_obj_id'])
 
-        # We work with the foreign key from the cover to the wastewater structure
         self.delete('od_wastewater_structure', row['fk_wastewater_structure'])
 
         # Just to be sure the structure really was deleted

@@ -59,7 +59,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         obj_id = self.insert_check('vw_qgep_cover', row)
 
-        row = self.select('od_structure_part', obj_id)
+        row = self.select('vw_qgep_cover', obj_id)
+        row = self.select('od_structure_part', row['co_obj_id'])
 
         identifier = row['identifier']
         assert identifier, "Identifier not set on insert: {}".format(repr(identifier))
