@@ -77,22 +77,22 @@ DROP MATERIALIZED VIEW IF EXISTS qgep.vw_network_segment CASCADE;
 CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
  WITH reach_parts AS (
    SELECT 
-     row_number() OVER (ORDER BY od_reach_point.fk_wastewater_networkelement, ST_LineLocatePoint(ST_LineMerge(od_reach.progression_geometry), od_reach_point.situation_geometry)) AS gid, 
+     row_number() OVER (ORDER BY od_reach_point.fk_wastewater_networkelement, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(od_reach.progression_geometry)), od_reach_point.situation_geometry)) AS gid, 
      od_reach_point.obj_id, 
      od_reach_point.fk_wastewater_networkelement, 
      od_reach_point.situation_geometry, 
      od_reach.progression_geometry, 
      od_reach.fk_reach_point_from, 
      od_reach.fk_reach_point_to, 
-     ST_LineMerge(od_reach.progression_geometry) AS reach_progression, 
+     ST_LineMerge(ST_CurveToLine(od_reach.progression_geometry)) AS reach_progression, 
      ST_LineLocatePoint(
-       ST_LineMerge(od_reach.progression_geometry), 
+       ST_LineMerge(ST_CurveToLine(od_reach.progression_geometry)), 
        od_reach_point.situation_geometry
      ) AS pos
    FROM qgep.od_reach_point
    LEFT JOIN qgep.od_reach ON od_reach_point.fk_wastewater_networkelement::text = od_reach.obj_id::text
    WHERE od_reach_point.fk_wastewater_networkelement IS NOT NULL AND od_reach.progression_geometry IS NOT NULL
-   ORDER BY od_reach_point.obj_id, ST_LineLocatePoint(ST_LineMerge(od_reach.progression_geometry), od_reach_point.situation_geometry)
+   ORDER BY od_reach_point.obj_id, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(od_reach.progression_geometry)), od_reach_point.situation_geometry)
  )
 
  SELECT row_number() OVER () AS gid,
@@ -114,8 +114,8 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
      NULL AS bottom_level,
      ch.usage_current AS usage_current,
      mat.abbr_de AS material,
-     COALESCE( reach_progression, ST_LineMerge(progression_geometry) ) AS progression_geometry,
-     ST_LineMerge(progression_geometry) AS detail_geometry
+     COALESCE( reach_progression, ST_LineMerge(ST_CurveToLine(progression_geometry)) ) AS progression_geometry,
+     ST_LineMerge(ST_CurveToLine(progression_geometry)) AS detail_geometry
    FROM qgep.od_reach re
    FULL JOIN
    (
@@ -125,7 +125,7 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
        COALESCE(s2.obj_id, s1.fk_reach_point_to) AS to_obj_id, 
        COALESCE(s1.pos, 0::double precision) AS from_pos, 
        COALESCE(s2.pos, 1::double precision) AS to_pos, 
-       ST_LineSubstring(COALESCE(s1.reach_progression, s2.reach_progression), 
+       ST_LineSubstring(ST_CurveToLine(COALESCE(s1.reach_progression, s2.reach_progression)), 
        COALESCE(s1.pos, 0::double precision), COALESCE(s2.pos, 1::double precision)) AS reach_progression
      FROM reach_parts s1
      FULL JOIN reach_parts s2 ON s1.gid = (s2.gid - 1) AND s1.fk_wastewater_networkelement::text = s2.fk_wastewater_networkelement::text
