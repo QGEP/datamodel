@@ -55,6 +55,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/fixes/fix_vsa_kek_exten
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/50_maintenance_zones.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/generate_ro_columns.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/fill_ro_values.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_access_aid.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_benching.sql
