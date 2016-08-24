@@ -1,0 +1,15 @@
+2015-11-30 19:58:19.782Z: Info: ili2pg-2.3.1-20151123
+2015-11-30 19:58:19.789Z: Info: ili2c-4.5.18-20151123
+2015-11-30 19:58:19.790Z: Info: java.version 1.8.0_66
+2015-11-30 19:58:19.790Z: Info: user.name <stefan>
+2015-11-30 19:58:19.791Z: Info: dbschema <vsadss2008_1_d>
+2015-11-30 19:58:19.791Z: Info: dburl <jdbc:postgresql://localhost:5432/postgres>
+2015-11-30 19:58:19.791Z: Info: dbusr <postgres>
+2015-11-30 19:58:19.809Z: Info: databaseProduct <PostgreSQL>
+2015-11-30 19:58:19.810Z: Info: databaseVersion <9.3.6>
+2015-11-30 19:58:19.810Z: Info: driverVersion <PostgreSQL 9.1 JDBC4 (build 901)>
+2015-11-30 19:58:19.826Z: Info: postGISVersion <POSTGIS="2.1.5 r13152" GEOS="3.4.2-CAPI-1.8.2 r3924" PROJ="Rel. 4.8.0, 6 March 2012" GDAL="GDAL 1.11.1, released 2014/09/24" LIBXML="2.7.8" LIBJSON="UNKNOWN" RASTER>
+2015-11-30 19:58:19.839Z: Info: compile models...
+2015-11-30 19:58:20.36Z: Info: ilifile <VSA_DSS_2008_1_d.ili>
+2015-11-30 19:58:20.335Z: Info: create table structure...
+2015-11-30 19:58:41.768Z: Info: ...done

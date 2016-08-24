@@ -1,0 +1,1 @@
+java -jar ili2pg.jar --export --models DSS_2015 --dbhost localhost --dbport 5432 --dbdatabase postgres --dbschema vsadss2015_2_d --dbusr postgres --dbpwd sjib --log logfile_export_VSA_DSS_2015_2_d.txt transferdatensatz2015_d_export.xtf

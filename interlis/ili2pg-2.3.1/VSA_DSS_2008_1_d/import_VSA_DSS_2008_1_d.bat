@@ -1,0 +1,1 @@
+java -jar ili2pg.jar --createEnumTxtCol --import --dbhost localhost --dbport 5432 --dbdatabase postgres --dbschema vsadss2008_1_d --dbusr postgres --dbpwd sjib --createscript vsa_dss_2008_1.sql --dropscript vsa_dss_2008_1_drop.sql --createEnumTabs --createFk --log logfile_import_VSA_DSS_2008_1_d.txt
