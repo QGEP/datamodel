@@ -494,11 +494,11 @@ BEGIN
     -- Move reach(es) as well
     UPDATE qgep.od_reach RE
     SET progression_geometry = 
-      ST_SetPoint(
-        RE.progression_geometry,
+      ST_ForceCurve (ST_SetPoint(
+        ST_CurveToLine (RE.progression_geometry ),
         0, -- SetPoint index is 0 based, PointN index is 1 based.
         ST_TRANSLATE(ST_PointN(RE.progression_geometry, 1), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
-      )
+      ) )
     WHERE fk_reach_point_from IN 
     (
       SELECT RP.obj_id FROM qgep.od_reach_point RP
@@ -508,11 +508,11 @@ BEGIN
 
     UPDATE qgep.od_reach RE
     SET progression_geometry = 
-      ST_SetPoint(
-        RE.progression_geometry,
+      ST_ForceCurve( ST_SetPoint(
+        ST_CurveToLine( RE.progression_geometry ),
         ST_NumPoints(RE.progression_geometry) - 1,
         ST_TRANSLATE(ST_EndPoint(RE.progression_geometry), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
-      )
+      ) )
     WHERE fk_reach_point_to IN 
     (
       SELECT RP.obj_id FROM qgep.od_reach_point RP
