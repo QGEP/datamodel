@@ -90,14 +90,8 @@ COMMENT ON COLUMN qgep.txt_symbol.symbolpos_geometry IS '';
 COMMENT ON COLUMN qgep.txt_symbol.symbolvali IS '';
  ALTER TABLE qgep.txt_symbol ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.txt_symbol.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.txt_symbol ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.txt_symbol.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.txt_symbol ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.txt_symbol ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.txt_symbol.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.txt_symbol ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.txt_symbol.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_symbol
@@ -138,10 +132,6 @@ COMMENT ON COLUMN qgep.txt_text.textpos_geometry IS '';
 COMMENT ON COLUMN qgep.txt_text.textvali IS '';
  ALTER TABLE qgep.txt_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.txt_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.txt_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.txt_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.txt_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.txt_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_text
@@ -185,14 +175,8 @@ COMMENT ON COLUMN qgep.od_mutation.remark IS 'General remarks / Allgemeine Bemer
 COMMENT ON COLUMN qgep.od_mutation.system_user IS 'Name of system user / Name des Systembenutzers / Usager du système informatique';
  ALTER TABLE qgep.od_mutation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_mutation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_mutation ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_mutation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_mutation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_mutation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_mutation ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_mutation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mutation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_mutation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_mutation
@@ -229,14 +213,8 @@ COMMENT ON COLUMN qgep.od_aquifier.perimeter_geometry IS 'Boundary points of the
 COMMENT ON COLUMN qgep.od_aquifier.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_aquifier ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_aquifier.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_aquifier ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_aquifier.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_aquifier ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_aquifier ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_aquifier.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_aquifier ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_aquifier.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_aquifier
@@ -264,14 +242,8 @@ COMMENT ON COLUMN qgep.od_surface_water_bodies.identifier IS '';
 COMMENT ON COLUMN qgep.od_surface_water_bodies.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_surface_water_bodies.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_water_bodies.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_surface_water_bodies.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_water_bodies ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_surface_water_bodies.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_surface_water_bodies
@@ -384,14 +356,8 @@ COMMENT ON COLUMN qgep.od_water_course_segment.water_hardness IS 'Chemical water
 COMMENT ON COLUMN qgep.od_water_course_segment.width_variability IS 'yyy_Breitenvariabilität des Wasserspiegels bei niedrigem bis mittlerem Abfluss / Breitenvariabilität des Wasserspiegels bei niedrigem bis mittlerem Abfluss / Variabilité de la largeur du lit mouillé par basses et moyennes eaux';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_water_course_segment.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_water_course_segment ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_course_segment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_water_course_segment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_water_course_segment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_course_segment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_course_segment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_water_course_segment
@@ -424,14 +390,8 @@ CREATE INDEX in_qgep_od_water_catchment_situation_geometry ON qgep.od_water_catc
 COMMENT ON COLUMN qgep.od_water_catchment.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_water_catchment.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_water_catchment ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_catchment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_water_catchment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_water_catchment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_catchment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_catchment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_water_catchment
@@ -473,14 +433,8 @@ COMMENT ON COLUMN qgep.od_river_bank.vegetation IS '';
 COMMENT ON COLUMN qgep.od_river_bank.width IS 'yyy_Breite des Bereiches oberhalb des Böschungsfusses bis zum Gebiet mit "intensiver Landnutzung" / Breite des Bereiches oberhalb des Böschungsfusses bis zum Gebiet mit "intensiver Landnutzung" / Distance horizontale de la zone comprise entre le pied de la berge et la zone d''utilisation intensive du sol';
  ALTER TABLE qgep.od_river_bank ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_river_bank.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_river_bank ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bank.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_river_bank ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_river_bank ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_river_bank.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bank ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_river_bank.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_river_bank
@@ -516,14 +470,8 @@ COMMENT ON COLUMN qgep.od_river_bed.river_control_type IS 'Type of river control
 COMMENT ON COLUMN qgep.od_river_bed.width IS 'yyy_Bei Hochwasser umgelagerter Bereich (frei von höheren Wasserpflanzen) / Bei Hochwasser umgelagerter Bereich (frei von höheren Wasserpflanzen) / Zone de charriage par hautes eaux (absence de plantes aquatiques supérieures)';
  ALTER TABLE qgep.od_river_bed ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_river_bed.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_river_bed ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bed.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_river_bed ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_river_bed ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_river_bed.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_river_bed ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_river_bed.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_river_bed
@@ -564,14 +512,8 @@ COMMENT ON COLUMN qgep.od_sector_water_body.ref_length IS 'yyy_Basislänge in Zu
 COMMENT ON COLUMN qgep.od_sector_water_body.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_sector_water_body.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_sector_water_body ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_sector_water_body.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_sector_water_body ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_sector_water_body.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sector_water_body ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_sector_water_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_sector_water_body
@@ -601,14 +543,8 @@ COMMENT ON COLUMN qgep.od_organisation.remark IS 'yyy Fehler bei Zuordnung / All
 COMMENT ON COLUMN qgep.od_organisation.uid IS 'yyyReferenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), e.g. z.B. CHE123456789 / Referenz zur Unternehmensidentifikation des Bundesamts fuer Statistik (www.uid.admin.ch), z.B. CHE123456789 / Référence pour l’identification des entreprises selon l’Office fédéral de la statistique OFS (www.uid.admin.ch), par exemple: CHE123456789';
  ALTER TABLE qgep.od_organisation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_organisation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_organisation ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_organisation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_organisation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_organisation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_organisation ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_organisation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_organisation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_organisation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_organisation
@@ -859,14 +795,8 @@ COMMENT ON COLUMN qgep.od_wastewater_structure.year_of_construction IS 'yyy_Jahr
 COMMENT ON COLUMN qgep.od_wastewater_structure.year_of_replacement IS 'yyy_Jahr, in dem die Lebensdauer des Bauwerks voraussichtlich abläuft / Jahr, in dem die Lebensdauer des Bauwerks voraussichtlich abläuft / Année pour laquelle on prévoit que la durée de vie de l''ouvrage soit écoulée';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_wastewater_structure.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_structure ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_wastewater_structure.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_structure ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_wastewater_structure
@@ -1126,14 +1056,8 @@ COMMENT ON COLUMN qgep.od_maintenance_event.status IS 'Disposition state of the 
 COMMENT ON COLUMN qgep.od_maintenance_event.time_point IS 'Date and time of the event / Zeitpunkt des Ereignisses / Date et heure de l''événement';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_maintenance_event.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_maintenance_event ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_maintenance_event.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_maintenance_event ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_maintenance_event.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_maintenance_event ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_maintenance_event.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_maintenance_event
@@ -1161,14 +1085,8 @@ COMMENT ON COLUMN qgep.od_zone.identifier IS '';
 COMMENT ON COLUMN qgep.od_zone.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_zone ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_zone.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_zone ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_zone.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_zone ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_zone.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_zone ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_zone.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_zone ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_zone.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_zone
@@ -1354,14 +1272,8 @@ COMMENT ON COLUMN qgep.od_pipe_profile.profile_type IS 'Type of profile / Typ de
 COMMENT ON COLUMN qgep.od_pipe_profile.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_pipe_profile.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_pipe_profile ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_pipe_profile.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_pipe_profile ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_pipe_profile.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_pipe_profile ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_pipe_profile.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_pipe_profile
@@ -1395,14 +1307,8 @@ COMMENT ON COLUMN qgep.od_wwtp_energy_use.remark IS 'General remarks / Allgemein
 COMMENT ON COLUMN qgep.od_wwtp_energy_use.turbining IS 'Energy production based on the (bio)gaz production on the WWTP / Energienutzung aufgrund des Gasanfalls auf der ARA / Production d''énergie issue de la production de gaz de la STEP';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_wwtp_energy_use.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wwtp_energy_use ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wwtp_energy_use.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_wwtp_energy_use
@@ -1432,14 +1338,8 @@ COMMENT ON COLUMN qgep.od_waste_water_treatment.kind IS 'Type of wastewater  tre
 COMMENT ON COLUMN qgep.od_waste_water_treatment.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_waste_water_treatment.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_waste_water_treatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_waste_water_treatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_waste_water_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_waste_water_treatment
@@ -1491,14 +1391,8 @@ COMMENT ON COLUMN qgep.od_sludge_treatment.stacking_of_dehydrated_sludge IS 'Dim
 COMMENT ON COLUMN qgep.od_sludge_treatment.stacking_of_liquid_sludge IS 'Dimensioning value / Dimensionierungswert / Valeur de dimensionnement';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_sludge_treatment.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_sludge_treatment ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_sludge_treatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_sludge_treatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_sludge_treatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_sludge_treatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_sludge_treatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_sludge_treatment
@@ -1527,14 +1421,8 @@ CREATE INDEX in_qgep_od_control_center_situation_geometry ON qgep.od_control_cen
 COMMENT ON COLUMN qgep.od_control_center.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_control_center ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_control_center.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_control_center ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_control_center.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_control_center ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_control_center.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_control_center ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_control_center.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_control_center ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_control_center.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_control_center
@@ -1565,14 +1453,8 @@ CREATE INDEX in_qgep_od_water_control_structure_situation_geometry ON qgep.od_wa
 COMMENT ON COLUMN qgep.od_water_control_structure.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_water_control_structure.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_water_control_structure ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_control_structure.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_water_control_structure ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_water_control_structure.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_water_control_structure ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_water_control_structure.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_water_control_structure
@@ -1767,14 +1649,8 @@ COMMENT ON COLUMN qgep.od_fish_pass.remark IS 'General remarks / Allgemeine Beme
 COMMENT ON COLUMN qgep.od_fish_pass.vertical_drop IS 'Vertical difference of water level before and after fishpass / Differenz des Wasserspiegels vor und nach dem Fischpass / Différence de la hauteur du plan d''eau avant et après l''échelle à poisson';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_fish_pass.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_fish_pass ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_fish_pass.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_fish_pass ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_fish_pass.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_fish_pass ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_fish_pass.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_fish_pass
@@ -1805,14 +1681,8 @@ CREATE INDEX in_qgep_od_bathing_area_situation_geometry ON qgep.od_bathing_area 
 COMMENT ON COLUMN qgep.od_bathing_area.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_bathing_area.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_bathing_area ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_bathing_area.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_bathing_area ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_bathing_area.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_bathing_area ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_bathing_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_bathing_area
@@ -1850,14 +1720,8 @@ COMMENT ON COLUMN qgep.od_hydr_geometry.utilisable_capacity IS 'yyy_Inhalt der K
 COMMENT ON COLUMN qgep.od_hydr_geometry.volume_pump_sump IS 'yyy_Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volumen des Pumpensumpfs von der Sohle bis zur maximal möglichen Wasserspiegellage (inkl. Kanalspeichervolumen im Zulaufkanal). / Volume du puisard calculée à partir du radier jusqu’au niveau d’eau maximum possible (incl. le volume de stockage de la canalisation d’amenée).';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hydr_geometry.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_hydr_geometry ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_hydr_geometry ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_hydr_geometry.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geometry ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydr_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_hydr_geometry
@@ -1885,14 +1749,8 @@ COMMENT ON COLUMN qgep.od_wastewater_networkelement.identifier IS '';
 COMMENT ON COLUMN qgep.od_wastewater_networkelement.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_wastewater_networkelement.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_networkelement ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_networkelement.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_wastewater_networkelement
@@ -1931,14 +1789,8 @@ CREATE INDEX in_qgep_od_reach_point_situation_geometry ON qgep.od_reach_point US
 COMMENT ON COLUMN qgep.od_reach_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_reach_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_reach_point.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_reach_point ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_point.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_reach_point ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_reach_point ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_reach_point.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_reach_point ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_reach_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_reach_point
@@ -2051,14 +1903,8 @@ COMMENT ON COLUMN qgep.od_profile_geometry.x IS 'x';
 COMMENT ON COLUMN qgep.od_profile_geometry.y IS 'y';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_profile_geometry.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_profile_geometry ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_profile_geometry.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_profile_geometry ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_profile_geometry.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_profile_geometry ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_profile_geometry.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_profile_geometry
@@ -2088,14 +1934,8 @@ COMMENT ON COLUMN qgep.od_hydr_geom_relation.water_surface IS 'yyy_Freie Wassers
 COMMENT ON COLUMN qgep.od_hydr_geom_relation.wet_cross_section_area IS 'yyy_Hydraulisch wirksamer Querschnitt für Verlustberechnungen / Hydraulisch wirksamer Querschnitt für Verlustberechnungen / Section hydrauliquement active pour les calculs des pertes de charge';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hydr_geom_relation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydr_geom_relation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydr_geom_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_hydr_geom_relation
@@ -2125,14 +1965,8 @@ COMMENT ON COLUMN qgep.od_mechanical_pretreatment.kind IS 'yyy_Arten der mechani
 COMMENT ON COLUMN qgep.od_mechanical_pretreatment.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_mechanical_pretreatment.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_mechanical_pretreatment ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_mechanical_pretreatment.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_mechanical_pretreatment
@@ -2164,14 +1998,8 @@ COMMENT ON COLUMN qgep.od_retention_body.remark IS 'General remarks / Allgemeine
 COMMENT ON COLUMN qgep.od_retention_body.volume IS 'yyy_Nutzbares Volumen des Retentionskörpers / Nutzbares Volumen des Retentionskörpers / Volume effectif du volume de rétention';
  ALTER TABLE qgep.od_retention_body ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_retention_body.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_retention_body ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_retention_body.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_retention_body ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_retention_body ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_retention_body.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_retention_body ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_retention_body.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_retention_body
@@ -2203,14 +2031,8 @@ COMMENT ON COLUMN qgep.od_overflow_characteristic.overflow_characteristic_digita
 COMMENT ON COLUMN qgep.od_overflow_characteristic.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_overflow_characteristic.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow_characteristic.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_overflow_characteristic.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow_characteristic ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_overflow_characteristic.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_overflow_characteristic
@@ -2240,14 +2062,8 @@ COMMENT ON COLUMN qgep.od_hq_relation.flow IS 'Flow (Q2) in direction of WWTP / 
 COMMENT ON COLUMN qgep.od_hq_relation.flow_from IS 'yyy_Zufluss (Q1) / Zufluss (Q1) / Débit d’entrée  (Q1)';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hq_relation.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_hq_relation ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_hq_relation.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_hq_relation ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_hq_relation.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hq_relation.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_hq_relation
@@ -2277,14 +2093,8 @@ COMMENT ON COLUMN qgep.od_structure_part.remark IS 'General remarks / Allgemeine
 COMMENT ON COLUMN qgep.od_structure_part.renovation_demand IS 'yyy_Zustandsinformation zum structure_part / Zustandsinformation zum Bauwerksteil / Information sur l''état de l''élément de l''ouvrage';
  ALTER TABLE qgep.od_structure_part ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_structure_part.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_structure_part ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_structure_part.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_structure_part ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_structure_part ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_structure_part.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_structure_part ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_structure_part.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_structure_part
@@ -2504,14 +2314,8 @@ COMMENT ON COLUMN qgep.od_connection_object.remark IS 'General remarks / Allgeme
 COMMENT ON COLUMN qgep.od_connection_object.sewer_infiltration_water_production IS 'yyy_Durchschnittlicher Fremdwasseranfall für Fremdwasserquellen wie Laufbrunnen oder Reservoirüberlauf / Durchschnittlicher Fremdwasseranfall für Fremdwasserquellen wie Laufbrunnen oder Reservoirüberlauf / Apport moyen d''eaux claires parasites (ECP) par des sources d''ECP, telles que fontaines ou trops-plein de réservoirs';
  ALTER TABLE qgep.od_connection_object ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_connection_object.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_connection_object ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_connection_object.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_connection_object ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_connection_object ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_connection_object.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_connection_object ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_connection_object.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_connection_object
@@ -2655,14 +2459,8 @@ CREATE INDEX in_qgep_od_hazard_source_situation_geometry ON qgep.od_hazard_sourc
 COMMENT ON COLUMN qgep.od_hazard_source.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hazard_source.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_hazard_source ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_hazard_source.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_hazard_source ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_hazard_source.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hazard_source ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hazard_source.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_hazard_source
@@ -2699,14 +2497,8 @@ CREATE INDEX in_qgep_od_accident_situation_geometry ON qgep.od_accident USING gi
 COMMENT ON COLUMN qgep.od_accident.situation_geometry IS 'National position coordinates (North, East) of accident / Landeskoordinate Ost/Nord des Unfallortes / Coordonnées nationales Est/Nord du lieu d''accident';
  ALTER TABLE qgep.od_accident ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_accident.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_accident ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_accident.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_accident ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_accident.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_accident ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_accident.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_accident ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_accident.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_accident
@@ -2738,14 +2530,8 @@ COMMENT ON COLUMN qgep.od_substance.remark IS 'General remarks / Allgemeine Beme
 COMMENT ON COLUMN qgep.od_substance.stockage IS 'yyy_Art der Lagerung der abwassergefährdenden Stoffe / Art der Lagerung der abwassergefährdenden Stoffe / Genre de stockage des substances dangereuses';
  ALTER TABLE qgep.od_substance ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_substance.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_substance ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_substance.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_substance ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_substance.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_substance ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_substance.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_substance ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_substance.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_substance
@@ -2826,14 +2612,8 @@ COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_current IS 'yyy_
 COMMENT ON COLUMN qgep.od_catchment_area.waste_water_production_planned IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Schmutzabwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit moyen prévu des eaux usées rejetées dans les canalisations d’eaux usées ou d''eaux mixtes.';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_catchment_area.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_catchment_area ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_catchment_area ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_catchment_area.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_catchment_area ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_catchment_area.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_catchment_area
@@ -2869,14 +2649,8 @@ COMMENT ON COLUMN qgep.od_surface_runoff_parameters.surface_storage IS 'Loss by 
 COMMENT ON COLUMN qgep.od_surface_runoff_parameters.wetting_loss IS 'Loss of wetting plantes and surface during rainfall / Verlust durch Haftung des Niederschlages an Pflanzen- und andere Oberfläche / Pertes par rétention des précipitations sur la végétation et autres surfaces';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_surface_runoff_parameters.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_surface_runoff_parameters ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_surface_runoff_parameters.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_surface_runoff_parameters
@@ -2913,14 +2687,8 @@ CREATE INDEX in_qgep_od_measuring_point_situation_geometry ON qgep.od_measuring_
 COMMENT ON COLUMN qgep.od_measuring_point.situation_geometry IS 'National position coordinates (East, North) / Landeskoordinate Ost/Nord / Coordonnées nationales Est/Nord';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_measuring_point.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_measuring_point ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_point.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_measuring_point ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_measuring_point.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_point ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measuring_point.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_measuring_point
@@ -2954,14 +2722,8 @@ COMMENT ON COLUMN qgep.od_measuring_device.remark IS 'General remarks / Allgemei
 COMMENT ON COLUMN qgep.od_measuring_device.serial_number IS '';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_measuring_device.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_measuring_device ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_device.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_measuring_device ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_measuring_device.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measuring_device ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measuring_device.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_measuring_device
@@ -2993,14 +2755,8 @@ COMMENT ON COLUMN qgep.od_measurement_series.kind IS 'Type of measurment series 
 COMMENT ON COLUMN qgep.od_measurement_series.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_measurement_series.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_measurement_series ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_series.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_measurement_series ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_measurement_series.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_series ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measurement_series.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_measurement_series
@@ -3036,14 +2792,8 @@ COMMENT ON COLUMN qgep.od_measurement_result.time IS 'Date and time at beginning
 COMMENT ON COLUMN qgep.od_measurement_result.value IS 'yyy_Gemessene Grösse / Gemessene Grösse / Valeur mesurée';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_measurement_result.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_measurement_result ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_result.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_measurement_result ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_measurement_result.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_measurement_result ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_measurement_result.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_measurement_result
@@ -3091,14 +2841,8 @@ COMMENT ON COLUMN qgep.od_overflow.signal_transmission IS 'Signal or data transf
 COMMENT ON COLUMN qgep.od_overflow.subsidies IS 'yyy_Staats- und Bundesbeiträge / Staats- und Bundesbeiträge / Contributions des cantons et de la confédération';
  ALTER TABLE qgep.od_overflow ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_overflow.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_overflow ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_overflow ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_overflow.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_overflow ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_overflow.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_overflow ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_overflow.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_overflow
@@ -3150,14 +2894,8 @@ COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current I
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.throttle_unit_opening_current_optimized IS 'yyy_Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Folgende Werte sind anzugeben: Leapingwehr: Schrägdistanz der Blech- resp. Bodenöffnung. Drosselstrecke: keine zusätzlichen Angaben. Schieber / Schütz: lichte Höhe der Öffnung (ab Sohle bis UK Schieberplatte, tiefster Punkt). Abflussregulator: keine zusätzlichen Angaben. Pumpe: zusätzlich in Stammkarte Pumpwerk erfassen / Les valeurs suivantes doivent être indiquées: Leaping weir: Longueur ouverture de fond, Cond. d’étranglement : aucune indication suppl., Vanne : hauteur max de l’ouverture (du radier jusqu’au bord inférieur plaque, point le plus bas), Régulateur de débit : aucune indication suppl., Pompe : saisir fiche technique STAP';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_throttle_shut_off_unit ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_throttle_shut_off_unit.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_throttle_shut_off_unit
@@ -3314,14 +3052,8 @@ COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.remark IS ' / Allgemeine
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.status IS 'yyy_Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Planungszustand der Hydraulischen Kennwerte (zwingend). Ueberlaufcharakteristik und Gesamteinzugsgebiet kann für verschiedene Stati gebildet werden und leitet sich aus dem Status der Hydr_Kennwerte ab. / Etat prévu des caractéristiques hydrauliques (obligatoire). Les caractéristiques de déversement et le bassin versant global peuvent être représentés à différents états et se laissent déduire à partir de l’attribut PARAMETRES_HYDR';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_hydraulic_characteristic_data ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_hydraulic_characteristic_data.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_hydraulic_characteristic_data
@@ -5160,10 +4892,6 @@ COMMENT ON COLUMN qgep.od_wastewater_structure_text.textpos_geometry IS '';
 COMMENT ON COLUMN qgep.od_wastewater_structure_text.textvali IS '';
  ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_wastewater_structure_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_wastewater_structure_text
@@ -5202,10 +4930,6 @@ COMMENT ON COLUMN qgep.od_reach_text.textpos_geometry IS '';
 COMMENT ON COLUMN qgep.od_reach_text.textvali IS '';
  ALTER TABLE qgep.od_reach_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_reach_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_reach_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_reach_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_reach_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_reach_text
@@ -5244,10 +4968,6 @@ COMMENT ON COLUMN qgep.od_catchment_area_text.textpos_geometry IS '';
 COMMENT ON COLUMN qgep.od_catchment_area_text.textvali IS '';
  ALTER TABLE qgep.od_catchment_area_text ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_catchment_area_text.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_catchment_area_text ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_catchment_area_text.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_catchment_area_text
@@ -5288,14 +5008,8 @@ COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolpos_geometry IS '';
 COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.symbolvali IS '';
  ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN dataowner varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.dataowner IS 'Metaattribute dataowner - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
- ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN provider varchar(80) ;
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.provider IS 'Metaattribute provider - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
  ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_dataowner varchar(16);
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
  ALTER TABLE qgep.od_wastewater_structure_symbol ADD COLUMN fk_provider varchar (16);
-COMMENT ON COLUMN qgep.od_wastewater_structure_symbol.provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
 -------
 CREATE TRIGGER
 update_last_modified_wastewater_structure_symbol
