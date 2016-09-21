@@ -3,6 +3,7 @@ import unittest
 import psycopg2
 import psycopg2.extras
 import decimal
+import copy
 
 from utils import DbTestBase
 
@@ -68,16 +69,19 @@ class TestViews(unittest.TestCase, DbTestBase):
 
         self.update_check('vw_qgep_reach', row, obj_id)
 
-    def test_vw_qgep_cover(self):
+    def test_vw_qgep_wastewater_structure(self):
         row = {
                 'identifier': '20',
                 'ws_type': 'manhole',
-                'situation_geometry': '01010000201555000000000000006AE840000000000088D340',
+                'situation_geometry': '01010000201555000000000000006AE840000000000088D340', # POINT(50000 20000)
                 'cover_material': 5355,
                 'backflow_level': decimal.Decimal('100.000')
         }
 
-        obj_id = self.insert_check('vw_qgep_cover', row)
+        expected_row = copy.deepcopy(row)
+        expected_row['situation_geometry'] = '01040000201555000001000000010100000000000000006AE840000000000088D340' # MULTIPOINT(50000 20000)
+
+        obj_id = self.insert_check('vw_qgep_wastewater_structure', row, expected_row)
 
         row = {
                 'identifier': '10',
@@ -86,7 +90,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 'upper_elevation': decimal.Decimal('405.000'),
         }
 
-        self.update_check('vw_qgep_cover', row, obj_id)
+        self.update_check('vw_qgep_wastewater_structure', row, obj_id)
 
         cur = self.cursor()
 

@@ -57,9 +57,9 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'ws_type': 'manhole'
         }
 
-        obj_id = self.insert_check('vw_qgep_cover', row)
+        obj_id = self.insert_check('vw_qgep_wastewater_structure', row)
 
-        row = self.select('vw_qgep_cover', obj_id)
+        row = self.select('vw_qgep_wastewater_structure', obj_id)
         row = self.select('od_structure_part', row['co_obj_id'])
 
         identifier = row['identifier']
