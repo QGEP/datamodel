@@ -209,8 +209,8 @@ COMMENT ON COLUMN qgep.od_file.identifier IS 'yyy_Name der Datei mit Dateiendung
 COMMENT ON COLUMN qgep.od_file.kind IS 'yyy_Beschreibt die Art der Datei. Für analoge Videos auf Bändern ist der Typ "Video" einzusetzen. Die Bezeichnung wird dann gleich gesetzt wie die Bezeichnung des Videobandes. / Beschreibt die Art der Datei. Für analoge Videos auf Bändern ist der Typ "Video" einzusetzen. Die Bezeichnung wird dann gleich gesetzt wie die Bezeichnung des Videobandes. / Décrit le type de fichier. Pour les vidéos analo-giques sur bandes, le type « vidéo » doit être entré. La désignation sera ensuite la même que celle de la bande vidéo.';
  ALTER TABLE qgep.od_file ADD COLUMN object  varchar(41) ;
 COMMENT ON COLUMN qgep.od_file.object IS 'yyy_Objekt-ID (OBJ_ID) des Datensatzes zu dem die Datei gehört / Objekt-ID (OBJ_ID) des Datensatzes zu dem die Datei gehört / Identification de l’ensemble de données auquel le fichier appartient (OBJ_ID)';
- ALTER TABLE qgep.od_file ADD COLUMN relativ_path  varchar(200) ;
-COMMENT ON COLUMN qgep.od_file.relativ_path IS 'yyy_Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Accès relatif supplémentaire à l’emplacement du fichier sur le support de données. P. ex. DVD_01';
+ ALTER TABLE qgep.od_file ADD COLUMN path_relative varchar(200) ;
+COMMENT ON COLUMN qgep.od_file.path_relative IS 'yyy_Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Accès relatif supplémentaire à l’emplacement du fichier sur le support de données. P. ex. DVD_01';
  ALTER TABLE qgep.od_file ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep.od_file.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep.od_file ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
