@@ -1,29 +1,28 @@
-﻿-- View: vw_qgep_cover
-
---- 27.4.2016 Changed detail_geometry_3d_geometry to detail_geometry3d_geometry - adaption to new datamodel 20160426
+﻿-- View: vw_qgep_wastewater_structure
 
 BEGIN TRANSACTION;
 
-DROP VIEW IF EXISTS qgep.vw_qgep_cover;
+DROP VIEW IF EXISTS qgep.vw_qgep_wastewater_structure;
 
-CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
- SELECT ws.obj_id,
-    co.brand,
-    co.cover_shape,
-    co.diameter,
-    co.fastening,
-    co.level,
-    co.material AS cover_material,
-    co.positional_accuracy,
-    co.situation_geometry,
-    co.sludge_bucket,
-    co.venting,
-    co.identifier AS co_identifier,
-    co.remark,
-    co.renovation_demand,
-    co.last_modification,
-    co.fk_dataowner,
-    co.fk_provider,
+CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
+ SELECT DISTINCT ON(ws.obj_id)
+    ws.obj_id,
+    main_co.brand,
+    main_co.cover_shape,
+    main_co.diameter,
+    main_co.fastening,
+    main_co.level,
+    main_co.material AS cover_material,
+    main_co.positional_accuracy,
+    ST_Collect(co.situation_geometry) OVER (PARTITION BY ws.obj_id) AS situation_geometry,
+    main_co.sludge_bucket,
+    main_co.venting,
+    main_co_sp.identifier AS co_identifier,
+    main_co_sp.remark,
+    main_co_sp.renovation_demand,
+    main_co_sp.last_modification,
+    ws.fk_dataowner,
+    ws.fk_provider,
 
     CASE
       WHEN mh.obj_id IS NOT NULL THEN 'manhole'
@@ -99,18 +98,21 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_cover AS
     wn.fk_dataowner AS wn_fk_dataowner,
     wn.fk_provider AS wn_fk_provider
 
-   FROM qgep.vw_cover co
-     LEFT JOIN qgep.od_wastewater_structure ws ON ws.obj_id = co.fk_wastewater_structure
-     LEFT JOIN qgep.od_manhole mh ON mh.obj_id = co.fk_wastewater_structure
-     LEFT JOIN qgep.od_special_structure ss ON ss.obj_id = co.fk_wastewater_structure
-     LEFT JOIN qgep.od_discharge_point dp ON dp.obj_id = co.fk_wastewater_structure
-     LEFT JOIN qgep.od_infiltration_installation ii ON ii.obj_id = co.fk_wastewater_structure
+   FROM qgep.od_wastewater_structure ws
+     RIGHT JOIN qgep.od_structure_part co_sp ON ws.obj_id = co_sp.fk_wastewater_structure
+     LEFT JOIN qgep.od_cover co ON co.obj_id = co_sp.obj_id
+     LEFT JOIN qgep.od_cover main_co ON main_co.obj_id = ws.fk_main_cover
+     LEFT JOIN qgep.od_structure_part main_co_sp ON main_co_sp.obj_id = ws.fk_main_cover
+     LEFT JOIN qgep.od_manhole mh ON mh.obj_id = ws.obj_id
+     LEFT JOIN qgep.od_special_structure ss ON ss.obj_id = ws.obj_id
+     LEFT JOIN qgep.od_discharge_point dp ON dp.obj_id = ws.obj_id
+     LEFT JOIN qgep.od_infiltration_installation ii ON ii.obj_id = ws.obj_id
 
      LEFT JOIN qgep.vw_wastewater_node wn ON wn.fk_wastewater_structure = ws.obj_id;
 
 -- INSERT function
 
-CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_INSERT()
+CREATE OR REPLACE FUNCTION qgep.vw_qgep_wastewater_structure_INSERT()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -344,21 +346,28 @@ BEGIN
     , NEW.fk_provider
     , NEW.obj_id
   );
+
+  UPDATE qgep.od_wastewater_structure
+  SET fk_main_cover = NEW.co_obj_id
+  WHERE obj_id = NEW.obj_id;
+  
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS vw_qgep_cover_ON_INSERT ON qgep.vw_qgep_cover;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_INSERT ON qgep.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_cover_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qgep_cover
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_INSERT();
+CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qgep_wastewater_structure
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_wastewater_structure_INSERT();
 
 /**************************************************************
  * UPDATE
  *************************************************************/
-CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_UPDATE()
+CREATE OR REPLACE FUNCTION qgep.vw_qgep_wastewater_structure_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
+  dx float;
+  dy float;
 BEGIN
     UPDATE qgep.od_cover
       SET
@@ -370,10 +379,9 @@ BEGIN
         level = new.level,
         material = new.cover_material,
         positional_accuracy = new.positional_accuracy,
-        situation_geometry = new.situation_geometry,
         sludge_bucket = new.sludge_bucket,
         venting = new.venting
-    WHERE od_cover.obj_id::text = old.co_obj_id::text;
+    WHERE od_cover.obj_id::text = OLD.co_obj_id::text;
 
     UPDATE qgep.od_structure_part
       SET
@@ -383,7 +391,7 @@ BEGIN
         last_modification = new.last_modification,
         fk_dataowner = new.fk_dataowner,
         fk_provider = new.fk_provider
-    WHERE od_structure_part.obj_id::text = old.obj_id::text;
+    WHERE od_structure_part.obj_id::text = OLD.co_obj_id::text;
 
     UPDATE qgep.od_wastewater_structure
       SET
@@ -408,7 +416,7 @@ BEGIN
         year_of_replacement = NEW.year_of_replacement,
         fk_owner = NEW.fk_owner,
         fk_operator = NEW.fk_operator
-     WHERE od_wastewater_structure.obj_id::text = old.obj_id::text;
+     WHERE od_wastewater_structure.obj_id::text = OLD.obj_id::text;
 
   IF OLD.ws_type <> NEW.ws_type THEN
     CASE
@@ -482,12 +490,24 @@ BEGIN
 
   -- Cover geometry has been moved
   IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
+    dx = ST_XMin(NEW.situation_geometry) - ST_XMin(OLD.situation_geometry);
+    dy = ST_YMin(NEW.situation_geometry) - ST_YMin(OLD.situation_geometry);
+  
     -- Move wastewater node as well
     UPDATE qgep.od_wastewater_node WN
-    SET situation_geometry = ST_TRANSLATE(WN.situation_geometry, ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+    SET situation_geometry = ST_TRANSLATE(WN.situation_geometry, dx, dy )
     WHERE obj_id IN 
     (
       SELECT obj_id FROM qgep.od_wastewater_networkelement
+      WHERE fk_wastewater_structure = NEW.obj_id
+    );
+
+    -- Move covers
+    UPDATE qgep.od_cover CO
+    SET situation_geometry = ST_TRANSLATE(CO.situation_geometry, dx, dy )
+    WHERE obj_id IN
+    (
+      SELECT obj_id FROM qgep.od_structure_part
       WHERE fk_wastewater_structure = NEW.obj_id
     );
 
@@ -497,7 +517,7 @@ BEGIN
       ST_ForceCurve (ST_SetPoint(
         ST_CurveToLine (RE.progression_geometry ),
         0, -- SetPoint index is 0 based, PointN index is 1 based.
-        ST_TRANSLATE(ST_PointN(RE.progression_geometry, 1), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+        ST_TRANSLATE(ST_PointN(RE.progression_geometry, 1), dx, dy )
       ) )
     WHERE fk_reach_point_from IN 
     (
@@ -511,7 +531,7 @@ BEGIN
       ST_ForceCurve( ST_SetPoint(
         ST_CurveToLine( RE.progression_geometry ),
         ST_NumPoints(RE.progression_geometry) - 1,
-        ST_TRANSLATE(ST_EndPoint(RE.progression_geometry), ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry), ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry ) )
+        ST_TRANSLATE(ST_EndPoint(RE.progression_geometry), dx, dy )
       ) )
     WHERE fk_reach_point_to IN 
     (
@@ -524,17 +544,17 @@ BEGIN
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS vw_qgep_cover_ON_UPDATE ON qgep.vw_qgep_cover;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_cover_ON_UPDATE INSTEAD OF UPDATE ON qgep.vw_qgep_cover
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_UPDATE();
+CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep.vw_qgep_wastewater_structure
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_wastewater_structure_UPDATE();
 
 
 /**************************************************************
  * DELETE
  *************************************************************/
 
-CREATE OR REPLACE FUNCTION qgep.vw_qgep_cover_DELETE()
+CREATE OR REPLACE FUNCTION qgep.vw_qgep_wastewater_structure_DELETE()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -543,17 +563,17 @@ BEGIN
 RETURN OLD;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS vw_qgep_cover_ON_DELETE ON qgep.vw_qgep_cover;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_DELETE ON qgep.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_cover_ON_DELETE INSTEAD OF DELETE ON qgep.vw_qgep_cover
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_cover_DELETE();
+CREATE TRIGGER vw_qgep_wastewater_structure_ON_DELETE INSTEAD OF DELETE ON qgep.vw_qgep_wastewater_structure
+  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_wastewater_structure_DELETE();
 
 /**************************************************************
  * DEFAULT VALUES
  *************************************************************/
 
-ALTER VIEW qgep.vw_qgep_cover ALTER obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure');
-
+ALTER VIEW qgep.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep.generate_oid('od_wastewater_structure');
+ALTER VIEW qgep.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep.generate_oid('od_structure_part');
 
 
 END TRANSACTION;

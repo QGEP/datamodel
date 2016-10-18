@@ -48,11 +48,14 @@ class DbTestBase:
             "DELETE FROM qgep.{table} WHERE obj_id=%s".format(table = table), [obj_id]
         )
 
-    def insert_check(self, table, row):
+    def insert_check(self, table, row, expected_row=None):
         obj_id = self.insert(table, row)
         result = self.select(table, obj_id)
 
         assert result, obj_id
+
+        if expected_row:
+            row = expected_row
 
         self.check_result(row, result, table, 'insert')
 

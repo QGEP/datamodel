@@ -26,10 +26,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'ws_type': 'manhole'
         }
 
-        obj_id = self.insert_check('vw_qgep_cover', row)
+        obj_id = self.insert_check('vw_qgep_wastewater_structure', row)
 
         # Get the new cover
-        row = self.select('vw_qgep_cover', obj_id)
+        row = self.select('vw_qgep_wastewater_structure', obj_id)
         row = self.select('vw_cover', row['co_obj_id'])
 
         self.delete('od_wastewater_structure', row['fk_wastewater_structure'])
