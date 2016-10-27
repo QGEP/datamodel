@@ -7,10 +7,10 @@ BEGIN;
 --- CREATE TABLE qgep.is_value_list_base exists already
 --- Add Columns for it and ro
 
-ALTER TABLE qgep.is_value_list_base ALTER COLUMN value_it character varying (50);
-ALTER TABLE qgep.is_value_list_base ALTER COLUMN value_ro character varying (50);
-ALTER TABLE qgep.is_value_list_base ALTER COLUMN abbr_it character varying (3);
-ALTER TABLE qgep.is_value_list_base ALTER COLUMN abbr_ro character varying (3);
+ALTER TABLE qgep.is_value_list_base ADD COLUMN value_it character varying (50);
+ALTER TABLE qgep.is_value_list_base ADD COLUMN value_ro character varying (50);
+ALTER TABLE qgep.is_value_list_base ADD COLUMN abbr_it character varying (3);
+ALTER TABLE qgep.is_value_list_base ADD COLUMN abbr_ro character varying (3);
 
 -------
 CREATE TABLE qgep.od_examination
