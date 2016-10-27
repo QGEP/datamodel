@@ -249,8 +249,8 @@ ALTER TABLE qgep.vl_examination_weather ADD CONSTRAINT pkey_qgep_vl_examination_
  ALTER TABLE qgep.od_examination ADD CONSTRAINT fkey_vl_examination_weather FOREIGN KEY (weather)
  REFERENCES qgep.vl_examination_weather (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_examination ADD COLUMN fk_reach_point varchar (16);
-ALTER TABLE qgep.od_examination ADD CONSTRAINT rel_examination_reach_point FOREIGN KEY (fk_reach_point) REFERENCES qgep.od_reach_point(obj_id) ON UPDATE CASCADE ON DELETE set null;
+-- ALTER TABLE qgep.od_examination ADD COLUMN fk_reach_point varchar (16);
+-- ALTER TABLE qgep.od_examination ADD CONSTRAINT rel_examination_reach_point FOREIGN KEY (fk_reach_point) REFERENCES qgep.od_reach_point(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_damage_connection () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_damage_connection ADD CONSTRAINT pkey_qgep_vl_damage_connection_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_damage_connection (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8498,8498,'yes','ja','oui', '', '', '', '', '', '', '', 'true');
