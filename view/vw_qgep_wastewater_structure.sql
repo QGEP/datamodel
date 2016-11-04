@@ -296,7 +296,7 @@ BEGIN
       NEW.wn_obj_id
     , NEW.backflow_level
     , NEW.bottom_level
-    , NEW.situation_geometry
+    , ST_GeometryN( NEW.situation_geometry, 1 )
     , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
     , NEW.wn_remark
     , NOW()
@@ -335,7 +335,7 @@ BEGIN
     , NEW.level
     , NEW.cover_material
     , NEW.positional_accuracy
-    , NEW.situation_geometry
+    , ST_GeometryN( NEW.situation_geometry, 1 )
     , NEW.sludge_bucket
     , NEW.venting
     , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
