@@ -488,6 +488,18 @@ BEGIN
       WHERE obj_id = OLD.obj_id;
   END CASE;
 
+  UPDATE qgep.od_wastewater_node
+    SET
+    backflow_level = NEW.backflow_level
+    , bottom_level = NEW.bottom_level
+    -- , situation_geometry = NEW.situation_geometry -- Geometry is handled separately below
+    , identifier = NEW.identifier
+    , remark = NEW.remark
+    -- , last_modification -- Handled by triggers
+    , fk_dataowner = NEW.fk_dataowner
+    , fk_provider = NEW.fk_provider
+    WHERE fk_wastewater_structure = NEW.obj_id;
+
   -- Cover geometry has been moved
   IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
     dx = ST_XMin(NEW.situation_geometry) - ST_XMin(OLD.situation_geometry);
