@@ -488,7 +488,7 @@ BEGIN
       WHERE obj_id = OLD.obj_id;
   END CASE;
 
-  UPDATE qgep.od_wastewater_node
+  UPDATE qgep.vw_wastewater_node NO1
     SET
     backflow_level = NEW.backflow_level
     , bottom_level = NEW.bottom_level
@@ -498,7 +498,13 @@ BEGIN
     -- , last_modification -- Handled by triggers
     , fk_dataowner = NEW.fk_dataowner
     , fk_provider = NEW.fk_provider
-    WHERE fk_wastewater_structure = NEW.obj_id;
+    -- Only update if there is a single wastewater node on this structure
+    WHERE fk_wastewater_structure = NEW.obj_id AND
+    (
+      SELECT COUNT(*)
+      FROM qgep.vw_wastewater_node NO2
+      WHERE NO2.fk_wastewater_structure = NO1.fk_wastewater_structure
+    ) = 1;
 
   -- Cover geometry has been moved
   IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
