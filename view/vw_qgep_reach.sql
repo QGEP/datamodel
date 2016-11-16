@@ -429,3 +429,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep.vw_qgep_reac
   DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_from_obj_id;
   DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_to_obj_id;
 );
+
+ALTER VIEW qgep.vw_qgep_reach ALTER obj_id SET DEFAULT qgep.generate_oid('od_reach');
+
+ALTER VIEW qgep.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
+ALTER VIEW qgep.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
