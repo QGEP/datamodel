@@ -12,6 +12,9 @@ class TestTypos(unittest.TestCase):
                 for line in f:
                     self.assertNotIn('dammage', line)
                     self.assertNotIn('relativ_path', line)
+                    self.assertNotIn('AddGeometryColumn', line,
+                            msg="""AddGeometryColumn should no longer be used. Use
+                            ALTER TABLE syntax instead""")
 
 if __name__ == '__main__':
     unittest.main()
