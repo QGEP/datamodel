@@ -144,45 +144,38 @@ BEGIN
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
+--------------------------------------------------------
+-- UPDATE wastewater structure depth
+-- Argument:
+--  * obj_id of wastewater structure
+--  * all True to update all
+--------------------------------------------------------
 
+CREATE OR REPLACE FUNCTION qgep.update_depth(_obj_id text, _all boolean default false)
+  RETURNS VOID AS
+  $BODY$
+  DECLARE
+  myrec record;
 
+BEGIN
+  UPDATE qgep.od_wastewater_structure ws
+  SET _depth = depth
+  FROM (
+    SELECT WS.obj_id, CO.level - MIN(LEAST(NO.bottom_level, RP.level)) as depth
+      FROM qgep.od_wastewater_structure WS
+      LEFT JOIN qgep.od_cover CO on WS.fk_main_cover = CO.obj_id
+      LEFT JOIN qgep.od_wastewater_networkelement NE ON NE.fk_wastewater_structure = WS.obj_id
+      RIGHT JOIN qgep.od_wastewater_node NO on NO.obj_id = NE.obj_id
+      LEFT JOIN qgep.od_reach_point RP ON RP.fk_wastewater_networkelement = NE.obj_id
+      WHERE _all OR WS.obj_id = _obj_id
+      GROUP BY WS.obj_id, CO.level
+  ) ws_depths
+  where ws.obj_id = ws_depths.obj_id;
+END
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$BODY$
+LANGUAGE plpgsql
+VOLATILE;
 
 
 
@@ -254,7 +247,7 @@ VOLATILE;
 -- ON COVER CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.ws_label_update_by_cover()
+CREATE OR REPLACE FUNCTION qgep.on_cover_change()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -275,6 +268,8 @@ BEGIN
   WHERE obj_id = co_obj_id;
 
   EXECUTE qgep.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
+  EXECUTE qgep.update_depth(affected_sp.fk_wastewater_structure);
+  
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -286,7 +281,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON STRUCTURE PART / NETWORKELEMENT CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.ws_label_update_by_structure_part_networkelement()
+CREATE OR REPLACE FUNCTION qgep.on_structure_part_change_networkelement()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -317,7 +312,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON WASTEWATER STRUCTURE CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.ws_label_update_by_wastewater_structure()
+CREATE OR REPLACE FUNCTION qgep.on_wastewater_structure_update()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -330,6 +325,11 @@ BEGIN
   _ws_obj_id = OLD.obj_id;
   SELECT qgep.update_wastewater_structure_label(_ws_obj_id) INTO NEW._label;
 
+  IF OLD.fk_main_cover != NEW.fk_main_cover THEN
+    EXECUTE qgep.update_depth(_ws_obj_id);
+  END IF;
+
+
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -338,7 +338,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON REACH CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.ws_label_update_by_reach()
+CREATE OR REPLACE FUNCTION qgep.on_reach_change()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -363,6 +363,7 @@ BEGIN
       WHERE rp.obj_id = ANY ( rp_obj_ids )
   LOOP
     EXECUTE qgep.update_wastewater_structure_label(_ws_obj_id);
+    EXECUTE qgep.update_depth(_ws_obj_id);
   END LOOP;
 
   RETURN NEW;
@@ -373,7 +374,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON REACH POINT CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.ws_label_update_by_reach_point()
+CREATE OR REPLACE FUNCTION qgep.on_reach_point_update()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -398,6 +399,7 @@ BEGIN
   LEFT JOIN qgep.od_reach_point rp ON ne.obj_id = NEW.fk_wastewater_networkelement;
 
   EXECUTE qgep.update_wastewater_structure_label(_ws_obj_id);
+  EXECUTE qgep.update_depth(_ws_obj_id);
 
   RETURN NEW;
 END; $BODY$
@@ -410,12 +412,12 @@ LANGUAGE plpgsql VOLATILE;
 
 CREATE OR REPLACE FUNCTION qgep.drop_symbology_triggers() RETURNS VOID AS $$
 BEGIN
-  DROP TRIGGER IF EXISTS ws_label_update_by_reach_point ON qgep.od_reach_point;
-  DROP TRIGGER IF EXISTS ws_label_update_by_reach ON qgep.od_reach;
-  DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_structure ON qgep.od_wastewater_structure;
+  DROP TRIGGER IF EXISTS on_reach_point_update ON qgep.od_reach_point;
+  DROP TRIGGER IF EXISTS on_reach_change ON qgep.od_reach;
+  DROP TRIGGER IF EXISTS on_wastewater_structure_update ON qgep.od_wastewater_structure;
   DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_networkelement ON qgep.od_wastewater_networkelement;
-  DROP TRIGGER IF EXISTS ws_label_update_by_structure_part ON qgep.od_structure_part;
-  DROP TRIGGER IF EXISTS ws_label_update_by_cover ON qgep.od_cover;
+  DROP TRIGGER IF EXISTS on_structure_part_change ON qgep.od_structure_part;
+  DROP TRIGGER IF EXISTS on_cover_change ON qgep.od_cover;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep.od_reach;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep.od_channel;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep.od_reach_point;
@@ -430,47 +432,49 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION qgep.create_symbology_triggers() RETURNS VOID AS $$
 BEGIN
   -- only update -> insert and delete are handled by reach trigger
-  CREATE TRIGGER ws_label_update_by_reach_point
+  CREATE TRIGGER on_reach_point_update
   AFTER UPDATE
     ON qgep.od_reach_point
   FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_reach_point();
+    EXECUTE PROCEDURE qgep.on_reach_point_update();
 
-  CREATE TRIGGER ws_label_update_by_reach
+  CREATE TRIGGER on_reach_change
   AFTER INSERT OR UPDATE OR DELETE
     ON qgep.od_reach
   FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_reach();
+    EXECUTE PROCEDURE qgep.on_reach_change();
 
-  CREATE TRIGGER ws_label_update_by_wastewater_structure
-  AFTER UPDATE
-    ON qgep.od_wastewater_structure
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_wastewater_structure();
-
-  CREATE TRIGGER ws_label_update_by_wastewater_networkelement
-  AFTER INSERT OR UPDATE OR DELETE
-    ON qgep.od_wastewater_networkelement
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_structure_part_networkelement();
-
-  CREATE TRIGGER ws_label_update_by_structure_part
-  AFTER INSERT OR UPDATE OR DELETE
-    ON qgep.od_structure_part
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_structure_part_networkelement();
-
-  CREATE TRIGGER ws_label_update_by_cover
-  AFTER INSERT OR UPDATE OR DELETE
-    ON qgep.od_cover
-  FOR EACH ROW
-    EXECUTE PROCEDURE qgep.ws_label_update_by_cover();
-
+    
   CREATE TRIGGER ws_symbology_update_by_reach
   AFTER INSERT OR UPDATE OR DELETE
     ON qgep.od_reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep.ws_symbology_update_by_reach();
+
+
+  CREATE TRIGGER on_wastewater_structure_update
+  AFTER UPDATE
+    ON qgep.od_wastewater_structure
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.on_wastewater_structure_update();
+
+  CREATE TRIGGER ws_label_update_by_wastewater_networkelement
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep.od_wastewater_networkelement
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_structure_part_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep.od_structure_part
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_cover_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep.od_cover
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.on_cover_change();
 
   CREATE TRIGGER ws_symbology_update_by_channel
   AFTER INSERT OR UPDATE OR DELETE
