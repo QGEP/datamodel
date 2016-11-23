@@ -434,3 +434,4 @@ ALTER VIEW qgep.vw_qgep_reach ALTER obj_id SET DEFAULT qgep.generate_oid('od_rea
 
 ALTER VIEW qgep.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
 ALTER VIEW qgep.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
+ALTER VIEW qgep.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep.generate_oid('od_channel')
