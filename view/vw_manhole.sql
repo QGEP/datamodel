@@ -9,16 +9,16 @@ CREATE OR REPLACE VIEW qgep.vw_manhole AS
 
 SELECT
    MA.obj_id
-   , MA.depth
+   , WS."_depth"
    , MA.dimension1
    , MA.dimension2
    , MA.function
    , MA.material
    , MA.surface_inflow
    , WS.accessibility
-   , WS.contract_section,
-WS.detail_geometry_geometry,
-WS.detail_geometry3d_geometry
+   , WS.contract_section
+   , WS.detail_geometry_geometry
+   , WS.detail_geometry3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -112,7 +112,6 @@ BEGIN
 
 INSERT INTO qgep.od_manhole (
              obj_id
-           , depth
            , dimension1
            , dimension2
            , function
@@ -121,7 +120,6 @@ INSERT INTO qgep.od_manhole (
            )
           VALUES (
             NEW.obj_id -- obj_id
-           , NEW.depth
            , NEW.dimension1
            , NEW.dimension2
            , NEW.function
@@ -146,8 +144,7 @@ CREATE TRIGGER vw_manhole_ON_INSERT INSTEAD OF INSERT ON qgep.vw_manhole
 CREATE OR REPLACE RULE vw_manhole_ON_UPDATE AS ON UPDATE TO qgep.vw_manhole DO INSTEAD (
 UPDATE qgep.od_manhole
   SET
-       depth = NEW.depth
-     , dimension1 = NEW.dimension1
+       dimension1 = NEW.dimension1
      , dimension2 = NEW.dimension2
      , function = NEW.function
      , material = NEW.material

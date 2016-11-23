@@ -9,16 +9,16 @@ CREATE OR REPLACE VIEW qgep.vw_discharge_point AS
 
 SELECT
    DP.obj_id
-   , DP.depth
+   , WS."_depth"
    , DP.highwater_level
    , DP.relevance
    , DP.terrain_level
    , DP.upper_elevation
    , DP.waterlevel_hydraulic
    , WS.accessibility
-   , WS.contract_section,
-WS.detail_geometry_geometry,
-WS.detail_geometry3d_geometry
+   , WS.contract_section
+   , WS.detail_geometry_geometry
+   , WS.detail_geometry3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -38,8 +38,8 @@ WS.detail_geometry3d_geometry
    , WS.fk_dataowner
    , WS.fk_provider
    , WS.last_modification
-  , WS.fk_owner
-  , WS.fk_operator
+   , WS.fk_owner
+   , WS.fk_operator
   FROM qgep.od_discharge_point DP
  LEFT JOIN qgep.od_wastewater_structure WS
  ON WS.obj_id = DP.obj_id;
@@ -112,7 +112,6 @@ BEGIN
 
 INSERT INTO qgep.od_discharge_point (
              obj_id
-           , depth
            , highwater_level
            , relevance
            , terrain_level
@@ -121,7 +120,6 @@ INSERT INTO qgep.od_discharge_point (
            )
           VALUES (
             NEW.obj_id -- obj_id
-           , NEW.depth
            , NEW.highwater_level
            , NEW.relevance
            , NEW.terrain_level
@@ -146,8 +144,7 @@ CREATE TRIGGER vw_discharge_point_ON_INSERT INSTEAD OF INSERT ON qgep.vw_dischar
 CREATE OR REPLACE RULE vw_discharge_point_ON_UPDATE AS ON UPDATE TO qgep.vw_discharge_point DO INSTEAD (
 UPDATE qgep.od_discharge_point
   SET
-       depth = NEW.depth
-     , highwater_level = NEW.highwater_level
+       highwater_level = NEW.highwater_level
      , relevance = NEW.relevance
      , terrain_level = NEW.terrain_level
      , upper_elevation = NEW.upper_elevation
@@ -158,8 +155,8 @@ UPDATE qgep.od_wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
-      , detail_geometry_geometry = NEW.detail_geometry_geometry
-      , detail_geometry3d_geometry = NEW.detail_geometry3d_geometry
+     , detail_geometry_geometry = NEW.detail_geometry_geometry
+     , detail_geometry3d_geometry = NEW.detail_geometry3d_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier
@@ -176,9 +173,9 @@ UPDATE qgep.od_wastewater_structure
      , subsidies = NEW.subsidies
      , year_of_construction = NEW.year_of_construction
      , year_of_replacement = NEW.year_of_replacement
-           , fk_dataowner = NEW.fk_dataowner
-           , fk_provider = NEW.fk_provider
-           , last_modification = NEW.last_modification
+     , fk_dataowner = NEW.fk_dataowner
+     , fk_provider = NEW.fk_provider
+     , last_modification = NEW.last_modification
      , fk_owner = NEW.fk_owner
      , fk_operator = NEW.fk_operator
   WHERE obj_id = OLD.obj_id;

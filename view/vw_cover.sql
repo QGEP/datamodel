@@ -11,7 +11,6 @@ SELECT
    CO.obj_id
    , CO.brand
    , CO.cover_shape
-   , CO.depth
    , CO.diameter
    , CO.fastening
    , CO.level
@@ -65,7 +64,6 @@ INSERT INTO qgep.od_cover (
              obj_id
            , brand
            , cover_shape
-           , depth
            , diameter
            , fastening
            , level
@@ -79,7 +77,6 @@ INSERT INTO qgep.od_cover (
             NEW.obj_id -- obj_id
            , NEW.brand
            , NEW.cover_shape
-           , NEW.depth
            , NEW.diameter
            , NEW.fastening
            , NEW.level
@@ -109,7 +106,6 @@ UPDATE qgep.od_cover
   SET
        brand = NEW.brand
      , cover_shape = NEW.cover_shape
-     , depth = NEW.depth
      , diameter = NEW.diameter
      , fastening = NEW.fastening
      , level = NEW.level

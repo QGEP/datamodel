@@ -10,15 +10,15 @@ CREATE OR REPLACE VIEW qgep.vw_special_structure AS
 SELECT
    SS.obj_id
    , SS.bypass
-   , SS.depth
+   , WS."_depth"
    , SS.emergency_spillway
    , SS.function
    , SS.stormwater_tank_arrangement
    , SS.upper_elevation
    , WS.accessibility
-   , WS.contract_section,
-WS.detail_geometry_geometry,
-WS.detail_geometry3d_geometry
+   , WS.contract_section
+   , WS.detail_geometry_geometry
+   , WS.detail_geometry3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -113,7 +113,6 @@ BEGIN
 INSERT INTO qgep.od_special_structure (
              obj_id
            , bypass
-           , depth
            , emergency_spillway
            , function
            , stormwater_tank_arrangement
@@ -122,7 +121,6 @@ INSERT INTO qgep.od_special_structure (
           VALUES (
             NEW.obj_id -- obj_id
            , NEW.bypass
-           , NEW.depth
            , NEW.emergency_spillway
            , NEW.function
            , NEW.stormwater_tank_arrangement
@@ -147,7 +145,6 @@ CREATE OR REPLACE RULE vw_special_structure_ON_UPDATE AS ON UPDATE TO qgep.vw_sp
 UPDATE qgep.od_special_structure
   SET
        bypass = NEW.bypass
-     , depth = NEW.depth
      , emergency_spillway = NEW.emergency_spillway
      , function = NEW.function
      , stormwater_tank_arrangement = NEW.stormwater_tank_arrangement

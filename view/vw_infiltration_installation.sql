@@ -11,7 +11,6 @@ SELECT
    II.obj_id
    , II.absorption_capacity
    , II.defects
-   , II.depth
    , II.dimension1
    , II.dimension2
    , II.distance_to_aquifer
@@ -24,9 +23,9 @@ SELECT
    , II.vehicle_access
    , II.watertightness
    , WS.accessibility
-   , WS.contract_section,
-WS.detail_geometry_geometry,
-WS.detail_geometry3d_geometry
+   , WS.contract_section
+   , WS.detail_geometry_geometry
+   , WS.detail_geometry3d_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -122,7 +121,6 @@ INSERT INTO qgep.od_infiltration_installation (
              obj_id
            , absorption_capacity
            , defects
-           , depth
            , dimension1
            , dimension2
            , distance_to_aquifer
@@ -139,7 +137,6 @@ INSERT INTO qgep.od_infiltration_installation (
             NEW.obj_id -- obj_id
            , NEW.absorption_capacity
            , NEW.defects
-           , NEW.depth
            , NEW.dimension1
            , NEW.dimension2
            , NEW.distance_to_aquifer
@@ -172,7 +169,6 @@ UPDATE qgep.od_infiltration_installation
   SET
        absorption_capacity = NEW.absorption_capacity
      , defects = NEW.defects
-     , depth = NEW.depth
      , dimension1 = NEW.dimension1
      , dimension2 = NEW.dimension2
      , distance_to_aquifer = NEW.distance_to_aquifer

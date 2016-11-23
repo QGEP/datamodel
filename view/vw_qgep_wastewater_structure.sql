@@ -54,8 +54,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
     ws.fk_owner,
     ws.fk_operator,
     ws._label,
-
-    COALESCE( mh.depth, ss.depth, dp.depth, ii.depth ) AS depth,
+    ws._depth,
     COALESCE( mh.dimension1, ii.dimension1 ) AS dimension1,
     COALESCE( mh.dimension2, ii.dimension2 ) AS dimension2,
     COALESCE( ss.upper_elevation, dp.upper_elevation, ii.upper_elevation ) AS upper_elevation,
@@ -180,7 +179,6 @@ BEGIN
              obj_id
            , dimension1
            , dimension2
-           , depth
            , function
            , material
            , surface_inflow
@@ -190,7 +188,6 @@ BEGIN
              NEW.obj_id
            , NEW.dimension1
            , NEW.dimension2
-           , NEW.depth
            , NEW.manhole_function
            , NEW.material
            , NEW.surface_inflow
@@ -200,7 +197,6 @@ BEGIN
     WHEN NEW.ws_type = 'special_structure' THEN
       INSERT INTO qgep.od_special_structure(
              obj_id
-           , depth
            , emergency_spillway
            , function
            , stormwater_tank_arrangement
@@ -209,7 +205,6 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.depth
            , NEW.emergency_spillway
            , NEW.special_structure_function
            , NEW.stormwater_tank_arrangement
@@ -220,7 +215,6 @@ BEGIN
     WHEN NEW.ws_type = 'discharge_point' THEN
       INSERT INTO qgep.od_discharge_point(
              obj_id
-           , depth
            , highwater_level
            , relevance
            , terrain_level
@@ -230,7 +224,6 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.depth
            , NEW.highwater_level
            , NEW.relevance
            , NEW.terrain_level
@@ -244,7 +237,6 @@ BEGIN
              obj_id
            , absorption_capacity
            , defects
-           , depth
            , dimension1
            , dimension2
            , distance_to_aquifer
@@ -262,7 +254,6 @@ BEGIN
              NEW.obj_id
            , NEW.absorption_capacity
            , NEW.defects
-           , NEW.depth
            , NEW.dimension1
            , NEW.dimension2
            , NEW.distance_to_aquifer
@@ -373,7 +364,6 @@ BEGIN
       SET
         brand = NEW.brand,
         cover_shape = new.cover_shape,
-        depth = new.depth,
         diameter = new.diameter,
         fastening = new.fastening,
         level = new.level,
@@ -438,7 +428,6 @@ BEGIN
     WHEN NEW.ws_type = 'manhole' THEN
       UPDATE qgep.od_manhole
       SET
-        depth = NEW.depth,
         dimension1 = NEW.dimension1,
         dimension2 = NEW.dimension2,
         function = NEW.manhole_function,
@@ -450,7 +439,6 @@ BEGIN
       UPDATE qgep.od_special_structure
       SET
         bypass = NEW.bypass,
-        depth = NEW.depth,
         emergency_spillway = NEW.emergency_spillway,
         function = NEW.special_structure_function,
         stormwater_tank_arrangement = NEW.stormwater_tank_arrangement,
@@ -460,7 +448,6 @@ BEGIN
     WHEN NEW.ws_type = 'discharge_point' THEN
       UPDATE qgep.od_discharge_point
       SET
-        depth = NEW.depth,
         highwater_level = NEW.highwater_level,
         relevance = NEW.relevance,
         terrain_level = NEW.terrain_level,
@@ -473,7 +460,6 @@ BEGIN
       SET
         absorption_capacity = NEW.absorption_capacity,
         defects = NEW.defects,
-        depth = NEW.depth,
         dimension1 = NEW.dimension1,
         dimension2 = NEW.dimension2,
         distance_to_aquifer = NEW.distance_to_aquifer,
