@@ -32,7 +32,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
       ELSE 'unknown'
     END AS ws_type,
 
-    co.obj_id as co_obj_id,
+    main_co.obj_id as co_obj_id,
     ws.identifier as identifier,
     ws.accessibility,
     ws.contract_section,
