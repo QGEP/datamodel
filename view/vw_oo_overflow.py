@@ -12,7 +12,10 @@ if len(sys.argv) > 1:
 else:
 	pg_service = 'pg_qgep'
 	
-	
+if len(sys.argv) > 2:
+	srid = sys.argv[2]
+else:
+	srid = 'pg_qgep'	
 
 overflow="""
 table: qgep.od_overflow
@@ -38,7 +41,7 @@ children:
 merge_view:
   name: vw_qgep_overflow
   additional_columns:
-    geometry: ST_MakeLine(n1.situation_geometry, n2.situation_geometry)::geometry('LineString',21781)
+    geometry: ST_MakeLine(n1.situation_geometry, n2.situation_geometry)::geometry('LineString',{0})
   additional_joins:
     n1:
       table: qgep.od_wastewater_node
@@ -50,7 +53,7 @@ merge_view:
       type: left
       key: obj_id
       fkey: fk_overflow_to 
-"""
+""".format(srid)
 
 
 print(pgiv.PGInheritanceView(pg_service, overflow).sql_all())
