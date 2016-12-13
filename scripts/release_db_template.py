@@ -5,7 +5,9 @@ import os
 from subprocess import call
 
 # Exit if we are not on origin/master
-if os.environ['TRAVIS_SECURE_ENV_VARS'] == 'true' and os.environ['TRAVIS_BRANCH'] == 'master':
+if os.environ['TRAVIS_SECURE_ENV_VARS'] == 'true' \
+        and os.environ['TRAVIS_BRANCH'] == 'master' \
+        and os.environ['TRAVIS_PULL_REQUEST'] == 'false':
     with open('/tmp/template_db.dump', 'w') as f:
         call(['pg_dump', '-n', '"qgep"', '-Fc', 'qgep'], stdout=f)
 
