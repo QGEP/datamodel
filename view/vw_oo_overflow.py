@@ -21,7 +21,7 @@ overflow="""
 table: qgep.od_overflow
 alias: overflow
 pkey: obj_id
-pkey_value: qgep.generate_oid('od_reach_point')
+pkey_value: qgep.generate_oid('od_overflow')
 schema: qgep
 
 children:
