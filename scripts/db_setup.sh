@@ -32,7 +32,7 @@ while getopts ":fs:" opt; do
       force=True
       ;;
     s)
-	  SRID=$OPTARG
+      SRID=$OPTARG
       echo "-s was triggered, SRID: $SRID" >&2
       ;;
     \?)
