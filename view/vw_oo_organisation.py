@@ -55,6 +55,7 @@ children:
 
 merge_view:
   name: vw_organisation
+  allow_type_change: true
 """
 
 
