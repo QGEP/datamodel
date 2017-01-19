@@ -1,6 +1,5 @@
 DROP VIEW IF EXISTS qgep.vw_wwtp_structure;
 
---- 27.4.2016 Changed detail_geometry_3d_geometry to detail_geometry3d_geometry - adaption to new datamodel 20160426
 --------
 -- Subclass: od_wwtp_structure
 -- Superclass: od_wastewater_structure
@@ -11,9 +10,8 @@ SELECT
    WT.obj_id
    , WT.kind
    , WS.accessibility
-   , WS.contract_section,
-WS.detail_geometry_geometry,
-WS.detail_geometry3d_geometry
+   , WS.contract_section
+   , WS.detail_geometry_geometry
    , WS.financing
    , WS.gross_costs
    , WS.identifier
@@ -52,8 +50,7 @@ BEGIN
              obj_id
            , accessibility
            , contract_section
-            , detail_geometry_geometry
-            , detail_geometry3d_geometry
+           , detail_geometry_geometry
            , financing
            , gross_costs
            , identifier
@@ -79,8 +76,7 @@ BEGIN
      VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_wwtp_structure')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
-            , NEW.detail_geometry_geometry
-            , NEW.detail_geometry3d_geometry
+           , NEW.detail_geometry_geometry
            , NEW.financing
            , NEW.gross_costs
            , NEW.identifier
@@ -138,8 +134,7 @@ UPDATE qgep.od_wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
-      , detail_geometry_geometry = NEW.detail_geometry_geometry
-      , detail_geometry3d_geometry = NEW.detail_geometry3d_geometry
+     , detail_geometry_geometry = NEW.detail_geometry_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier
@@ -156,9 +151,9 @@ UPDATE qgep.od_wastewater_structure
      , subsidies = NEW.subsidies
      , year_of_construction = NEW.year_of_construction
      , year_of_replacement = NEW.year_of_replacement
-           , fk_dataowner = NEW.fk_dataowner
-           , fk_provider = NEW.fk_provider
-           , last_modification = NEW.last_modification
+     , fk_dataowner = NEW.fk_dataowner
+     , fk_provider = NEW.fk_provider
+     , last_modification = NEW.last_modification
      , fk_owner = NEW.fk_owner
      , fk_operator = NEW.fk_operator
   WHERE obj_id = OLD.obj_id;

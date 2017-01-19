@@ -1,6 +1,4 @@
-﻿--- 27.4.2016 Changed detail_geometry_3d_geometry to detail_geometry3d_geometry - adaption to new datamodel 20160426
---- 27.4.2016 Changed progression_3d_geometry to progression3d_geometry - adaption to new datamodel 20160426
-
+﻿
 DROP VIEW IF EXISTS qgep.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
@@ -23,7 +21,6 @@ SELECT DISTINCT ON (re.obj_id) re.obj_id,
     CASE WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/re.length_effective*1000,1) ELSE NULL END AS slope_per_mill,
     re.material,
     re.progression_geometry,
-    re.progression3d_geometry,
     re.reliner_material,
     re.reliner_nominal_size,
     re.relining_construction,
@@ -172,7 +169,6 @@ BEGIN
             , accessibility
             , contract_section
             -- , detail_geometry_geometry
-            -- , detail_geometry3d_geometry
             , financing
             , gross_costs
             , identifier
@@ -199,7 +195,6 @@ BEGIN
             , NEW.accessibility
             , NEW.contract_section
             -- , NEW.detail_geometry_geometry
-            -- , NEW.detail_geometry3d_geometry
             , NEW.financing
             , NEW.gross_costs
             , NEW.identifier
@@ -365,7 +360,6 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
      -- , detail_geometry_geometry = NEW.detail_geometry_geometry
-     -- , detail_geometry3d_geometry = NEW.detail_geometry3d_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
      , identifier = NEW.identifier

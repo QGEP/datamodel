@@ -1,6 +1,5 @@
 DROP VIEW IF EXISTS qgep.vw_reach;
 
---- 27.4.2016 Changed progression_3d_geometry to progression3d_geometry - adaption to new datamodel 20160426
 
 --------
 -- Subclass: od_reach
@@ -18,7 +17,6 @@ SELECT
    , RE.length_effective
    , RE.material
    , RE.progression_geometry
-   , RE.progression3d_geometry
    , RE.reliner_material
    , RE.reliner_nominal_size
    , RE.relining_construction
@@ -74,7 +72,6 @@ INSERT INTO qgep.od_reach (
            , length_effective
            , material
            , progression_geometry
-           , progression3d_geometry
            , reliner_material
            , reliner_nominal_size
            , relining_construction
@@ -93,7 +90,6 @@ INSERT INTO qgep.od_reach (
            , NEW.length_effective
            , NEW.material
            , NEW.progression_geometry
-   , NEW.progression3d_geometry
            , NEW.reliner_material
            , NEW.reliner_nominal_size
            , NEW.relining_construction
@@ -128,7 +124,6 @@ UPDATE qgep.od_reach
      , length_effective = NEW.length_effective
      , material = NEW.material
      , progression_geometry = NEW.progression_geometry
-     , progression3d_geometry = NEW.progression3d_geometry
      , reliner_material = NEW.reliner_material
      , reliner_nominal_size = NEW.reliner_nominal_size
      , relining_construction = NEW.relining_construction
@@ -142,9 +137,9 @@ UPDATE qgep.od_wastewater_networkelement
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
-           , fk_dataowner = NEW.fk_dataowner
-           , fk_provider = NEW.fk_provider
-           , last_modification = NEW.last_modification
+     , fk_dataowner = NEW.fk_dataowner
+     , fk_provider = NEW.fk_provider
+     , last_modification = NEW.last_modification
      , fk_wastewater_structure = NEW.fk_wastewater_structure
   WHERE obj_id = OLD.obj_id;
 );
