@@ -15,7 +15,7 @@ else:
 if len(sys.argv) > 2:
 	srid = sys.argv[2]
 else:
-	srid = 'pg_qgep'	
+	srid = 21781
 
 overflow="""
 table: qgep.od_overflow
