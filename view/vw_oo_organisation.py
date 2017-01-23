@@ -56,6 +56,10 @@ children:
 merge_view:
   name: vw_organisation
   allow_type_change: true
+  merge_columns:
+    perimeter_geometry:
+      canton: perimeter_geometry
+      municipality: perimeter_geometry
 """
 
 
