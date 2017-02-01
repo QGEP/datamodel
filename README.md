@@ -8,6 +8,8 @@ of the VSA-DSS datamodel (including SIA405). It ships with SQL scripts required
 to setup an empty PostgreSQL/PostGIS database to use as basis for the QGEP
 project.
 
+The latest release can be downloaded here: https://github.com/QGEP/datamodel/releases/
+
 Ordinary data tables (od\_)
 ---------------------------
 
