@@ -73,14 +73,13 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'identifier': '20',
                 'ws_type': 'manhole',
-                'situation_geometry':
-                '01010000A01555000000000000006AE840000000000088D3400000000000000000',  # POINTZ(50000 20000), 21781
+                'situation_geometry': '01010000201555000000000000006AE840000000000088D340', # POINT(50000 20000)
                 'cover_material': 5355,
                 'backflow_level': decimal.Decimal('100.000')
         }
 
         expected_row = copy.deepcopy(row)
-        expected_row['situation_geometry'] = '01040000A01555000001000000010100008000000000006AE840000000000088D3400000000000000000' # MULTIPOINTZ(50000 20000 0)
+        expected_row['situation_geometry'] = '01040000201555000001000000010100000000000000006AE840000000000088D340' # MULTIPOINT(50000 20000)
 
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row, expected_row)
 
