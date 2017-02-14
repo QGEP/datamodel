@@ -125,7 +125,7 @@ BEGIN
             , NEW.rp_from_outlet_shape -- outlet_shape
             , NEW.rp_from_position_of_connection -- position_of_connection
             , NEW.rp_from_remark -- remark
-            , ST_StartPoint( NEW.progression_geometry ) -- situation_geometry
+            , ST_Force2D(ST_StartPoint(NEW.progression_geometry)) -- situation_geometry
             , NEW.rp_from_last_modification -- last_modification
             , NEW.rp_from_fk_dataowner -- fk_dataowner
             , NEW.rp_from_fk_provider -- fk_provider
@@ -156,7 +156,7 @@ BEGIN
             , NEW.rp_to_outlet_shape -- outlet_shape
             , NEW.rp_to_position_of_connection -- position_of_connection
             , NEW.rp_to_remark -- remark
-            , ST_EndPoint( NEW.progression_geometry ) -- situation_geometry
+            , ST_Force2D(ST_EndPoint(NEW.progression_geometry)) -- situation_geometry
             , NEW.rp_to_last_modification -- last_modification
             , NEW.rp_to_fk_dataowner -- fk_dataowner
             , NEW.rp_to_fk_provider -- fk_provider
