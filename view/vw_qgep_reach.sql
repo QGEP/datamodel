@@ -321,7 +321,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , outlet_shape = NEW.rp_from_outlet_shape
       , position_of_connection = NEW.rp_from_position_of_connection
       , remark = NEW.rp_from_remark
-      , situation_geometry = ST_StartPoint( NEW.progression_geometry )
+      , situation_geometry = ST_Force2D(ST_StartPoint(NEW.progression_geometry))
       , last_modification = NEW.rp_from_last_modification
       , fk_dataowner = NEW.rp_from_fk_dataowner
       , fk_provider = NEW.rp_from_fk_provider
@@ -336,7 +336,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , outlet_shape = NEW.rp_to_outlet_shape
       , position_of_connection = NEW.rp_to_position_of_connection
       , remark = NEW.rp_to_remark
-      , situation_geometry = ST_EndPoint( NEW.progression_geometry )
+      , situation_geometry = ST_Force2D(ST_EndPoint(NEW.progression_geometry))
       , last_modification = NEW.rp_to_last_modification
       , fk_dataowner = NEW.rp_to_fk_dataowner
       , fk_provider = NEW.rp_to_fk_provider
