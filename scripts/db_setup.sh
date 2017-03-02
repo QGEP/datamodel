@@ -26,7 +26,7 @@ then
   PGSERVICE=pg_qgep
 fi
 
-while getopts ":fs:" opt; do
+while getopts ":fs:p:" opt; do
   case $opt in
     f)
       force=True
@@ -34,6 +34,10 @@ while getopts ":fs:" opt; do
     s)
       SRID=$OPTARG
       echo "-s was triggered, SRID: $SRID" >&2
+      ;;
+    p)
+      PGSERVICE=$OPTARG
+      echo "-p was triggered, PGSERVICE: $PGSERVICE" >&2
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
