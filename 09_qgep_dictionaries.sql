@@ -10,6 +10,7 @@ CREATE VIEW qgep.is_dictionary_value_list AS
   WHERE vl.tableoid = p.oid;
 
 
+DROP TABLE IF EXISTS qgep.is_dictionary_od_table;
 CREATE TABLE qgep.is_dictionary_od_table
 (
   id integer NOT NULL,
@@ -129,6 +130,9 @@ WITH (
 
 DROP TYPE IF EXISTS qgep.plantype;
 CREATE TYPE qgep.plantype AS ENUM ('Leitungskataster','Werkinformation', 'GEP_Verband', 'GEP_Traegerschaft', 'PAA', 'SAA', 'kein_Plantyp_definiert');
+
+DROP TABLE IF EXISTS qgep.is_dictionary_od_field;
+
 CREATE TABLE qgep.is_dictionary_od_field (
     id serial NOT NULL,
     class_id integer,
@@ -148,7 +152,8 @@ CREATE TABLE qgep.is_dictionary_od_field (
     field_mandatory qgep.plantype[],
     field_visible boolean,
     field_datatype character varying(40),
-    field_unit_de character varying(20),
+    -- kf 20 to 40
+    field_unit_de character varying(40),
     field_unit_description_de character varying(90),
     field_unit_en character varying(20),
     field_unit_description_en character varying(90),
@@ -836,6 +841,8 @@ CREATE TABLE qgep.is_dictionary_od_field (
  INSERT INTO qgep.is_dictionary_od_field (class_id, attribute_id, table_name, field_name, field_name_en, field_name_de, field_name_fr, field_name_it, field_name_ro, field_description_en, field_description_de, field_description_fr, field_description_it, field_description_ro, field_mandatory, field_visible, field_datatype, field_unit_en, field_unit_description_en, field_unit_de, field_unit_description_de, field_unit_fr, field_unit_description_fr, field_unit_it, field_unit_description_it, field_unit_ro, field_unit_description_ro, field_max, field_min) VALUES (99982,999999,'maintenance_event_wastewater_structure','dataowner','dataowner','Datenherr','MAITRE_DES_DONNEES','proprietario_dati','rrr_Datenherr','dataowner - this is the person or body who is allowed to delete, change or maintain this object','Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten','Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe','zzz_Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten','rrr_Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten',ARRAY['Werkinformation','Leitungskataster', 'GEP_Verband','GEP_Traegerschaft','SAA', 'PAA']::qgep.plantype[],'true','varchar(80)','','','','','','','','','','',NULL,NULL);
  INSERT INTO qgep.is_dictionary_od_field (class_id, attribute_id, table_name, field_name, field_name_en, field_name_de, field_name_fr, field_name_it, field_name_ro, field_description_en, field_description_de, field_description_fr, field_description_it, field_description_ro, field_mandatory, field_visible, field_datatype, field_unit_en, field_unit_description_en, field_unit_de, field_unit_description_de, field_unit_fr, field_unit_description_fr, field_unit_it, field_unit_description_it, field_unit_ro, field_unit_description_ro, field_max, field_min) VALUES (99982,999999,'maintenance_event_wastewater_structure','provider','provider','Datenherr','FOURNISSEUR_DES_DONNEES','zzz_Datenlieferant','rrr_Datenlieferant','Metaattribute provider - this is the person or body who delivered the data','Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat','FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données','zzz_Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat','rrr_Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat',ARRAY['Werkinformation','Leitungskataster', 'GEP_Verband','GEP_Traegerschaft','SAA', 'PAA']::qgep.plantype[],'true','varchar(80)','','','','','','','','','','',NULL,NULL);
  INSERT INTO qgep.is_dictionary_od_field (class_id, attribute_id, table_name, field_name, field_name_en, field_name_de, field_name_fr, field_name_it, field_name_ro, field_description_en, field_description_de, field_description_fr, field_description_it, field_description_ro, field_mandatory, field_visible, field_datatype, field_unit_en, field_unit_description_en, field_unit_de, field_unit_description_de, field_unit_fr, field_unit_description_fr, field_unit_it, field_unit_description_it, field_unit_ro, field_unit_description_ro, field_max, field_min) VALUES (99982,999999,'maintenance_event_wastewater_structure','last_modification','last_modification','Letzte_Aenderung','DERNIERE_MODIFICATION','zzz_Letze_Aenderung','rrr_Letze_Aenderung','Last modification: INTERLIS_1_DATE','Letzte Änderung: INTERLIS_1_DATE','Dernière modification: INTERLIS_1_DATE','zzz_Letzte Änderung: INTERLIS_1_DATE','rrr_Letzte Änderung: INTERLIS_1_DATE',ARRAY['Werkinformation','Leitungskataster', 'GEP_Verband','GEP_Traegerschaft','SAA', 'PAA']::qgep.plantype[],'true','TIMESTAMP','','','','','','','','','','',NULL,NULL);
+
+DROP TABLE IF EXISTS qgep.is_dictionary_od_values;
 
 CREATE TABLE qgep.is_dictionary_od_values (
   id serial NOT NULL,
