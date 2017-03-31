@@ -73,7 +73,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'identifier': '20',
                 'ws_type': 'manhole',
-                'situation_geometry': '01010000201555000000000000006AE840000000000088D340', # POINT(50000 20000)
+                'situation_geometry': '01040000201555000001000000010100000000000000006AE840000000000088D340', # MULTIPOINT(50000 20000)
                 'cover_material': 5355,
                 'backflow_level': decimal.Decimal('100.000')
         }

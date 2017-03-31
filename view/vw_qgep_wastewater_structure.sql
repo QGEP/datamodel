@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
     main_co.level,
     main_co.material AS cover_material,
     main_co.positional_accuracy,
-    ST_Collect(co.situation_geometry) OVER (PARTITION BY ws.obj_id) AS situation_geometry,
+    ST_Collect(co.situation_geometry) OVER (PARTITION BY ws.obj_id)::geometry(MultiPoint, :SRID) AS situation_geometry,
     main_co.sludge_bucket,
     main_co.venting,
     main_co_sp.identifier AS co_identifier,
