@@ -1,0 +1,1 @@
+java -jar ili2pg.jar --createEnumTxtCol --import --sqlEnableNull --dbhost localhost --dbport 5432 --dbdatabase postgres --dbschema vsadss2015_2_d --dbusr qgep --dbpwd sjib --createscript vsa_dss_2015_2.sql --dropscript vsa_dss_2015_2_drop.sql --createEnumTabs --createFk --log logfile_import_VSA_DSS_2015_2_d.txt transferdatensatz2015_d.xtf

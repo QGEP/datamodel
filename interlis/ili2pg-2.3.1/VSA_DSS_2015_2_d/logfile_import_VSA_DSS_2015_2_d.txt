@@ -1,0 +1,109 @@
+2015-12-17 19:25:13.332Z: Info: ili2pg-2.3.1-20151123
+2015-12-17 19:25:13.340Z: Info: ili2c-4.5.18-20151123
+2015-12-17 19:25:13.341Z: Info: java.version 1.8.0_66
+2015-12-17 19:25:13.342Z: Info: user.name <stefan>
+2015-12-17 19:25:13.665Z: Info: dbschema <vsadss2015_2_d>
+2015-12-17 19:25:13.665Z: Info: dburl <jdbc:postgresql://localhost:5432/postgres>
+2015-12-17 19:25:13.666Z: Info: dbusr <postgres>
+2015-12-17 19:25:13.693Z: Info: databaseProduct <PostgreSQL>
+2015-12-17 19:25:13.693Z: Info: databaseVersion <9.3.6>
+2015-12-17 19:25:13.694Z: Info: driverVersion <PostgreSQL 9.1 JDBC4 (build 901)>
+2015-12-17 19:25:14.335Z: Info: postGISVersion <POSTGIS="2.1.5 r13152" GEOS="3.4.2-CAPI-1.8.2 r3924" PROJ="Rel. 4.8.0, 6 March 2012" GDAL="GDAL 1.11.1, released 2014/09/24" LIBXML="2.7.8" LIBJSON="UNKNOWN" RASTER>
+2015-12-17 19:25:14.385Z: Info: compile models...
+2015-12-17 19:25:14.414Z: Info: lookup model <DSS_2015> in repository <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d>
+2015-12-17 19:25:14.901Z: Info: lookup model <SIA405_Base> 2.3 in repository <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d>
+2015-12-17 19:25:14.902Z: Info: lookup model <Units> 2.3 in repository <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d>
+2015-12-17 19:25:14.902Z: Info: lookup model <Base> 2.3 in repository <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d>
+2015-12-17 19:25:14.907Z: Info: ilifile <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d\Units.ili>
+2015-12-17 19:25:14.907Z: Info: ilifile <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d\Base.ili>
+2015-12-17 19:25:14.909Z: Info: ilifile <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d\SIA405_Base.ili>
+2015-12-17 19:25:14.909Z: Info: ilifile <C:\Daten\Dropbox\in_Arbeit\QGEP\Interlis_Schnittstelle_ili2pg\ili2pg-2.3.1\VSA_DSS_2015_2_d\VSA_DSS_2015_2_d.ili>
+2015-12-17 19:25:15.552Z: Info: create table structure...
+2015-12-17 19:25:44.721Z: Info: process data file...
+2015-12-17 19:25:44.722Z: Info: data <transferdatensatz2015_d.xtf>
+2015-12-17 19:25:44.958Z: Info: Basket DSS_2015.Siedlungsentwaesserung(oid xBASKET1)...
+2015-12-17 19:25:54.44Z: Info: transferdatensatz2015_d.xtf: DSS_2015.Siedlungsentwaesserung BID=xBASKET1
+2015-12-17 19:25:54.45Z: Info:      10 objects in CLASS DSS_2015.Siedlungsentwaesserung.ARABauwerk
+2015-12-17 19:25:54.46Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.ARAEnergienutzung
+2015-12-17 19:25:54.47Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Absperr_Drosselorgan
+2015-12-17 19:25:54.47Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserbauwerk_Symbol
+2015-12-17 19:25:54.48Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserbauwerk_Text
+2015-12-17 19:25:54.48Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserbehandlung
+2015-12-17 19:25:54.48Z: Info:      88 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserknoten
+2015-12-17 19:25:54.49Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserreinigungsanlage
+2015-12-17 19:25:54.49Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Abwasserverband
+2015-12-17 19:25:54.50Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Amt
+2015-12-17 19:25:54.50Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Badestelle
+2015-12-17 19:25:54.50Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Bankett
+2015-12-17 19:25:54.50Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Beckenentleerung
+2015-12-17 19:25:54.51Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Beckenreinigung
+2015-12-17 19:25:54.51Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Brunnen
+2015-12-17 19:25:54.51Z: Info:      60 objects in CLASS DSS_2015.Siedlungsentwaesserung.Deckel
+2015-12-17 19:25:54.52Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Durchlass
+2015-12-17 19:25:54.52Z: Info:       6 objects in CLASS DSS_2015.Siedlungsentwaesserung.Einleitstelle
+2015-12-17 19:25:54.52Z: Info:       6 objects in CLASS DSS_2015.Siedlungsentwaesserung.Einstiegshilfe
+2015-12-17 19:25:54.53Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Einzelflaeche
+2015-12-17 19:25:54.53Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Einzugsgebiet
+2015-12-17 19:25:54.54Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Einzugsgebiet_Text
+2015-12-17 19:25:54.54Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.ElektrischeEinrichtung
+2015-12-17 19:25:54.55Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.ElektromechanischeAusruestung
+2015-12-17 19:25:54.55Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Entwaesserungssystem
+2015-12-17 19:25:54.56Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Erhaltungsereignis
+2015-12-17 19:25:54.56Z: Info:       6 objects in CLASS DSS_2015.Siedlungsentwaesserung.Erhaltungsereignis_AbwasserbauwerkAssoc
+2015-12-17 19:25:54.57Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Feststoffrueckhalt
+2015-12-17 19:25:54.57Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Fischpass
+2015-12-17 19:25:54.58Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Fliessgewaesser
+2015-12-17 19:25:54.58Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.FoerderAggregat
+2015-12-17 19:25:54.58Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Furt
+2015-12-17 19:25:54.58Z: Info:       6 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gebaeude
+2015-12-17 19:25:54.59Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gefahrenquelle
+2015-12-17 19:25:54.59Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Geschiebesperre
+2015-12-17 19:25:54.59Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.GewaesserAbsturz
+2015-12-17 19:25:54.60Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.GewaesserWehr
+2015-12-17 19:25:54.60Z: Info:       5 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gewaesserabschnitt
+2015-12-17 19:25:54.60Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gewaesserschutzbereich
+2015-12-17 19:25:54.61Z: Info:       9 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gewaessersektor
+2015-12-17 19:25:54.61Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Gewaessersohle
+2015-12-17 19:25:54.61Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Grundwasserleiter
+2015-12-17 19:25:54.62Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Grundwasserschutzareal
+2015-12-17 19:25:54.62Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Grundwasserschutzzone
+2015-12-17 19:25:54.63Z: Info:       6 objects in CLASS DSS_2015.Siedlungsentwaesserung.HQ_Relation
+2015-12-17 19:25:54.63Z: Info:     102 objects in CLASS DSS_2015.Siedlungsentwaesserung.Haltung
+2015-12-17 19:25:54.63Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Haltung_AlternativVerlauf
+2015-12-17 19:25:54.64Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Haltung_Text
+2015-12-17 19:25:54.64Z: Info:     204 objects in CLASS DSS_2015.Siedlungsentwaesserung.Haltungspunkt
+2015-12-17 19:25:54.64Z: Info:      18 objects in CLASS DSS_2015.Siedlungsentwaesserung.Hydr_GeomRelation
+2015-12-17 19:25:54.65Z: Info:       7 objects in CLASS DSS_2015.Siedlungsentwaesserung.Hydr_Geometrie
+2015-12-17 19:25:54.65Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Hydr_Kennwerte
+2015-12-17 19:25:54.65Z: Info:     102 objects in CLASS DSS_2015.Siedlungsentwaesserung.Kanal
+2015-12-17 19:25:54.66Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Leapingwehr
+2015-12-17 19:25:54.66Z: Info:      62 objects in CLASS DSS_2015.Siedlungsentwaesserung.MUTATION
+2015-12-17 19:25:54.66Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.MechanischeVorreinigung
+2015-12-17 19:25:54.67Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Messgeraet
+2015-12-17 19:25:54.67Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Messreihe
+2015-12-17 19:25:54.67Z: Info:    4363 objects in CLASS DSS_2015.Siedlungsentwaesserung.Messresultat
+2015-12-17 19:25:54.67Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Messstelle
+2015-12-17 19:25:54.68Z: Info:      49 objects in CLASS DSS_2015.Siedlungsentwaesserung.Normschacht
+2015-12-17 19:25:54.68Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Privat
+2015-12-17 19:25:54.68Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Reservoir
+2015-12-17 19:25:54.68Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Retentionskoerper
+2015-12-17 19:25:54.68Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Rohrprofil
+2015-12-17 19:25:54.69Z: Info:      10 objects in CLASS DSS_2015.Siedlungsentwaesserung.Rohrprofil_Geometrie
+2015-12-17 19:25:54.69Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Rueckstausicherung
+2015-12-17 19:25:54.70Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Schlammbehandlung
+2015-12-17 19:25:54.70Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Schleuse
+2015-12-17 19:25:54.70Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.See
+2015-12-17 19:25:54.71Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Sohlrampe
+2015-12-17 19:25:54.71Z: Info:      18 objects in CLASS DSS_2015.Siedlungsentwaesserung.Spezialbauwerk
+2015-12-17 19:25:54.71Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Steuerungszentrale
+2015-12-17 19:25:54.72Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Stoff
+2015-12-17 19:25:54.72Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Streichwehr
+2015-12-17 19:25:54.72Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Trockenwetterfallrohr
+2015-12-17 19:25:54.73Z: Info:       2 objects in CLASS DSS_2015.Siedlungsentwaesserung.Trockenwetterrinne
+2015-12-17 19:25:54.73Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Ueberlaufcharakteristik
+2015-12-17 19:25:54.73Z: Info:       4 objects in CLASS DSS_2015.Siedlungsentwaesserung.Ufer
+2015-12-17 19:25:54.74Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Unfall
+2015-12-17 19:25:54.74Z: Info:       1 objects in CLASS DSS_2015.Siedlungsentwaesserung.Versickerungsanlage
+2015-12-17 19:25:54.74Z: Info:       3 objects in CLASS DSS_2015.Siedlungsentwaesserung.Wasserfassung
+2015-12-17 19:25:54.75Z: Info:    5235 objects in CLASS SIA405_Base.Metaattribute
+2015-12-17 19:25:54.75Z: Info: ...import done
