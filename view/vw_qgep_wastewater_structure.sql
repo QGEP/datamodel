@@ -480,7 +480,7 @@ BEGIN
     , bottom_level = NEW.bottom_level
     -- , situation_geometry = NEW.situation_geometry -- Geometry is handled separately below
     , identifier = NEW.identifier
-    , remark = NEW.remark
+    , remark = NEW.wn_remark
     -- , last_modification -- Handled by triggers
     , fk_dataowner = NEW.fk_dataowner
     , fk_provider = NEW.fk_provider
