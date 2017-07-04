@@ -21,9 +21,9 @@ CREATE TABLE qgep.is_dictionary_od_table
   name_fr text,
   shortcut_fr character(2),
   name_it text,
-  shortcut_it character(2),
+  shortcut_it character(4),
   name_ro text,
-  shortcut_ro character(2),
+  shortcut_ro character(4),
   CONSTRAINT pkey_qgep_is_dictonary_id PRIMARY KEY (id),
   CONSTRAINT unq_qgep_is_dictonary_tablename UNIQUE (tablename)
 )
