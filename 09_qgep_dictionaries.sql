@@ -36,10 +36,10 @@ ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_nam
 ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_de UNIQUE (shortcut_de);
 ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_name_fr UNIQUE (name_fr);
 ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_fr UNIQUE (shortcut_fr);
-ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_name_it UNIQUE (name_it);
-ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_it UNIQUE (shortcut_it);
-ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_name_ro UNIQUE (name_ro);
-ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_ro UNIQUE (shortcut_ro);
+--ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_name_it UNIQUE (name_it);
+--ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_it UNIQUE (shortcut_it);
+--ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_name_ro UNIQUE (name_ro);
+--ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_shortcut_ro UNIQUE (shortcut_ro);
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (1001,'od_dryweather_downspout','dryweather downspout','DD','Trockenwetterfallrohr','TF','Tuyau de chute par temps sec','TT','zzz_Trockenwetterfallrohr','NULL','tub uscat','NULL');
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (1022,'od_param_ca_mouse1','param ca mouse1','PM','EZG_PARAMETER_MOUSE1','EM','Paramètre BV MOUSE1','PM','NULL','NULL','NULL','NULL');
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (1033,'od_fountain','fountain','FO','Brunnen','BR','Fontaine','FO','NULL','NULL','NULL','NULL');
