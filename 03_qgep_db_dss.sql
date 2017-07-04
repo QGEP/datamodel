@@ -3326,10 +3326,10 @@ ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewa
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
 ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
-ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+--ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
+--ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep.od_wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+--ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
+--ALTER TABLE qgep.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep.od_maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_symbol_plantype () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_symbol_plantype ADD CONSTRAINT pkey_qgep_vl_symbol_plantype_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_symbol_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7874,7874,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', 'catasto_delle_canalizzazioni', '', '', '', '', '', '', 'true');
