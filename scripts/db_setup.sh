@@ -17,7 +17,7 @@
 # Exit on error
 set -e
 
-SRID=21781
+SRID=2056
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
 
