@@ -22,6 +22,7 @@ INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch11h8mw'
 INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch15z36d','SIGE',FALSE);
 INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch13p7mz','Arbon',FALSE);
 INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch176dc9','Sigip',FALSE);
+INSERT INTO qgep.is_oid_prefixes (prefix,organization,active) VALUES ('ch17f516','Prilly',FALSE);
 
 CREATE INDEX in_qgep_is_oid_prefixes_active
   ON qgep.is_oid_prefixes
