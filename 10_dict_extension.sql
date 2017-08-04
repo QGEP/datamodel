@@ -1,3 +1,7 @@
+-- updated 3.8.2017 sb
+-- what is this script for?
+-- where table_name = 'od_manhole' - entries are without od_
+
 DROP TABLE qgep.is_dictionary_vw_field CASCADE;
 CREATE TABLE qgep.is_dictionary_vw_field
 (
@@ -10,10 +14,29 @@ CREATE TABLE qgep.is_dictionary_vw_field
   field_name_de character varying(100),
   field_name_fr character varying(100),
   field_name_it character varying(100),
+  -- 3.8.2017
+  field_name_ro character varying(100),
   field_description_en text,
   field_description_de text,
   field_description_fr text,
   field_description_it text,
+  -- 3.8.2017
+  field_description_ro text,
+field_mandatory qgep.plantype[],
+  field_visible boolean,
+  field_datatype character varying(40),
+  field_unit_de character varying(20),
+  field_unit_description_de character varying(90),
+  field_unit_en character varying(20),
+  field_unit_description_en character varying(90),
+  field_unit_fr character varying(20),
+  field_unit_description_fr character varying(90),
+  field_unit_it character varying(20),
+  field_unit_description_it character varying(90),
+  field_unit_ro character varying(20),
+  field_unit_description_ro character varying(90),
+  field_min numeric,
+  field_max numeric,
   CONSTRAINT is_dictionary_vw_field_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -52,8 +75,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
       FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_reach'
-    OR table_name = 'od_wastewater_networkelement'
+      -- 3.8.2017
+    WHERE table_name = 'reach'
+    OR table_name = 'wastewater_networkelement'
   UNION SELECT
     class_id,
     attribute_id,
@@ -83,8 +107,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr, -- TODO
     field_description_it -- TODO
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_reach_point'
-
+-- 3.8.2017
+    WHERE table_name = 'reach_point';
+    
 -- Manhole
 
 INSERT INTO qgep.is_dictionary_vw_field (
@@ -114,8 +139,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_manhole'
-      OR table_name = 'od_wastewater_structure';
+    -- 3.8.2017
+      WHERE table_name = 'manhole'
+      OR table_name = 'wastewater_structure';
 
 
 -- Special Structure
@@ -147,8 +173,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_special_structure'
-      OR table_name = 'od_wastewater_structure';
+    -- 3.8.2017
+    WHERE table_name = 'special_structure'
+      OR table_name = 'wastewater_structure';
 
 
 -- Special Structure
@@ -180,8 +207,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_channel'
-      OR table_name = 'od_wastewater_structure';
+    -- 3.8.2017
+    WHERE table_name = 'channel'
+      OR table_name = 'wastewater_structure';
 
 -- Discharge Point
 
@@ -212,8 +240,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_discharge_point'
-      OR table_name = 'od_wastewater_structure';
+    -- 3.8.2017
+    WHERE table_name = 'discharge_point'
+      OR table_name = 'wastewater_structure';
 
 
 -- Wastewater Node
@@ -245,8 +274,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_wastewater_node'
-      OR table_name = 'od_wastewater_networkelement';
+    -- 3.8.2017
+    WHERE table_name = 'wastewater_node'
+      OR table_name = 'wastewater_networkelement';
 
 
 -- Cover
@@ -278,8 +308,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-      WHERE table_name = 'od_cover'
-      OR table_name = 'od_structure_part';
+    -- 3.8.2017
+      WHERE table_name = 'cover'
+      OR table_name = 'structure_part';
 
 
 -- Access Aid
@@ -311,8 +342,9 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_access_aid'
-      OR table_name = 'od_structure_part';
+    -- 3.8.2017
+    WHERE table_name = 'access_aid'
+      OR table_name = 'structure_part';
 
 
 -- Benching
@@ -344,8 +376,8 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-    WHERE table_name = 'od_benching'
-      OR table_name = 'od_structure_part';
+    WHERE table_name = 'benching'
+      OR table_name = 'structure_part';
 
 
 -- Dryweather Downspout
@@ -377,8 +409,8 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-  WHERE table_name = 'od_dryweather_downspout'
-  OR table_name = 'od_structure_part';
+  WHERE table_name = 'dryweather_downspout'
+  OR table_name = 'structure_part';
 
 
 -- Dryweather Flume
@@ -410,8 +442,8 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_fr,
     field_description_it
     FROM qgep.is_dictionary_od_field
-  WHERE table_name = 'od_dryweather_flume'
-  OR table_name = 'od_structure_part';
+  WHERE table_name = 'dryweather_flume'
+  OR table_name = 'structure_part';
 
 
 
