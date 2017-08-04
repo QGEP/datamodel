@@ -1,6 +1,8 @@
 ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
 ------ version 03.07.2017 21:26:28
+------ 4.8.2017 corrected fk_overflow_characteristic -> fk_overflow_char
+
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -4384,8 +4386,8 @@ ALTER TABLE qgep.vl_overflow_char_overflow_characteristic_digital ADD CONSTRAINT
  ALTER TABLE qgep.od_overflow_char ADD CONSTRAINT fkey_vl_overflow_char_overflow_characteristic_digital FOREIGN KEY (overflow_characteristic_digital)
  REFERENCES qgep.vl_overflow_char_overflow_characteristic_digital (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+ALTER TABLE qgep.od_hq_relation ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep.od_hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_char) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep.vl_structure_part_renovation_demand () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl_structure_part_renovation_demand_code PRIMARY KEY (code);
  INSERT INTO qgep.vl_structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (138,138,'not_necessary','nicht_notwendig','pas_necessaire', 'zzz_nicht_notwendig', 'nenecesare', 'NN', 'NN', 'PN', '', '', 'true');
@@ -4759,8 +4761,8 @@ ALTER TABLE qgep.od_overflow ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_to varchar (16);
 ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_to FOREIGN KEY (fk_overflow_to) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep.od_overflow ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_char) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_overflow ADD COLUMN fk_control_center varchar (16);
 ALTER TABLE qgep.od_overflow ADD CONSTRAINT rel_overflow_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep.od_control_center(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep.vl_throttle_shut_off_unit_actuation () INHERITS (qgep.is_value_list_base);
@@ -4951,8 +4953,8 @@ ALTER TABLE qgep.vl_hydraulic_char_data_status ADD CONSTRAINT pkey_qgep_vl_hydra
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep.od_hydraulic_char_data ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep.od_hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep.od_wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep.od_hydraulic_char_data ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep.od_hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep.od_hydraulic_char_data ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep.od_hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_overflow_characteristic FOREIGN KEY (fk_overflow_char) REFERENCES qgep.od_overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep.od_backflow_prevention ADD CONSTRAINT oorel_od_backflow_prevention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep.od_structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE qgep.vl_backflow_prevention_kind () INHERITS (qgep.is_value_list_base);
 ALTER TABLE qgep.vl_backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflow_prevention_kind_code PRIMARY KEY (code);
