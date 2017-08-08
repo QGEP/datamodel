@@ -1,6 +1,7 @@
 ------ this file generates the qgep is_dictionary (Modul dss) in en on QGEP
 ------ for questions etc. please contact stefan burckhardt stefan.burckhardt@sjib.ch
 ------ version 04.07.2017 23:28:49
+------ modified 8.8.2017
 
 DROP VIEW IF EXISTS qgep.is_dictionary_value_list;
 
@@ -11,7 +12,7 @@ CREATE VIEW qgep.is_dictionary_value_list AS
 
 
 -- for diff
-DROP TABLE IF EXISTS qgep.is_dictionary_od_table
+DROP TABLE IF EXISTS qgep.is_dictionary_od_table;
 
 CREATE TABLE qgep.is_dictionary_od_table
 (
@@ -140,11 +141,11 @@ ALTER TABLE qgep.is_dictionary_od_table ADD CONSTRAINT unq_qgep_is_dictonary_sho
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (99981,'txt_symbol','SYMBOL','SX','Symbol','SX','Symbole','SX','zzz_SYMBOL','NULL','NULL','NULL');
  INSERT INTO qgep.is_dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (99982,'re_maintenance_event_wastewater_structure','maintenance event wastewater structure','','Erhaltungsereignis Abwasserbauwre','','Evénement de maintenance Ouvrage réseau AS','','zzz_Erhaltungsereignis_Abwasserbauwerk','NULL','NULL','NULL');
 
-DROP TYPE IF EXISTS qgep.plantype;
-CREATE TYPE qgep.plantype AS ENUM ('Leitungskataster','Werkinformation', 'GEP_Verband', 'GEP_Traegerschaft', 'PAA', 'SAA', 'kein_Plantyp_definiert');
+-- DROP TYPE IF EXISTS qgep.plantype;
+-- CREATE TYPE qgep.plantype AS ENUM ('Leitungskataster','Werkinformation', 'GEP_Verband', 'GEP_Traegerschaft', 'PAA', 'SAA', 'kein_Plantyp_definiert');
 
 -- for diff
-DROP TABLE IF EXISTS qgep.is_dictionary_od_field
+DROP TABLE IF EXISTS qgep.is_dictionary_od_field;
 
 CREATE TABLE qgep.is_dictionary_od_field (
     id serial NOT NULL,
@@ -852,7 +853,7 @@ CREATE TABLE qgep.is_dictionary_od_field (
  INSERT INTO qgep.is_dictionary_od_field (class_id, attribute_id, table_name, field_name, field_name_en, field_name_de, field_name_fr, field_name_it, field_name_ro, field_description_en, field_description_de, field_description_fr, field_description_it, field_description_ro, field_mandatory, field_visible, field_datatype, field_unit_en, field_unit_description_en, field_unit_de, field_unit_description_de, field_unit_fr, field_unit_description_fr, field_unit_it, field_unit_description_it, field_unit_ro, field_unit_description_ro, field_max, field_min) VALUES (99982,999999,'maintenance_event_wastewater_structure','last_modification','last_modification','Letzte_Aenderung','DERNIERE_MODIFICATION','ultima_modifica','rrr_Letze_Aenderung','Last modification: INTERLIS_1_DATE','Letzte Änderung: INTERLIS_1_DATE','Dernière modification: INTERLIS_1_DATE','ultima_modifica: INTERLIS_1_DATE','rrr_Letzte Änderung: INTERLIS_1_DATE',ARRAY['Werkinformation','Leitungskataster', 'GEP_Verband','GEP_Traegerschaft','SAA', 'PAA']::qgep.plantype[],'true','TIMESTAMP','','','','','','','','','','',NULL,NULL);
 
  -- for diff
-DROP TABLE IF EXISTS qgep.is_dictionary_od_values
+DROP TABLE IF EXISTS qgep.is_dictionary_od_values;
 
 CREATE TABLE qgep.is_dictionary_od_values (
   id serial NOT NULL,
