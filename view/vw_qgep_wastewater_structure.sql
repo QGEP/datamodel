@@ -99,11 +99,13 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
 
   FROM (
     SELECT ws.obj_id,
-      ST_Collect(co.situation_geometry)::geometry(MultiPoint, 2056) AS situation_geometry
+      ST_Collect(co.situation_geometry)::geometry(MultiPoint, 2056) AS situation_geometry,
+      CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
     FROM qgep.od_wastewater_structure ws
-    RIGHT JOIN qgep.od_structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
+    FULL OUTER JOIN qgep.od_structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
     LEFT JOIN qgep.od_cover co ON co.obj_id = sp.obj_id
-    WHERE co.obj_id IS NOT NULL
+    LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.fk_wastewater_structure = ws.obj_id
+    LEFT JOIN qgep.od_wastewater_node wn ON wn.obj_id = ne.obj_id
     GROUP BY ws.obj_id
    ) aggregated_wastewater_structure
    LEFT JOIN qgep.od_wastewater_structure ws ON ws.obj_id = aggregated_wastewater_structure.obj_id
@@ -113,7 +115,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
    LEFT JOIN qgep.od_special_structure ss ON ss.obj_id = ws.obj_id
    LEFT JOIN qgep.od_discharge_point dp ON dp.obj_id = ws.obj_id
    LEFT JOIN qgep.od_infiltration_installation ii ON ii.obj_id = ws.obj_id
-   LEFT JOIN qgep.vw_wastewater_node wn ON wn.fk_wastewater_structure = ws.obj_id;
+   LEFT JOIN qgep.vw_wastewater_node wn ON wn.obj_id = aggregated_wastewater_structure.wn_obj_id;
 
 -- INSERT function
 
