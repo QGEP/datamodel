@@ -161,7 +161,7 @@ BEGIN
   UPDATE qgep.od_wastewater_structure ws
   SET _depth = depth
   FROM (
-    SELECT WS.obj_id, CO.level - COALESCE(NO.bottom_level, LEAST(RP.level)) as depth
+    SELECT WS.obj_id, CO.level - COALESCE(LEAST(NO.bottom_level), LEAST(RP.level)) as depth
       FROM qgep.od_wastewater_structure WS
       LEFT JOIN qgep.od_cover CO on WS.fk_main_cover = CO.obj_id
       LEFT JOIN qgep.od_wastewater_networkelement NE ON NE.fk_wastewater_structure = WS.obj_id
