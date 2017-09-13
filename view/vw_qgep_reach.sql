@@ -10,7 +10,7 @@ WITH active_maintenance_event AS (
     WHERE active_zone IS NOT NULL
 )
 
-SELECT DISTINCT ON (re.obj_id) re.obj_id,
+SELECT re.obj_id,
     re.clear_height AS clear_height,
     CASE WHEN pp.height_width_ratio IS NOT NULL THEN round(re.clear_height::numeric * pp.height_width_ratio)::smallint ELSE clear_height END AS width,
     re.coefficient_of_friction,
