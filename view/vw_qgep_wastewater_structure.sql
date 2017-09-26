@@ -99,7 +99,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
 
   FROM (
     SELECT ws.obj_id,
-      ST_Collect(co.situation_geometry)::geometry(MultiPoint, 2056) AS situation_geometry,
+      ST_Collect(co.situation_geometry)::geometry(MultiPoint, :SRID) AS situation_geometry,
       CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
     FROM qgep.od_wastewater_structure ws
     FULL OUTER JOIN qgep.od_structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
