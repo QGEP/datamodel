@@ -287,7 +287,7 @@ BEGIN
             , NEW.elevation_determination
             , NEW.horizontal_positioning
             , NEW.inside_coating
-            , NEW.length_effective
+            , CASE WHEN NEW.rp_from_level > 0 AND NEW.rp_to_level > 0 THEN |/((NEW.rp_from_level-NEW.rp_to_level)^2 + ST_Length(NEW.progression_geometry)^2) ELSE ST_Length(NEW.progression_geometry) END
             , NEW.material
             , NEW.progression_geometry
             , NEW.reliner_material
@@ -400,7 +400,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , elevation_determination = NEW.elevation_determination
       , horizontal_positioning = NEW.horizontal_positioning
       , inside_coating = NEW.inside_coating
-      , length_effective = NEW.length_effective
+      , length_effective = CASE WHEN NEW.rp_from_level > 0 AND NEW.rp_to_level > 0 THEN |/((NEW.rp_from_level-NEW.rp_to_level)^2 + ST_Length(NEW.progression_geometry)^2) ELSE ST_Length(NEW.progression_geometry) END
       , material = NEW.material
       , progression_geometry = NEW.progression_geometry
       , reliner_material = NEW.reliner_material
