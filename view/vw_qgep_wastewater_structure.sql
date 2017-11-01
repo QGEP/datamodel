@@ -205,6 +205,7 @@ BEGIN
     WHEN NEW.ws_type = 'special_structure' THEN
       INSERT INTO qgep.od_special_structure(
              obj_id
+           , bypass
            , emergency_spillway
            , function
            , stormwater_tank_arrangement
@@ -213,6 +214,7 @@ BEGIN
            VALUES
            (
              NEW.obj_id
+           , NEW.bypass
            , NEW.emergency_spillway
            , NEW.special_structure_function
            , NEW.stormwater_tank_arrangement
