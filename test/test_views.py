@@ -54,7 +54,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'clear_height': 100,
                 'coefficient_of_friction': 10,
-                'identifier': 'pra',
+                'ws_identifier': 'pra',
                 'usage_current': 4514
         }
 
@@ -63,7 +63,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'clear_height': 200,
                 'coefficient_of_friction': 20,
-                'identifier': '10',
+                'ws_identifier': '10',
                 'usage_current': 4516
         }
 

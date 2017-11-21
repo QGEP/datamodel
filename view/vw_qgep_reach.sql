@@ -42,9 +42,11 @@ SELECT re.obj_id,
     ws.contract_section,
     ws.financing,
     ws.gross_costs,
+    ws.identifier AS ws_identifier,
     ws.inspection_interval,
     ws.location_name,
     ws.records,
+    ws.remark AS ws_remark,
     ws.renovation_necessity,
     ws.replacement_value,
     ws.rv_base_year,
@@ -56,8 +58,8 @@ SELECT re.obj_id,
     ws.year_of_replacement,
     ws.fk_owner,
     ws.fk_operator,
-    ne.identifier,
-    ne.remark,
+    ne.identifier AS ne_identifier,
+    ne.remark AS ne_remark,
     ne.last_modification,
     ne.fk_dataowner,
     ne.fk_provider,
@@ -197,11 +199,11 @@ BEGIN
             -- , NEW.detail_geometry_geometry
             , NEW.financing
             , NEW.gross_costs
-            , NEW.identifier
+            , NEW.ws_identifier -- identifier
             , NEW.inspection_interval
             , NEW.location_name
             , NEW.records
-            , NEW.remark
+            , NEW.ws_remark -- remark
             , NEW.renovation_necessity
             , NEW.replacement_value
             , NEW.rv_base_year
@@ -251,8 +253,8 @@ BEGIN
             , fk_provider
             , fk_wastewater_structure )
     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_reach')) -- obj_id
-            , NEW.identifier -- identifier
-            , NEW.remark -- remark
+            , NEW.ne_identifier -- identifier
+            , NEW.ne_remark -- remark
             , NEW.last_modification -- last_modification
             , NEW.fk_dataowner -- fk_dataowner
             , NEW.fk_provider -- fk_provider
@@ -362,11 +364,11 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
      -- , detail_geometry_geometry = NEW.detail_geometry_geometry
      , financing = NEW.financing
      , gross_costs = NEW.gross_costs
-     , identifier = NEW.identifier
+     , identifier = NEW.ws_identifier
      , inspection_interval = NEW.inspection_interval
      , location_name = NEW.location_name
      , records = NEW.records
-     , remark = NEW.remark
+     , remark = NEW.ws_remark
      , renovation_necessity = NEW.renovation_necessity
      , replacement_value = NEW.replacement_value
      , rv_base_year = NEW.rv_base_year
@@ -386,8 +388,8 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
 
   UPDATE qgep.od_wastewater_networkelement
     SET
-        identifier = NEW.identifier
-      , remark = NEW.remark
+        identifier = NEW.ne_identifier
+      , remark = NEW.ne_remark
       , last_modification = NEW.last_modification
       , fk_dataowner = NEW.fk_dataowner
       , fk_provider = NEW.fk_provider
