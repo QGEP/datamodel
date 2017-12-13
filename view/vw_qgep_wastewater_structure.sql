@@ -64,6 +64,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
     ma._orientation AS ma_orientation,
  
     ss.bypass AS ss_bypass,
+    ss.emergency_spillway AS ss_emergency_spillway,
     ss.stormwater_tank_arrangement AS ss_stormwater_tank_arrangement,
     ss.upper_elevation AS ss_upper_elevation,
 
@@ -199,11 +200,11 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.dimension1
-           , NEW.dimension2
-           , NEW.manhole_function
-           , NEW.material
-           , NEW.surface_inflow
+           , NEW.ma_dimension1
+           , NEW.ma_dimension2
+           , NEW.ma_function
+           , NEW.ma_material
+           , NEW.ma_surface_inflow
            );
 
     -- Special Structure
@@ -219,11 +220,11 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.bypass
-           , NEW.emergency_spillway
-           , NEW.special_structure_function
-           , NEW.stormwater_tank_arrangement
-           , NEW.upper_elevation
+           , NEW.ss_bypass
+           , NEW.ss_emergency_spillway
+           , NEW.ss_function
+           , NEW.ss_stormwater_tank_arrangement
+           , NEW.ss_upper_elevation
            );
 
     -- Discharge Point
@@ -239,11 +240,11 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.highwater_level
-           , NEW.relevance
-           , NEW.terrain_level
-           , NEW.upper_elevation
-           , NEW.waterlevel_hydraulic
+           , NEW.dp_highwater_level
+           , NEW.dp_relevance
+           , NEW.dp_terrain_level
+           , NEW.dp_upper_elevation
+           , NEW.dp_waterlevel_hydraulic
            );
 
     -- Infiltration Installation
@@ -267,19 +268,19 @@ BEGIN
            VALUES
            (
              NEW.obj_id
-           , NEW.absorption_capacity
-           , NEW.defects
-           , NEW.dimension1
-           , NEW.dimension2
-           , NEW.distance_to_aquifer
-           , NEW.effective_area
-           , NEW.emergency_spillway
-           , NEW.kind
-           , NEW.labeling
-           , NEW.seepage_utilization
-           , NEW.upper_elevation
-           , NEW.vehicle_access
-           , NEW.watertightness
+           , NEW.ii_absorption_capacity
+           , NEW.ii_defects
+           , NEW.ii_dimension1
+           , NEW.ii_dimension2
+           , NEW.ii_distance_to_aquifer
+           , NEW.ii_effective_area
+           , NEW.ii_emergency_spillway
+           , NEW.ii_kind
+           , NEW.ii_labeling
+           , NEW.ii_seepage_utilization
+           , NEW.ii_upper_elevation
+           , NEW.ii_vehicle_access
+           , NEW.ii_watertightness
            );
     ELSE
      RAISE NOTICE 'Wastewater structure type not known (%)', NEW.ws_type; -- ERROR
@@ -300,14 +301,14 @@ BEGIN
   VALUES
   (
       NEW.wn_obj_id
-    , NEW.backflow_level
-    , NEW.bottom_level
+    , NEW.wn_backflow_level
+    , NEW.wn_bottom_level
     , ST_GeometryN( NEW.situation_geometry, 1 )
-    , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
+    , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.wn_identifier)
     , NEW.wn_remark
     , NOW()
-    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
-    , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
+    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.wn_fk_provider)
+    , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.wn_fk_dataowner)
     , NEW.obj_id
   );
 
@@ -334,19 +335,19 @@ BEGIN
   VALUES
   (
       NEW.co_obj_id
-    , NEW.brand
-    , NEW.cover_shape
-    , NEW.diameter
-    , NEW.fastening
-    , NEW.level
-    , NEW.cover_material
-    , NEW.positional_accuracy
+    , NEW.co_brand
+    , NEW.co_cover_shape
+    , NEW.co_diameter
+    , NEW.co_fastening
+    , NEW.co_level
+    , NEW.co_material
+    , NEW.co_positional_accuracy
     , ST_GeometryN( NEW.situation_geometry, 1 )
-    , NEW.sludge_bucket
-    , NEW.venting
-    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
-    , NEW.remark
-    , NEW.renovation_demand
+    , NEW.co_sludge_bucket
+    , NEW.co_venting
+    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.co_identifier)
+    , NEW.co_remark
+    , NEW.co_renovation_demand
     , NOW()
     , NEW.fk_dataowner
     , NEW.fk_provider
@@ -377,23 +378,23 @@ DECLARE
 BEGIN
     UPDATE qgep.od_cover
       SET
-        brand = NEW.brand,
-        cover_shape = new.cover_shape,
-        diameter = new.diameter,
-        fastening = new.fastening,
-        level = new.level,
-        material = new.cover_material,
-        positional_accuracy = new.positional_accuracy,
-        sludge_bucket = new.sludge_bucket,
-        venting = new.venting
+        brand = NEW.co_brand,
+        cover_shape = new.co_cover_shape,
+        diameter = new.co_diameter,
+        fastening = new.co_fastening,
+        level = new.co_level,
+        material = new.co_material,
+        positional_accuracy = new.co_positional_accuracy,
+        sludge_bucket = new.co_sludge_bucket,
+        venting = new.co_venting
     WHERE od_cover.obj_id::text = OLD.co_obj_id::text;
 
     UPDATE qgep.od_structure_part
       SET
         identifier = new.co_identifier,
-        remark = new.remark,
-        renovation_demand = new.renovation_demand,
-        last_modification = new.last_modification,
+        remark = new.co_remark,
+        renovation_demand = new.co_renovation_demand,
+        last_modification = new.co_last_modification,
         fk_dataowner = new.fk_dataowner,
         fk_provider = new.fk_provider
     WHERE od_structure_part.obj_id::text = OLD.co_obj_id::text;
@@ -443,58 +444,58 @@ BEGIN
     WHEN NEW.ws_type = 'manhole' THEN
       UPDATE qgep.od_manhole
       SET
-        dimension1 = NEW.dimension1,
-        dimension2 = NEW.dimension2,
-        function = NEW.manhole_function,
-        material = NEW.material,
-        surface_inflow = NEW.surface_inflow
+        dimension1 = NEW.ma_dimension1,
+        dimension2 = NEW.ma_dimension2,
+        function = NEW.ma_function,
+        material = NEW.ma_material,
+        surface_inflow = NEW.ma_surface_inflow
       WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'special_structure' THEN
       UPDATE qgep.od_special_structure
       SET
-        bypass = NEW.bypass,
-        emergency_spillway = NEW.emergency_spillway,
-        function = NEW.special_structure_function,
-        stormwater_tank_arrangement = NEW.stormwater_tank_arrangement,
-        upper_elevation = NEW.upper_elevation
+        bypass = NEW.ss_bypass,
+        emergency_spillway = NEW.ss_emergency_spillway,
+        function = NEW.ss_function,
+        stormwater_tank_arrangement = NEW.ss_stormwater_tank_arrangement,
+        upper_elevation = NEW.ss_upper_elevation
       WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'discharge_point' THEN
       UPDATE qgep.od_discharge_point
       SET
-        highwater_level = NEW.highwater_level,
-        relevance = NEW.relevance,
-        terrain_level = NEW.terrain_level,
-        upper_elevation = NEW.upper_elevation,
-        waterlevel_hydraulic = NEW.waterlevel_hydraulic
+        highwater_level = NEW.dp_highwater_level,
+        relevance = NEW.dp_relevance,
+        terrain_level = NEW.dp_terrain_level,
+        upper_elevation = NEW.dp_upper_elevation,
+        waterlevel_hydraulic = NEW.dp_waterlevel_hydraulic
       WHERE obj_id = OLD.obj_id;
 
     WHEN NEW.ws_type = 'infiltration_installation' THEN
       UPDATE qgep.od_infiltration_installation
       SET
-        absorption_capacity = NEW.absorption_capacity,
-        defects = NEW.defects,
-        dimension1 = NEW.dimension1,
-        dimension2 = NEW.dimension2,
-        distance_to_aquifer = NEW.distance_to_aquifer,
-        effective_area = NEW.effective_area,
-        emergency_spillway = NEW.emergency_spillway,
-        kind = NEW.kind,
-        labeling = NEW.labeling,
-        seepage_utilization = NEW.seepage_utilization,
-        upper_elevation = NEW.upper_elevation,
-        vehicle_access = NEW.vehicle_access,
-        watertightness = NEW.watertightness
+        absorption_capacity = NEW.ii_absorption_capacity,
+        defects = NEW.ii_defects,
+        dimension1 = NEW.ii_dimension1,
+        dimension2 = NEW.ii_dimension2,
+        distance_to_aquifer = NEW.ii_distance_to_aquifer,
+        effective_area = NEW.ii_effective_area,
+        emergency_spillway = NEW.ii_emergency_spillway,
+        kind = NEW.ii_kind,
+        labeling = NEW.ii_labeling,
+        seepage_utilization = NEW.ii_seepage_utilization,
+        upper_elevation = NEW.ii_upper_elevation,
+        vehicle_access = NEW.ii_vehicle_access,
+        watertightness = NEW.ii_watertightness
       WHERE obj_id = OLD.obj_id;
   END CASE;
 
   UPDATE qgep.vw_wastewater_node NO1
     SET
-    backflow_level = NEW.backflow_level
-    , bottom_level = NEW.bottom_level
+    backflow_level = NEW.wn_backflow_level
+    , bottom_level = NEW.wn_bottom_level
     -- , situation_geometry = NEW.situation_geometry -- Geometry is handled separately below
-    , identifier = NEW.identifier
+    , identifier = NEW.wn_identifier
     , remark = NEW.wn_remark
     -- , last_modification -- Handled by triggers
     , fk_dataowner = NEW.fk_dataowner
