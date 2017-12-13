@@ -191,37 +191,37 @@ BEGIN
             , subsidies
             , year_of_construction
             , year_of_replacement
-            , last_modification
-            , fk_dataowner
-            , fk_provider
+            --, last_modification
+            --, fk_dataowner
+            --, fk_provider
             , fk_owner
             , fk_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep.generate_oid('od_channel')) -- obj_id
-            , NEW.accessibility
-            , NEW.contract_section
+            , NEW.ws_accessibility
+            , NEW.ws_contract_section
             -- , NEW.detail_geometry_geometry
-            , NEW.financing
-            , NEW.gross_costs
-            , NEW.identifier
-            , NEW.inspection_interval
-            , NEW.location_name
-            , NEW.records
-            , NEW.remark
-            , NEW.renovation_necessity
-            , NEW.replacement_value
-            , NEW.rv_base_year
-            , NEW.rv_construction_type
-            , NEW.status
-            , NEW.structure_condition
-            , NEW.subsidies
-            , NEW.year_of_construction
-            , NEW.year_of_replacement
-            , NEW.last_modification
-            , NEW.fk_dataowner
-            , NEW.fk_provider
-            , NEW.fk_owner
-            , NEW.fk_operator
+            , NEW.ws_financing
+            , NEW.ws_gross_costs
+            , NEW.ws_identifier
+            , NEW.ws_inspection_interval
+            , NEW.ws_location_name
+            , NEW.ws_records
+            , NEW.ws_remark
+            , NEW.ws_renovation_necessity
+            , NEW.ws_replacement_value
+            , NEW.ws_rv_base_year
+            , NEW.ws_rv_construction_type
+            , NEW.ws_status
+            , NEW.ws_structure_condition
+            , NEW.ws_subsidies
+            , NEW.ws_year_of_construction
+            , NEW.ws_year_of_replacement
+            --, NEW.ws_last_modification
+            --, NEW.fk_dataowner
+            --, NEW.fk_provider
+            , NEW.ws_fk_owner
+            , NEW.ws_fk_operator
            )
            RETURNING obj_id INTO NEW.fk_wastewater_structure;
 
@@ -238,14 +238,14 @@ BEGIN
             )
             VALUES(
               NEW.fk_wastewater_structure
-            , NEW.bedding_encasement
-            , NEW.connection_type
-            , NEW.function_hierarchic
-            , NEW.function_hydraulic
-            , NEW.jetting_interval
-            , NEW.pipe_length
-            , NEW.usage_current
-            , NEW.usage_planned
+            , NEW.ch_bedding_encasement
+            , NEW.ch_connection_type
+            , NEW.ch_function_hierarchic
+            , NEW.ch_function_hydraulic
+            , NEW.ch_jetting_interval
+            , NEW.ch_pipe_length
+            , NEW.ch_usage_current
+            , NEW.ch_usage_planned
             );
 
   INSERT INTO qgep.od_wastewater_networkelement (
@@ -429,6 +429,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep.vw_qgep_reac
   DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_from_obj_id;
   DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_to_obj_id;
 );
+--missing: delete also connected wastewater_structure (and subclass channel or other), structure_parts, re_maintenance_events
 
 ALTER VIEW qgep.vw_qgep_reach ALTER obj_id SET DEFAULT qgep.generate_oid('od_reach');
 
