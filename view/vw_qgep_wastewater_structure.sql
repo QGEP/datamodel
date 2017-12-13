@@ -35,6 +35,7 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
     ws.subsidies,
     ws.year_of_construction,
     ws.year_of_replacement,
+    ws.last_modification,
     ws.fk_operator,
     ws.fk_dataowner,
     ws.fk_provider,
@@ -54,7 +55,6 @@ CREATE OR REPLACE VIEW qgep.vw_qgep_wastewater_structure AS
     main_co.venting AS co_venting,
     main_co_sp.remark AS co_remark,
     main_co_sp.renovation_demand AS co_renovation_demand,
-    main_co_sp.last_modification AS co_last_modification,
     main_co.obj_id AS co_obj_id,
 
     ma.material AS ma_material,
@@ -394,7 +394,7 @@ BEGIN
         identifier = new.co_identifier,
         remark = new.co_remark,
         renovation_demand = new.co_renovation_demand,
-        last_modification = new.co_last_modification,
+        last_modification = new.last_modification,
         fk_dataowner = new.fk_dataowner,
         fk_provider = new.fk_provider
     WHERE od_structure_part.obj_id::text = OLD.co_obj_id::text;
