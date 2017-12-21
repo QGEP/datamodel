@@ -392,6 +392,9 @@ BEGIN
     WHEN TG_OP = 'DELETE' THEN
       rp_obj_id = OLD.obj_id;
   END CASE;
+  
+  UPDATE qgep.od_reach
+  SET progression_geometry = progression_geometry;
 
   SELECT ws.obj_id INTO _ws_obj_id
   FROM qgep.od_wastewater_structure ws
@@ -404,6 +407,36 @@ BEGIN
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
+
+--------------------------------------------------
+-- CALCULATE REACH LENGTH
+--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep.calculate_reach_length()
+  RETURNS trigger AS
+$BODY$
+
+DECLARE 
+	_rp_from_level numeric(7,3);
+	_rp_to_level numeric(7,3);
+
+BEGIN
+
+  SELECT rp_from.level INTO _rp_from_level 
+  FROM qgep.od_reach_point rp_from
+  WHERE NEW.fk_reach_point_from = rp_from.obj_id;
+
+  SELECT rp_to.level INTO _rp_to_level 
+  FROM qgep.od_reach_point rp_to
+  WHERE NEW.fk_reach_point_to = rp_to.obj_id;
+
+  NEW.length_effective = COALESCE(sqrt((_rp_from_level - _rp_to_level)^2 + ST_Length(NEW.progression_geometry)^2), ST_Length(NEW.progression_geometry) );
+
+  RETURN NEW;
+
+END; 
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
 -----------------------------------------------------------------------
 -- Drop Symbology Triggers
@@ -443,7 +476,13 @@ BEGIN
     ON qgep.od_reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep.on_reach_change();
-
+	
+  CREATE TRIGGER calculate_reach_length
+  BEFORE INSERT OR UPDATE
+    ON qgep.od_reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep.calculate_reach_length();
+ 
     
   CREATE TRIGGER ws_symbology_update_by_reach
   AFTER INSERT OR UPDATE OR DELETE
