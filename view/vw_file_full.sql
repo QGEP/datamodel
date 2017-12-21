@@ -41,7 +41,15 @@ CREATE TRIGGER vw_file_update
   FOR EACH ROW
   EXECUTE PROCEDURE qgep.vw_file_update();
 
+  -- Trigger: vw_file_delete on qgep.vw_file
 
+-- DROP TRIGGER vw_file_delete ON qgep.vw_file;
+
+CREATE TRIGGER vw_file_delete
+  INSTEAD OF DELETE
+  ON qgep.vw_file
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep.vw_file_delete();
 
 
 -----------------------------------
@@ -117,6 +125,26 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION qgep.vw_file_update()
+  OWNER TO postgres;
+
+-----------------------------------
+-- building DELETE
+-- Function: qgep.vw_file_delete()
+-----------------------------------
+
+-- DROP FUNCTION qgep.vw_file_delete();
+
+CREATE OR REPLACE FUNCTION qgep.vw_file_delete()
+  RETURNS trigger AS
+$BODY$
+	BEGIN
+		DELETE FROM qgep.od_file WHERE obj_id = OLD.obj_id;
+		RETURN NULL;
+	END;
+	$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION qgep.vw_file_delete()
   OWNER TO postgres;
 
 --------------------------------------------
