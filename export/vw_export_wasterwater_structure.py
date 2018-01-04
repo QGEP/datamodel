@@ -107,4 +107,4 @@ joins:
     fkey: relevance
 """)
 
-print SqlExportView(pg_service, definition).sql()
+print(SqlExportView(pg_service, definition).sql())

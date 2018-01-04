@@ -1,6 +1,6 @@
 import json
 import time
-import httplib
+import http.client
 import os
 from subprocess import call
 
@@ -15,7 +15,7 @@ if os.environ['TRAVIS_SECURE_ENV_VARS'] == 'true' \
     releasename=time.strftime("%Y%m%d-%H%M%S")
 
     # Create a release
-    conn = httplib.HTTPSConnection('api.github.com')
+    conn = http.client.HTTPSConnection('api.github.com')
     headers = {
       'User-Agent' : 'Deploy-Script',
       'Authorization': 'token {}'.format(os.environ['OAUTH_TOKEN'])
@@ -28,15 +28,15 @@ if os.environ['TRAVIS_SECURE_ENV_VARS'] == 'true' \
 
     release = json.load(response)
 
-    print release
+    print(release)
 
 
-    conn = httplib.HTTPSConnection('uploads.github.com')
+    conn = http.client.HTTPSConnection('uploads.github.com')
     headers['Content-Type'] = 'application/zip'
     url='{}?name={}'.format(release['upload_url'][:-13], 'template_db.dump')
-    print 'Upload to ' + url
+    print('Upload to ' + url)
 
     with open('/tmp/template_db.dump', 'r') as f:
         conn.request('POST', url, f, headers)
 
-    print conn.getresponse().read()
+    print(conn.getresponse().read())

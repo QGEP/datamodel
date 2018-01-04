@@ -36,4 +36,4 @@ merge_view:
 """
 
 
-print pgiv.PGInheritanceView(pg_service, damage).sql_all()
+print(pgiv.PGInheritanceView(pg_service, damage).sql_all())
