@@ -393,8 +393,9 @@ BEGIN
       rp_obj_id = OLD.obj_id;
   END CASE;
   
+  
   UPDATE qgep.od_reach
-  SET progression_geometry = progression_geometry;
+  SET progression_geometry = progression_geometry; --To retrigger the calculate_length trigger on reach update
 
   SELECT ws.obj_id INTO _ws_obj_id
   FROM qgep.od_wastewater_structure ws
