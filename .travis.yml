@@ -60,9 +60,8 @@ script:
   - pum baseline -p qgep_comp -t qgep.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 2018.01.05
 
   # Run pum's test and upgrade
-  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep.pum_info -d delta/ -f /tmp/qwat_dump -i constraints views
+  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views
 
 after_success:
-  # TODO uncomment
-  #- $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
-  #- python $TRAVIS_BUILD_DIR/scripts/release_db_template.py
+  - $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
+  - python $TRAVIS_BUILD_DIR/scripts/release_db_template.py
