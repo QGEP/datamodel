@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_cover;
+DROP VIEW IF EXISTS qgep_od.vw_cover;
 
 
 --------
--- Subclass: od_cover
--- Superclass: od_structure_part
+-- Subclass: cover
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_cover AS
+CREATE OR REPLACE VIEW qgep_od.vw_cover AS
 
 SELECT
    CO.obj_id
@@ -26,8 +26,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_cover CO
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.cover CO
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = CO.obj_id;
 
 -----------------------------------
@@ -35,11 +35,11 @@ SELECT
 -- Function: vw_cover_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_cover_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_cover_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -49,7 +49,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_cover')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','cover')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -60,7 +60,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_cover (
+INSERT INTO qgep_od.cover (
              obj_id
            , brand
            , cover_shape
@@ -91,18 +91,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_cover_ON_INSERT ON qgep.cover;
+-- DROP TRIGGER vw_cover_ON_INSERT ON qgep_od.cover;
 
-CREATE TRIGGER vw_cover_ON_INSERT INSTEAD OF INSERT ON qgep.vw_cover
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_cover_insert();
+CREATE TRIGGER vw_cover_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_cover
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_cover_insert();
 
 -----------------------------------
 -- cover UPDATE
 -- Rule: vw_cover_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_cover_ON_UPDATE AS ON UPDATE TO qgep.vw_cover DO INSTEAD (
-UPDATE qgep.od_cover
+CREATE OR REPLACE RULE vw_cover_ON_UPDATE AS ON UPDATE TO qgep_od.vw_cover DO INSTEAD (
+UPDATE qgep_od.cover
   SET
        brand = NEW.brand
      , cover_shape = NEW.cover_shape
@@ -116,7 +116,7 @@ UPDATE qgep.od_cover
      , venting = NEW.venting
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -133,8 +133,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_cover_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_cover_ON_DELETE AS ON DELETE TO qgep.vw_cover DO INSTEAD (
-  DELETE FROM qgep.od_cover WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_cover_ON_DELETE AS ON DELETE TO qgep_od.vw_cover DO INSTEAD (
+  DELETE FROM qgep_od.cover WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 

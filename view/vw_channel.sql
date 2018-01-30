@@ -1,10 +1,10 @@
-DROP VIEW IF EXISTS qgep.vw_channel;
+DROP VIEW IF EXISTS qgep_od.vw_channel;
 
 --------
--- Subclass: od_channel
--- Superclass: od_wastewater_structure
+-- Subclass: channel
+-- Superclass: wastewater_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_channel AS
+CREATE OR REPLACE VIEW qgep_od.vw_channel AS
 
 SELECT
    CL.obj_id
@@ -40,8 +40,8 @@ SELECT
    , WS.last_modification
   , WS.fk_owner
   , WS.fk_operator
-  FROM qgep.od_channel CL
- LEFT JOIN qgep.od_wastewater_structure WS
+  FROM qgep_od.channel CL
+ LEFT JOIN qgep_od.wastewater_structure WS
  ON WS.obj_id = CL.obj_id;
 
 -----------------------------------
@@ -49,11 +49,11 @@ SELECT
 -- Function: vw_channel_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_channel_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_channel_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_wastewater_structure (
+  INSERT INTO qgep_od.wastewater_structure (
              obj_id
            , accessibility
            , contract_section
@@ -80,7 +80,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_channel')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
@@ -108,7 +108,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_channel (
+INSERT INTO qgep_od.channel (
              obj_id
            , bedding_encasement
            , connection_type
@@ -135,18 +135,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_channel_ON_INSERT ON qgep.channel;
+-- DROP TRIGGER vw_channel_ON_INSERT ON qgep_od.channel;
 
-CREATE TRIGGER vw_channel_ON_INSERT INSTEAD OF INSERT ON qgep.vw_channel
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_channel_insert();
+CREATE TRIGGER vw_channel_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_channel
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_channel_insert();
 
 -----------------------------------
 -- channel UPDATE
 -- Rule: vw_channel_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_channel_ON_UPDATE AS ON UPDATE TO qgep.vw_channel DO INSTEAD (
-UPDATE qgep.od_channel
+CREATE OR REPLACE RULE vw_channel_ON_UPDATE AS ON UPDATE TO qgep_od.vw_channel DO INSTEAD (
+UPDATE qgep_od.channel
   SET
        bedding_encasement = NEW.bedding_encasement
      , connection_type = NEW.connection_type
@@ -158,7 +158,7 @@ UPDATE qgep.od_channel
      , usage_planned = NEW.usage_planned
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_wastewater_structure
+UPDATE qgep_od.wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
@@ -192,8 +192,8 @@ UPDATE qgep.od_wastewater_structure
 -- Rule: vw_channel_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_channel_ON_DELETE AS ON DELETE TO qgep.vw_channel DO INSTEAD (
-  DELETE FROM qgep.od_channel WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_channel_ON_DELETE AS ON DELETE TO qgep_od.vw_channel DO INSTEAD (
+  DELETE FROM qgep_od.channel WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.obj_id;
 );
 

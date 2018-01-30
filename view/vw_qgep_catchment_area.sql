@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW qgep.vw_qgep_catchment_area AS
+CREATE OR REPLACE VIEW qgep_od.vw_qgep_catchment_area AS
 
 SELECT
   CA.obj_id,
@@ -41,14 +41,14 @@ SELECT
   NE_rw_planned.identifier AS rw_planned_identifier,
   NE_ww_planned.identifier AS ww_planned_identifier,
   NE_ww_current.identifier AS ww_current_identifier
-  FROM qgep.od_catchment_area CA
-LEFT JOIN qgep.od_wastewater_networkelement NE_rw_current
+  FROM qgep_od.catchment_area CA
+LEFT JOIN qgep_od.wastewater_networkelement NE_rw_current
  ON CA.fk_wastewater_networkelement_rw_current = NE_rw_current.obj_id
-LEFT JOIN qgep.od_wastewater_networkelement NE_rw_planned
+LEFT JOIN qgep_od.wastewater_networkelement NE_rw_planned
  ON CA.fk_wastewater_networkelement_rw_planned = NE_rw_planned.obj_id
-LEFT JOIN qgep.od_wastewater_networkelement NE_ww_planned
+LEFT JOIN qgep_od.wastewater_networkelement NE_ww_planned
  ON CA.fk_wastewater_networkelement_ww_planned = NE_ww_planned.obj_id
-LEFT JOIN qgep.od_wastewater_networkelement NE_ww_current
+LEFT JOIN qgep_od.wastewater_networkelement NE_ww_current
  ON CA.fk_wastewater_networkelement_ww_current = NE_ww_current.obj_id;
 
 
@@ -58,11 +58,11 @@ LEFT JOIN qgep.od_wastewater_networkelement NE_ww_current
 -----------------------------------
 
 
-CREATE OR REPLACE FUNCTION qgep.vw_qgep_catchment_area_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_catchment_area_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-INSERT INTO qgep.od_catchment_area(
+INSERT INTO qgep_od.catchment_area(
    obj_id
   , direct_discharge_current
   , direct_discharge_planned
@@ -100,7 +100,7 @@ INSERT INTO qgep.od_catchment_area(
   , fk_wastewater_networkelement_ww_planned
   , fk_wastewater_networkelement_ww_current)
 VALUES (
-    COALESCE(NEW.obj_id,qgep.generate_oid('od_catchment_area'))
+    COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','catchment_area'))
   , NEW.direct_discharge_current
   , NEW.direct_discharge_planned=NEW.NEW.direct_discharge_planned
   , NEW.discharge_coefficient_rw_current
@@ -144,10 +144,10 @@ END; $BODY$
   COST 100;
 
 
--- DROP TRIGGER vw_qgep_catchment_area_ON_INSERT ON qgep.catchment_area;
+-- DROP TRIGGER vw_qgep_catchment_area_ON_INSERT ON qgep_od.catchment_area;
 
-CREATE TRIGGER vw_qgep_catchment_area_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qgep_catchment_area
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_catchment_area_insert();
+CREATE TRIGGER vw_qgep_catchment_area_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_catchment_area
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_catchment_area_insert();
 
 
 -----------------------------------
@@ -156,8 +156,8 @@ CREATE TRIGGER vw_qgep_catchment_area_ON_INSERT INSTEAD OF INSERT ON qgep.vw_qge
 -----------------------------------
 
 
-CREATE OR REPLACE RULE vw_qgep_catchment_area_ON_UPDATE AS ON UPDATE TO qgep.vw_qgep_catchment_area DO INSTEAD (
-UPDATE qgep.od_catchment_area
+CREATE OR REPLACE RULE vw_qgep_catchment_area_ON_UPDATE AS ON UPDATE TO qgep_od.vw_qgep_catchment_area DO INSTEAD (
+UPDATE qgep_od.catchment_area
   SET
     direct_discharge_current=NEW.direct_discharge_current
   , direct_discharge_planned=NEW.direct_discharge_planned
@@ -205,8 +205,8 @@ UPDATE qgep.od_catchment_area
 -----------------------------------
 
 
-CREATE OR REPLACE RULE vw_qgep_catchment_area_ON_DELETE AS ON DELETE TO qgep.vw_qgep_catchment_area DO
+CREATE OR REPLACE RULE vw_qgep_catchment_area_ON_DELETE AS ON DELETE TO qgep_od.vw_qgep_catchment_area DO
 INSTEAD (
-  DELETE FROM qgep.od_catchment_area WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.catchment_area WHERE obj_id = OLD.obj_id;
 );
 

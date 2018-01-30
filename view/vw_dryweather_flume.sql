@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_dryweather_flume;
+DROP VIEW IF EXISTS qgep_od.vw_dryweather_flume;
 
 
 --------
--- Subclass: od_dryweather_flume
--- Superclass: od_structure_part
+-- Subclass: dryweather_flume
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_dryweather_flume AS
+CREATE OR REPLACE VIEW qgep_od.vw_dryweather_flume AS
 
 SELECT
    DF.obj_id
@@ -17,8 +17,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_dryweather_flume DF
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.dryweather_flume DF
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = DF.obj_id;
 
 -----------------------------------
@@ -26,11 +26,11 @@ SELECT
 -- Function: vw_dryweather_flume_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_dryweather_flume_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_dryweather_flume_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -40,7 +40,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_dryweather_flume')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','dryweather_flume')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -51,7 +51,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_dryweather_flume (
+INSERT INTO qgep_od.dryweather_flume (
              obj_id
            , material
            )
@@ -64,23 +64,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_dryweather_flume_ON_INSERT ON qgep.dryweather_flume;
+-- DROP TRIGGER vw_dryweather_flume_ON_INSERT ON qgep_od.dryweather_flume;
 
-CREATE TRIGGER vw_dryweather_flume_ON_INSERT INSTEAD OF INSERT ON qgep.vw_dryweather_flume
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_dryweather_flume_insert();
+CREATE TRIGGER vw_dryweather_flume_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_dryweather_flume
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_dryweather_flume_insert();
 
 -----------------------------------
 -- dryweather_flume UPDATE
 -- Rule: vw_dryweather_flume_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_dryweather_flume_ON_UPDATE AS ON UPDATE TO qgep.vw_dryweather_flume DO INSTEAD (
-UPDATE qgep.od_dryweather_flume
+CREATE OR REPLACE RULE vw_dryweather_flume_ON_UPDATE AS ON UPDATE TO qgep_od.vw_dryweather_flume DO INSTEAD (
+UPDATE qgep_od.dryweather_flume
   SET
        material = NEW.material
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -97,8 +97,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_dryweather_flume_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_dryweather_flume_ON_DELETE AS ON DELETE TO qgep.vw_dryweather_flume DO INSTEAD (
-  DELETE FROM qgep.od_dryweather_flume WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_dryweather_flume_ON_DELETE AS ON DELETE TO qgep_od.vw_dryweather_flume DO INSTEAD (
+  DELETE FROM qgep_od.dryweather_flume WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 

@@ -1,9 +1,9 @@
 -- Views for network following with the Python NetworkX module and the QGEP Python plugins
--- View: qgep.vw_network_node
+-- View: qgep_od.vw_network_node
 
-DROP MATERIALIZED VIEW IF EXISTS qgep.vw_network_node CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node CASCADE;
 
-CREATE MATERIALIZED VIEW qgep.vw_network_node AS
+CREATE MATERIALIZED VIEW qgep_od.vw_network_node AS
  SELECT
    row_number() OVER () AS gid,
    nodes.*
@@ -20,7 +20,7 @@ CREATE MATERIALIZED VIEW qgep.vw_network_node AS
      NULL AS description,
      situation_geometry AS detail_geometry,
      situation_geometry
-   FROM qgep.od_reach_point
+   FROM qgep_od.reach_point
 
    UNION
 
@@ -41,58 +41,58 @@ CREATE MATERIALIZED VIEW qgep.vw_network_node AS
      NE.identifier AS description,
      COALESCE( WS.detail_geometry_geometry, WN.situation_geometry ) AS detail_geometry, -- Will contain different geometry types: do not visualize directly. Will be handled by plugin
      WN.situation_geometry
-   FROM qgep.od_wastewater_node WN
-   LEFT JOIN qgep.od_wastewater_networkelement NE
+   FROM qgep_od.wastewater_node WN
+   LEFT JOIN qgep_od.wastewater_networkelement NE
      ON NE.obj_id = WN.obj_id
-   LEFT JOIN qgep.od_wastewater_structure WS
+   LEFT JOIN qgep_od.wastewater_structure WS
      ON WS.obj_id = NE.fk_wastewater_structure
-   LEFT JOIN qgep.od_manhole MH
+   LEFT JOIN qgep_od.manhole MH
      ON MH.obj_id = WS.obj_id
-   LEFT JOIN qgep.od_structure_part SP
+   LEFT JOIN qgep_od.structure_part SP
      ON SP.fk_wastewater_structure = WS.obj_id
-   LEFT JOIN qgep.od_cover CO
+   LEFT JOIN qgep_od.cover CO
      ON CO.obj_id = SP.obj_id
-   LEFT JOIN qgep.od_reach_point RP
+   LEFT JOIN qgep_od.reach_point RP
      ON NE.obj_id = RP.fk_wastewater_networkelement
-   LEFT JOIN qgep.od_reach re_from
+   LEFT JOIN qgep_od.reach re_from
      ON re_from.fk_reach_point_from = RP.obj_id
-   LEFT JOIN qgep.od_wastewater_networkelement ne_from
+   LEFT JOIN qgep_od.wastewater_networkelement ne_from
      ON ne_from.obj_id = re_from.obj_id
-   LEFT JOIN qgep.od_channel ch_from
+   LEFT JOIN qgep_od.channel ch_from
      ON ch_from.obj_id = ne_from.fk_wastewater_structure
-   LEFT JOIN qgep.od_reach re_to
+   LEFT JOIN qgep_od.reach re_to
      ON re_to.fk_reach_point_to = RP.obj_id
-   LEFT JOIN qgep.od_wastewater_networkelement ne_to
+   LEFT JOIN qgep_od.wastewater_networkelement ne_to
      ON ne_to.obj_id = re_to.obj_id
-   LEFT JOIN qgep.od_channel ch_to
+   LEFT JOIN qgep_od.channel ch_to
      ON ch_to.obj_id = ne_to.fk_wastewater_structure
    GROUP BY NE.obj_id, type, bottom_level, backflow_level, description, WN.situation_geometry, WS.detail_geometry_geometry, WS.obj_id, MH.obj_id, SP.fk_wastewater_structure
   ) AS nodes;
 
 
--- View: qgep.vw_network_segment
+-- View: qgep_od.vw_network_segment
 
-DROP MATERIALIZED VIEW IF EXISTS qgep.vw_network_segment CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_segment CASCADE;
 
-CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
+CREATE MATERIALIZED VIEW qgep_od.vw_network_segment AS
  WITH reach_parts AS (
    SELECT
-     row_number() OVER (ORDER BY od_reach_point.fk_wastewater_networkelement, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(ST_Force2D(od_reach.progression_geometry))), od_reach_point.situation_geometry)) AS gid,
-     od_reach_point.obj_id,
-     od_reach_point.fk_wastewater_networkelement,
-     od_reach_point.situation_geometry,
-     od_reach.progression_geometry,
-     od_reach.fk_reach_point_from,
-     od_reach.fk_reach_point_to,
-     ST_LineMerge(ST_CurveToLine(ST_Force2D(od_reach.progression_geometry))) AS reach_progression,
+     row_number() OVER (ORDER BY reach_point.fk_wastewater_networkelement, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(ST_Force2D(reach.progression_geometry))), reach_point.situation_geometry)) AS gid,
+     reach_point.obj_id,
+     reach_point.fk_wastewater_networkelement,
+     reach_point.situation_geometry,
+     reach.progression_geometry,
+     reach.fk_reach_point_from,
+     reach.fk_reach_point_to,
+     ST_LineMerge(ST_CurveToLine(ST_Force2D(reach.progression_geometry))) AS reach_progression,
      ST_LineLocatePoint(
-       ST_LineMerge(ST_CurveToLine(ST_Force2D(od_reach.progression_geometry))),
-       od_reach_point.situation_geometry
+       ST_LineMerge(ST_CurveToLine(ST_Force2D(reach.progression_geometry))),
+       reach_point.situation_geometry
      ) AS pos
-   FROM qgep.od_reach_point
-   LEFT JOIN qgep.od_reach ON od_reach_point.fk_wastewater_networkelement::text = od_reach.obj_id::text
-   WHERE od_reach_point.fk_wastewater_networkelement IS NOT NULL AND od_reach.progression_geometry IS NOT NULL
-   ORDER BY od_reach_point.obj_id, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(od_reach.progression_geometry)), od_reach_point.situation_geometry)
+   FROM qgep_od.reach_point
+   LEFT JOIN qgep_od.reach ON reach_point.fk_wastewater_networkelement::text = reach.obj_id::text
+   WHERE reach_point.fk_wastewater_networkelement IS NOT NULL AND reach.progression_geometry IS NOT NULL
+   ORDER BY reach_point.obj_id, ST_LineLocatePoint(ST_LineMerge(ST_CurveToLine(reach.progression_geometry)), reach_point.situation_geometry)
  )
 
  SELECT row_number() OVER () AS gid,
@@ -116,7 +116,7 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
      mat.abbr_de AS material,
      COALESCE(reach_progression, ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))) AS progression_geometry,
      ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry))) AS detail_geometry
-   FROM qgep.od_reach re
+   FROM qgep_od.reach re
    FULL JOIN
    (
      SELECT
@@ -132,9 +132,9 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
      ORDER BY COALESCE(s1.fk_wastewater_networkelement, s2.fk_wastewater_networkelement), COALESCE(s1.pos, 0::double precision)
    ) AS rr
    ON rr.reach_obj_id = re.obj_id
-   LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.obj_id = re.obj_id
-   LEFT JOIN qgep.od_channel ch ON ch.obj_id = ne.fk_wastewater_structure
-   LEFT JOIN qgep.vl_reach_material mat ON re.material = mat.code
+   LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
+   LEFT JOIN qgep_od.channel ch ON ch.obj_id = ne.fk_wastewater_structure
+   LEFT JOIN qgep_vl.reach_material mat ON re.material = mat.code
 
    UNION
 
@@ -164,11 +164,11 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
      rp_from.obj_id AS to_obj_id,
      wn_from.bottom_level AS bottom_level,
      ST_LineFromMultiPoint( ST_Collect(wn_from.situation_geometry, rp_from.situation_geometry ) ) AS progression_geometry
-     FROM qgep.od_reach
-       LEFT JOIN qgep.od_reach_point rp_from ON rp_from.obj_id = od_reach.fk_reach_point_from
-       LEFT JOIN qgep.od_wastewater_node wn_from ON rp_from.fk_wastewater_networkelement = wn_from.obj_id
+     FROM qgep_od.reach
+       LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = reach.fk_reach_point_from
+       LEFT JOIN qgep_od.wastewater_node wn_from ON rp_from.fk_wastewater_networkelement = wn_from.obj_id
      WHERE
-       od_reach.fk_reach_point_from IS NOT NULL
+       reach.fk_reach_point_from IS NOT NULL
        AND
        wn_from.obj_id IS NOT NULL
 
@@ -180,20 +180,20 @@ CREATE MATERIALIZED VIEW qgep.vw_network_segment AS
        wn_to.obj_id AS to_obj_id,
        wn_to.bottom_level AS bottom_level,
        ST_LineFromMultiPoint( ST_Collect(rp_to.situation_geometry, wn_to.situation_geometry ) ) AS progression_geometry
-     FROM qgep.od_reach
-       LEFT JOIN qgep.od_reach_point rp_to ON rp_to.obj_id = od_reach.fk_reach_point_to
-       LEFT JOIN qgep.od_wastewater_node wn_to ON rp_to.fk_wastewater_networkelement = wn_to.obj_id
+     FROM qgep_od.reach
+       LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id = reach.fk_reach_point_to
+       LEFT JOIN qgep_od.wastewater_node wn_to ON rp_to.fk_wastewater_networkelement = wn_to.obj_id
      WHERE
-       od_reach.fk_reach_point_to IS NOT NULL
+       reach.fk_reach_point_to IS NOT NULL
      AND
        wn_to.obj_id IS NOT NULL
    ) AS connectors
-   LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.obj_id = connectors.obj_id
+   LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = connectors.obj_id
  ) AS parts
 WHERE GeometryType(progression_geometry) <> 'GEOMETRYCOLLECTION';
 
 
 
 
-REFRESH MATERIALIZED view qgep.vw_network_node;
-REFRESH MATERIALIZED view qgep.vw_network_segment;
+REFRESH MATERIALIZED view qgep_od.vw_network_node;
+REFRESH MATERIALIZED view qgep_od.vw_network_segment;

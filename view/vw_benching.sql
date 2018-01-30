@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_benching;
+DROP VIEW IF EXISTS qgep_od.vw_benching;
 
 
 --------
--- Subclass: od_benching
--- Superclass: od_structure_part
+-- Subclass: benching
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_benching AS
+CREATE OR REPLACE VIEW qgep_od.vw_benching AS
 
 SELECT
    BE.obj_id
@@ -17,8 +17,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_benching BE
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.benching BE
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = BE.obj_id;
 
 -----------------------------------
@@ -26,11 +26,11 @@ SELECT
 -- Function: vw_benching_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_benching_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_benching_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -40,7 +40,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_benching')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','benching')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -51,7 +51,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_benching (
+INSERT INTO qgep_od.benching (
              obj_id
            , kind
            )
@@ -64,23 +64,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_benching_ON_INSERT ON qgep.benching;
+-- DROP TRIGGER vw_benching_ON_INSERT ON qgep_od.benching;
 
-CREATE TRIGGER vw_benching_ON_INSERT INSTEAD OF INSERT ON qgep.vw_benching
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_benching_insert();
+CREATE TRIGGER vw_benching_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_benching
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_benching_insert();
 
 -----------------------------------
 -- benching UPDATE
 -- Rule: vw_benching_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_benching_ON_UPDATE AS ON UPDATE TO qgep.vw_benching DO INSTEAD (
-UPDATE qgep.od_benching
+CREATE OR REPLACE RULE vw_benching_ON_UPDATE AS ON UPDATE TO qgep_od.vw_benching DO INSTEAD (
+UPDATE qgep_od.benching
   SET
        kind = NEW.kind
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -97,8 +97,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_benching_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_benching_ON_DELETE AS ON DELETE TO qgep.vw_benching DO INSTEAD (
-  DELETE FROM qgep.od_benching WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_benching_ON_DELETE AS ON DELETE TO qgep_od.vw_benching DO INSTEAD (
+  DELETE FROM qgep_od.benching WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 

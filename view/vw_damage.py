@@ -15,18 +15,18 @@ else:
 
 damage = """
 alias: damage
-table: qgep.od_damage
+table: qgep_od.damage
 pkey: obj_id
-pkey_value: qgep.generate_oid('od_damage')
-schema: qgep
+pkey_value: qgep_sys.generate_oid('qgep_od','damage')
+schema: qgep_od
 
 children:
   channel:
-    table: qgep.od_damage_channel
+    table: qgep_od.damage_channel
     pkey: obj_id
     
   manhole:
-    table: qgep.od_damage_manhole
+    table: qgep_od.damage_manhole
     pkey: obj_id 
 
 merge_view:

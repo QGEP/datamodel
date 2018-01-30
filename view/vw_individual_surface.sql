@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_individual_surface;
+DROP VIEW IF EXISTS qgep_od.vw_individual_surface;
 
 
 --------
--- Subclass: od_individual_surface
--- Superclass: od_connection_object
+-- Subclass: individual_surface
+-- Superclass: connection_object
 --------
-CREATE OR REPLACE VIEW qgep.vw_individual_surface AS
+CREATE OR REPLACE VIEW qgep_od.vw_individual_surface AS
 
 SELECT
    IS.obj_id
@@ -22,8 +22,8 @@ SELECT
   , CN.fk_wastewater_networkelement
   , CN.fk_owner
   , CN.fk_operator
-  FROM qgep.od_individual_surface IS
- LEFT JOIN qgep.od_connection_object CN
+  FROM qgep_od.individual_surface IS
+ LEFT JOIN qgep_od.connection_object CN
  ON CN.obj_id = IS.obj_id;
 
 -----------------------------------
@@ -31,11 +31,11 @@ SELECT
 -- Function: vw_individual_surface_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_individual_surface_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_individual_surface_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_connection_object (
+  INSERT INTO qgep_od.connection_object (
              obj_id
            , identifier
            , remark
@@ -47,7 +47,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_individual_surface')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','individual_surface')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.sewer_infiltration_water_production
@@ -60,7 +60,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_individual_surface (
+INSERT INTO qgep_od.individual_surface (
              obj_id
            , function
            , inclination
@@ -79,18 +79,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_individual_surface_ON_INSERT ON qgep.individual_surface;
+-- DROP TRIGGER vw_individual_surface_ON_INSERT ON qgep_od.individual_surface;
 
-CREATE TRIGGER vw_individual_surface_ON_INSERT INSTEAD OF INSERT ON qgep.vw_individual_surface
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_individual_surface_insert();
+CREATE TRIGGER vw_individual_surface_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_individual_surface
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_individual_surface_insert();
 
 -----------------------------------
 -- individual_surface UPDATE
 -- Rule: vw_individual_surface_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_individual_surface_ON_UPDATE AS ON UPDATE TO qgep.vw_individual_surface DO INSTEAD (
-UPDATE qgep.od_individual_surface
+CREATE OR REPLACE RULE vw_individual_surface_ON_UPDATE AS ON UPDATE TO qgep_od.vw_individual_surface DO INSTEAD (
+UPDATE qgep_od.individual_surface
   SET
        function = NEW.function
      , inclination = NEW.inclination
@@ -98,7 +98,7 @@ UPDATE qgep.od_individual_surface
      , perimeter_geometry = NEW.perimeter_geometry
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_connection_object
+UPDATE qgep_od.connection_object
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -117,8 +117,8 @@ UPDATE qgep.od_connection_object
 -- Rule: vw_individual_surface_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_individual_surface_ON_DELETE AS ON DELETE TO qgep.vw_individual_surface DO INSTEAD (
-  DELETE FROM qgep.od_individual_surface WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_connection_object WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_individual_surface_ON_DELETE AS ON DELETE TO qgep_od.vw_individual_surface DO INSTEAD (
+  DELETE FROM qgep_od.individual_surface WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.connection_object WHERE obj_id = OLD.obj_id;
 );
 

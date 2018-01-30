@@ -1,10 +1,10 @@
-DROP VIEW IF EXISTS qgep.vw_special_structure;
+DROP VIEW IF EXISTS qgep_od.vw_special_structure;
 
 --------
--- Subclass: od_special_structure
--- Superclass: od_wastewater_structure
+-- Subclass: special_structure
+-- Superclass: wastewater_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_special_structure AS
+CREATE OR REPLACE VIEW qgep_od.vw_special_structure AS
 
 SELECT
    SS.obj_id
@@ -38,8 +38,8 @@ SELECT
    , WS.last_modification
   , WS.fk_owner
   , WS.fk_operator
-  FROM qgep.od_special_structure SS
- LEFT JOIN qgep.od_wastewater_structure WS
+  FROM qgep_od.special_structure SS
+ LEFT JOIN qgep_od.wastewater_structure WS
  ON WS.obj_id = SS.obj_id;
 
 -----------------------------------
@@ -47,11 +47,11 @@ SELECT
 -- Function: vw_special_structure_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_special_structure_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_special_structure_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_wastewater_structure (
+  INSERT INTO qgep_od.wastewater_structure (
              obj_id
            , accessibility
            , contract_section
@@ -78,7 +78,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_special_structure')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','special_structure')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
@@ -106,7 +106,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_special_structure (
+INSERT INTO qgep_od.special_structure (
              obj_id
            , bypass
            , emergency_spillway
@@ -127,18 +127,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_special_structure_ON_INSERT ON qgep.special_structure;
+-- DROP TRIGGER vw_special_structure_ON_INSERT ON qgep_od.special_structure;
 
-CREATE TRIGGER vw_special_structure_ON_INSERT INSTEAD OF INSERT ON qgep.vw_special_structure
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_special_structure_insert();
+CREATE TRIGGER vw_special_structure_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_special_structure
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_special_structure_insert();
 
 -----------------------------------
 -- special_structure UPDATE
 -- Rule: vw_special_structure_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_special_structure_ON_UPDATE AS ON UPDATE TO qgep.vw_special_structure DO INSTEAD (
-UPDATE qgep.od_special_structure
+CREATE OR REPLACE RULE vw_special_structure_ON_UPDATE AS ON UPDATE TO qgep_od.vw_special_structure DO INSTEAD (
+UPDATE qgep_od.special_structure
   SET
        bypass = NEW.bypass
      , emergency_spillway = NEW.emergency_spillway
@@ -147,7 +147,7 @@ UPDATE qgep.od_special_structure
      , upper_elevation = NEW.upper_elevation
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_wastewater_structure
+UPDATE qgep_od.wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
@@ -181,8 +181,8 @@ UPDATE qgep.od_wastewater_structure
 -- Rule: vw_special_structure_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_special_structure_ON_DELETE AS ON DELETE TO qgep.vw_special_structure DO INSTEAD (
-  DELETE FROM qgep.od_special_structure WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_special_structure_ON_DELETE AS ON DELETE TO qgep_od.vw_special_structure DO INSTEAD (
+  DELETE FROM qgep_od.special_structure WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.obj_id;
 );
 

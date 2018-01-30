@@ -18,23 +18,23 @@ else:
 	srid = 2056
 
 overflow="""
-table: qgep.od_overflow
+table: qgep_od.overflow
 alias: overflow
 pkey: obj_id
-pkey_value: qgep.generate_oid('od_overflow')
-schema: qgep
+pkey_value: qgep_sys.generate_oid('qgep_od','overflow')
+schema: qgep_od
 
 children:
   leapingweir:
-    table: qgep.od_leapingweir
+    table: qgep_od.leapingweir
     pkey: obj_id
 
   prank_weir:
-    table: qgep.od_prank_weir
+    table: qgep_od.prank_weir
     pkey: obj_id
 
   pump:
-    table: qgep.od_pump
+    table: qgep_od.pump
     pkey: obj_id
 
 
@@ -44,12 +44,12 @@ merge_view:
     geometry: ST_MakeLine(n1.situation_geometry, n2.situation_geometry)::geometry('LineString',{0})
   additional_joins:
     n1:
-      table: qgep.od_wastewater_node
+      table: qgep_od.wastewater_node
       type: left
       key: obj_id
       fkey: fk_wastewater_node
     n2:
-      table: qgep.od_wastewater_node
+      table: qgep_od.wastewater_node
       type: left
       key: obj_id
       fkey: fk_overflow_to 

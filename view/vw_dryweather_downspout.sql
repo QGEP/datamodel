@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_dryweather_downspout;
+DROP VIEW IF EXISTS qgep_od.vw_dryweather_downspout;
 
 
 --------
--- Subclass: od_dryweather_downspout
--- Superclass: od_structure_part
+-- Subclass: dryweather_downspout
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_dryweather_downspout AS
+CREATE OR REPLACE VIEW qgep_od.vw_dryweather_downspout AS
 
 SELECT
    DD.obj_id
@@ -17,8 +17,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_dryweather_downspout DD
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.dryweather_downspout DD
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = DD.obj_id;
 
 -----------------------------------
@@ -26,11 +26,11 @@ SELECT
 -- Function: vw_dryweather_downspout_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_dryweather_downspout_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_dryweather_downspout_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -40,7 +40,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_dryweather_downspout')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','dryweather_downspout')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -51,7 +51,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_dryweather_downspout (
+INSERT INTO qgep_od.dryweather_downspout (
              obj_id
            , diameter
            )
@@ -64,23 +64,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_dryweather_downspout_ON_INSERT ON qgep.dryweather_downspout;
+-- DROP TRIGGER vw_dryweather_downspout_ON_INSERT ON qgep_od.dryweather_downspout;
 
-CREATE TRIGGER vw_dryweather_downspout_ON_INSERT INSTEAD OF INSERT ON qgep.vw_dryweather_downspout
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_dryweather_downspout_insert();
+CREATE TRIGGER vw_dryweather_downspout_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_dryweather_downspout
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_dryweather_downspout_insert();
 
 -----------------------------------
 -- dryweather_downspout UPDATE
 -- Rule: vw_dryweather_downspout_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_dryweather_downspout_ON_UPDATE AS ON UPDATE TO qgep.vw_dryweather_downspout DO INSTEAD (
-UPDATE qgep.od_dryweather_downspout
+CREATE OR REPLACE RULE vw_dryweather_downspout_ON_UPDATE AS ON UPDATE TO qgep_od.vw_dryweather_downspout DO INSTEAD (
+UPDATE qgep_od.dryweather_downspout
   SET
        diameter = NEW.diameter
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -97,8 +97,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_dryweather_downspout_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_dryweather_downspout_ON_DELETE AS ON DELETE TO qgep.vw_dryweather_downspout DO INSTEAD (
-  DELETE FROM qgep.od_dryweather_downspout WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_dryweather_downspout_ON_DELETE AS ON DELETE TO qgep_od.vw_dryweather_downspout DO INSTEAD (
+  DELETE FROM qgep_od.dryweather_downspout WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 

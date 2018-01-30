@@ -1,5 +1,5 @@
-DROP TABLE qgep.is_dictionary_vw_field CASCADE;
-CREATE TABLE qgep.is_dictionary_vw_field
+DROP TABLE qgep_sys.dictionary_vw_field CASCADE;
+CREATE TABLE qgep_sys.dictionary_vw_field
 (
   id serial NOT NULL,
   class_id integer,
@@ -20,12 +20,12 @@ WITH (
   OIDS=FALSE
 );
 
-ALTER TABLE qgep.is_dictionary_vw_field
+ALTER TABLE qgep_sys.dictionary_vw_field
   OWNER TO qgep;
 
 -- Reach
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -51,7 +51,7 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-      FROM qgep.is_dictionary_od_field
+      FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_reach'
     OR table_name = 'od_wastewater_networkelement'
   UNION SELECT
@@ -67,7 +67,7 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de, -- TODO
     field_description_fr, -- TODO
     field_description_it -- TODO
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_reach_point'
   UNION SELECT
     class_id,
@@ -82,12 +82,12 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de, -- TODO
     field_description_fr, -- TODO
     field_description_it -- TODO
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_reach_point'
 
 -- Manhole
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -113,14 +113,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_manhole'
       OR table_name = 'od_wastewater_structure';
 
 
 -- Special Structure
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -146,14 +146,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_special_structure'
       OR table_name = 'od_wastewater_structure';
 
 
 -- Special Structure
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -179,13 +179,13 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_channel'
       OR table_name = 'od_wastewater_structure';
 
 -- Discharge Point
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -211,14 +211,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_discharge_point'
       OR table_name = 'od_wastewater_structure';
 
 
 -- Wastewater Node
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -244,14 +244,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_wastewater_node'
       OR table_name = 'od_wastewater_networkelement';
 
 
 -- Cover
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -277,14 +277,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
       WHERE table_name = 'od_cover'
       OR table_name = 'od_structure_part';
 
 
 -- Access Aid
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -310,14 +310,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_access_aid'
       OR table_name = 'od_structure_part';
 
 
 -- Benching
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -343,14 +343,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
     WHERE table_name = 'od_benching'
       OR table_name = 'od_structure_part';
 
 
 -- Dryweather Downspout
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -376,14 +376,14 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
   WHERE table_name = 'od_dryweather_downspout'
   OR table_name = 'od_structure_part';
 
 
 -- Dryweather Flume
 
-INSERT INTO qgep.is_dictionary_vw_field (
+INSERT INTO qgep_sys.dictionary_vw_field (
   class_id,
   attribute_id,
   table_name,
@@ -409,18 +409,18 @@ INSERT INTO qgep.is_dictionary_vw_field (
     field_description_de,
     field_description_fr,
     field_description_it
-    FROM qgep.is_dictionary_od_field
+    FROM qgep_sys.dictionary_od_field
   WHERE table_name = 'od_dryweather_flume'
   OR table_name = 'od_structure_part';
 
 
 
 
-CREATE VIEW qgep.vw_dictionary_field AS
+CREATE VIEW qgep_od.vw_dictionary_field AS
   SELECT *
-    FROM qgep.is_dictionary_vw_field
+    FROM qgep_sys.dictionary_vw_field
   UNION SELECT *
-    FROM qgep.is_dictionary_od_field;
+    FROM qgep_sys.dictionary_od_field;
 
-ALTER VIEW qgep.vw_dictionary_field
+ALTER VIEW qgep_od.vw_dictionary_field
   OWNER TO qgep;
