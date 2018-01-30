@@ -30,14 +30,14 @@ FROM(
     LEFT JOIN qgep_od.reach                       re_from           ON re_from.fk_reach_point_from = rp.obj_id
     LEFT JOIN qgep_od.wastewater_networkelement   ne_from           ON ne_from.obj_id = re_from.obj_id
     LEFT JOIN qgep_od.channel                     CH_from           ON CH_from.obj_id = ne_from.fk_wastewater_structure
-    LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_from  ON CH_from.function_hierarchic = fct_hier_from.code
-    LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_from  ON CH_from.usage_current = usg_curr_from.code
+    LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_from  ON CH_from.function_hierarchic = vl_fct_hier_from.code
+    LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_from  ON CH_from.usage_current = vl_usg_curr_from.code
 
     LEFT JOIN qgep_od.reach                       re_to          ON re_to.fk_reach_point_to = rp.obj_id
     LEFT JOIN qgep_od.wastewater_networkelement   ne_to          ON ne_to.obj_id = re_to.obj_id
     LEFT JOIN qgep_od.channel                     CH_to          ON CH_to.obj_id = ne_to.fk_wastewater_structure
-    LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_to ON CH_to.function_hierarchic = fct_hier_to.code
-    LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_to ON CH_to.usage_current = usg_curr_to.code
+    LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_to ON CH_to.function_hierarchic = vl_fct_hier_to.code
+    LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_to ON CH_to.usage_current = vl_usg_curr_to.code
 
     WHERE _all OR ws.obj_id = _obj_id
 ) symbology_ws
@@ -107,7 +107,7 @@ BEGIN
     WHERE rp.obj_id = rp_obj_id;
 
   EXECUTE qgep_od.update_wastewater_structure_symbology(_ws.obj_id);
-  
+
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -130,7 +130,7 @@ BEGIN
     WHEN TG_OP = 'DELETE' THEN
       re_obj_id = OLD.obj_id;
   END CASE;
-  
+
   SELECT ws.obj_id INTO _ws
     FROM qgep_od.reach re
     LEFT JOIN qgep_od.reach_point rp ON ( rp.obj_id = re.fk_reach_point_from OR rp.obj_id = re.fk_reach_point_to )
@@ -269,7 +269,7 @@ BEGIN
 
   EXECUTE qgep_od.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
   EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
-  
+
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -392,8 +392,8 @@ BEGIN
     WHEN TG_OP = 'DELETE' THEN
       rp_obj_id = OLD.obj_id;
   END CASE;
-  
-  
+
+
   UPDATE qgep_od.reach
   SET progression_geometry = progression_geometry; --To retrigger the calculate_length trigger on reach update
 
@@ -417,17 +417,17 @@ CREATE OR REPLACE FUNCTION qgep_od.calculate_reach_length()
   RETURNS trigger AS
 $BODY$
 
-DECLARE 
+DECLARE
 	_rp_from_level numeric(7,3);
 	_rp_to_level numeric(7,3);
 
 BEGIN
 
-  SELECT rp_from.level INTO _rp_from_level 
+  SELECT rp_from.level INTO _rp_from_level
   FROM qgep_od.reach_point rp_from
   WHERE NEW.fk_reach_point_from = rp_from.obj_id;
 
-  SELECT rp_to.level INTO _rp_to_level 
+  SELECT rp_to.level INTO _rp_to_level
   FROM qgep_od.reach_point rp_to
   WHERE NEW.fk_reach_point_to = rp_to.obj_id;
 
@@ -435,7 +435,7 @@ BEGIN
 
   RETURN NEW;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -477,14 +477,14 @@ BEGIN
     ON qgep_od.reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep_od.on_reach_change();
-	
+
   CREATE TRIGGER calculate_reach_length
   BEFORE INSERT OR UPDATE
     ON qgep_od.reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep_od.calculate_reach_length();
- 
-    
+
+
   CREATE TRIGGER ws_symbology_update_by_reach
   AFTER INSERT OR UPDATE OR DELETE
     ON qgep_od.reach
