@@ -25,7 +25,7 @@ class DbTestBase:
 
         cur.execute(
             "INSERT INTO qgep_od.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, cols=cols_str, vals_str=vals_str),
-            row.values()
+            list(row.values())
         )
 
         return cur.fetchone()[0]
@@ -38,7 +38,7 @@ class DbTestBase:
 
         cur.execute(
             "UPDATE qgep_od.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, cols_str=cols_str),
-            row.values() + [obj_id]
+            list(row.values()) + [obj_id]
         )
 
     def delete(self, table, obj_id):
