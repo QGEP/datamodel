@@ -105,4 +105,4 @@ joins:
     fkey: fk_operator
 """)
 
-print SqlExportView(pg_service, definition).sql()
+print(SqlExportView(pg_service, definition).sql())

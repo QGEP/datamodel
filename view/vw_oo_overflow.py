@@ -56,4 +56,4 @@ merge_view:
 """.format(srid)
 
 
-print(pgiv.PGInheritanceView(pg_service, overflow).sql_all())
+print((pgiv.PGInheritanceView(pg_service, overflow).sql_all()))

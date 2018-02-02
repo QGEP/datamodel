@@ -17,15 +17,15 @@ class DbTestBase:
     def insert(self, table, row):
         cur = self.conn.cursor()
 
-        cols = row.keys()
+        cols = list(row.keys())
         cols_str = ','.join(cols)
-        vals = [unicode(row[x]) for x in cols]
+        vals = [str(row[x]) for x in cols]
         vals_str_list = ["%s"] * len(vals)
         vals_str = ','.join(vals_str_list)
 
         cur.execute(
             "INSERT INTO qgep_od.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, cols=cols_str, vals_str=vals_str),
-            row.values()
+            list(row.values())
         )
 
         return cur.fetchone()[0]
@@ -33,12 +33,12 @@ class DbTestBase:
     def update(self, table, row, obj_id):
         cur = self.conn.cursor()
 
-        cols = ['{}=%s'.format(key) for key, _ in row.iteritems()]
+        cols = ['{}=%s'.format(key) for key, _ in row.items()]
         cols_str = ','.join(cols)
 
         cur.execute(
             "UPDATE qgep_od.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, cols_str=cols_str),
-            row.values() + [obj_id]
+            list(row.values()) + [obj_id]
         )
 
     def delete(self, table, obj_id):
@@ -73,8 +73,8 @@ class DbTestBase:
         # currently broken, that's the reason at the moment.
         self.assertTrue(result, "No result set received.")
 
-        for key, value in expected.iteritems():
-          self.assertEquals(unicode(result[key]), unicode(value), """
+        for key, value in expected.items():
+          self.assertEqual(str(result[key]), str(value), """
              ========================================================
 
              Data: {expected}
