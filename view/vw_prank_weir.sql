@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_prank_weir;
+DROP VIEW IF EXISTS qgep_od.vw_prank_weir;
 
 
 --------
--- Subclass: od_prank_weir
--- Superclass: od_overflow
+-- Subclass: prank_weir
+-- Superclass: overflow
 --------
-CREATE OR REPLACE VIEW qgep.vw_prank_weir AS
+CREATE OR REPLACE VIEW qgep_od.vw_prank_weir AS
 
 SELECT
    PW.obj_id
@@ -33,8 +33,8 @@ SELECT
   , OF.fk_overflow_to
   , OF.fk_overflow_characteristic
   , OF.fk_control_center
-  FROM qgep.od_prank_weir PW
- LEFT JOIN qgep.od_overflow OF
+  FROM qgep_od.prank_weir PW
+ LEFT JOIN qgep_od.overflow OF
  ON OF.obj_id = PW.obj_id;
 
 -----------------------------------
@@ -42,11 +42,11 @@ SELECT
 -- Function: vw_prank_weir_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_prank_weir_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_prank_weir_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_overflow (
+  INSERT INTO qgep_od.overflow (
              obj_id
            , actuation
            , adjustability
@@ -68,7 +68,7 @@ BEGIN
            , fk_overflow_characteristic
            , fk_control_center
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_prank_weir')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','prank_weir')) -- obj_id
            , NEW.actuation
            , NEW.adjustability
            , NEW.brand
@@ -91,7 +91,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_prank_weir (
+INSERT INTO qgep_od.prank_weir (
              obj_id
            , hydraulic_overflow_length
            , level_max
@@ -112,18 +112,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_prank_weir_ON_INSERT ON qgep.prank_weir;
+-- DROP TRIGGER vw_prank_weir_ON_INSERT ON qgep_od.prank_weir;
 
-CREATE TRIGGER vw_prank_weir_ON_INSERT INSTEAD OF INSERT ON qgep.vw_prank_weir
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_prank_weir_insert();
+CREATE TRIGGER vw_prank_weir_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_prank_weir
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_prank_weir_insert();
 
 -----------------------------------
 -- prank_weir UPDATE
 -- Rule: vw_prank_weir_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_prank_weir_ON_UPDATE AS ON UPDATE TO qgep.vw_prank_weir DO INSTEAD (
-UPDATE qgep.od_prank_weir
+CREATE OR REPLACE RULE vw_prank_weir_ON_UPDATE AS ON UPDATE TO qgep_od.vw_prank_weir DO INSTEAD (
+UPDATE qgep_od.prank_weir
   SET
        hydraulic_overflow_length = NEW.hydraulic_overflow_length
      , level_max = NEW.level_max
@@ -132,7 +132,7 @@ UPDATE qgep.od_prank_weir
      , weir_kind = NEW.weir_kind
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_overflow
+UPDATE qgep_od.overflow
   SET
        actuation = NEW.actuation
      , adjustability = NEW.adjustability
@@ -161,8 +161,8 @@ UPDATE qgep.od_overflow
 -- Rule: vw_prank_weir_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_prank_weir_ON_DELETE AS ON DELETE TO qgep.vw_prank_weir DO INSTEAD (
-  DELETE FROM qgep.od_prank_weir WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_overflow WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_prank_weir_ON_DELETE AS ON DELETE TO qgep_od.vw_prank_weir DO INSTEAD (
+  DELETE FROM qgep_od.prank_weir WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.overflow WHERE obj_id = OLD.obj_id;
 );
 

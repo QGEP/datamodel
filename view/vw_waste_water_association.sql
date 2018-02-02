@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_waste_water_association;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_association;
 
 
 --------
--- Subclass: od_waste_water_association
--- Superclass: od_organisation
+-- Subclass: waste_water_association
+-- Superclass: organisation
 --------
-CREATE OR REPLACE VIEW qgep.vw_waste_water_association AS
+CREATE OR REPLACE VIEW qgep_od.vw_waste_water_association AS
 
 SELECT
    WA.obj_id
@@ -15,8 +15,8 @@ SELECT
    , OG.fk_dataowner
    , OG.fk_provider
    , OG.last_modification
-  FROM qgep.od_waste_water_association WA
- LEFT JOIN qgep.od_organisation OG
+  FROM qgep_od.waste_water_association WA
+ LEFT JOIN qgep_od.organisation OG
  ON OG.obj_id = WA.obj_id;
 
 -----------------------------------
@@ -24,11 +24,11 @@ SELECT
 -- Function: vw_waste_water_association_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_waste_water_association_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_waste_water_association_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_organisation (
+  INSERT INTO qgep_od.organisation (
              obj_id
            , identifier
            , remark
@@ -37,7 +37,7 @@ BEGIN
            , fk_provider
            , last_modification
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_waste_water_association')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','waste_water_association')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid
@@ -47,7 +47,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_waste_water_association (
+INSERT INTO qgep_od.waste_water_association (
              obj_id
            )
           VALUES (
@@ -58,24 +58,24 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_waste_water_association_ON_INSERT ON qgep.waste_water_association;
+-- DROP TRIGGER vw_waste_water_association_ON_INSERT ON qgep_od.waste_water_association;
 
-CREATE TRIGGER vw_waste_water_association_ON_INSERT INSTEAD OF INSERT ON qgep.vw_waste_water_association
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_waste_water_association_insert();
+CREATE TRIGGER vw_waste_water_association_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_waste_water_association
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_waste_water_association_insert();
 
 -----------------------------------
 -- waste_water_association UPDATE
 -- Rule: vw_waste_water_association_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_waste_water_association_ON_UPDATE AS ON UPDATE TO qgep.vw_waste_water_association DO INSTEAD (
+CREATE OR REPLACE RULE vw_waste_water_association_ON_UPDATE AS ON UPDATE TO qgep_od.vw_waste_water_association DO INSTEAD (
 --------
--- UPDATE qgep.od_waste_water_association
+-- UPDATE qgep_od.waste_water_association
 --  SET
 --  WHERE obj_id = OLD.obj_id;
 --------
 
-UPDATE qgep.od_organisation
+UPDATE qgep_od.organisation
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -91,8 +91,8 @@ UPDATE qgep.od_organisation
 -- Rule: vw_waste_water_association_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_waste_water_association_ON_DELETE AS ON DELETE TO qgep.vw_waste_water_association DO INSTEAD (
-  DELETE FROM qgep.od_waste_water_association WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_organisation WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_waste_water_association_ON_DELETE AS ON DELETE TO qgep_od.vw_waste_water_association DO INSTEAD (
+  DELETE FROM qgep_od.waste_water_association WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.organisation WHERE obj_id = OLD.obj_id;
 );
 

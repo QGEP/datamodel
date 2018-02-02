@@ -1,12 +1,12 @@
 ﻿
-DROP VIEW IF EXISTS qgep.vw_qgep_reach;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
-CREATE OR REPLACE VIEW qgep.vw_qgep_reach AS
+CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
 
 WITH active_maintenance_event AS (
-  SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep.od_maintenance_event me
+  SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep_od.maintenance_event me
   LEFT JOIN
-    qgep.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
+    qgep_od.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
     WHERE active_zone IS NOT NULL
 )
 
@@ -18,7 +18,7 @@ SELECT re.obj_id,
     re.horizontal_positioning,
     re.inside_coating,
     re.length_effective,
-    CASE WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/re.length_effective*1000,1) ELSE NULL END AS slope_per_mill,
+    CASE WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/NULLIF(re.length_effective,0)*1000,1) ELSE NULL END AS slope_per_mill,
     re.material,
     re.progression_geometry,
     re.reliner_material,
@@ -87,23 +87,23 @@ SELECT re.obj_id,
     am.obj_id AS me_obj_id,
     am.active_zone AS me_active_zone,
     am.identifier AS me_identifier
-   FROM qgep.od_reach re
-     LEFT JOIN qgep.od_wastewater_networkelement ne ON ne.obj_id = re.obj_id
-     LEFT JOIN qgep.od_reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
-     LEFT JOIN qgep.od_reach_point rp_to ON rp_to.obj_id = re.fk_reach_point_to
-     LEFT JOIN qgep.od_wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
-     LEFT JOIN qgep.od_channel ch ON ch.obj_id = ws.obj_id
-     LEFT JOIN qgep.od_pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
+   FROM qgep_od.reach re
+     LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
+     LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
+     LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id = re.fk_reach_point_to
+     LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
+     LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
+     LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
      LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id;
 
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
 
-CREATE OR REPLACE FUNCTION qgep.vw_qgep_reach_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_reach_point(
+  INSERT INTO qgep_od.reach_point(
             obj_id
             , elevation_accuracy
             , identifier
@@ -118,7 +118,7 @@ BEGIN
             , fk_wastewater_networkelement
           )
     VALUES (
-            COALESCE(NEW.rp_from_obj_id,qgep.generate_oid('od_reach_point')) -- obj_id
+            COALESCE(NEW.rp_from_obj_id,qgep_sys.generate_oid('qgep_od','reach_point')) -- obj_id
             , NEW.rp_from_elevation_accuracy -- elevation_accuracy
             , NEW.rp_from_identifier -- identifier
             , NEW.rp_from_level -- level
@@ -134,7 +134,7 @@ BEGIN
     RETURNING obj_id INTO NEW.rp_from_obj_id;
 
 
-    INSERT INTO qgep.od_reach_point(
+    INSERT INTO qgep_od.reach_point(
             obj_id
             , elevation_accuracy
             , identifier
@@ -149,7 +149,7 @@ BEGIN
             , fk_wastewater_networkelement
           )
     VALUES (
-            COALESCE(NEW.rp_to_obj_id,qgep.generate_oid('od_reach_point')) -- obj_id
+            COALESCE(NEW.rp_to_obj_id,qgep_sys.generate_oid('qgep_od','reach_point')) -- obj_id
             , NEW.rp_to_elevation_accuracy -- elevation_accuracy
             , NEW.rp_to_identifier -- identifier
             , NEW.rp_to_level -- level
@@ -164,7 +164,7 @@ BEGIN
           )
     RETURNING obj_id INTO NEW.rp_to_obj_id;
     
-  INSERT INTO qgep.od_wastewater_structure (
+  INSERT INTO qgep_od.wastewater_structure (
             obj_id
             , accessibility
             , contract_section
@@ -191,7 +191,7 @@ BEGIN
             , fk_owner
             , fk_operator )
 
-    VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep.generate_oid('od_channel')) -- obj_id
+    VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
             , NEW.accessibility
             , NEW.contract_section
             -- , NEW.detail_geometry_geometry
@@ -219,7 +219,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.fk_wastewater_structure;
 
-  INSERT INTO qgep.od_channel(
+  INSERT INTO qgep_od.channel(
               obj_id
             , bedding_encasement
             , connection_type
@@ -242,7 +242,7 @@ BEGIN
             , NEW.usage_planned
             );
 
-  INSERT INTO qgep.od_wastewater_networkelement (
+  INSERT INTO qgep_od.wastewater_networkelement (
             obj_id
             , identifier
             , remark
@@ -250,7 +250,7 @@ BEGIN
             , fk_dataowner
             , fk_provider
             , fk_wastewater_structure )
-    VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_reach')) -- obj_id
+    VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','reach')) -- obj_id
             , NEW.identifier -- identifier
             , NEW.remark -- remark
             , NEW.last_modification -- last_modification
@@ -260,7 +260,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-  INSERT INTO qgep.od_reach (
+  INSERT INTO qgep_od.reach (
             obj_id
             , clear_height
             , coefficient_of_friction
@@ -306,14 +306,14 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep.vw_qgep_reach
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_qgep_reach_insert();
+CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
 
 -- REACH UPDATE
 -- Rule: vw_qgep_reach_on_update()
 
-CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reach DO INSTEAD (
-  UPDATE qgep.od_reach_point
+CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_reach DO INSTEAD (
+  UPDATE qgep_od.reach_point
     SET
         elevation_accuracy = NEW.rp_from_elevation_accuracy
       , identifier = NEW.rp_from_identifier
@@ -328,7 +328,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , fk_wastewater_networkelement = NEW.rp_from_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_from_obj_id;
     
-  UPDATE qgep.od_reach_point
+  UPDATE qgep_od.reach_point
     SET
         elevation_accuracy = NEW.rp_to_elevation_accuracy
       , identifier = NEW.rp_to_identifier
@@ -343,7 +343,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , fk_wastewater_networkelement = NEW.rp_to_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_to_obj_id;
 
-  UPDATE qgep.od_channel
+  UPDATE qgep_od.channel
     SET
        bedding_encasement = NEW.bedding_encasement
      , connection_type = NEW.connection_type
@@ -355,7 +355,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
      , usage_planned = NEW.usage_planned
   WHERE obj_id = OLD.fk_wastewater_structure;
 
-  UPDATE qgep.od_wastewater_structure
+  UPDATE qgep_od.wastewater_structure
     SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
@@ -384,7 +384,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
   WHERE obj_id = OLD.fk_wastewater_structure;
 
 
-  UPDATE qgep.od_wastewater_networkelement
+  UPDATE qgep_od.wastewater_networkelement
     SET
         identifier = NEW.identifier
       , remark = NEW.remark
@@ -394,7 +394,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
       , fk_wastewater_structure = NEW.fk_wastewater_structure
     WHERE obj_id = OLD.obj_id;
 
-  UPDATE qgep.od_reach
+  UPDATE qgep_od.reach
     SET clear_height = NEW.clear_height
       , coefficient_of_friction = NEW.coefficient_of_friction
       , elevation_determination = NEW.elevation_determination
@@ -417,15 +417,15 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep.vw_qgep_reac
 -- REACH DELETE
 -- Rule: vw_qgep_reach_on_delete()
 
-CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep.vw_qgep_reach DO INSTEAD (
-  DELETE FROM qgep.od_reach WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_networkelement WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_from_obj_id;
-  DELETE FROM qgep.od_reach_point WHERE obj_id = OLD.rp_to_obj_id;
+CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
+  DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_networkelement WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.reach_point WHERE obj_id = OLD.rp_from_obj_id;
+  DELETE FROM qgep_od.reach_point WHERE obj_id = OLD.rp_to_obj_id;
 );
 
-ALTER VIEW qgep.vw_qgep_reach ALTER obj_id SET DEFAULT qgep.generate_oid('od_reach');
+ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach');
 
-ALTER VIEW qgep.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
-ALTER VIEW qgep.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep.generate_oid('od_reach_point');
-ALTER VIEW qgep.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep.generate_oid('od_channel')
+ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
+ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
+ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel')

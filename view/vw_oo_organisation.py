@@ -13,41 +13,41 @@ else:
 	pg_service = 'pg_qgep'
 
 organisation="""
-table: qgep.od_organisation
+table: qgep_od.organisation
 alias: organisation
 pkey: obj_id
-pkey_value: qgep.generate_oid('od_organisation')
-schema: qgep
+pkey_value: qgep_sys.generate_oid('qgep_od','organisation')
+schema: qgep_od
 
 children:
   cooperative:
-    table: qgep.od_cooperative
+    table: qgep_od.cooperative
     pkey: obj_id
 
   canton:
-    table: qgep.od_canton
+    table: qgep_od.canton
     pkey: obj_id
 
   waste_water_association:
-    table: qgep.od_waste_water_association
+    table: qgep_od.waste_water_association
     pkey: obj_id
 
   municipality:
-    table: qgep.od_municipality
+    table: qgep_od.municipality
     pkey: obj_id
 
   administrative_office:
-    table: qgep.od_administrative_office
+    table: qgep_od.administrative_office
     pkey: obj_id
 
   waste_water_treatment_plant:
-    table: qgep.od_waste_water_treatment_plant
+    table: qgep_od.waste_water_treatment_plant
     pkey: obj_id
     remap:
       kind: waste_water_treatment_plant_kind
 
   private:
-    table: qgep.od_private
+    table: qgep_od.private
     pkey: obj_id
     remap:
       kind: private_kind

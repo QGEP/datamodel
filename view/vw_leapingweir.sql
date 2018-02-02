@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_leapingweir;
+DROP VIEW IF EXISTS qgep_od.vw_leapingweir;
 
 
 --------
--- Subclass: od_leapingweir
--- Superclass: od_overflow
+-- Subclass: leapingweir
+-- Superclass: overflow
 --------
-CREATE OR REPLACE VIEW qgep.vw_leapingweir AS
+CREATE OR REPLACE VIEW qgep_od.vw_leapingweir AS
 
 SELECT
    LW.obj_id
@@ -31,8 +31,8 @@ SELECT
   , OF.fk_overflow_to
   , OF.fk_overflow_characteristic
   , OF.fk_control_center
-  FROM qgep.od_leapingweir LW
- LEFT JOIN qgep.od_overflow OF
+  FROM qgep_od.leapingweir LW
+ LEFT JOIN qgep_od.overflow OF
  ON OF.obj_id = LW.obj_id;
 
 -----------------------------------
@@ -40,11 +40,11 @@ SELECT
 -- Function: vw_leapingweir_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_leapingweir_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_leapingweir_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_overflow (
+  INSERT INTO qgep_od.overflow (
              obj_id
            , actuation
            , adjustability
@@ -66,7 +66,7 @@ BEGIN
            , fk_overflow_characteristic
            , fk_control_center
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_leapingweir')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','leapingweir')) -- obj_id
            , NEW.actuation
            , NEW.adjustability
            , NEW.brand
@@ -89,7 +89,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_leapingweir (
+INSERT INTO qgep_od.leapingweir (
              obj_id
            , length
            , opening_shape
@@ -106,25 +106,25 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_leapingweir_ON_INSERT ON qgep.leapingweir;
+-- DROP TRIGGER vw_leapingweir_ON_INSERT ON qgep_od.leapingweir;
 
-CREATE TRIGGER vw_leapingweir_ON_INSERT INSTEAD OF INSERT ON qgep.vw_leapingweir
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_leapingweir_insert();
+CREATE TRIGGER vw_leapingweir_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_leapingweir
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_leapingweir_insert();
 
 -----------------------------------
 -- leapingweir UPDATE
 -- Rule: vw_leapingweir_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_leapingweir_ON_UPDATE AS ON UPDATE TO qgep.vw_leapingweir DO INSTEAD (
-UPDATE qgep.od_leapingweir
+CREATE OR REPLACE RULE vw_leapingweir_ON_UPDATE AS ON UPDATE TO qgep_od.vw_leapingweir DO INSTEAD (
+UPDATE qgep_od.leapingweir
   SET
        length = NEW.length
      , opening_shape = NEW.opening_shape
      , width = NEW.width
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_overflow
+UPDATE qgep_od.overflow
   SET
        actuation = NEW.actuation
      , adjustability = NEW.adjustability
@@ -153,8 +153,8 @@ UPDATE qgep.od_overflow
 -- Rule: vw_leapingweir_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_leapingweir_ON_DELETE AS ON DELETE TO qgep.vw_leapingweir DO INSTEAD (
-  DELETE FROM qgep.od_leapingweir WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_overflow WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_leapingweir_ON_DELETE AS ON DELETE TO qgep_od.vw_leapingweir DO INSTEAD (
+  DELETE FROM qgep_od.leapingweir WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.overflow WHERE obj_id = OLD.obj_id;
 );
 

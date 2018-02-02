@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_administrative_office;
+DROP VIEW IF EXISTS qgep_od.vw_administrative_office;
 
 
 --------
--- Subclass: od_administrative_office
--- Superclass: od_organisation
+-- Subclass: administrative_office
+-- Superclass: organisation
 --------
-CREATE OR REPLACE VIEW qgep.vw_administrative_office AS
+CREATE OR REPLACE VIEW qgep_od.vw_administrative_office AS
 
 SELECT
    AO.obj_id
@@ -15,8 +15,8 @@ SELECT
    , OG.fk_dataowner
    , OG.fk_provider
    , OG.last_modification
-  FROM qgep.od_administrative_office AO
- LEFT JOIN qgep.od_organisation OG
+  FROM qgep_od.administrative_office AO
+ LEFT JOIN qgep_od.organisation OG
  ON OG.obj_id = AO.obj_id;
 
 -----------------------------------
@@ -24,11 +24,11 @@ SELECT
 -- Function: vw_administrative_office_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_administrative_office_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_administrative_office_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_organisation (
+  INSERT INTO qgep_od.organisation (
              obj_id
            , identifier
            , remark
@@ -37,7 +37,7 @@ BEGIN
            , fk_provider
            , last_modification
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_administrative_office')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','administrative_office')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid
@@ -47,7 +47,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_administrative_office (
+INSERT INTO qgep_od.administrative_office (
              obj_id
            )
           VALUES (
@@ -58,24 +58,24 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_administrative_office_ON_INSERT ON qgep.administrative_office;
+-- DROP TRIGGER vw_administrative_office_ON_INSERT ON qgep_od.administrative_office;
 
-CREATE TRIGGER vw_administrative_office_ON_INSERT INSTEAD OF INSERT ON qgep.vw_administrative_office
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_administrative_office_insert();
+CREATE TRIGGER vw_administrative_office_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_administrative_office
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_administrative_office_insert();
 
 -----------------------------------
 -- administrative_office UPDATE
 -- Rule: vw_administrative_office_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_administrative_office_ON_UPDATE AS ON UPDATE TO qgep.vw_administrative_office DO INSTEAD (
+CREATE OR REPLACE RULE vw_administrative_office_ON_UPDATE AS ON UPDATE TO qgep_od.vw_administrative_office DO INSTEAD (
 --------
--- UPDATE qgep.od_administrative_office
+-- UPDATE qgep_od.administrative_office
 --  SET
 --  WHERE obj_id = OLD.obj_id;
 --------
 
-UPDATE qgep.od_organisation
+UPDATE qgep_od.organisation
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -91,8 +91,8 @@ UPDATE qgep.od_organisation
 -- Rule: vw_administrative_office_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_administrative_office_ON_DELETE AS ON DELETE TO qgep.vw_administrative_office DO INSTEAD (
-  DELETE FROM qgep.od_administrative_office WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_organisation WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_administrative_office_ON_DELETE AS ON DELETE TO qgep_od.vw_administrative_office DO INSTEAD (
+  DELETE FROM qgep_od.administrative_office WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.organisation WHERE obj_id = OLD.obj_id;
 );
 
