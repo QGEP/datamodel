@@ -32,11 +32,11 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = self.select('vw_qgep_wastewater_structure', obj_id)
         row = self.select('vw_cover', row['co_obj_id'])
 
-        self.delete('od_wastewater_structure', row['fk_wastewater_structure'])
+        self.delete('wastewater_structure', row['fk_wastewater_structure'])
 
         # Just to be sure the structure really was deleted
-        self.assertIsNone(self.select('od_manhole', row['fk_wastewater_structure']))
-        self.assertIsNone(self.select('od_wastewater_structure', row['fk_wastewater_structure']))
+        self.assertIsNone(self.select('manhole', row['fk_wastewater_structure']))
+        self.assertIsNone(self.select('wastewater_structure', row['fk_wastewater_structure']))
         # The cover should be delted as well. If not, the foreign key constraint action does not work properly
         self.assertIsNone(self.select('vw_cover', obj_id))
 

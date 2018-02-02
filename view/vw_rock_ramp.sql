@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_rock_ramp;
+DROP VIEW IF EXISTS qgep_od.vw_rock_ramp;
 
 
 --------
--- Subclass: od_rock_ramp
--- Superclass: od_water_control_structure
+-- Subclass: rock_ramp
+-- Superclass: water_control_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_rock_ramp AS
+CREATE OR REPLACE VIEW qgep_od.vw_rock_ramp AS
 
 SELECT
    RR.obj_id
@@ -18,8 +18,8 @@ CS.situation_geometry
    , CS.fk_provider
    , CS.last_modification
   , CS.fk_water_course_segment
-  FROM qgep.od_rock_ramp RR
- LEFT JOIN qgep.od_water_control_structure CS
+  FROM qgep_od.rock_ramp RR
+ LEFT JOIN qgep_od.water_control_structure CS
  ON CS.obj_id = RR.obj_id;
 
 -----------------------------------
@@ -27,11 +27,11 @@ CS.situation_geometry
 -- Function: vw_rock_ramp_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_rock_ramp_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_rock_ramp_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_water_control_structure (
+  INSERT INTO qgep_od.water_control_structure (
              obj_id
            , identifier
            , remark
@@ -41,7 +41,7 @@ BEGIN
            , last_modification
            , fk_water_course_segment
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_rock_ramp')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','rock_ramp')) -- obj_id
            , NEW.identifier
            , NEW.remark
             , NEW.situation_geometry
@@ -52,7 +52,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_rock_ramp (
+INSERT INTO qgep_od.rock_ramp (
              obj_id
            , stabilisation
            , vertical_drop
@@ -67,24 +67,24 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_rock_ramp_ON_INSERT ON qgep.rock_ramp;
+-- DROP TRIGGER vw_rock_ramp_ON_INSERT ON qgep_od.rock_ramp;
 
-CREATE TRIGGER vw_rock_ramp_ON_INSERT INSTEAD OF INSERT ON qgep.vw_rock_ramp
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_rock_ramp_insert();
+CREATE TRIGGER vw_rock_ramp_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_rock_ramp
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_rock_ramp_insert();
 
 -----------------------------------
 -- rock_ramp UPDATE
 -- Rule: vw_rock_ramp_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_rock_ramp_ON_UPDATE AS ON UPDATE TO qgep.vw_rock_ramp DO INSTEAD (
-UPDATE qgep.od_rock_ramp
+CREATE OR REPLACE RULE vw_rock_ramp_ON_UPDATE AS ON UPDATE TO qgep_od.vw_rock_ramp DO INSTEAD (
+UPDATE qgep_od.rock_ramp
   SET
        stabilisation = NEW.stabilisation
      , vertical_drop = NEW.vertical_drop
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_water_control_structure
+UPDATE qgep_od.water_control_structure
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -101,8 +101,8 @@ UPDATE qgep.od_water_control_structure
 -- Rule: vw_rock_ramp_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_rock_ramp_ON_DELETE AS ON DELETE TO qgep.vw_rock_ramp DO INSTEAD (
-  DELETE FROM qgep.od_rock_ramp WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_water_control_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_rock_ramp_ON_DELETE AS ON DELETE TO qgep_od.vw_rock_ramp DO INSTEAD (
+  DELETE FROM qgep_od.rock_ramp WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
 

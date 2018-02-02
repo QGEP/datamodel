@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_passage;
+DROP VIEW IF EXISTS qgep_od.vw_passage;
 
 
 --------
--- Subclass: od_passage
--- Superclass: od_water_control_structure
+-- Subclass: passage
+-- Superclass: water_control_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_passage AS
+CREATE OR REPLACE VIEW qgep_od.vw_passage AS
 
 SELECT
    PA.obj_id
@@ -16,8 +16,8 @@ CS.situation_geometry
    , CS.fk_provider
    , CS.last_modification
   , CS.fk_water_course_segment
-  FROM qgep.od_passage PA
- LEFT JOIN qgep.od_water_control_structure CS
+  FROM qgep_od.passage PA
+ LEFT JOIN qgep_od.water_control_structure CS
  ON CS.obj_id = PA.obj_id;
 
 -----------------------------------
@@ -25,11 +25,11 @@ CS.situation_geometry
 -- Function: vw_passage_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_passage_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_passage_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_water_control_structure (
+  INSERT INTO qgep_od.water_control_structure (
              obj_id
            , identifier
            , remark
@@ -39,7 +39,7 @@ BEGIN
            , last_modification
            , fk_water_course_segment
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_passage')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','passage')) -- obj_id
            , NEW.identifier
            , NEW.remark
             , NEW.situation_geometry
@@ -50,7 +50,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_passage (
+INSERT INTO qgep_od.passage (
              obj_id
            )
           VALUES (
@@ -61,24 +61,24 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_passage_ON_INSERT ON qgep.passage;
+-- DROP TRIGGER vw_passage_ON_INSERT ON qgep_od.passage;
 
-CREATE TRIGGER vw_passage_ON_INSERT INSTEAD OF INSERT ON qgep.vw_passage
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_passage_insert();
+CREATE TRIGGER vw_passage_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_passage
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_passage_insert();
 
 -----------------------------------
 -- passage UPDATE
 -- Rule: vw_passage_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_passage_ON_UPDATE AS ON UPDATE TO qgep.vw_passage DO INSTEAD (
+CREATE OR REPLACE RULE vw_passage_ON_UPDATE AS ON UPDATE TO qgep_od.vw_passage DO INSTEAD (
 --------
--- UPDATE qgep.od_passage
+-- UPDATE qgep_od.passage
 --  SET
 --  WHERE obj_id = OLD.obj_id;
 --------
 
-UPDATE qgep.od_water_control_structure
+UPDATE qgep_od.water_control_structure
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -95,8 +95,8 @@ UPDATE qgep.od_water_control_structure
 -- Rule: vw_passage_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_passage_ON_DELETE AS ON DELETE TO qgep.vw_passage DO INSTEAD (
-  DELETE FROM qgep.od_passage WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_water_control_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_passage_ON_DELETE AS ON DELETE TO qgep_od.vw_passage DO INSTEAD (
+  DELETE FROM qgep_od.passage WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
 

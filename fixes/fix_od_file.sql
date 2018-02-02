@@ -1,2 +1,2 @@
-ALTER TABLE qgep.od_file
+ALTER TABLE qgep_od.file
    ALTER COLUMN identifier TYPE character varying(60);

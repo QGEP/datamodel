@@ -8,7 +8,7 @@ class DbTestBase:
     def select(self, table, obj_id):
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cur.execute("SELECT * FROM qgep.{table} WHERE obj_id='{obj_id}'".format(table=table, obj_id=obj_id))
+        cur.execute("SELECT * FROM qgep_od.{table} WHERE obj_id='{obj_id}'".format(table=table, obj_id=obj_id))
         return cur.fetchone()
 
     def cursor(self):
@@ -24,8 +24,8 @@ class DbTestBase:
         vals_str = ','.join(vals_str_list)
 
         cur.execute(
-            "INSERT INTO qgep.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, cols=cols_str, vals_str=vals_str),
-            list(row.values())
+            "INSERT INTO qgep_od.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, cols=cols_str, vals_str=vals_str),
+            row.values()
         )
 
         return cur.fetchone()[0]
@@ -37,15 +37,15 @@ class DbTestBase:
         cols_str = ','.join(cols)
 
         cur.execute(
-            "UPDATE qgep.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, cols_str=cols_str),
-            list(row.values()) + [obj_id]
+            "UPDATE qgep_od.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, cols_str=cols_str),
+            row.values() + [obj_id]
         )
 
     def delete(self, table, obj_id):
         cur = self.conn.cursor()
 
         cur.execute(
-            "DELETE FROM qgep.{table} WHERE obj_id=%s".format(table = table), [obj_id]
+            "DELETE FROM qgep_od.{table} WHERE obj_id=%s".format(table = table), [obj_id]
         )
 
     def insert_check(self, table, row, expected_row=None):
@@ -98,4 +98,3 @@ class DbTestBase:
                   expected_type = type(value),
                   result_type = type(result[key])
               ))
-

@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_private;
+DROP VIEW IF EXISTS qgep_od.vw_private;
 
 
 --------
--- Subclass: od_private
--- Superclass: od_organisation
+-- Subclass: private
+-- Superclass: organisation
 --------
-CREATE OR REPLACE VIEW qgep.vw_private AS
+CREATE OR REPLACE VIEW qgep_od.vw_private AS
 
 SELECT
    PR.obj_id
@@ -16,8 +16,8 @@ SELECT
    , OG.fk_dataowner
    , OG.fk_provider
    , OG.last_modification
-  FROM qgep.od_private PR
- LEFT JOIN qgep.od_organisation OG
+  FROM qgep_od.private PR
+ LEFT JOIN qgep_od.organisation OG
  ON OG.obj_id = PR.obj_id;
 
 -----------------------------------
@@ -25,11 +25,11 @@ SELECT
 -- Function: vw_private_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_private_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_private_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_organisation (
+  INSERT INTO qgep_od.organisation (
              obj_id
            , identifier
            , remark
@@ -38,7 +38,7 @@ BEGIN
            , fk_provider
            , last_modification
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_private')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','private')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid
@@ -48,7 +48,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_private (
+INSERT INTO qgep_od.private (
              obj_id
            , kind
            )
@@ -61,23 +61,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_private_ON_INSERT ON qgep.private;
+-- DROP TRIGGER vw_private_ON_INSERT ON qgep_od.private;
 
-CREATE TRIGGER vw_private_ON_INSERT INSTEAD OF INSERT ON qgep.vw_private
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_private_insert();
+CREATE TRIGGER vw_private_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_private
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_private_insert();
 
 -----------------------------------
 -- private UPDATE
 -- Rule: vw_private_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_private_ON_UPDATE AS ON UPDATE TO qgep.vw_private DO INSTEAD (
-UPDATE qgep.od_private
+CREATE OR REPLACE RULE vw_private_ON_UPDATE AS ON UPDATE TO qgep_od.vw_private DO INSTEAD (
+UPDATE qgep_od.private
   SET
        kind = NEW.kind
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_organisation
+UPDATE qgep_od.organisation
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -93,8 +93,8 @@ UPDATE qgep.od_organisation
 -- Rule: vw_private_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_private_ON_DELETE AS ON DELETE TO qgep.vw_private DO INSTEAD (
-  DELETE FROM qgep.od_private WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_organisation WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_private_ON_DELETE AS ON DELETE TO qgep_od.vw_private DO INSTEAD (
+  DELETE FROM qgep_od.private WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.organisation WHERE obj_id = OLD.obj_id;
 );
 

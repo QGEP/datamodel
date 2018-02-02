@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_building;
+DROP VIEW IF EXISTS qgep_od.vw_building;
 
 
 --------
--- Subclass: od_building
--- Superclass: od_connection_object
+-- Subclass: building
+-- Superclass: connection_object
 --------
-CREATE OR REPLACE VIEW qgep.vw_building AS
+CREATE OR REPLACE VIEW qgep_od.vw_building AS
 
 SELECT
    BU.obj_id
@@ -22,8 +22,8 @@ SELECT
   , CN.fk_wastewater_networkelement
   , CN.fk_owner
   , CN.fk_operator
-  FROM qgep.od_building BU
- LEFT JOIN qgep.od_connection_object CN
+  FROM qgep_od.building BU
+ LEFT JOIN qgep_od.connection_object CN
  ON CN.obj_id = BU.obj_id;
 
 -----------------------------------
@@ -31,11 +31,11 @@ SELECT
 -- Function: vw_building_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_building_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_building_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_connection_object (
+  INSERT INTO qgep_od.connection_object (
              obj_id
            , identifier
            , remark
@@ -47,7 +47,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_building')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','building')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.sewer_infiltration_water_production
@@ -60,7 +60,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_building (
+INSERT INTO qgep_od.building (
              obj_id
            , house_number
            , location_name
@@ -79,18 +79,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_building_ON_INSERT ON qgep.building;
+-- DROP TRIGGER vw_building_ON_INSERT ON qgep_od.building;
 
-CREATE TRIGGER vw_building_ON_INSERT INSTEAD OF INSERT ON qgep.vw_building
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_building_insert();
+CREATE TRIGGER vw_building_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_building
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_building_insert();
 
 -----------------------------------
 -- building UPDATE
 -- Rule: vw_building_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_building_ON_UPDATE AS ON UPDATE TO qgep.vw_building DO INSTEAD (
-UPDATE qgep.od_building
+CREATE OR REPLACE RULE vw_building_ON_UPDATE AS ON UPDATE TO qgep_od.vw_building DO INSTEAD (
+UPDATE qgep_od.building
   SET
        house_number = NEW.house_number
      , location_name = NEW.location_name
@@ -98,7 +98,7 @@ UPDATE qgep.od_building
      , reference_point_geometry = NEW.reference_point_geometry
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_connection_object
+UPDATE qgep_od.connection_object
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -117,8 +117,8 @@ UPDATE qgep.od_connection_object
 -- Rule: vw_building_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_building_ON_DELETE AS ON DELETE TO qgep.vw_building DO INSTEAD (
-  DELETE FROM qgep.od_building WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_connection_object WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_building_ON_DELETE AS ON DELETE TO qgep_od.vw_building DO INSTEAD (
+  DELETE FROM qgep_od.building WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.connection_object WHERE obj_id = OLD.obj_id;
 );
 

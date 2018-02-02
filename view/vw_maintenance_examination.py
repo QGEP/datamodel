@@ -15,14 +15,14 @@ else:
 
 maintenance = """
 alias: maintenance
-table: qgep.od_maintenance_event
+table: qgep_od.maintenance_event
 pkey: obj_id
-pkey_value: qgep.generate_oid('od_maintenance_event')
-schema: qgep
+pkey_value: qgep_sys.generate_oid('qgep_od','maintenance_event')
+schema: qgep_od
 
 children:
   examination:
-    table: qgep.od_examination
+    table: qgep_od.examination
     pkey: obj_id
 
 

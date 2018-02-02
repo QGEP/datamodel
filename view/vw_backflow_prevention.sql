@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_backflow_prevention;
+DROP VIEW IF EXISTS qgep_od.vw_backflow_prevention;
 
 
 --------
--- Subclass: od_backflow_prevention
--- Superclass: od_structure_part
+-- Subclass: backflow_prevention
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_backflow_prevention AS
+CREATE OR REPLACE VIEW qgep_od.vw_backflow_prevention AS
 
 SELECT
    BP.obj_id
@@ -19,8 +19,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_backflow_prevention BP
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.backflow_prevention BP
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = BP.obj_id;
 
 -----------------------------------
@@ -28,11 +28,11 @@ SELECT
 -- Function: vw_backflow_prevention_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_backflow_prevention_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_backflow_prevention_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -42,7 +42,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_backflow_prevention')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','backflow_prevention')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -53,7 +53,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_backflow_prevention (
+INSERT INTO qgep_od.backflow_prevention (
              obj_id
            , gross_costs
            , kind
@@ -70,25 +70,25 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_backflow_prevention_ON_INSERT ON qgep.backflow_prevention;
+-- DROP TRIGGER vw_backflow_prevention_ON_INSERT ON qgep_od.backflow_prevention;
 
-CREATE TRIGGER vw_backflow_prevention_ON_INSERT INSTEAD OF INSERT ON qgep.vw_backflow_prevention
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_backflow_prevention_insert();
+CREATE TRIGGER vw_backflow_prevention_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_backflow_prevention
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_backflow_prevention_insert();
 
 -----------------------------------
 -- backflow_prevention UPDATE
 -- Rule: vw_backflow_prevention_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_backflow_prevention_ON_UPDATE AS ON UPDATE TO qgep.vw_backflow_prevention DO INSTEAD (
-UPDATE qgep.od_backflow_prevention
+CREATE OR REPLACE RULE vw_backflow_prevention_ON_UPDATE AS ON UPDATE TO qgep_od.vw_backflow_prevention DO INSTEAD (
+UPDATE qgep_od.backflow_prevention
   SET
        gross_costs = NEW.gross_costs
      , kind = NEW.kind
      , year_of_replacement = NEW.year_of_replacement
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -105,8 +105,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_backflow_prevention_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_backflow_prevention_ON_DELETE AS ON DELETE TO qgep.vw_backflow_prevention DO INSTEAD (
-  DELETE FROM qgep.od_backflow_prevention WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_backflow_prevention_ON_DELETE AS ON DELETE TO qgep_od.vw_backflow_prevention DO INSTEAD (
+  DELETE FROM qgep_od.backflow_prevention WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 
