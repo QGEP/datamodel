@@ -43,7 +43,7 @@ before_script:
   - psql -c 'GRANT qgep TO qgepuser;' -U postgres
 
 script:
-  - $TRAVIS_BUILD_DIR/scripts/db_setup.sh > /dev/null
+  - $TRAVIS_BUILD_DIR/scripts/db_setup.sh -r > /dev/null
   - nosetests
 
   # Get current version
