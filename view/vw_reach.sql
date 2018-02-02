@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_reach;
+DROP VIEW IF EXISTS qgep_od.vw_reach;
 
 
 --------
--- Subclass: od_reach
--- Superclass: od_wastewater_networkelement
+-- Subclass: reach
+-- Superclass: wastewater_networkelement
 --------
-CREATE OR REPLACE VIEW qgep.vw_reach AS
+CREATE OR REPLACE VIEW qgep_od.vw_reach AS
 
 SELECT
    RE.obj_id
@@ -30,8 +30,8 @@ SELECT
    , WE.fk_provider
    , WE.last_modification
   , WE.fk_wastewater_structure
-  FROM qgep.od_reach RE
- LEFT JOIN qgep.od_wastewater_networkelement WE
+  FROM qgep_od.reach RE
+ LEFT JOIN qgep_od.wastewater_networkelement WE
  ON WE.obj_id = RE.obj_id;
 
 -----------------------------------
@@ -39,11 +39,11 @@ SELECT
 -- Function: vw_reach_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_reach_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_wastewater_networkelement (
+  INSERT INTO qgep_od.wastewater_networkelement (
              obj_id
            , identifier
            , remark
@@ -52,7 +52,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_reach')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','reach')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.fk_dataowner
@@ -62,7 +62,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_reach (
+INSERT INTO qgep_od.reach (
              obj_id
            , clear_height
            , coefficient_of_friction
@@ -103,18 +103,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_reach_ON_INSERT ON qgep.reach;
+-- DROP TRIGGER vw_reach_ON_INSERT ON qgep_od.reach;
 
-CREATE TRIGGER vw_reach_ON_INSERT INSTEAD OF INSERT ON qgep.vw_reach
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_reach_insert();
+CREATE TRIGGER vw_reach_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_reach
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_reach_insert();
 
 -----------------------------------
 -- reach UPDATE
 -- Rule: vw_reach_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_reach_ON_UPDATE AS ON UPDATE TO qgep.vw_reach DO INSTEAD (
-UPDATE qgep.od_reach
+CREATE OR REPLACE RULE vw_reach_ON_UPDATE AS ON UPDATE TO qgep_od.vw_reach DO INSTEAD (
+UPDATE qgep_od.reach
   SET
        clear_height = NEW.clear_height
      , coefficient_of_friction = NEW.coefficient_of_friction
@@ -133,7 +133,7 @@ UPDATE qgep.od_reach
      , wall_roughness = NEW.wall_roughness
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_wastewater_networkelement
+UPDATE qgep_od.wastewater_networkelement
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -149,8 +149,8 @@ UPDATE qgep.od_wastewater_networkelement
 -- Rule: vw_reach_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_reach_ON_DELETE AS ON DELETE TO qgep.vw_reach DO INSTEAD (
-  DELETE FROM qgep.od_reach WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_networkelement WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_reach_ON_DELETE AS ON DELETE TO qgep_od.vw_reach DO INSTEAD (
+  DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_networkelement WHERE obj_id = OLD.obj_id;
 );
 

@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_canton;
+DROP VIEW IF EXISTS qgep_od.vw_canton;
 
 
 --------
--- Subclass: od_canton
--- Superclass: od_organisation
+-- Subclass: canton
+-- Superclass: organisation
 --------
-CREATE OR REPLACE VIEW qgep.vw_canton AS
+CREATE OR REPLACE VIEW qgep_od.vw_canton AS
 
 SELECT
    CT.obj_id
@@ -16,8 +16,8 @@ SELECT
    , OG.fk_dataowner
    , OG.fk_provider
    , OG.last_modification
-  FROM qgep.od_canton CT
- LEFT JOIN qgep.od_organisation OG
+  FROM qgep_od.canton CT
+ LEFT JOIN qgep_od.organisation OG
  ON OG.obj_id = CT.obj_id;
 
 -----------------------------------
@@ -25,11 +25,11 @@ SELECT
 -- Function: vw_canton_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_canton_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_canton_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_organisation (
+  INSERT INTO qgep_od.organisation (
              obj_id
            , identifier
            , remark
@@ -38,7 +38,7 @@ BEGIN
            , fk_provider
            , last_modification
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_canton')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','canton')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.uid
@@ -48,7 +48,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_canton (
+INSERT INTO qgep_od.canton (
              obj_id
            , perimeter_geometry
            )
@@ -61,23 +61,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_canton_ON_INSERT ON qgep.canton;
+-- DROP TRIGGER vw_canton_ON_INSERT ON qgep_od.canton;
 
-CREATE TRIGGER vw_canton_ON_INSERT INSTEAD OF INSERT ON qgep.vw_canton
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_canton_insert();
+CREATE TRIGGER vw_canton_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_canton
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_canton_insert();
 
 -----------------------------------
 -- canton UPDATE
 -- Rule: vw_canton_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_canton_ON_UPDATE AS ON UPDATE TO qgep.vw_canton DO INSTEAD (
-UPDATE qgep.od_canton
+CREATE OR REPLACE RULE vw_canton_ON_UPDATE AS ON UPDATE TO qgep_od.vw_canton DO INSTEAD (
+UPDATE qgep_od.canton
   SET
      , perimeter_geometry = NEW.perimeter_geometry
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_organisation
+UPDATE qgep_od.organisation
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -93,8 +93,8 @@ UPDATE qgep.od_organisation
 -- Rule: vw_canton_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_canton_ON_DELETE AS ON DELETE TO qgep.vw_canton DO INSTEAD (
-  DELETE FROM qgep.od_canton WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_organisation WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_canton_ON_DELETE AS ON DELETE TO qgep_od.vw_canton DO INSTEAD (
+  DELETE FROM qgep_od.canton WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.organisation WHERE obj_id = OLD.obj_id;
 );
 

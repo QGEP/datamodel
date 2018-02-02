@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_access_aid;
+DROP VIEW IF EXISTS qgep_od.vw_access_aid;
 
 
 --------
--- Subclass: od_access_aid
--- Superclass: od_structure_part
+-- Subclass: access_aid
+-- Superclass: structure_part
 --------
-CREATE OR REPLACE VIEW qgep.vw_access_aid AS
+CREATE OR REPLACE VIEW qgep_od.vw_access_aid AS
 
 SELECT
    AA.obj_id
@@ -17,8 +17,8 @@ SELECT
    , SP.fk_provider
    , SP.last_modification
   , SP.fk_wastewater_structure
-  FROM qgep.od_access_aid AA
- LEFT JOIN qgep.od_structure_part SP
+  FROM qgep_od.access_aid AA
+ LEFT JOIN qgep_od.structure_part SP
  ON SP.obj_id = AA.obj_id;
 
 -----------------------------------
@@ -26,11 +26,11 @@ SELECT
 -- Function: vw_access_aid_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_access_aid_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_access_aid_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_structure_part (
+  INSERT INTO qgep_od.structure_part (
              obj_id
            , identifier
            , remark
@@ -40,7 +40,7 @@ BEGIN
            , last_modification
            , fk_wastewater_structure
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_access_aid')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','access_aid')) -- obj_id
            , NEW.identifier
            , NEW.remark
            , NEW.renovation_demand
@@ -51,7 +51,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_access_aid (
+INSERT INTO qgep_od.access_aid (
              obj_id
            , kind
            )
@@ -64,23 +64,23 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_access_aid_ON_INSERT ON qgep.access_aid;
+-- DROP TRIGGER vw_access_aid_ON_INSERT ON qgep_od.access_aid;
 
-CREATE TRIGGER vw_access_aid_ON_INSERT INSTEAD OF INSERT ON qgep.vw_access_aid
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_access_aid_insert();
+CREATE TRIGGER vw_access_aid_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_access_aid
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_access_aid_insert();
 
 -----------------------------------
 -- access_aid UPDATE
 -- Rule: vw_access_aid_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_UPDATE AS ON UPDATE TO qgep.vw_access_aid DO INSTEAD (
-UPDATE qgep.od_access_aid
+CREATE OR REPLACE RULE vw_access_aid_ON_UPDATE AS ON UPDATE TO qgep_od.vw_access_aid DO INSTEAD (
+UPDATE qgep_od.access_aid
   SET
        kind = NEW.kind
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_structure_part
+UPDATE qgep_od.structure_part
   SET
        identifier = NEW.identifier
      , remark = NEW.remark
@@ -97,8 +97,8 @@ UPDATE qgep.od_structure_part
 -- Rule: vw_access_aid_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_access_aid_ON_DELETE AS ON DELETE TO qgep.vw_access_aid DO INSTEAD (
-  DELETE FROM qgep.od_access_aid WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_structure_part WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_access_aid_ON_DELETE AS ON DELETE TO qgep_od.vw_access_aid DO INSTEAD (
+  DELETE FROM qgep_od.access_aid WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
 

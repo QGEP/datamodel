@@ -1,10 +1,10 @@
-DROP VIEW IF EXISTS qgep.vw_discharge_point;
+DROP VIEW IF EXISTS qgep_od.vw_discharge_point;
 
 --------
--- Subclass: od_discharge_point
--- Superclass: od_wastewater_structure
+-- Subclass: discharge_point
+-- Superclass: wastewater_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_discharge_point AS
+CREATE OR REPLACE VIEW qgep_od.vw_discharge_point AS
 
 SELECT
    DP.obj_id
@@ -38,8 +38,8 @@ SELECT
    , WS.last_modification
    , WS.fk_owner
    , WS.fk_operator
-  FROM qgep.od_discharge_point DP
- LEFT JOIN qgep.od_wastewater_structure WS
+  FROM qgep_od.discharge_point DP
+ LEFT JOIN qgep_od.wastewater_structure WS
  ON WS.obj_id = DP.obj_id;
 
 -----------------------------------
@@ -47,11 +47,11 @@ SELECT
 -- Function: vw_discharge_point_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_discharge_point_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_discharge_point_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_wastewater_structure (
+  INSERT INTO qgep_od.wastewater_structure (
              obj_id
            , accessibility
            , contract_section
@@ -78,7 +78,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_discharge_point')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','discharge_point')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
@@ -106,7 +106,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_discharge_point (
+INSERT INTO qgep_od.discharge_point (
              obj_id
            , highwater_level
            , relevance
@@ -127,18 +127,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_discharge_point_ON_INSERT ON qgep.discharge_point;
+-- DROP TRIGGER vw_discharge_point_ON_INSERT ON qgep_od.discharge_point;
 
-CREATE TRIGGER vw_discharge_point_ON_INSERT INSTEAD OF INSERT ON qgep.vw_discharge_point
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_discharge_point_insert();
+CREATE TRIGGER vw_discharge_point_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_discharge_point
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_discharge_point_insert();
 
 -----------------------------------
 -- discharge_point UPDATE
 -- Rule: vw_discharge_point_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_discharge_point_ON_UPDATE AS ON UPDATE TO qgep.vw_discharge_point DO INSTEAD (
-UPDATE qgep.od_discharge_point
+CREATE OR REPLACE RULE vw_discharge_point_ON_UPDATE AS ON UPDATE TO qgep_od.vw_discharge_point DO INSTEAD (
+UPDATE qgep_od.discharge_point
   SET
        highwater_level = NEW.highwater_level
      , relevance = NEW.relevance
@@ -147,7 +147,7 @@ UPDATE qgep.od_discharge_point
      , waterlevel_hydraulic = NEW.waterlevel_hydraulic
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_wastewater_structure
+UPDATE qgep_od.wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
@@ -181,8 +181,8 @@ UPDATE qgep.od_wastewater_structure
 -- Rule: vw_discharge_point_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_discharge_point_ON_DELETE AS ON DELETE TO qgep.vw_discharge_point DO INSTEAD (
-  DELETE FROM qgep.od_discharge_point WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_discharge_point_ON_DELETE AS ON DELETE TO qgep_od.vw_discharge_point DO INSTEAD (
+  DELETE FROM qgep_od.discharge_point WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.obj_id;
 );
 

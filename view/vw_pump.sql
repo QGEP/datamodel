@@ -1,11 +1,11 @@
-DROP VIEW IF EXISTS qgep.vw_pump;
+DROP VIEW IF EXISTS qgep_od.vw_pump;
 
 
 --------
--- Subclass: od_pump
--- Superclass: od_overflow
+-- Subclass: pump
+-- Superclass: overflow
 --------
-CREATE OR REPLACE VIEW qgep.vw_pump AS
+CREATE OR REPLACE VIEW qgep_od.vw_pump AS
 
 SELECT
    PU.obj_id
@@ -37,8 +37,8 @@ SELECT
   , OF.fk_overflow_to
   , OF.fk_overflow_characteristic
   , OF.fk_control_center
-  FROM qgep.od_pump PU
- LEFT JOIN qgep.od_overflow OF
+  FROM qgep_od.pump PU
+ LEFT JOIN qgep_od.overflow OF
  ON OF.obj_id = PU.obj_id;
 
 -----------------------------------
@@ -46,11 +46,11 @@ SELECT
 -- Function: vw_pump_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_pump_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_pump_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_overflow (
+  INSERT INTO qgep_od.overflow (
              obj_id
            , actuation
            , adjustability
@@ -72,7 +72,7 @@ BEGIN
            , fk_overflow_characteristic
            , fk_control_center
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_pump')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','pump')) -- obj_id
            , NEW.actuation
            , NEW.adjustability
            , NEW.brand
@@ -95,7 +95,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_pump (
+INSERT INTO qgep_od.pump (
              obj_id
            , contruction_type
            , operating_point
@@ -124,18 +124,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_pump_ON_INSERT ON qgep.pump;
+-- DROP TRIGGER vw_pump_ON_INSERT ON qgep_od.pump;
 
-CREATE TRIGGER vw_pump_ON_INSERT INSTEAD OF INSERT ON qgep.vw_pump
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_pump_insert();
+CREATE TRIGGER vw_pump_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_pump
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_pump_insert();
 
 -----------------------------------
 -- pump UPDATE
 -- Rule: vw_pump_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_pump_ON_UPDATE AS ON UPDATE TO qgep.vw_pump DO INSTEAD (
-UPDATE qgep.od_pump
+CREATE OR REPLACE RULE vw_pump_ON_UPDATE AS ON UPDATE TO qgep_od.vw_pump DO INSTEAD (
+UPDATE qgep_od.pump
   SET
        contruction_type = NEW.contruction_type
      , operating_point = NEW.operating_point
@@ -148,7 +148,7 @@ UPDATE qgep.od_pump
      , usage_current = NEW.usage_current
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_overflow
+UPDATE qgep_od.overflow
   SET
        actuation = NEW.actuation
      , adjustability = NEW.adjustability
@@ -177,8 +177,8 @@ UPDATE qgep.od_overflow
 -- Rule: vw_pump_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_pump_ON_DELETE AS ON DELETE TO qgep.vw_pump DO INSTEAD (
-  DELETE FROM qgep.od_pump WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_overflow WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_pump_ON_DELETE AS ON DELETE TO qgep_od.vw_pump DO INSTEAD (
+  DELETE FROM qgep_od.pump WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.overflow WHERE obj_id = OLD.obj_id;
 );
 

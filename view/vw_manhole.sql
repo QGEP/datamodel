@@ -1,10 +1,10 @@
-DROP VIEW IF EXISTS qgep.vw_manhole;
+DROP VIEW IF EXISTS qgep_od.vw_manhole;
 
 --------
--- Subclass: od_manhole
--- Superclass: od_wastewater_structure
+-- Subclass: manhole
+-- Superclass: wastewater_structure
 --------
-CREATE OR REPLACE VIEW qgep.vw_manhole AS
+CREATE OR REPLACE VIEW qgep_od.vw_manhole AS
 
 SELECT
    MA.obj_id
@@ -38,8 +38,8 @@ SELECT
    , WS.last_modification
   , WS.fk_owner
   , WS.fk_operator
-  FROM qgep.od_manhole MA
- LEFT JOIN qgep.od_wastewater_structure WS
+  FROM qgep_od.manhole MA
+ LEFT JOIN qgep_od.wastewater_structure WS
  ON WS.obj_id = MA.obj_id;
 
 -----------------------------------
@@ -47,11 +47,11 @@ SELECT
 -- Function: vw_manhole_insert()
 -----------------------------------
 
-CREATE OR REPLACE FUNCTION qgep.vw_manhole_insert()
+CREATE OR REPLACE FUNCTION qgep_od.vw_manhole_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  INSERT INTO qgep.od_wastewater_structure (
+  INSERT INTO qgep_od.wastewater_structure (
              obj_id
            , accessibility
            , contract_section
@@ -78,7 +78,7 @@ BEGIN
            , fk_owner
            , fk_operator
            )
-     VALUES ( COALESCE(NEW.obj_id,qgep.generate_oid('od_manhole')) -- obj_id
+     VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','manhole')) -- obj_id
            , NEW.accessibility
            , NEW.contract_section
             , NEW.detail_geometry_geometry
@@ -106,7 +106,7 @@ BEGIN
            )
            RETURNING obj_id INTO NEW.obj_id;
 
-INSERT INTO qgep.od_manhole (
+INSERT INTO qgep_od.manhole (
              obj_id
            , dimension1
            , dimension2
@@ -127,18 +127,18 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
--- DROP TRIGGER vw_manhole_ON_INSERT ON qgep.manhole;
+-- DROP TRIGGER vw_manhole_ON_INSERT ON qgep_od.manhole;
 
-CREATE TRIGGER vw_manhole_ON_INSERT INSTEAD OF INSERT ON qgep.vw_manhole
-  FOR EACH ROW EXECUTE PROCEDURE qgep.vw_manhole_insert();
+CREATE TRIGGER vw_manhole_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_manhole
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_manhole_insert();
 
 -----------------------------------
 -- manhole UPDATE
 -- Rule: vw_manhole_ON_UPDATE()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_manhole_ON_UPDATE AS ON UPDATE TO qgep.vw_manhole DO INSTEAD (
-UPDATE qgep.od_manhole
+CREATE OR REPLACE RULE vw_manhole_ON_UPDATE AS ON UPDATE TO qgep_od.vw_manhole DO INSTEAD (
+UPDATE qgep_od.manhole
   SET
        dimension1 = NEW.dimension1
      , dimension2 = NEW.dimension2
@@ -147,7 +147,7 @@ UPDATE qgep.od_manhole
      , surface_inflow = NEW.surface_inflow
   WHERE obj_id = OLD.obj_id;
 
-UPDATE qgep.od_wastewater_structure
+UPDATE qgep_od.wastewater_structure
   SET
        accessibility = NEW.accessibility
      , contract_section = NEW.contract_section
@@ -181,8 +181,8 @@ UPDATE qgep.od_wastewater_structure
 -- Rule: vw_manhole_ON_DELETE ()
 -----------------------------------
 
-CREATE OR REPLACE RULE vw_manhole_ON_DELETE AS ON DELETE TO qgep.vw_manhole DO INSTEAD (
-  DELETE FROM qgep.od_manhole WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep.od_wastewater_structure WHERE obj_id = OLD.obj_id;
+CREATE OR REPLACE RULE vw_manhole_ON_DELETE AS ON DELETE TO qgep_od.vw_manhole DO INSTEAD (
+  DELETE FROM qgep_od.manhole WHERE obj_id = OLD.obj_id;
+  DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.obj_id;
 );
 
