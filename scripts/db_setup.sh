@@ -50,7 +50,7 @@ while getopts ":fs:p:" opt; do
 done
 
 if [[ $force ]]; then
-  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA qgep_is CASCADE"
+  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA qgep_sys CASCADE"
   psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA qgep_od CASCADE"
   psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA qgep_vl CASCADE"
 fi
