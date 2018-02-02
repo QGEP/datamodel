@@ -29,9 +29,9 @@ To perform the migration:
 * Sequences are updated from former schema.
   
 ## Things which are **NOT** handled or should be considered
-  * If some fields are too long (varchar columns were extended in former schema).
-  * Former `qgep` schema is kept in the new DB, it would need to be removed afterwards.
-  * This migration will break history in logged_actions, this would require patching data in the logged actions.
+* If some fields are too long (varchar columns were extended in former schema).
+* Former `qgep` schema is kept in the new DB, it would need to be removed afterwards.
+* This migration will break history in logged_actions, this would require patching data in the logged actions.
  
 ## Technical details
 * table renames
