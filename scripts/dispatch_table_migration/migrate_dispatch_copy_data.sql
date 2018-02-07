@@ -8,6 +8,7 @@ CREATE FUNCTION pg_temp.handle_missing_column(_source_columns text,
                                               _drop_column bool,
                                               _destination_table_name text,
                                               _destination_column text,
+                                              _source_table_name text,
                                               _source_column text default '' )
                                               RETURNS TEXT AS
 $func$
@@ -20,7 +21,7 @@ BEGIN
       WHERE table_schema ='qgep'
       AND table_name = '%1$I'
       AND column_name = '%2$I'
-  $$, _destination_table_name, _destination_column ) INTO _column_exists;
+  $$, _source_table_name, _destination_column ) INTO _column_exists;
   IF _column_exists = 0 THEN
       IF _drop_column THEN
         RAISE NOTICE '%', format('Handle missing column with drop: %1$I.%2$I', _destination_table_name, _destination_column);
@@ -117,22 +118,22 @@ BEGIN
     -- handle missing schema update
     _ordered_columns_source := _ordered_columns_dest;
     IF _destination_table_name IN ('catchment_area_text') THEN
-       SELECT pg_temp.handle_missing_column(_ordered_columns_source, FALSE, _destination_table_name, 'fk_catchment_area', 'fk_catchment') INTO _ordered_columns_source;
+       SELECT pg_temp.handle_missing_column(_ordered_columns_source, FALSE, _destination_table_name, 'fk_catchment_area', r.table_name, 'fk_catchment') INTO _ordered_columns_source;
     END IF;
     IF _destination_table_name IN ('hq_relation', 'hydraulic_char_data', 'overflow') THEN
-       SELECT pg_temp.handle_missing_column(_ordered_columns_source, FALSE, _destination_table_name, 'fk_overflow_characteristic', 'fk_overflow_char') INTO _ordered_columns_source;
+       SELECT pg_temp.handle_missing_column(_ordered_columns_source, FALSE, _destination_table_name, 'fk_overflow_characteristic', r.table_name, 'fk_overflow_char') INTO _ordered_columns_source;
     END IF;
     IF _destination_table_name IN ('txt_symbol', 'txt_text') THEN
-       SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_wastewater_structure') INTO _ordered_columns_source;
+       SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_wastewater_structure', r.table_name) INTO _ordered_columns_source;
     END IF;
     IF _destination_table_name IN ('txt_text') THEN
-      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_catchment_area') INTO _ordered_columns_source;
-      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_reach') INTO _ordered_columns_source;
+      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_catchment_area', r.table_name) INTO _ordered_columns_source;
+      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'fk_reach', r.table_name) INTO _ordered_columns_source;
     END IF;
     IF r.table_name LIKE 'vl_%' THEN
-      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'value_it') INTO _ordered_columns_source;
-      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'short_it') INTO _ordered_columns_source;
-      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'abbr_it') INTO _ordered_columns_source;
+      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'value_it', r.table_name) INTO _ordered_columns_source;
+      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'short_it', r.table_name) INTO _ordered_columns_source;
+      SELECT pg_temp.handle_missing_column(_ordered_columns_source, TRUE, _destination_table_name, 'abbr_it', r.table_name) INTO _ordered_columns_source;
     END IF;
 
     -- Do the copy
