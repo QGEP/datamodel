@@ -54,6 +54,7 @@ DECLARE
    _array_pos int;
    _sequence_exists int;
    _sequence_name text;
+   _sequence_name_fully_qualified text;
    _sequence_value bigint;
    _loop_count int;
 BEGIN
@@ -163,7 +164,8 @@ BEGIN
       EXECUTE format('INSERT INTO %1$I.%2$I (%5$s) (SELECT %4$s FROM qgep.%3$I);', _destination_schema_name, _destination_table_name, r.table_name, _ordered_columns_source, _ordered_columns_dest);
       GET DIAGNOSTICS rc = ROW_COUNT;
       RAISE INFO '% %: % elements copied', _destination_schema_name, _destination_table_name, rc;
-      _sequence_name := format('qgep.seq_%1$I_oid', r.table_name);
+      _sequence_name := format('seq_%1$I_oid', r.table_name);
+      _sequence_name_fully_qualified := format('qgep.%1$I', _sequence_name);
       -- handle renamed sequences
       EXECUTE format($$
         SELECT COUNT(*)
@@ -172,11 +174,11 @@ BEGIN
           AND sequence_name = '%1$I'
       $$, _sequence_name ) INTO _sequence_exists;
       IF _sequence_exists = 0 THEN
-        _sequence_name := replace(_sequence_name,'qgep.seq_od_hydraulic_char_data_oid','qgep.seq_od_hydraulic_characteristic_data_oid');
-        _sequence_name := replace(_sequence_name,'qgep.seq_od_overflow_char_oid','qgep.seq_od_overflow_characteristic_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_hydraulic_char_data_oid','qgep.seq_od_hydraulic_characteristic_data_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_overflow_char_oid','qgep.seq_od_overflow_characteristic_oid');
       END IF;
       -- update sequence
-      SELECT nextval(_sequence_name) INTO _sequence_value;
+      SELECT nextval(_sequence_name_fully_qualified) INTO _sequence_value;
       EXECUTE format('SELECT setval(''%1$I.seq_%2$I_oid'', %3$s, FALSE);', _destination_schema_name, _destination_table_name, _sequence_value);
     END IF;
   END LOOP;
