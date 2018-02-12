@@ -43,7 +43,7 @@ else
   echo "  ${CWARN} warnings"
   echo "  ${CNOT} notices (columns skip or rename)."
   echo "**************"
-  cat migration2.log | ${GP}egrep 'WARNING:'
+  cat migration2.log | ${GP}egrep 'WARNING:' || /bin/true
   echo "**************"
   cat migration2.log | ${GP}egrep '[^0]\d* elements' | ${GP}sed 's/INFO:\s*/ /'
   echo "**************"
