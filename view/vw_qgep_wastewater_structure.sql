@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
     main_co.sludge_bucket,
     main_co.venting,
     main_co_sp.identifier AS co_identifier,
-    main_co_sp.remark,
+    main_co_sp.remark AS co_remark,
     main_co_sp.renovation_demand,
     main_co_sp.last_modification,
     ws.fk_dataowner,
@@ -41,7 +41,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
     ws.inspection_interval,
     ws.location_name,
     ws.records,
-    ws.remark AS ws_remark,
+    ws.remark,
     ws.renovation_necessity,
     ws.replacement_value,
     ws.rv_base_year,
@@ -340,7 +340,7 @@ BEGIN
     , NEW.sludge_bucket
     , NEW.venting
     , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
-    , NEW.remark
+    , NEW.co_remark
     , NEW.renovation_demand
     , NOW()
     , NEW.fk_dataowner
@@ -386,7 +386,7 @@ BEGIN
     UPDATE qgep_od.structure_part
       SET
         identifier = new.co_identifier,
-        remark = new.remark,
+        remark = new.co_remark,
         renovation_demand = new.renovation_demand,
         last_modification = new.last_modification,
         fk_dataowner = new.fk_dataowner,
@@ -404,7 +404,7 @@ BEGIN
         inspection_interval = NEW.inspection_interval,
         location_name = NEW.location_name,
         records = NEW.records,
-        remark = NEW.ws_remark,
+        remark = NEW.remark,
         renovation_necessity = NEW.renovation_necessity,
         replacement_value = NEW.replacement_value,
         rv_base_year = NEW.rv_base_year,
