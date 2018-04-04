@@ -2,3 +2,4 @@
 .noseids
 nosetests.xml
 *.orig
+.DS_Store
