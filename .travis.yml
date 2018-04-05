@@ -50,8 +50,8 @@ script:
   - export VERSION=$(sed 'r' "$TRAVIS_BUILD_DIR/system/CURRENT_VERSION.txt")
 
   # Create a db from a dump file. This simulate the prod db
-  - pum restore -p qgep_prod -x $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.dump
-  - pum baseline -p qgep_prod -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 1.0
+  - pum restore -p qgep_prod -x $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
+  - pum baseline -p qgep_prod -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 1.0.0
 
   # Create last version of qgep db using db_setup.sh script as comp db
   - export PGSERVICE=qgep_comp
