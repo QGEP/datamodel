@@ -24,6 +24,7 @@ before_install:
 before_script:
   - sudo apt-get -qq update
   - sudo apt-get install -y postgresql-9.6-postgis-2.4
+  - sudo apt-get upgrade postgresql-client-9.6 
   - printf "[pg_qgep]\nhost=localhost\ndbname=qgep\nuser=postgres\n" > ~/.pg_service.conf
   - psql -c 'CREATE DATABASE qgep;' -U postgres
   - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qgep
