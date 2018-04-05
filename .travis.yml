@@ -21,9 +21,8 @@ git:
   submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - apt-get -qq update
-  - apt-get upgrade postgresql-9.6
-  - apt-get upgrade
+  - sudo apt-get -qq update
+  - sudo apt-get upgrade postgresql-9.6
   - ./scripts/setup_git.sh
   - git submodule update --init --recursive
 
