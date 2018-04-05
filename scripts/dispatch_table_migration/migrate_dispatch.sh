@@ -2,10 +2,10 @@
 
 # PG Services
 SRC_SRV=pg_qgep_sige
-DEST_SRV=qgep_up
+DEST_SRV=pg_qgep_new
 # Databases
 SRC_DB=qgep_sige
-DEST_DB=gis
+DEST_DB=qgep_new
 
 
 set -e
@@ -17,8 +17,8 @@ if [[ "$OSTYPE" =~ darwin* ]]; then
 fi
 
 # Create a new DB with the existing as template
-# psql "service=$SRC_SRV" -c "DROP DATABASE IF EXISTS $DEST_DB"
-# psql "service=$SRC_SRV" -c "CREATE DATABASE $DEST_DB WITH TEMPLATE $SRC_DB"
+psql "service=$SRC_SRV" -c "DROP DATABASE IF EXISTS $DEST_DB"
+psql "service=$SRC_SRV" -c "CREATE DATABASE $DEST_DB WITH TEMPLATE $SRC_DB"
 
 # Create new schemas in same DB to ease table copying
 echo "*** init empty QGEP db"
