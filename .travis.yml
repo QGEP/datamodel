@@ -7,7 +7,7 @@ addons:
   postgresql: "9.6"
   apt:
     packages:
-      - postgresql-9.6-postgis-2.3
+      - postgresql-9.6-postgis-2.4
 
 install:
   - pip install -r requirements.txt
@@ -21,8 +21,8 @@ git:
   submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get upgrade postgresql-client-9.6
+  #- sudo apt-get -qq update
+  #- sudo apt-get upgrade postgresql-client-9.6
   - ./scripts/setup_git.sh
   - git submodule update --init --recursive
 
