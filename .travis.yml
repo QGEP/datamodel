@@ -60,7 +60,7 @@ script:
   - pum baseline -p qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b $VERSION
 
   # Run pum's test and upgrade
-  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views
+  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --skip-schemas public
 
 after_success:
   #- $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
