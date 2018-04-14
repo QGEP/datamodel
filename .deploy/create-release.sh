@@ -46,7 +46,6 @@ def create_dumps():
                      '--blobs',
                      '--section', 'data',
                      '--compress', '5',
-                     '--verbose',
                      '--file', dumpfile,
                      '--schema', 'qgep_od',
                      'qgep_prod']
@@ -64,7 +63,6 @@ def create_dumps():
                      '--format', 'plain',
                      '--blobs',
                      '--section', 'data',
-                     '--verbose',
                      '--file', dumpfile,
                      '--schema', 'qgep_od',
                      'qgep_prod']
@@ -84,7 +82,6 @@ def create_dumps():
                      '--format', 'custom',
                      '--blobs',
                      '--compress', '5',
-                     '--verbose',
                      '--file', dumpfile,
                      '-N', 'public',
                      'qgep_prod']
@@ -101,7 +98,6 @@ def create_dumps():
     subprocess.call(['pg_dump',
                      '--format', 'plain',
                      '--blobs',
-                     '--verbose',
                      '--file', dumpfile,
                      '-N', 'public',
                      'qgep_prod']
@@ -120,7 +116,6 @@ def create_dumps():
     subprocess.call(['pg_dump',
                      '--format', 'custom',
                      '--schema-only',
-                     '--verbose',
                      '--file', dumpfile,
                      '-N', 'public',
                      'qgep_prod']
@@ -137,7 +132,6 @@ def create_dumps():
     subprocess.call(['pg_dump',
                      '--format', 'plain',
                      '--schema-only',
-                     '--verbose',
                      '--file', dumpfile,
                      '-N', 'public',
                      'qgep_prod']
@@ -157,7 +151,6 @@ def create_dumps():
                      '--blobs',
                      '--compress', '5',
                      '--data-only',
-                     '--verbose',
                      '--file', dumpfile,
                      '--schema', 'qgep_vl',
                      'qgep_prod']
@@ -175,7 +168,6 @@ def create_dumps():
                      '--format', 'plain',
                      '--blobs',
                      '--data-only',
-                     '--verbose',
                      '--file', dumpfile,
                      '--schema', 'qgep_vl',
                      'qgep_prod']
