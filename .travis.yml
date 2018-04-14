@@ -58,6 +58,3 @@ script:
 
 after_success:
   - ./.deploy/create-release.sh
-  on:
-    branch: master
-    tag: true
