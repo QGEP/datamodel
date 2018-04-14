@@ -19,7 +19,7 @@ git:
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
   - ./.deploy/setup_git.sh
-  # - git submodule update --init --recursive
+  - git submodule update --init --recursive
 
 before_script:
   - sudo apt-get -qq update
