@@ -18,8 +18,8 @@ git:
   submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - ./scripts/setup_git.sh
-  - git submodule update --init --recursive
+  - ./.deploy/setup_git.sh
+  # - git submodule update --init --recursive
 
 before_script:
   - sudo apt-get -qq update
@@ -57,5 +57,7 @@ script:
   - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --exclude-schema public
 
 after_success:
-  #- $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
-  - python $TRAVIS_BUILD_DIR/scripts/release_db_template.py
+  - ./.deploy/create-release.sh
+  on:
+    branch: master
+    tag: true
