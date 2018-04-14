@@ -45,7 +45,7 @@ script:
   - export VERSION=$(sed 'r' "$TRAVIS_BUILD_DIR/system/CURRENT_VERSION.txt")
 
   # Create a db from a dump file. This simulate the prod db
-  - pum restore -p qgep_prod -x --skip-schemas public -- $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
+  - pum restore -p qgep_prod -x --exclude-schema public -- $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
   - pum baseline -p qgep_prod -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 1.0.0
 
   # Create last version of qgep db using db_setup.sh script as comp db
@@ -54,7 +54,7 @@ script:
   - pum baseline -p qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b $VERSION
 
   # Run pum's test and upgrade
-  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --skip-schemas public
+  - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --exclude-schema public
 
 after_success:
   #- $TRAVIS_BUILD_DIR/scripts/make_pull_request.sh
