@@ -26,22 +26,16 @@ before_script:
   - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
   - sudo apt-get install -y postgresql-9.6-postgis-2.4
   - sudo apt-get upgrade postgresql-client-9.6
-  - printf "[pg_qgep]\nhost=localhost\ndbname=qgep\nuser=postgres\n" > ~/.pg_service.conf
-  - psql -c 'CREATE DATABASE qgep;' -U postgres
-  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qgep
-  - psql -c 'CREATE EXTENSION hstore;' -U postgres -d qgep
-
-  # Append the 3 services used for pum's checks to pg_service.conf
-  - printf "[qgep_prod]\nhost=localhost\ndbname=qgep_prod\nuser=postgres\n\n[qgep_test]\nhost=localhost\ndbname=qgep_test\nuser=postgres\n\n[qgep_comp]\nhost=localhost\ndbname=qgep_comp\nuser=postgres\n" >> ~/.pg_service.conf
-
-  # Create the 3 databases used for pum's check
-  - psql -c 'CREATE DATABASE qgep_prod;' -U postgres
-  - psql -c 'CREATE DATABASE qgep_test;' -U postgres
-  - psql -c 'CREATE DATABASE qgep_comp;' -U postgres
-
-  - psql -c 'CREATE GROUP qgep;' -U postgres
-  - psql -c 'CREATE ROLE qgepuser LOGIN;' -U postgres
-  - psql -c 'GRANT qgep TO qgepuser;' -U postgres
+  - |
+    for pgsrv in pg_qgep qgep_prod qgep_test qgep_comp; do
+      printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\n" >> ~/.pg_service.conf
+      psql -c 'CREATE DATABASE ${pgsrv};' -U postgres
+      psql -c 'CREATE EXTENSION postgis;' -U postgres -d ${pgsrv}
+      psql -c 'CREATE EXTENSION hstore;' -U postgres -d ${pgsrv}
+    done
+    psql -c 'CREATE GROUP qgep;' -U postgres
+    psql -c 'CREATE ROLE qgepuser LOGIN;' -U postgres
+    psql -c 'GRANT qgep TO qgepuser;' -U postgres
 
 script:
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh -r > /dev/null
@@ -51,7 +45,7 @@ script:
   - export VERSION=$(sed 'r' "$TRAVIS_BUILD_DIR/system/CURRENT_VERSION.txt")
 
   # Create a db from a dump file. This simulate the prod db
-  - pum restore -p qgep_prod -x $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
+  - pum restore -p qgep_prod -x --skip-schemas public -- $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
   - pum baseline -p qgep_prod -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 1.0.0
 
   # Create last version of qgep db using db_setup.sh script as comp db
