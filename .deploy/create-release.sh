@@ -197,6 +197,27 @@ def main():
         'Authorization': 'token {}'.format(os.environ['GH_TOKEN'])
     }
 
+    # if a release exist with this tag_name delete it first
+    # this allows to create the release from github website
+    url='/repos/{repo_slug}/releases/latest'.format(
+        repo_slug=os.environ['TRAVIS_REPO_SLUG'])
+    conn.request('GET', url, headers=headers)
+    response=conn.getresponse()
+    release=json.loads(response.read().decode())
+    if 'tag_name' in release and release['tag_name'] == os.environ['TRAVIS_TAG']:
+        print("Deleting release {}".format(release['tag_name']))
+        url='/repos/{repo_slug}/releases/latest{id}'.format(
+            repo_slug=os.environ['TRAVIS_REPO_SLUG'],
+            id=release['id'])
+        conn.request('DELETE', url, headers=headers)
+        response=conn.getresponse()
+        if response.status == 204:
+            print('Existing release deleted!')
+        else:
+            print('Failed to delete release!')
+            print('Github API replied:')
+            print('{} {}'.format(response.status, response.reason))
+
     raw_data={
         "tag_name": os.environ['TRAVIS_TAG']
     }
