@@ -32,7 +32,7 @@ before_script:
   - sudo apt-get -qq update
   - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
   - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install postgresql-9.6-postgis-2.4
-  - sudo apt-get upgrade postgresql-client-9.6
+  - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes upgrade postgresql-client-9.6
   - |
     for pgsrv in pg_qgep qgep_prod qgep_test qgep_comp; do
       printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\n" >> ~/.pg_service.conf
