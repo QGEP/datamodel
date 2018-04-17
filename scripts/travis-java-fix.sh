@@ -1,4 +1,4 @@
-#!/usr/in/env bash
+#!/usr/bin/env bash
 
 pushd /var/lib/dpkg/info
 sed -i 's|JAVA_VERSION=8u161|JAVA_VERSION=8u171|' oracle-java8-installer.*
