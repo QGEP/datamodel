@@ -29,7 +29,6 @@ before_install:
     git submodule update --init --recursive
 
 before_script:
-  - ./scripts/travis-java-fix.sh
   - sudo apt-get -qq update
   - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
   - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install postgresql-9.6-postgis-2.4
