@@ -190,7 +190,7 @@ def main():
 
     release_files=create_dumps()
 
-    conn=http.client.HTTPSConnection('api.github.com')
+
 
     headers={
         'User-Agent': 'Deploy-Script',
@@ -205,6 +205,7 @@ def main():
     # this allows to create the release from github website
     url='/repos/{repo_slug}/releases/latest'.format(
         repo_slug=os.environ['TRAVIS_REPO_SLUG'])
+    conn=http.client.HTTPSConnection('api.github.com')
     conn.request('GET', url, headers=headers)
     response=conn.getresponse()
     release=json.loads(response.read().decode())
@@ -213,6 +214,7 @@ def main():
         url='/repos/{repo_slug}/releases/{id}'.format(
             repo_slug=os.environ['TRAVIS_REPO_SLUG'],
             id=release['id'])
+        conn=http.client.HTTPSConnection('api.github.com')
         conn.request('DELETE', url, headers=headers)
         response=conn.getresponse()
         if response.status == 204:
@@ -228,6 +230,7 @@ def main():
     data=json.dumps(create_raw_data)
     url='/repos/{repo_slug}/releases'.format(
         repo_slug=os.environ['TRAVIS_REPO_SLUG'])
+    conn=http.client.HTTPSConnection('api.github.com')
     conn.request('POST', url, body=data, headers=headers)
     response=conn.getresponse()
     release=json.loads(response.read().decode())
