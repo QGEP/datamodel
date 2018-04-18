@@ -210,7 +210,7 @@ def main():
     release=json.loads(response.read().decode())
     if 'tag_name' in release and release['tag_name'] == os.environ['TRAVIS_TAG']:
         print("Deleting release {}".format(release['tag_name']))
-        url='/repos/{repo_slug}/releases/latest{id}'.format(
+        url='/repos/{repo_slug}/releases/{id}'.format(
             repo_slug=os.environ['TRAVIS_REPO_SLUG'],
             id=release['id'])
         conn.request('DELETE', url, headers=headers)
