@@ -1,27 +1,26 @@
 -- ******************************************************************************
 -- Open/view files in qgep
 -- ******************************************************************************
---1. ADD fk_data_media : 
+--1. ADD fk_data_media :
 -- ******************************************************************************
 
 -- Modification of table od_file --> insert fk_data_media
-/*
-ALTER TABLE qgep_od.file
-ADD COLUMN fk_data_media character varying(16);
+
+ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
+
 -- ******************************************************************************
--- 2. qgep_od.vw_file : 
+-- 2. qgep_od.vw_file :
 -- ******************************************************************************
 
 -- View: qgep_od.vw_file
-DROP VIEW qgep_od.vw_file;
-*/
-CREATE OR REPLACE VIEW qgep_od.vw_file AS 
+
+CREATE OR REPLACE VIEW qgep_od.vw_file AS
   SELECT f.obj_id,
     f.identifier,
     f.kind AS file_kind,
     f.object,
     f.class,
-    -- dm.path,   
+    -- dm.path,
     dm.path::text || f.path_relative::text AS _url,
     f.fk_dataowner as dataowner,
     f.fk_provider as provider,
@@ -30,7 +29,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_file AS
      LEFT JOIN qgep_od.data_media dm ON dm.obj_id::text = f.fk_data_media::text;
 
 -- ******************************************************************************
--- 3. FUNCTIONS : 
+-- 3. FUNCTIONS :
 -- ******************************************************************************
 
 -- Function: qgep_od.vw_file_delete()
@@ -70,14 +69,14 @@ $BODY$
 
     SELECT
       NEW.class,
-      NEW.identifier, 
+      NEW.identifier,
       NEW.file_kind,
       NEW.object,
       SUBSTRING(NEW._url, LENGTH("path")+1, LENGTH(NEW._url)), -- path_relative,
       NEW.dataowner, -- fk_dataowner,
       NEW.provider, -- fk_provider,
       obj_id, -- fk_data_media
-      NEW.remark  
+      NEW.remark
     FROM qgep_od.data_media
     WHERE "path" = SUBSTRING(NEW._url FROM 1 FOR LENGTH("path"))
     ORDER BY LENGTH("path") DESC
@@ -106,15 +105,15 @@ BEGIN
 NEW._url = replace(NEW._url, '\', '/');
 
   UPDATE  qgep_od.file
-    SET 
+    SET
     class = NEW.class,
     identifier = NEW.identifier,
     kind = NEW.file_kind,
     object = NEW.object,
-    path_relative = SUBSTRING(NEW._url, LENGTH(dm.path)+1, LENGTH(NEW._url)), 
+    path_relative = SUBSTRING(NEW._url, LENGTH(dm.path)+1, LENGTH(NEW._url)),
     fk_dataowner = NEW.dataowner,
     fk_provider = NEW.provider,
-    fk_data_media = dm.id, 
+    fk_data_media = dm.id,
     remark = NEW.remark
 
 FROM (
@@ -127,9 +126,9 @@ FROM (
 
 WHERE obj_id = OLD.obj_id;
 
-     
+
   RETURN NEW;
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;

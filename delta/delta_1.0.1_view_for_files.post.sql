@@ -5,16 +5,15 @@
 -- ******************************************************************************
 
 -- Modification of table od_file --> insert fk_data_media
-/*
-ALTER TABLE qgep_od.file
-ADD COLUMN fk_data_media character varying(16);
+
+ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
+
 -- ******************************************************************************
--- 2. qgep.vw_file :
+-- 2. qgep_od.vw_file :
 -- ******************************************************************************
--- View: qgep.vw_file
-DROP VIEW qgep.vw_file;
-*/
-CREATE OR REPLACE VIEW qgep.vw_file AS
+-- View: qgep_od.vw_file
+
+CREATE OR REPLACE VIEW qgep_od.vw_file AS
   SELECT f.obj_id,
     f.identifier,
     f.kind AS file_kind,
@@ -32,10 +31,10 @@ CREATE OR REPLACE VIEW qgep.vw_file AS
 -- 3. FUNCTIONS :
 -- ******************************************************************************
 
--- Function: qgep.vw_file_delete()
--- DROP FUNCTION qgep.vw_file_delete();
+-- Function: qgep_od.vw_file_delete()
+-- DROP FUNCTION qgep_od.vw_file_delete();
 
-CREATE OR REPLACE FUNCTION qgep.vw_file_delete()
+CREATE OR REPLACE FUNCTION qgep_od.vw_file_delete()
   RETURNS trigger AS
 $BODY$
   BEGIN
@@ -46,9 +45,9 @@ $BODY$
 
 
 -- ******************************************************************************
--- Function: qgep.vw_file_insert()
--- DROP FUNCTION qgep.vw_file_insert();
-CREATE OR REPLACE FUNCTION qgep.vw_file_insert()
+-- Function: qgep_od.vw_file_insert()
+-- DROP FUNCTION qgep_od.vw_file_insert();
+CREATE OR REPLACE FUNCTION qgep_od.vw_file_insert()
   RETURNS trigger AS
 $BODY$
 
@@ -89,9 +88,9 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
   -- ******************************************************************************
--- Function: qgep.vw_file_update()
--- DROP FUNCTION qgep.vw_file_update();
-CREATE OR REPLACE FUNCTION qgep.vw_file_update()
+-- Function: qgep_od.vw_file_update()
+-- DROP FUNCTION qgep_od.vw_file_update();
+CREATE OR REPLACE FUNCTION qgep_od.vw_file_update()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -123,25 +122,25 @@ $BODY$
   COST 100;
 -- TRIGGERS :
 -- ******************************************************************************
--- Trigger: vw_file_delete on qgep.vw_file
--- DROP TRIGGER vw_file_delete ON qgep.vw_file;
+-- Trigger: vw_file_delete on qgep_od.vw_file
+-- DROP TRIGGER vw_file_delete ON qgep_od.vw_file;
 CREATE TRIGGER vw_file_delete
   INSTEAD OF DELETE
-  ON qgep.vw_file
+  ON qgep_od.vw_file
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep.vw_file_delete();
--- Trigger: vw_file_insert on qgep.vw_file
--- DROP TRIGGER vw_file_insert ON qgep.vw_file;
+  EXECUTE PROCEDURE qgep_od.vw_file_delete();
+-- Trigger: vw_file_insert on qgep_od.vw_file
+-- DROP TRIGGER vw_file_insert ON qgep_od.vw_file;
 CREATE TRIGGER vw_file_insert
   INSTEAD OF INSERT
-  ON qgep.vw_file
+  ON qgep_od.vw_file
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep.vw_file_insert();
--- Trigger: vw_file_update on qgep.vw_file
--- DROP TRIGGER vw_file_update ON qgep.vw_file;
+  EXECUTE PROCEDURE qgep_od.vw_file_insert();
+-- Trigger: vw_file_update on qgep_od.vw_file
+-- DROP TRIGGER vw_file_update ON qgep_od.vw_file;
 CREATE TRIGGER vw_file_update
   INSTEAD OF UPDATE
-  ON qgep.vw_file
+  ON qgep_od.vw_file
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep.vw_file_update();
+  EXECUTE PROCEDURE qgep_od.vw_file_update();
 -- ******************************************************************************
