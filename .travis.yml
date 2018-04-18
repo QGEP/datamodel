@@ -30,6 +30,7 @@ before_install:
 
 before_script:
   - sudo apt-get -qq update
+  - sudo apt-get purge oracle-java9-installer
   - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
   - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install postgresql-9.6-postgis-2.4
   - sudo -E apt-get -yq upgrade postgresql-client-9.6
