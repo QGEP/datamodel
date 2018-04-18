@@ -6,7 +6,7 @@
 
 -- Modification of table od_file --> insert fk_data_media
 /*
-ALTER TABLE qgep.od_file
+ALTER TABLE qgep_od.file
 ADD COLUMN fk_data_media character varying(16);
 -- ******************************************************************************
 -- 2. qgep.vw_file :
@@ -25,8 +25,8 @@ CREATE OR REPLACE VIEW qgep.vw_file AS
     f.fk_dataowner as dataowner,
     f.fk_provider as provider,
     f.remark
-   FROM qgep.od_file f
-     LEFT JOIN qgep.od_data_media dm ON dm.obj_id::text = f.fk_data_media::text;
+   FROM qgep_od.file f
+     LEFT JOIN qgep_od.data_media dm ON dm.obj_id::text = f.fk_data_media::text;
 
 -- ******************************************************************************
 -- 3. FUNCTIONS :
@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION qgep.vw_file_delete()
   RETURNS trigger AS
 $BODY$
   BEGIN
-    DELETE FROM qgep.od_file WHERE obj_id = OLD.obj_id;
+    DELETE FROM qgep_od.file WHERE obj_id = OLD.obj_id;
   END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
@@ -55,7 +55,7 @@ $BODY$
   BEGIN
 
     NEW._url = replace(NEW._url, '\', '/');
-    INSERT INTO qgep.od_file(
+    INSERT INTO qgep_od.file(
       class,
       identifier,
       kind,
@@ -75,7 +75,7 @@ $BODY$
       NEW.provider, -- fk_provider,
       obj_id, -- fk_data_media
       NEW.remark
-    FROM qgep.od_data_media
+    FROM qgep_od.data_media
     WHERE "path" = SUBSTRING(NEW._url FROM 1 FOR LENGTH("path"))
     ORDER BY LENGTH("path") DESC
     LIMIT 1;
@@ -96,7 +96,7 @@ CREATE OR REPLACE FUNCTION qgep.vw_file_update()
 $BODY$
 BEGIN
 NEW._url = replace(NEW._url, '\', '/');
-  UPDATE  qgep.od_file
+  UPDATE  qgep_od.file
     SET
     class = NEW.class,
     identifier = NEW.identifier,
@@ -110,7 +110,7 @@ NEW._url = replace(NEW._url, '\', '/');
 FROM (
   SELECT obj_id as id,
 	path
-	FROM qgep.od_data_media
+	FROM qgep_od.data_media
 	WHERE path = SUBSTRING(NEW._url FROM 1 FOR LENGTH(path))
 	ORDER BY LENGTH(path) DESC
 	LIMIT 1)  dm
