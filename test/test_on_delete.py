@@ -22,7 +22,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # Create a new cover(structure part) with manhole(wastewater structure)
         row = {
                 'identifier': 'CO698',
-                'level': decimal.Decimal('50.000'),
+                'co_level': decimal.Decimal('50.000'),
                 'ws_type': 'manhole'
         }
 

@@ -1,4 +1,7 @@
-﻿
+-- View: vw_qgep_reach
+
+BEGIN TRANSACTION;
+
 DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
@@ -433,3 +436,5 @@ ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid(
 ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
 ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
 ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel');
+
+END TRANSACTION;
