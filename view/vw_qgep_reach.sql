@@ -190,8 +190,8 @@ BEGIN
             -- , last_modification
             -- , fk_dataowner
             -- , fk_provider
-            , fk_owner
-            , fk_operator )
+            , fk_ws_owner
+            , fk_ws_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
             , NEW.ws_accessibility
@@ -217,7 +217,7 @@ BEGIN
             -- , NEW.fk_dataowner
             -- , NEW.fk_provider
             , NEW.ws_fk_owner
-            , NEW.fk_operator
+            , NEW.ws_fk_operator
            )
            RETURNING obj_id INTO NEW.fk_wastewater_structure;
 
