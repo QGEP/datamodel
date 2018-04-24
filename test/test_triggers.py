@@ -21,7 +21,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
     def test_last_modified(self):
         row = {
                 'identifier': 'CO123',
-                'co_level': decimal.Decimal('50.000')
+                'level': decimal.Decimal('50.000')
         }
 
         obj_id = self.insert_check('vw_cover', row)
@@ -43,7 +43,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         last_mod = row['last_modification']
 
         row = {
-                'co_level': decimal.Decimal('300.000')
+                'level': decimal.Decimal('300.000')
         }
 
         self.update_check('cover', row, obj_id)
