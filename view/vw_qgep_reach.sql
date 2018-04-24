@@ -190,8 +190,8 @@ BEGIN
             -- , last_modification
             -- , fk_dataowner
             -- , fk_provider
-            , fk_ws_owner
-            , fk_ws_operator )
+            , fk_owner
+            , fk_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
             , NEW.ws_accessibility
