@@ -283,7 +283,7 @@ BEGIN
            , NEW.ii_watertightness
            );
     ELSE
-     RAISE NOTICE 'Wastewater structure type not known (%)', NEW.ws_type; -- ERROR
+     RAISE NOTICE 'Wastewater structure type not known (%%)', NEW.ws_type; -- ERROR
   END CASE;
 
   INSERT INTO qgep_od.vw_wastewater_node(
