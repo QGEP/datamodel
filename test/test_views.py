@@ -74,7 +74,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 'identifier': '20',
                 'ws_type': 'manhole',
                 'situation_geometry': '0104000020080800000100000001010000000000000020D6434100000000804F3241', # SELECT ST_SetSRID(ST_GeomFromText('MULTIPOINT(2600000 1200000)'), 2056)
-                'co_cover_material': 5355,
+                'co_material': 5355,
                 'wn_backflow_level': decimal.Decimal('100.000')
         }
 
@@ -86,7 +86,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'identifier': '10',
                 'ws_type': 'special_structure',
-                'co_cover_material': 233,
+                'co_material': 233,
                 'ss_upper_elevation': decimal.Decimal('405.000'),
         }
 
