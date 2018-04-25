@@ -410,7 +410,7 @@ BEGIN
         inspection_interval = NEW.inspection_interval,
         location_name = NEW.location_name,
         records = NEW.records,
-        remark = NEW.ws_remark,
+        remark = NEW.remark,
         renovation_necessity = NEW.renovation_necessity,
         replacement_value = NEW.replacement_value,
         rv_base_year = NEW.rv_base_year,

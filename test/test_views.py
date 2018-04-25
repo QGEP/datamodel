@@ -97,7 +97,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         cur.execute("SELECT * FROM qgep_od.wastewater_networkelement NE LEFT JOIN qgep_od.wastewater_node NO ON NO.obj_id = NE.obj_id WHERE fk_wastewater_structure='{obj_id}' ".format(obj_id=obj_id))
         row = cur.fetchone()
 
-        assert row['wn_backflow_level'] == decimal.Decimal('100.000')
+        assert row['backflow_level'] == decimal.Decimal('100.000')
 
 if __name__ == '__main__':
     unittest.main()

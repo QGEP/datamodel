@@ -62,7 +62,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = self.select('vw_qgep_wastewater_structure', obj_id)
         row = self.select('structure_part', row['co_obj_id'])
 
-        identifier = row['identifier']
+        identifier = row['ws_identifier']
         assert identifier, "Identifier not set on insert: {}".format(repr(identifier))
 
 if __name__ == '__main__':

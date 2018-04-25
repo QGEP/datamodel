@@ -220,7 +220,7 @@ BEGIN
             -- , NEW.fk_dataowner
             -- , NEW.fk_provider
             , NEW.ws_fk_owner
-            , NEW.fk_operator
+            , NEW.ws_fk_operator
            )
            RETURNING obj_id INTO NEW.fk_wastewater_structure;
 
