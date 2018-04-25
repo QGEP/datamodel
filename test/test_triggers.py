@@ -53,14 +53,21 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     def test_identifier(self):
         row = {
-                'level': decimal.Decimal('50.000'),
+                'co_level': decimal.Decimal('50.000'),
                 'ws_type': 'manhole'
         }
 
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row)
 
         row = self.select('vw_qgep_wastewater_structure', obj_id)
+
+        for r in row:
+            print(r)
+
         row = self.select('structure_part', row['co_obj_id'])
+
+        for r in row:
+            print(r)
 
         identifier = row['identifier']
         assert identifier, "Identifier not set on insert: {}".format(repr(identifier))

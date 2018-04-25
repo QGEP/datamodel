@@ -3,23 +3,28 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
 
-WITH active_maintenance_event AS (
+/* WITH active_maintenance_event AS (
   SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep_od.maintenance_event me
   LEFT JOIN
     qgep_od.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
     WHERE active_zone IS NOT NULL
-)
+) */
 
 SELECT re.obj_id,
     re.clear_height AS clear_height,
+    re.material,
+    ch.usage_current AS ch_usage_current,
+    ch.function_hierarchic AS ch_function_hierarchic,
+    ws.status AS ws_status,
+    ws.fk_owner AS ws_fk_owner,
+    ch.function_hydraulic AS ch_function_hydraulic,
     CASE WHEN pp.height_width_ratio IS NOT NULL THEN round(re.clear_height::numeric * pp.height_width_ratio)::smallint ELSE clear_height END AS width,
     re.coefficient_of_friction,
     re.elevation_determination,
     re.horizontal_positioning,
     re.inside_coating,
     re.length_effective,
-    CASE WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/NULLIF(re.length_effective,0)*1000,1) ELSE NULL END AS slope_per_mill,
-    re.material,
+    CASE WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/re.length_effective*1000,1) ELSE NULL END AS _slope_per_mill,
     re.progression_geometry,
     re.reliner_material,
     re.reliner_nominal_size,
@@ -29,39 +34,36 @@ SELECT re.obj_id,
     re.slope_building_plan,
     re.wall_roughness,
     re.fk_pipe_profile,
-    ch.bedding_encasement,
-    ch.function_hierarchic,
-    ch.connection_type,
-    ch.function_hydraulic,
-    ch.jetting_interval,
-    ch.pipe_length,
-    ch.usage_current,
-    ch.usage_planned,
-    ws.obj_id AS ws_obj_id,
-    ws.accessibility,
-    ws.contract_section,
-    ws.financing,
-    ws.gross_costs,
-    ws.inspection_interval,
-    ws.location_name,
-    ws.records,
-    ws.renovation_necessity,
-    ws.replacement_value,
-    ws.rv_base_year,
-    ws.rv_construction_type,
-    ws.status,
-    ws.structure_condition,
-    ws.subsidies,
-    ws.year_of_construction,
-    ws.year_of_replacement,
-    ws.fk_owner,
-    ws.fk_operator,
     ne.identifier,
     ne.remark,
     ne.last_modification,
     ne.fk_dataowner,
     ne.fk_provider,
     ne.fk_wastewater_structure,
+    ch.bedding_encasement AS ch_bedding_encasement,
+    ch.connection_type AS ch_connection_type,
+    ch.jetting_interval AS ch_jetting_interval,
+    ch.pipe_length AS ch_pipe_length,
+    ch.usage_planned AS ch_usage_planned,
+    ws.obj_id AS ws_obj_id,
+    ws.accessibility AS ws_accessibility,
+    ws.contract_section AS ws_contract_section,
+    ws.financing AS ws_financing,
+    ws.gross_costs AS ws_gross_costs,
+    ws.identifier AS ws_identifier,
+    ws.inspection_interval AS ws_inspection_interval,
+    ws.location_name AS ws_location_name,
+    ws.records AS ws_records,
+    ws.remark AS ws_remark,
+    ws.renovation_necessity AS ws_renovation_necessity,
+    ws.replacement_value AS ws_replacement_value,
+    ws.rv_base_year AS ws_rv_base_year,
+    ws.rv_construction_type AS ws_rv_construction_type,
+    ws.structure_condition AS ws_structure_condition,
+    ws.subsidies AS ws_subsidies,
+    ws.year_of_construction AS ws_year_of_construction,
+    ws.year_of_replacement AS ws_year_of_replacement,
+    ws.fk_operator AS ws_fk_operator,
     rp_from.obj_id AS rp_from_obj_id,
     rp_from.elevation_accuracy AS rp_from_elevation_accuracy,
     rp_from.identifier AS rp_from_identifier,
@@ -83,18 +85,18 @@ SELECT re.obj_id,
     rp_to.last_modification AS rp_to_last_modification,
     rp_to.fk_dataowner AS rp_to_fk_dataowner,
     rp_to.fk_provider AS rp_to_fk_provider,
-    rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement,
-    am.obj_id AS me_obj_id,
+    rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement
+    /* am.obj_id AS me_obj_id,
     am.active_zone AS me_active_zone,
-    am.identifier AS me_identifier
+    am.identifier AS me_identifier */
    FROM qgep_od.reach re
      LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
      LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
      LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id = re.fk_reach_point_to
      LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
      LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
-     LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
-     LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id;
+     LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id;
+     /* LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id; */
 
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
@@ -163,7 +165,7 @@ BEGIN
             , NEW.rp_to_fk_wastewater_networkelement -- fk_wastewater_networkelement
           )
     RETURNING obj_id INTO NEW.rp_to_obj_id;
-    
+
   INSERT INTO qgep_od.wastewater_structure (
             obj_id
             , accessibility
@@ -185,37 +187,37 @@ BEGIN
             , subsidies
             , year_of_construction
             , year_of_replacement
-            , last_modification
-            , fk_dataowner
-            , fk_provider
+            -- , last_modification
+            -- , fk_dataowner
+            -- , fk_provider
             , fk_owner
             , fk_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
-            , NEW.accessibility
-            , NEW.contract_section
+            , NEW.ws_accessibility
+            , NEW.ws_contract_section
             -- , NEW.detail_geometry_geometry
-            , NEW.financing
-            , NEW.gross_costs
-            , NEW.identifier
-            , NEW.inspection_interval
-            , NEW.location_name
-            , NEW.records
-            , NEW.remark
-            , NEW.renovation_necessity
-            , NEW.replacement_value
-            , NEW.rv_base_year
-            , NEW.rv_construction_type
-            , NEW.status
-            , NEW.structure_condition
-            , NEW.subsidies
-            , NEW.year_of_construction
-            , NEW.year_of_replacement
-            , NEW.last_modification
-            , NEW.fk_dataowner
-            , NEW.fk_provider
-            , NEW.fk_owner
-            , NEW.fk_operator
+            , NEW.ws_financing
+            , NEW.ws_gross_costs
+            , NEW.ws_identifier
+            , NEW.ws_inspection_interval
+            , NEW.ws_location_name
+            , NEW.ws_records
+            , NEW.ws_remark
+            , NEW.ws_renovation_necessity
+            , NEW.ws_replacement_value
+            , NEW.ws_rv_base_year
+            , NEW.ws_rv_construction_type
+            , NEW.ws_status
+            , NEW.ws_structure_condition
+            , NEW.ws_subsidies
+            , NEW.ws_year_of_construction
+            , NEW.ws_year_of_replacement
+            -- , NEW.ws_last_modification
+            -- , NEW.fk_dataowner
+            -- , NEW.fk_provider
+            , NEW.ws_fk_owner
+            , NEW.ws_fk_operator
            )
            RETURNING obj_id INTO NEW.fk_wastewater_structure;
 
@@ -232,14 +234,14 @@ BEGIN
             )
             VALUES(
               NEW.fk_wastewater_structure
-            , NEW.bedding_encasement
-            , NEW.connection_type
-            , NEW.function_hierarchic
-            , NEW.function_hydraulic
-            , NEW.jetting_interval
-            , NEW.pipe_length
-            , NEW.usage_current
-            , NEW.usage_planned
+            , NEW.ch_bedding_encasement
+            , NEW.ch_connection_type
+            , NEW.ch_function_hierarchic
+            , NEW.ch_function_hydraulic
+            , NEW.ch_jetting_interval
+            , NEW.ch_pipe_length
+            , NEW.ch_usage_current
+            , NEW.ch_usage_planned
             );
 
   INSERT INTO qgep_od.wastewater_networkelement (
@@ -327,7 +329,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
       , fk_provider = NEW.rp_from_fk_provider
       , fk_wastewater_networkelement = NEW.rp_from_fk_wastewater_networkelement
     WHERE obj_id = OLD.rp_from_obj_id;
-    
+
   UPDATE qgep_od.reach_point
     SET
         elevation_accuracy = NEW.rp_to_elevation_accuracy
@@ -345,42 +347,42 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
 
   UPDATE qgep_od.channel
     SET
-       bedding_encasement = NEW.bedding_encasement
-     , connection_type = NEW.connection_type
-     , function_hierarchic = NEW.function_hierarchic
-     , function_hydraulic = NEW.function_hydraulic
-     , jetting_interval = NEW.jetting_interval
-     , pipe_length = NEW.pipe_length
-     , usage_current = NEW.usage_current
-     , usage_planned = NEW.usage_planned
+       bedding_encasement = NEW.ch_bedding_encasement
+     , connection_type = NEW.ch_connection_type
+     , function_hierarchic = NEW.ch_function_hierarchic
+     , function_hydraulic = NEW.ch_function_hydraulic
+     , jetting_interval = NEW.ch_jetting_interval
+     , pipe_length = NEW.ch_pipe_length
+     , usage_current = NEW.ch_usage_current
+     , usage_planned = NEW.ch_usage_planned
   WHERE obj_id = OLD.fk_wastewater_structure;
 
   UPDATE qgep_od.wastewater_structure
     SET
-       accessibility = NEW.accessibility
-     , contract_section = NEW.contract_section
+       accessibility = NEW.ws_accessibility
+     , contract_section = NEW.ws_contract_section
      -- , detail_geometry_geometry = NEW.detail_geometry_geometry
-     , financing = NEW.financing
-     , gross_costs = NEW.gross_costs
-     , identifier = NEW.identifier
-     , inspection_interval = NEW.inspection_interval
-     , location_name = NEW.location_name
-     , records = NEW.records
-     , remark = NEW.remark
-     , renovation_necessity = NEW.renovation_necessity
-     , replacement_value = NEW.replacement_value
-     , rv_base_year = NEW.rv_base_year
-     , rv_construction_type = NEW.rv_construction_type
-     , status = NEW.status
-     , structure_condition = NEW.structure_condition
-     , subsidies = NEW.subsidies
-     , year_of_construction = NEW.year_of_construction
-     , year_of_replacement = NEW.year_of_replacement
+     , financing = NEW.ws_financing
+     , gross_costs = NEW.ws_gross_costs
+     , identifier = NEW.ws_identifier
+     , inspection_interval = NEW.ws_inspection_interval
+     , location_name = NEW.ws_location_name
+     , records = NEW.ws_records
+     , remark = NEW.ws_remark
+     , renovation_necessity = NEW.ws_renovation_necessity
+     , replacement_value = NEW.ws_replacement_value
+     , rv_base_year = NEW.ws_rv_base_year
+     , rv_construction_type = NEW.ws_rv_construction_type
+     , status = NEW.ws_status
+     , structure_condition = NEW.ws_structure_condition
+     , subsidies = NEW.ws_subsidies
+     , year_of_construction = NEW.ws_year_of_construction
+     , year_of_replacement = NEW.ws_year_of_replacement
      , fk_dataowner = NEW.fk_dataowner
      , fk_provider = NEW.fk_provider
      , last_modification = NEW.last_modification
-     , fk_owner = NEW.fk_owner
-     , fk_operator = NEW.fk_operator
+     , fk_owner = NEW.ws_fk_owner
+     , fk_operator = NEW.ws_fk_operator
   WHERE obj_id = OLD.fk_wastewater_structure;
 
 
@@ -424,8 +426,10 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_r
   DELETE FROM qgep_od.reach_point WHERE obj_id = OLD.rp_to_obj_id;
 );
 
+--missing: delete also connected wastewater_structure (and subclass channel or other), structure_parts, re_maintenance_events
+
 ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach');
 
 ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
 ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
-ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel')
+ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel');
