@@ -304,11 +304,11 @@ BEGIN
     , NEW.wn_backflow_level
     , NEW.wn_bottom_level
     , ST_GeometryN( NEW.situation_geometry, 1 )
-    , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.wn_identifier)
+    , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
     , NEW.wn_remark
     , NOW()
-    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.wn_fk_provider)
-    , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.wn_fk_dataowner)
+    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
+    , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
     , NEW.obj_id
   );
 
@@ -345,7 +345,7 @@ BEGIN
     , ST_GeometryN( NEW.situation_geometry, 1 )
     , NEW.co_sludge_bucket
     , NEW.co_venting
-    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.co_identifier)
+    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
     , NEW.co_remark
     , NEW.co_renovation_demand
     , NOW()
