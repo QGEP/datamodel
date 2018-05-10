@@ -48,6 +48,7 @@ def create_dumps():
                      '--compress', '5',
                      '--file', dumpfile,
                      '--schema', 'qgep_od',
+                     '--schema', 'qgep_sys',
                      'qgep_prod']
                     )
     files.append(dumpfile)
@@ -65,6 +66,7 @@ def create_dumps():
                      '--section', 'data',
                      '--file', dumpfile,
                      '--schema', 'qgep_od',
+                     '--schema', 'qgep_sys',
                      'qgep_prod']
                     )
     files.append(dumpfile)
