@@ -32,153 +32,149 @@ import subprocess
 
 
 def create_dumps():
-    files = []
+    """
+    Creates all dumps
+    :return: the files names in a list
+    """
+    file_s = create_plain_structure_only()
+    file_v = create_plain_value_list(file_s)
+    file_d = create_plain_data()
+    file_b = create_backup_complete()
+    return [file_s, file_v, file_d, file_b]
 
+
+def create_plain_structure_only():
+    """
+    Create a plain SQL dump of data structure of all schemas and the content of pum_sys.inf
+    :return: the file name of the dump
+    """
+    print('travis_fold:start:plain SQL structure only')
+
+    # structure
+    dump_s = 'qgep_v{version}_structure.sql'.format(
+        version=os.environ['TRAVIS_TAG'])
+
+    print('Creating dump {}'.format(dump_s))
+    dump_file_s = '/tmp/{dump}'.format(dump=dump_s)
+    subprocess.call(['pg_dump',
+                     '--format', 'plain',
+                     '--schema-only',
+                     '--file', dump_file_s,
+                     '-N', 'public',
+                     'qgep_prod']
+                    )
+
+    # pum_sys.info
+    dump_i = 'qgep_v{version}_pum_info.sql'.format(
+        version=os.environ['TRAVIS_TAG'])
+    print('Creating dump {}'.format(dump_i))
+    dump_file_i = '/tmp/{dump}'.format(dump=dump_i)
+    subprocess.call(['pg_dump',
+                     '--format', 'plain',
+                     '--data-only',
+                     '--file', dump_file_i,
+                     '-t', 'qgep_sys.pum_info',
+                     'qgep_prod']
+                    )
+    print('Concatenating the 2 dumps')
+    with open(dump_file_s, "a") as f:
+        f.write(dump_file_i.read())
+
+    print('travis_fold:end:plain SQL structure only')
+
+    return dump_file_s
+
+
+def create_plain_value_list(structure_dump):
+    """
+    Create a plain SQL dump of data structure (result of create_structure_only)
+    with value list content
+    :return: the file name of the dump
+    """
+    print('travis_fold:start:value lists dump')
+
+    dump = 'qgep_v{version}_value_list_data.sql'.format(
+        version=os.environ['TRAVIS_TAG'])
+
+    print('Creating dump {}'.format(dump))
+    dump_file = '/tmp/{dump}'.format(dump=dump)
+
+    subprocess.call(['pg_dump',
+                     '--format', 'plain',
+                     '--blobs',
+                     '--data-only',
+                     '--file', dump_file,
+                     '--schema', 'qgep_vl',
+                     'qgep_prod']
+                    )
+
+    print('Concatenating the 2 dumps')
+    dump_data = dump_file.read()
+    with open(dump_file, 'w') as f:
+        f.write(structure_dump.read())
+        f.write('\n\n\n-- Value lists dump --\n\n')
+        f.write(dump_data)
+
+    print('travis_fold:end:value lists dump')
+    
+    return dump_file
+
+
+def create_plain_data():
+    """
+    Create a plain SQL data-only dump (without VL and pum_info) and a binary dump of data + structure
+    :return: the file name
+    """
     # Create data-only dumps (with sample data)
-
-    dump = 'qgep_v{version}_data_only_sample.backup'.format(
-        version=os.environ['TRAVIS_TAG'])
+    dump = 'qgep_v{version}_demo_data.sql'.format(
+        version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
-    dumpfile = '/tmp/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
-                     '--format', 'custom',
-                     '--blobs',
-                     '--section', 'data',
-                     '--compress', '5',
-                     '--file', dumpfile,
-                     '--schema', 'qgep_od',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    dump='qgep_v{version}_data_only_sample.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
+    dump_file = '/tmp/{dump}'.format(dump=dump)
     subprocess.call(['pg_dump',
                      '--format', 'plain',
                      '--blobs',
                      '--section', 'data',
-                     '--file', dumpfile,
+                     '--file', dump_file,
                      '--schema', 'qgep_od',
+                     '--schema', 'qgep_sys',
+                     '--exclude-table', 'qgep_sys.pum_info'
                      'qgep_prod']
                     )
-    files.append(dumpfile)
     print('travis_fold:end:{}'.format(dump))
+    return dump_file
 
+
+def create_backup_complete():
+    """
+    Create
+    :return: the file name
+    """
     # Create data + structure dumps (with sample data)
-
-    dump='qgep_v{version}_data_and_structure_sample.backup'.format(
-        version=os.environ['TRAVIS_TAG'])
+    dump = 'qgep_v{version}_complete_demo.backup'.format(
+        version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
+    dump_file = '/tmp/{dump}'.format(dump=dump)
     subprocess.call(['pg_dump',
                      '--format', 'custom',
                      '--blobs',
                      '--compress', '5',
-                     '--file', dumpfile,
+                     '--file', dump_file,
                      '-N', 'public',
                      'qgep_prod']
                     )
-    files.append(dumpfile)
     print('travis_fold:end:{}'.format(dump))
 
-    dump='qgep_v{version}_data_and_structure_sample.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
-    subprocess.call(['pg_dump',
-                     '--format', 'plain',
-                     '--blobs',
-                     '--file', dumpfile,
-                     '-N', 'public',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    # Create structure-only dumps
-
-    dump='qgep_v{version}_structure_only.backup'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
-    subprocess.call(['pg_dump',
-                     '--format', 'custom',
-                     '--schema-only',
-                     '--file', dumpfile,
-                     '-N', 'public',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    dump='qgep_v{version}_structure_only.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
-    subprocess.call(['pg_dump',
-                     '--format', 'plain',
-                     '--schema-only',
-                     '--file', dumpfile,
-                     '-N', 'public',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    # Create value-list data only dumps (the qgep_vl schema)
-
-    dump = 'qgep_v{version}_value_list_data_only.backup'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile = '/tmp/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
-                     '--format', 'custom',
-                     '--blobs',
-                     '--compress', '5',
-                     '--data-only',
-                     '--file', dumpfile,
-                     '--schema', 'qgep_vl',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    dump='qgep_v{version}_value_list_data_only.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dumpfile='/tmp/{dump}'.format(dump=dump)
-
-    subprocess.call(['pg_dump',
-                     '--format', 'plain',
-                     '--blobs',
-                     '--data-only',
-                     '--file', dumpfile,
-                     '--schema', 'qgep_vl',
-                     'qgep_prod']
-                    )
-    files.append(dumpfile)
-    print('travis_fold:end:{}'.format(dump))
-
-    return files
+    return dump_file
 
 
 def main():
+    """
+    Publish the files in a release on github
+    If a release already exist, it will copy its data (title, description, etc),
+    delete it and create a new one with the same data and adding the dump files
+    """
     if 'TRAVIS_TAG' not in os.environ or not os.environ['TRAVIS_TAG']:
         print('No git tag: not deploying anything')
         return
@@ -188,35 +184,33 @@ def main():
     else:
         print('Creating release from tag {}'.format(os.environ['TRAVIS_TAG']))
 
-    release_files=create_dumps()
+    release_files = create_dumps()
 
-
-
-    headers={
+    headers = {
         'User-Agent': 'Deploy-Script',
         'Authorization': 'token {}'.format(os.environ['GH_TOKEN'])
     }
 
-    create_raw_data={
+    create_raw_data = {
         "tag_name": os.environ['TRAVIS_TAG']
     }
 
     # if a release exist with this tag_name delete it first
     # this allows to create the release from github website
-    url='/repos/{repo_slug}/releases/latest'.format(
+    url = '/repos/{repo_slug}/releases/latest'.format(
         repo_slug=os.environ['TRAVIS_REPO_SLUG'])
-    conn=http.client.HTTPSConnection('api.github.com')
+    conn = http.client.HTTPSConnection('api.github.com')
     conn.request('GET', url, headers=headers)
-    response=conn.getresponse()
-    release=json.loads(response.read().decode())
+    response = conn.getresponse()
+    release = json.loads(response.read().decode())
     if 'tag_name' in release and release['tag_name'] == os.environ['TRAVIS_TAG']:
         print("Deleting release {}".format(release['tag_name']))
-        url='/repos/{repo_slug}/releases/{id}'.format(
+        url = '/repos/{repo_slug}/releases/{id}'.format(
             repo_slug=os.environ['TRAVIS_REPO_SLUG'],
             id=release['id'])
-        conn=http.client.HTTPSConnection('api.github.com')
+        conn = http.client.HTTPSConnection('api.github.com')
         conn.request('DELETE', url, headers=headers)
-        response=conn.getresponse()
+        response = conn.getresponse()
         if response.status == 204:
             print('Existing release deleted!')
             create_raw_data["target_commitish"] = release['target_commitish']
@@ -227,13 +221,13 @@ def main():
             print('Github API replied:')
             print('{} {}'.format(response.status, response.reason))
 
-    data=json.dumps(create_raw_data)
-    url='/repos/{repo_slug}/releases'.format(
+    data = json.dumps(create_raw_data)
+    url = '/repos/{repo_slug}/releases'.format(
         repo_slug=os.environ['TRAVIS_REPO_SLUG'])
-    conn=http.client.HTTPSConnection('api.github.com')
+    conn = http.client.HTTPSConnection('api.github.com')
     conn.request('POST', url, body=data, headers=headers)
-    response=conn.getresponse()
-    release=json.loads(response.read().decode())
+    response = conn.getresponse()
+    release = json.loads(response.read().decode())
 
     if 'upload_url' not in release:
         print('Failed to create release!')
@@ -242,12 +236,12 @@ def main():
         print(repr(release))
         exit(-1)
 
-    conn=http.client.HTTPSConnection('uploads.github.com')
+    conn = http.client.HTTPSConnection('uploads.github.com')
     for release_file in release_files:
-        _, filename=os.path.split(release_file)
-        headers['Content-Type']='text/plain'
-#        headers['Transfer-Encoding']='gzip'
-        url='{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13], filename=filename)
+        _, filename = os.path.split(release_file)
+        headers['Content-Type'] = 'text/plain'
+#        headers['Transfer-Encoding'] = 'gzip'
+        url = '{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13], filename=filename)
         print('Upload to {}'.format(url))
 
         with open(release_file, 'rb') as f:
