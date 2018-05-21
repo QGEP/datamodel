@@ -77,15 +77,17 @@ def create_plain_structure_only():
                      'qgep_prod']
                     )
     print('Concatenating the 2 dumps')
+    with open(dump_file_i) as f:
+        dump_data = f.read()
     with open(dump_file_s, "a") as f:
-        f.write(dump_file_i.read())
+        f.write(dump_data)
 
     print('travis_fold:end:plain SQL structure only')
 
     return dump_file_s
 
 
-def create_plain_value_list(structure_dump):
+def create_plain_value_list(structure_dump_file):
     """
     Create a plain SQL dump of data structure (result of create_structure_only)
     with value list content
@@ -109,9 +111,13 @@ def create_plain_value_list(structure_dump):
                     )
 
     print('Concatenating the 2 dumps')
+    with open(dump_file) as f:
+        dump_data = f.read()
+    with open(structure_dump_file) as f:
+        structure_dump_data = f.read()
     dump_data = dump_file.read()
     with open(dump_file, 'w') as f:
-        f.write(structure_dump.read())
+        f.write(structure_dump_data)
         f.write('\n\n\n-- Value lists dump --\n\n')
         f.write(dump_data)
 
