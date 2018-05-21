@@ -6,7 +6,8 @@
 
 -- Modification of table od_file --> insert fk_data_media
 
-ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
+-- done in 04_vsa_kek_extension instead
+--ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
 
 -- ******************************************************************************
 -- 2. qgep_od.vw_file :

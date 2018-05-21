@@ -190,6 +190,7 @@ CREATE SEQUENCE qgep_od.seq_file_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 STAR
  ALTER TABLE qgep_od.file ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','file');
 COMMENT ON COLUMN qgep_od.file.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep_od.file ADD COLUMN class  integer ;
+ ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
 COMMENT ON COLUMN qgep_od.file.class IS 'yyy_Gibt an, zu welcher Klasse des VSA-DSS-Datenmodells die Datei gehört. Grundsätzlich alle Klassen möglich. Im Rahmen der Kanalfernsehaufnahmen hauptsächlich Kanal, Normschachtschaden, Kanalschaden und Untersuchung. / Gibt an, zu welcher Klasse des VSA-DSS-Datenmodells die Datei gehört. Grundsätzlich alle Klassen möglich. Im Rahmen der Kanalfernsehaufnahmen hauptsächlich Kanal, Normschachtschaden, Kanalschaden und Untersuchung. / Indique à quelle classe du modèle de données de VSA-SDEE appartient le fichier. Toutes les classes sont possible. Surtout CANALISATION, DOMMAGE_CHAMBRE_STANDARD, DOMMAGE_CANALISATION, INSPECTION.';
  ALTER TABLE qgep_od.file ADD COLUMN identifier  varchar(40) ;
 COMMENT ON COLUMN qgep_od.file.identifier IS 'yyy_Name der Datei mit Dateiendung. Z.B video_01.mpg oder haltung_01.ipf / Name der Datei mit Dateiendung. Z.B video_01.mpg oder haltung_01.ipf / Nom du fichier avec terminaison du fichier. P. ex. video_01.mpg ou canalisation_01.ipf';
