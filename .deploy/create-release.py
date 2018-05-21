@@ -115,7 +115,6 @@ def create_plain_value_list(structure_dump_file):
         dump_data = f.read()
     with open(structure_dump_file) as f:
         structure_dump_data = f.read()
-    dump_data = dump_file.read()
     with open(dump_file, 'w') as f:
         f.write(structure_dump_data)
         f.write('\n\n\n-- Value lists dump --\n\n')
