@@ -102,3 +102,6 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_c
 if [[ $roles ]]; then
   psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/12_roles.sql
 fi
+
+VERSION=$(sed 'r' ${DIR}/system/CURRENT_VERSION.txt)
+pum baseline -p qgep_prod -t qgep_sys.pum_info -d ${DIR}/delta/ -b ${VERSION}
