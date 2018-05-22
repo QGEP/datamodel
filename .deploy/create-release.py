@@ -132,15 +132,16 @@ def create_plain_data():
     :return: the file name
     """
     # Create data-only dumps (with sample data)
-    dump = 'qgep_v{version}_demo_data.sql'.format(
+    dump = 'qgep_v{version}_demo_data.backup'.format(
         version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
     dump_file = '/tmp/{dump}'.format(dump=dump)
     subprocess.call(['pg_dump',
-                     '--format', 'plain',
+                     '--format', 'custom',
                      '--blobs',
                      '--data-only',
+                     '--compress', '5',
                      '--file', dump_file,
                      '--table', 'qgep_od.*',
                      '--table', 'qgep_sys.logged_actions',
