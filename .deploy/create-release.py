@@ -96,7 +96,7 @@ def create_plain_value_list(structure_dump_file):
     """
     print('travis_fold:start:value lists dump')
 
-    dump = 'qgep_v{version}_value_list_data.sql'.format(
+    dump = 'qgep_v{version}_structure_with_value_lists.sql'.format(
         version=os.environ['TRAVIS_TAG'])
 
     print('Creating dump {}'.format(dump))
