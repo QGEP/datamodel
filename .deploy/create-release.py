@@ -143,7 +143,7 @@ def create_plain_data():
                      '--section', 'data',
                      '--file', dump_file,
                      '--schema', 'qgep_od',
-                     '--table', 'qgep_sys.logged_actions'
+                     '--table', 'qgep_sys.logged_actions',
                      'qgep_prod']
                     )
     print('travis_fold:end:{}'.format(dump))
