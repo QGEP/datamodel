@@ -140,9 +140,9 @@ def create_plain_data():
     subprocess.call(['pg_dump',
                      '--format', 'plain',
                      '--blobs',
-                     '--section', 'data',
+                     '--data-only',
                      '--file', dump_file,
-                     '--schema', 'qgep_od',
+                     '--table', 'qgep_od.*',
                      '--table', 'qgep_sys.logged_actions',
                      'qgep_prod']
                     )
