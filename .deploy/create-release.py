@@ -60,11 +60,11 @@ def create_plain_structure_only():
                      '--format', 'plain',
                      '--schema-only',
                      '--file', dump_file_s,
-                     '-N', 'public',
+                     '--exclude-schema', 'public',
                      'qgep_prod']
                     )
 
-    # pum_sys.info
+    # dump all from qgep_sys except logged_actions
     dump_i = 'qgep_v{version}_pum_info.sql'.format(
         version=os.environ['TRAVIS_TAG'])
     print('Creating dump {}'.format(dump_i))
@@ -73,7 +73,8 @@ def create_plain_structure_only():
                      '--format', 'plain',
                      '--data-only',
                      '--file', dump_file_i,
-                     '-t', 'qgep_sys.pum_info',
+                     '--schema', 'qgep_sys',
+                     '--exclude-table', 'qgep_sys.logged_actions',
                      'qgep_prod']
                     )
     print('Concatenating the 2 dumps')
@@ -142,8 +143,7 @@ def create_plain_data():
                      '--section', 'data',
                      '--file', dump_file,
                      '--schema', 'qgep_od',
-                     '--schema', 'qgep_sys',
-                     '--exclude-table', 'qgep_sys.pum_info'
+                     '--table', 'qgep_sys.logged_actions'
                      'qgep_prod']
                     )
     print('travis_fold:end:{}'.format(dump))
