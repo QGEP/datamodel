@@ -110,8 +110,8 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
     FROM qgep_od.wastewater_structure ws
     FULL OUTER JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
     LEFT JOIN qgep_od.cover co ON co.obj_id = sp.obj_id
-    LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure = ws.obj_id
-    LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ne.obj_id
+    RIGHT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure = ws.obj_id
+    RIGHT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ne.obj_id
     GROUP BY ws.obj_id
    ) aggregated_wastewater_structure
    LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = aggregated_wastewater_structure.obj_id
