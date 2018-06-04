@@ -31,6 +31,22 @@ import json
 import subprocess
 
 
+def files_description(version):
+    return """
+
+## Descriptions of the files
+File | Description
+------------ | -------------
+qgep_v{version}_structure.sql | Contains the structure of tables and system schema content
+qgep_v{version}_structure_with_value_lists.sql | Contains the structure of tables, system schema data and value lists data
+qgep_v{version}_demo_data.backup | Data-only backup of the `qgep_od` schema (i.e. ordinary data) from demonstration set of data
+qgep_v{version}_structure_and_demo_data.backup | Complete backup with structure and data of the demonstration set of data
+
+* If you plan to **use QGEP for production**, it is more likely you will be using the plain SQL `qgep_v{version}_structure_with_value_lists.sql`.
+* If you want to **give a try at QGEP**, you will likely restore the `qgep_v{version}_structure_and_demo_data.backup` backup file.
+""".format(version=version)
+
+
 def create_dumps():
     """
     Creates all dumps
@@ -38,7 +54,7 @@ def create_dumps():
     """
     file_s = create_plain_structure_only()
     file_v = create_plain_value_list(file_s)
-    file_d = create_plain_data()
+    file_d = create_backup_data()
     file_b = create_backup_complete()
     return [file_s, file_v, file_d, file_b]
 
@@ -126,9 +142,9 @@ def create_plain_value_list(structure_dump_file):
     return dump_file
 
 
-def create_plain_data():
+def create_backup_data():
     """
-    Create a plain SQL data-only dump (without VL and pum_info) and a binary dump of data + structure
+    Create a data-only dump (without VL and pum_info)
     :return: the file name
     """
     # Create data-only dumps (with sample data)
@@ -153,11 +169,11 @@ def create_plain_data():
 
 def create_backup_complete():
     """
-    Create
+    Create data + structure dump
     :return: the file name
     """
     # Create data + structure dumps (with sample data)
-    dump = 'qgep_v{version}_complete_demo.backup'.format(
+    dump = 'qgep_v{version}_structure_and_demo_data.backup'.format(
         version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
@@ -198,7 +214,8 @@ def main():
     }
 
     create_raw_data = {
-        "tag_name": os.environ['TRAVIS_TAG']
+        "tag_name": os.environ['TRAVIS_TAG'],
+        "body": ""
     }
 
     # if a release exist with this tag_name delete it first
@@ -226,6 +243,8 @@ def main():
             print('Failed to delete release!')
             print('Github API replied:')
             print('{} {}'.format(response.status, response.reason))
+
+    create_raw_data["body"] += files_description(os.environ['TRAVIS_TAG'])
 
     data = json.dumps(create_raw_data)
     url = '/repos/{repo_slug}/releases'.format(
