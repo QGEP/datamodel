@@ -222,7 +222,7 @@ BEGIN
              NEW.obj_id
            , NEW.ss_bypass
            , NEW.ss_emergency_spillway
-           , NEW.ss_special_structure_function
+           , NEW.ss_function
            , NEW.ss_stormwater_tank_arrangement
            , NEW.ss_upper_elevation
            );
