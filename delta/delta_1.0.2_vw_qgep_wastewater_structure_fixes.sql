@@ -1,7 +1,3 @@
-﻿-- View: vw_qgep_wastewater_structure
-
-BEGIN TRANSACTION;
-
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
@@ -105,7 +101,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
 
   FROM (
     SELECT ws.obj_id,
-      ST_Collect(co.situation_geometry)::geometry(MultiPoint, :SRID) AS situation_geometry,
+      ST_Collect(co.situation_geometry)::geometry(MultiPoint, %(SRID)s) AS situation_geometry,
       CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
     FROM qgep_od.wastewater_structure ws
     FULL OUTER JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
@@ -283,7 +279,7 @@ BEGIN
            , NEW.ii_watertightness
            );
     ELSE
-     RAISE NOTICE 'Wastewater structure type not known (%)', NEW.ws_type; -- ERROR
+     RAISE NOTICE 'Wastewater structure type not known (%%)', NEW.ws_type; -- ERROR
   END CASE;
 
   INSERT INTO qgep_od.vw_wastewater_node(
@@ -594,6 +590,3 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_DELETE INSTEAD OF DELETE ON qgep_
 
 ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
 ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','structure_part');
-
-
-END TRANSACTION;
