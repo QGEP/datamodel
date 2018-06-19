@@ -169,7 +169,7 @@ BEGIN
     , NEW.inspection_interval
     , NEW.location_name
     , NEW.records
-    , NEW.remark
+    , NEW.ws_remark
     , NEW.renovation_necessity
     , NEW.replacement_value
     , NEW.rv_base_year
