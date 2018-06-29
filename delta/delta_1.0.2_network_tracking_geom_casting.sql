@@ -18,8 +18,8 @@ CREATE MATERIALIZED VIEW qgep_od.vw_network_node AS
      NULL AS cover_level,
      NULL AS backflow_level,
      NULL AS description,
-     situation_geometry::geometry(Point,:SRID) AS detail_geometry,
-     situation_geometry::geometry(Point,:SRID)
+     situation_geometry::geometry(Point,%(SRID)s) AS detail_geometry,
+     situation_geometry::geometry(Point,%(SRID)s)
    FROM qgep_od.reach_point
 
    UNION
@@ -115,7 +115,7 @@ CREATE MATERIALIZED VIEW qgep_od.vw_network_segment AS
      ch.usage_current AS usage_current,
      mat.abbr_de AS material,
      COALESCE(reach_progression, ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))) AS progression_geometry,
-     ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))::geometry(LineString,:SRID) AS detail_geometry
+     ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))::geometry(LineString,%(SRID)s) AS detail_geometry
    FROM qgep_od.reach re
    FULL JOIN
    (
