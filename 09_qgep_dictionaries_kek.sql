@@ -4,12 +4,12 @@
 
 --- CREATE VIEW qgep_sys.dictionary_value_list already exists
 --- CREATE TABLE qgep_sys.dictionary_od_table already exists
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3679,'od_examination','examination','EX','Untersuchung','UN','Examen','IN','','','','');
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3705,'od_damage','damage','DG','Schaden','SC','Dommage','DO','','','','');
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3714,'od_damage_channel','damage channel','DC','Kanalschaden','KS','Dommage aux canalisations','DC','','','','');
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3728,'od_damage_manhole','damage manhole','DM','Normschachtschaden','SS','Dommage chambre standard','SS','','','','');
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3754,'od_file','file','FI','Datei','DA','Fichier','FI','','','','');
- INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3776,'od_data_media','data media','VO','Datenträger','DT','Support données','SO','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3679,'examination','examination','EX','Untersuchung','UN','Examen','IN','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3705,'damage','damage','DG','Schaden','SC','Dommage','DO','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3714,'damage_channel','damage channel','DC','Kanalschaden','KS','Dommage aux canalisations','DC','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3728,'damage_manhole','damage manhole','DM','Normschachtschaden','SS','Dommage chambre standard','SS','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3754,'file','file','FI','Datei','DA','Fichier','FI','','','','');
+ INSERT INTO qgep_sys.dictionary_od_table (id, tablename, name_en, shortcut_en, name_de, shortcut_de, name_fr, shortcut_fr, name_it, shortcut_it, name_ro, shortcut_ro) VALUES (3776,'data_media','data media','VO','Datenträger','DT','Support données','SO','','','','');
 
 --- CREATE TABLE qgep_sys.dictionary_od_field already exists
 
