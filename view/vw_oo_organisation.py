@@ -8,9 +8,14 @@ pgiv = imp.load_source('PGInheritanceView', os.path.join(os.path.dirname(__file_
 
 
 if len(sys.argv) > 1:
-	pg_service = sys.argv[1]
+    pg_service = sys.argv[1]
 else:
-	pg_service = 'pg_qgep'
+    pg_service = 'pg_qgep'
+
+if len(sys.argv) > 2:
+    srid = sys.argv[2]
+else:
+    srid = 2056
 
 organisation="""
 table: qgep_od.organisation
@@ -58,9 +63,11 @@ merge_view:
   allow_type_change: true
   merge_columns:
     perimeter_geometry:
-      canton: perimeter_geometry
-      municipality: perimeter_geometry
-"""
+      cast: "geometry(CurvePolygon,{srid})"
+      fields:
+        canton: perimeter_geometry
+        municipality: perimeter_geometry
+""".format(srid=srid)
 
 
 print((pgiv.PGInheritanceView(pg_service, organisation).sql_all()))
