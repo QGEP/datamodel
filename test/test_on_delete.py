@@ -1,4 +1,5 @@
 import unittest
+import os
 
 import psycopg2
 import psycopg2.extras
@@ -15,7 +16,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.conn = psycopg2.connect("service=pg_qgep")
+        pgservice=os.environ.get('PGSERVICE')
+        if not pgservice:
+          pgservice='pg_qgep'
+        cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
 
     def test_delete_wastewater_structure(self):
