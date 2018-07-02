@@ -68,7 +68,6 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/06_symbology_functions.
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/07_views_for_network_tracking.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/09_qgep_dictionaries_kek.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/13_import.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/fixes/fix_vsa_kek_extension.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/fixes/fix_wastewater_structure.sql
@@ -107,3 +106,5 @@ fi
 
 VERSION=$(cat ${DIR}/system/CURRENT_VERSION.txt)
 pum baseline -p ${PGSERVICE} -t qgep_sys.pum_info -d ${DIR}/delta/ -b ${VERSION}
+
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/13_import.sql
