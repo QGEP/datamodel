@@ -39,7 +39,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'remark': 'Strassenauslauf',
                 'co_material': 3015,
                 'outlet_1_material': 5081,
-                'outlet_1_dimension_mm': 160,
+                'outlet_1_clear_hight': 160,
                 'outlet_1_depth_m': 100,
                 'photo1' : 'funky_selfie.png'
         }
@@ -54,6 +54,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the view qgep_import.vw_manhole
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
         self.assertEqual( row['co_material'], 3015)
         self.assertEqual( row['remark'], 'Strassenauslauf')
 
@@ -161,10 +162,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'remark': 'Strassenauslauf',
                 'co_material': 3015,
                 'outlet_1_material': 5081,
-                'outlet_1_dimension_mm': 160,
+                'outlet_1_clear_hight': 160,
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
-                'inlet_3_dimension_mm': 160,
+                'inlet_3_clear_hight': 160,
                 'inlet_3_depth_m': 100
         }
 
@@ -173,6 +174,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the view qgep_import.vw_manhole
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
         self.assertEqual( row['co_material'], 3015)
         self.assertEqual( row['remark'], 'Strassenauslauf')
 
@@ -227,6 +229,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the view qgep_import.vw_manhole
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
         self.assertEqual( row['co_material'], 3015)
         self.assertEqual( row['remark'], 'Strassenauslauf')
 
@@ -263,10 +266,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'co_material': 3015,
                 'co_level': 500,
                 'outlet_1_material': 5081,
-                'outlet_1_dimension_mm': 160,
+                'outlet_1_clear_hight': 160,
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
-                'inlet_3_dimension_mm': 160,
+                'inlet_3_clear_hight': 160,
                 'inlet_3_depth_m': 100
         }
 
@@ -275,6 +278,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the view qgep_import.vw_manhole
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
         self.assertEqual( row['co_material'], 3015)
         self.assertEqual( row['remark'], 'E10')
 
@@ -306,6 +310,14 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it shouldn't be anymore in the quarantine qgep_import.manhole_quarantine
         row = self.select( 'manhole_quarantine', obj_id, 'qgep_import')
         self.assertIsNone( row )
+
+    # - general test
+    def test_general(self):
+        # it should be in the live table qgep_od.reach and qgep_od.reach_point
+        cur = self.cursor()
+        cur.execute("SELECT * FROM {schema}.wastewater_structure LIMIT 1".format(schema='qgep_od'))
+        row = cur.fetchone()
+        self.assertIsNotNone( row )
 
 
 if __name__ == '__main__':
