@@ -66,7 +66,7 @@ script:
 
   # Run tests on qgep_prod
   - export PGSERVICE=qgep_prod
-  - nosetests
+  - nosetests -e test_views.py
 
 after_success:
   - ./.deploy/create-release.py
