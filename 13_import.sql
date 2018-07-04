@@ -213,9 +213,9 @@ CREATE TRIGGER on_mutation_make_insert
 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
 DECLARE 
-  multi_situation_geometry geometry(MultiPoint,:SRID);
+  multi_situation_geometry geometry(MultiPoint,2056);
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,:SRID);
+  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,2056);
 
   -- qgep_od.wastewater_structure
   IF( SELECT TRUE FROM qgep_od.vw_qgep_wastewater_structure WHERE obj_id = NEW.obj_id ) THEN
