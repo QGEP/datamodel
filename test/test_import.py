@@ -3,6 +3,7 @@ import os
 
 import psycopg2
 import psycopg2.extras
+import psycopg2.sql
 import decimal
 from time import sleep
 
@@ -60,12 +61,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
-        cur.execute("SELECT re.material, re.clear_height, rp.level, ws.co_level\
+        cur.execute(psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = '{obj_id}'".format(schema='qgep_od', obj_id=obj_id))
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier('qgep_od')), {'obj_id':obj_id})
         row = cur.fetchone()
         self.assertIsNotNone( row )
         self.assertEqual( row['material'], 5081)
@@ -75,9 +76,9 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # the photo should be in the live table qgep_od.file
         row = self.select( 'file', obj_id, 'qgep_od')
         cur = self.cursor()
-        cur.execute("SELECT *\
+        cur.execute(psycopg2.sql.SQL("SELECT *\
             FROM {schema}.file\
-            WHERE object = '{obj_id}'".format(schema='qgep_od', obj_id=obj_id))
+            WHERE object = %(obj_id)s").format(schema=psycopg2.sql.Identifier('qgep_od')), {'obj_id':obj_id})
         row = cur.fetchone()
         self.assertEqual( row['identifier'], 'funky_selfie.png')
 
@@ -108,12 +109,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
-        cur.execute("SELECT re.material, re.clear_height, rp.level, ws.co_level\
+        cur.execute(psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = '{obj_id}'".format(schema='qgep_od', obj_id=obj_id))
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier('qgep_od')), {'obj_id':obj_id})
         row = cur.fetchone()
         self.assertIsNotNone( row )
         self.assertEqual( row['material'], 5081)
@@ -180,12 +181,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
-        cur.execute("SELECT re.material, re.clear_height, rp.level, ws.co_level\
+        cur.execute(psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = '{obj_id}'".format(schema='qgep_od', obj_id=obj_id))
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier('qgep_od')), {'obj_id':obj_id})
         row = cur.fetchone()
         self.assertIsNotNone( row )
         self.assertEqual( row['material'], 5081)
@@ -284,12 +285,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
-        cur.execute("SELECT re.material, re.clear_height, rp.level, ws.co_level\
+        cur.execute(psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = '{obj_id}'".format(schema='qgep_od', obj_id=obj_id))
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier('qgep_od')), {'obj_id':obj_id})
         row = cur.fetchone()
         self.assertIsNotNone( row )
         self.assertEqual( row['material'], 5081)
@@ -315,7 +316,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
     def test_general(self):
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
-        cur.execute("SELECT * FROM {schema}.wastewater_structure LIMIT 1".format(schema='qgep_od'))
+        cur.execute(psycopg2.sql.SQL("SELECT * FROM {schema}.wastewater_structure LIMIT 1").format(schema=psycopg2.sql.Identifier('qgep_od')))
         row = cur.fetchone()
         self.assertIsNotNone( row )
 
