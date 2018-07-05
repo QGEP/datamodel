@@ -324,7 +324,7 @@ BEGIN
 
   -- catch
   EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %', SQLERRM;
+    RAISE NOTICE 'EXCEPTION: %%', SQLERRM;
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
@@ -398,14 +398,14 @@ BEGIN
   -- handle inlets
   IF ( new_lets > 1 AND old_lets > 0 ) OR old_lets > 1 THEN
     -- request for update because new lets are bigger 1 (and old lets not 0 ) or old lets are bigger 1
-    RAISE NOTICE 'Impossible to assign %s - manual edit needed.', let_kind;
+    RAISE NOTICE 'Impossible to assign %%s - manual edit needed.', let_kind;
   ELSE
     IF new_lets = 0 AND old_lets > 0 THEN
       -- request for delete because no new lets but old lets
-      RAISE NOTICE 'No new %s but old ones - manual delete needed.', let_kind;
+      RAISE NOTICE 'No new %%s but old ones - manual delete needed.', let_kind;
     ELSIF new_lets > 0 AND old_lets = 0 THEN
       -- request for create because no old lets but new lets
-      RAISE NOTICE 'No old %s but new ones - manual create needed.', let_kind;
+      RAISE NOTICE 'No old %%s but new ones - manual create needed.', let_kind;
     ELSE
       IF new_lets = 1 AND old_lets = 1 THEN
         IF is_inlet THEN
@@ -452,10 +452,10 @@ BEGIN
             WHERE ws.obj_id = NEW.obj_id );
         END IF;
 
-        RAISE NOTICE '%s updated', let_kind;
+        RAISE NOTICE '%%s updated', let_kind;
       ELSE
         -- do nothing
-        RAISE NOTICE 'No %s - nothing to do', let_kind;
+        RAISE NOTICE 'No %%s - nothing to do', let_kind;
       END IF;     
 
       IF is_inlet THEN
@@ -476,7 +476,7 @@ BEGIN
 
   -- catch
   EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %', SQLERRM;
+    RAISE NOTICE 'EXCEPTION: %%', SQLERRM;
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
