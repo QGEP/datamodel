@@ -208,9 +208,7 @@ CREATE TRIGGER on_mutation_make_insert
   FOR EACH ROW
   EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine();
 
-
 -- create triggerfunctions and triggers for quarantine table 
-
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
 DECLARE 
   multi_situation_geometry geometry(MultiPoint,2056);
@@ -347,7 +345,6 @@ CREATE TRIGGER after_insert_try_structure_update
   FOR EACH ROW
   EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
 
-
 -- Some information:
 -- 1. new lets 0 - old lets 0 -> do nothing
 -- 2. new lets 0 - old lets 1 -> delete let
@@ -359,14 +356,27 @@ CREATE TRIGGER after_insert_try_structure_update
 -- 8. new lets n - old lets 1 -> manual update needed
 -- 9. new lets n - old lets n -> manual update needed
 
-CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_inlet_update() RETURNS trigger AS $BODY$
+CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_let_update() RETURNS trigger AS $BODY$
   DECLARE 
+    is_inlet boolean;
+    let_kind text;
     new_lets integer;
     old_lets integer;
 BEGIN
+  is_inlet := TG_ARGV[0];
+
+  -- for the notice outputs
+  IF is_inlet THEN 
+    let_kind = 'inlet';
+  ELSE 
+    let_kind = 'outlet';
+  END IF;
+
   -- count new lets
-  IF NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_hight IS NOT NULL THEN
-    IF NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_hight IS NOT NULL THEN
+  IF is_inlet AND ( NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_hight IS NOT NULL ) 
+   OR NOT( is_inlet ) AND ( NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_hight IS NOT NULL ) THEN
+    IF is_inlet AND ( NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_hight IS NOT NULL )
+     OR NOT( is_inlet ) AND ( NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_hight IS NOT NULL ) THEN
       new_lets = 2; -- it's possibly more, but at least > 1
     ELSE
       new_lets = 1;
@@ -377,7 +387,7 @@ BEGIN
   -- count old lets
   old_lets = ( SELECT COUNT (*)
     FROM qgep_od.reach re
-    LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
+    LEFT JOIN qgep_od.reach_point rp ON is_inlet AND rp.obj_id = re.fk_reach_point_to OR NOT( is_inlet ) AND rp.obj_id = re.fk_reach_point_from
     LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
     LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
     WHERE ws.obj_id = NEW.obj_id );
@@ -385,47 +395,78 @@ BEGIN
   -- handle inlets
   IF ( new_lets > 1 AND old_lets > 0 ) OR old_lets > 1 THEN
     -- request for update because new lets are bigger 1 (and old lets not 0 ) or old lets are bigger 1
-    RAISE NOTICE 'Impossible to assign inlets - manual edit needed.';
+    RAISE NOTICE 'Impossible to assign %s - manual edit needed.', let_kind;
   ELSE
     IF new_lets = 0 AND old_lets > 0 THEN
       -- request for delete because no new lets but old lets
-      RAISE NOTICE 'No new inlets but old ones - manual delete needed.';
+      RAISE NOTICE 'No new %s but old ones - manual delete needed.', let_kind;
     ELSIF new_lets > 0 AND old_lets = 0 THEN
       -- request for create because no old lets but new lets
-      RAISE NOTICE 'No old inlets but new ones - manual create needed.';
+      RAISE NOTICE 'No old %s but new ones - manual create needed.', let_kind;
     ELSE
       IF new_lets = 1 AND old_lets = 1 THEN
-        -- update material and dimension on reach
-        UPDATE qgep_od.reach
-        SET material = NEW.inlet_3_material,
-        clear_height = NEW.inlet_3_clear_hight
-        WHERE obj_id = ( SELECT re.obj_id
-          FROM qgep_od.reach re
-          LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
-          LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
-          LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
-          WHERE ws.obj_id = NEW.obj_id );
+        IF is_inlet THEN
+          -- update material and dimension on reach
+          UPDATE qgep_od.reach
+          SET material = NEW.inlet_3_material,
+          clear_height = NEW.inlet_3_clear_hight
+          WHERE obj_id = ( SELECT re.obj_id
+            FROM qgep_od.reach re
+            LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
+            LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
+            LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
+            WHERE ws.obj_id = NEW.obj_id );
 
-        -- update depth_m on reach_point
-        UPDATE qgep_od.reach_point
-        SET level = NEW.co_level - NEW.inlet_3_depth_m
-        WHERE obj_id = ( SELECT rp.obj_id
-          FROM qgep_od.reach re
-          LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
-          LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
-          LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
-          WHERE ws.obj_id = NEW.obj_id );
+          -- update depth_m on reach_point
+          UPDATE qgep_od.reach_point
+          SET level = NEW.co_level - NEW.inlet_3_depth_m
+          WHERE obj_id = ( SELECT rp.obj_id
+            FROM qgep_od.reach re
+            LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
+            LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
+            LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
+            WHERE ws.obj_id = NEW.obj_id );
+        ELSE
+          -- update material on reach
+          UPDATE qgep_od.reach
+          SET material = NEW.outlet_1_material,
+          clear_height = NEW.outlet_1_clear_hight
+          WHERE obj_id = ( SELECT re.obj_id
+            FROM qgep_od.reach re
+            LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
+            LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
+            LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
+            WHERE ws.obj_id = NEW.obj_id );
 
-        RAISE NOTICE 'Inlets updated';
+          -- update depth_m on reach_point
+          UPDATE qgep_od.reach_point
+          SET level = NEW.co_level - NEW.outlet_1_depth_m
+          WHERE obj_id = ( SELECT rp.obj_id
+            FROM qgep_od.reach re
+            LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
+            LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
+            LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
+            WHERE ws.obj_id = NEW.obj_id );
+        END IF;
+
+        RAISE NOTICE '%s updated', let_kind;
       ELSE
         -- do nothing
-        RAISE NOTICE 'No inlets - nothing to do';
+        RAISE NOTICE 'No %s - nothing to do', let_kind;
       END IF;     
 
-      -- set inlet okay
-      UPDATE qgep_import.manhole_quarantine
-      SET inlet_okay = true
-      WHERE quarantine_serial = NEW.quarantine_serial;
+      IF is_inlet THEN
+        -- set inlet okay
+        UPDATE qgep_import.manhole_quarantine
+        SET inlet_okay = true
+        WHERE quarantine_serial = NEW.quarantine_serial;
+      ELSE
+        -- set outlet okay
+        UPDATE qgep_import.manhole_quarantine
+        SET outlet_okay = true
+        WHERE quarantine_serial = NEW.quarantine_serial;
+      END IF;
+
     END IF;
   END IF;
   RETURN NEW;
@@ -446,7 +487,7 @@ CREATE TRIGGER after_update_try_inlet_update
   WHEN ( ( NEW.inlet_okay IS NOT TRUE )
   AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE )
   AND NOT( OLD.structure_okay IS NOT TRUE AND NEW.structure_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_inlet_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( TRUE );
 
 DROP TRIGGER IF EXISTS after_insert_try_inlet_update ON qgep_import.manhole_quarantine;
 
@@ -454,87 +495,7 @@ CREATE TRIGGER after_insert_try_inlet_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_inlet_update();
-
-
-CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_outlet_update() RETURNS trigger AS $BODY$
-  DECLARE 
-    new_lets integer;
-    old_lets integer;
-BEGIN
-  -- count new lets
-  IF NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_hight IS NOT NULL THEN
-    IF NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_hight IS NOT NULL THEN
-      new_lets = 2; -- it's possibly more, but at least > 1
-    ELSE
-      new_lets = 1;
-    END IF;
-  ELSE
-    new_lets = 0;
-  END IF;
-  -- count old lets
-  old_lets = ( SELECT COUNT (*)
-    FROM qgep_od.reach re
-    LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
-    LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
-    LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
-    WHERE ws.obj_id = NEW.obj_id );
-
-  -- handle outlets
-  IF ( new_lets > 1 AND old_lets > 0 ) OR old_lets > 1 THEN
-    -- request for update because new lets are bigger 1 (and old lets not 0 ) or old lets are bigger 1
-    RAISE NOTICE 'Impossible to assign outlets - manual edit needed.';
-  ELSE
-    IF new_lets = 0 AND old_lets > 0 THEN
-      -- request for delete because no new lets but old lets
-      RAISE NOTICE 'No new outlets but old ones - manual delete needed.';
-    ELSIF new_lets > 0 AND old_lets = 0 THEN
-      -- request for create because no old lets but new lets
-      RAISE NOTICE 'No old outlets but new ones - manual create needed.';
-    ELSE
-      IF new_lets = 1 AND old_lets = 1 THEN
-        -- update material on reach
-        UPDATE qgep_od.reach
-        SET material = NEW.outlet_1_material,
-        clear_height = NEW.outlet_1_clear_hight
-        WHERE obj_id = ( SELECT re.obj_id
-          FROM qgep_od.reach re
-          LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
-          LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
-          LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
-          WHERE ws.obj_id = NEW.obj_id );
-
-        -- update depth_m on reach_point
-        UPDATE qgep_od.reach_point
-        SET level = NEW.co_level - NEW.outlet_1_depth_m
-        WHERE obj_id = ( SELECT rp.obj_id
-          FROM qgep_od.reach re
-          LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
-          LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
-          LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
-          WHERE ws.obj_id = NEW.obj_id );
-
-        RAISE NOTICE 'Outlets updated';
-      ELSE
-        -- do nothing
-        RAISE NOTICE 'No outlets - nothing to do';
-      END IF;     
-
-      -- set outlet okay
-      UPDATE qgep_import.manhole_quarantine
-      SET outlet_okay = true
-      WHERE quarantine_serial = NEW.quarantine_serial;
-    END IF;
-  END IF;
-
-  RETURN NEW;
-
-  -- catch
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %', SQLERRM;
-    RETURN NEW;
-END; $BODY$
-LANGUAGE plpgsql;
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( TRUE );
 
 DROP TRIGGER IF EXISTS after_update_try_outlet_update ON qgep_import.manhole_quarantine;
 
@@ -545,7 +506,7 @@ CREATE TRIGGER after_update_try_outlet_update
   WHEN ( ( NEW.outlet_okay IS NOT TRUE ) 
   AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
   AND NOT( OLD.structure_okay IS NOT TRUE AND NEW.structure_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_outlet_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( FALSE );
 
 DROP TRIGGER IF EXISTS after_insert_try_outlet_update ON qgep_import.manhole_quarantine;
 
@@ -553,7 +514,7 @@ CREATE TRIGGER after_insert_try_outlet_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_outlet_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( FALSE );
 
 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_delete_entry() RETURNS trigger AS $BODY$
