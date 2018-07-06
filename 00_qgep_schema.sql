@@ -6,3 +6,4 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 CREATE SCHEMA qgep_sys;
 CREATE SCHEMA qgep_vl;
 CREATE SCHEMA qgep_od;
+CREATE SCHEMA qgep_import;

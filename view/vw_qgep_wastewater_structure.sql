@@ -430,6 +430,7 @@ BEGIN
       WHEN OLD.ws_type = 'special_structure' THEN DELETE FROM qgep_od.special_structure WHERE obj_id = OLD.obj_id;
       WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep_od.discharge_point WHERE obj_id = OLD.obj_id;
       WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep_od.infiltration_installation WHERE obj_id = OLD.obj_id;
+      ELSE -- do nothing
     END CASE;
 
     CASE
@@ -437,6 +438,7 @@ BEGIN
       WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep_od.special_structure (obj_id) VALUES(OLD.obj_id);
       WHEN NEW.ws_type = 'discharge_point' THEN INSERT INTO qgep_od.discharge_point (obj_id) VALUES(OLD.obj_id);
       WHEN NEW.ws_type = 'infiltration_installation' THEN INSERT INTO qgep_od.infiltration_installation (obj_id) VALUES(OLD.obj_id);
+      ELSE -- do nothing
     END CASE;
   END IF;
 
@@ -488,6 +490,7 @@ BEGIN
         vehicle_access = NEW.ii_vehicle_access,
         watertightness = NEW.ii_watertightness
       WHERE obj_id = OLD.obj_id;
+    ELSE -- do nothing
   END CASE;
 
   UPDATE qgep_od.vw_wastewater_node NO1
