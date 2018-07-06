@@ -354,12 +354,12 @@ CREATE TRIGGER after_insert_try_structure_update
 
 -- Some information:
 -- 1. new lets 0 - old lets 0 -> do nothing
--- 2. new lets 0 - old lets 1 -> delete let
--- 3. new lets 0 - old lets n -> delete lets
--- 4. new lets 1 - old lets 0 -> create let (future)
+-- 2. new lets 0 - old lets 1 -> manual deletion needed (or not, depending on if it's on purpose or not)
+-- 3. new lets 0 - old lets n -> manual deletion needed (or not, depending on if it's on purpose or not)
+-- 4. new lets 1 - old lets 0 -> manual creation needed
 -- 5. new lets 1 - old lets 1 -> update let
 -- 6. new lets 1 - old lets n -> manual update needed
--- 7. new lets n - old lets 0 -> create lets (future)
+-- 7. new lets n - old lets 0 -> manual creation needed
 -- 8. new lets n - old lets 1 -> manual update needed
 -- 9. new lets n - old lets n -> manual update needed
 
