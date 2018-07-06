@@ -209,122 +209,129 @@ CREATE TRIGGER on_mutation_make_insert
   EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine();
 
 -- create triggerfunctions and triggers for quarantine table 
-CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
-DECLARE 
-  multi_situation_geometry geometry(MultiPoint,2056);
+SELECT set_config('qgep.srid', :SRID::text, false);
+DO $DO$
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,2056);
+EXECUTE format($TRIGGER$
+  CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
+  DECLARE 
+    multi_situation_geometry geometry(MultiPoint,%1$s);
+  BEGIN
+    multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,%1$s);
 
-  -- qgep_od.wastewater_structure
-  IF( SELECT TRUE FROM qgep_od.vw_qgep_wastewater_structure WHERE obj_id = NEW.obj_id ) THEN
-    UPDATE qgep_od.vw_qgep_wastewater_structure SET
-    identifier = NEW.identifier,
-    situation_geometry = multi_situation_geometry,
-    co_shape = NEW.co_shape,
-    co_diameter = NEW.co_diameter,
-    co_material = NEW.co_material,
-    co_positional_accuracy = NEW.co_positional_accuracy,
-    co_level = NEW.co_level,
-    _depth = NEW._depth,
-    _channel_usage_current = NEW._channel_usage_current,
-    ma_material = NEW.ma_material,
-    ma_dimension1 = NEW.ma_dimension1,
-    ma_dimension2 = NEW.ma_dimension2,
-    ws_type = NEW.ws_type,
-    ma_function = NEW.ma_function,
-    ss_function = NEW.ss_function,
-    remark = NEW.remark,
-    wn_bottom_level = NEW.wn_bottom_level
-    WHERE obj_id = NEW.obj_id;
-    RAISE NOTICE 'Updated row in qgep_od.vw_qgep_wastewater_structure';
-  ELSE
-    INSERT INTO qgep_od.vw_qgep_wastewater_structure
-    (
-    obj_id,
-    identifier,
-    situation_geometry,
-    co_shape,
-    co_diameter,
-    co_material,
-    co_positional_accuracy,
-    co_level,
-    _depth,
-    _channel_usage_current,
-    ma_material,
-    ma_dimension1,
-    ma_dimension2,
-    ws_type,
-    ma_function,
-    ss_function,
-    remark,
-    wn_bottom_level
-    )
-    VALUES
-    (
-    NEW.obj_id,
-    NEW.identifier,
-    multi_situation_geometry,
-    NEW.co_shape,
-    NEW.co_diameter,
-    NEW.co_material,
-    NEW.co_positional_accuracy,
-    NEW.co_level,
-    NEW._depth,
-    NEW._channel_usage_current,
-    NEW.ma_material,
-    NEW.ma_dimension1,
-    NEW.ma_dimension2,
-    NEW.ws_type,
-    NEW.ma_function,
-    NEW.ss_function,
-    NEW.remark,
-    NEW.wn_bottom_level
-    );
-    RAISE NOTICE 'Inserted row in qgep_od.vw_qgep_wastewater_structure';
-  END IF;
-
-  -- photo1 insert
-  IF (NEW.photo1 IS NOT NULL) THEN
-    INSERT INTO qgep_od.file
-    (
-      object,
-      identifier
-    )
-    VALUES
-    ( 
+    -- qgep_od.wastewater_structure
+    IF( SELECT TRUE FROM qgep_od.vw_qgep_wastewater_structure WHERE obj_id = NEW.obj_id ) THEN
+      UPDATE qgep_od.vw_qgep_wastewater_structure SET
+      identifier = NEW.identifier,
+      situation_geometry = multi_situation_geometry,
+      co_shape = NEW.co_shape,
+      co_diameter = NEW.co_diameter,
+      co_material = NEW.co_material,
+      co_positional_accuracy = NEW.co_positional_accuracy,
+      co_level = NEW.co_level,
+      _depth = NEW._depth,
+      _channel_usage_current = NEW._channel_usage_current,
+      ma_material = NEW.ma_material,
+      ma_dimension1 = NEW.ma_dimension1,
+      ma_dimension2 = NEW.ma_dimension2,
+      ws_type = NEW.ws_type,
+      ma_function = NEW.ma_function,
+      ss_function = NEW.ss_function,
+      remark = NEW.remark,
+      wn_bottom_level = NEW.wn_bottom_level
+      WHERE obj_id = NEW.obj_id;
+      RAISE NOTICE 'Updated row in qgep_od.vw_qgep_wastewater_structure';
+    ELSE
+      INSERT INTO qgep_od.vw_qgep_wastewater_structure
+      (
+      obj_id,
+      identifier,
+      situation_geometry,
+      co_shape,
+      co_diameter,
+      co_material,
+      co_positional_accuracy,
+      co_level,
+      _depth,
+      _channel_usage_current,
+      ma_material,
+      ma_dimension1,
+      ma_dimension2,
+      ws_type,
+      ma_function,
+      ss_function,
+      remark,
+      wn_bottom_level
+      )
+      VALUES
+      (
       NEW.obj_id,
-      NEW.photo1
-    );
-    RAISE NOTICE 'Inserted row in qgep_od.file';
-  END IF;
+      NEW.identifier,
+      multi_situation_geometry,
+      NEW.co_shape,
+      NEW.co_diameter,
+      NEW.co_material,
+      NEW.co_positional_accuracy,
+      NEW.co_level,
+      NEW._depth,
+      NEW._channel_usage_current,
+      NEW.ma_material,
+      NEW.ma_dimension1,
+      NEW.ma_dimension2,
+      NEW.ws_type,
+      NEW.ma_function,
+      NEW.ss_function,
+      NEW.remark,
+      NEW.wn_bottom_level
+      );
+      RAISE NOTICE 'Inserted row in qgep_od.vw_qgep_wastewater_structure';
+    END IF;
 
-  -- photo2 insert
-  IF (NEW.photo2 IS NOT NULL) THEN
-    INSERT INTO qgep_od.file
-    (
-      object,
-      identifier
-    )
-    VALUES
-    ( 
-      NEW.obj_id,
-      NEW.photo2
-    );
-    RAISE NOTICE 'Inserted row in qgep_od.file';
-  END IF;
+    -- photo1 insert
+    IF (NEW.photo1 IS NOT NULL) THEN
+      INSERT INTO qgep_od.file
+      (
+        object,
+        identifier
+      )
+      VALUES
+      ( 
+        NEW.obj_id,
+        NEW.photo1
+      );
+      RAISE NOTICE 'Inserted row in qgep_od.file';
+    END IF;
 
-  -- set structure okay
-  UPDATE qgep_import.manhole_quarantine
-  SET structure_okay = true
-  WHERE quarantine_serial = NEW.quarantine_serial;
-  RETURN NEW;
+    -- photo2 insert
+    IF (NEW.photo2 IS NOT NULL) THEN
+      INSERT INTO qgep_od.file
+      (
+        object,
+        identifier
+      )
+      VALUES
+      ( 
+        NEW.obj_id,
+        NEW.photo2
+      );
+      RAISE NOTICE 'Inserted row in qgep_od.file';
+    END IF;
 
-  -- catch
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %', SQLERRM;
+    -- set structure okay
+    UPDATE qgep_import.manhole_quarantine
+    SET structure_okay = true
+    WHERE quarantine_serial = NEW.quarantine_serial;
     RETURN NEW;
-END; $BODY$
-LANGUAGE plpgsql;
+
+    -- catch
+    EXCEPTION WHEN OTHERS THEN
+      RAISE NOTICE 'EXCEPTION: %%', SQLERRM;
+      RETURN NEW;
+  END; $BODY$
+  LANGUAGE plpgsql;
+$TRIGGER$, current_setting('qgep.srid'));
+END
+$DO$;
 
 DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
 
@@ -358,25 +365,17 @@ CREATE TRIGGER after_insert_try_structure_update
 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_let_update() RETURNS trigger AS $BODY$
   DECLARE 
-    is_inlet boolean;
     let_kind text;
     new_lets integer;
     old_lets integer;
 BEGIN
-  is_inlet := TG_ARGV[0];
-
-  -- for the notice outputs
-  IF is_inlet THEN 
-    let_kind = 'inlet';
-  ELSE 
-    let_kind = 'outlet';
-  END IF;
+  let_kind := TG_ARGV[0];
 
   -- count new lets
-  IF is_inlet AND ( NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_hight IS NOT NULL ) 
-   OR NOT( is_inlet ) AND ( NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_hight IS NOT NULL ) THEN
-    IF is_inlet AND ( NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_hight IS NOT NULL )
-     OR NOT( is_inlet ) AND ( NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_hight IS NOT NULL ) THEN
+  IF let_kind='inlet' AND ( NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_hight IS NOT NULL ) 
+   OR let_kind='outlet' AND ( NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_hight IS NOT NULL ) THEN
+    IF let_kind='inlet' AND ( NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_hight IS NOT NULL )
+     OR let_kind='outlet' AND ( NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_hight IS NOT NULL ) THEN
       new_lets = 2; -- it's possibly more, but at least > 1
     ELSE
       new_lets = 1;
@@ -387,7 +386,7 @@ BEGIN
   -- count old lets
   old_lets = ( SELECT COUNT (*)
     FROM qgep_od.reach re
-    LEFT JOIN qgep_od.reach_point rp ON is_inlet AND rp.obj_id = re.fk_reach_point_to OR NOT( is_inlet ) AND rp.obj_id = re.fk_reach_point_from
+    LEFT JOIN qgep_od.reach_point rp ON let_kind='inlet' AND rp.obj_id = re.fk_reach_point_to OR let_kind='outlet' AND rp.obj_id = re.fk_reach_point_from
     LEFT JOIN qgep_od.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement
     LEFT JOIN qgep_od.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure
     WHERE ws.obj_id = NEW.obj_id );
@@ -405,7 +404,7 @@ BEGIN
       RAISE NOTICE 'No old %s but new ones - manual create needed.', let_kind;
     ELSE
       IF new_lets = 1 AND old_lets = 1 THEN
-        IF is_inlet THEN
+        IF let_kind='inlet' THEN
           -- update material and dimension on reach
           UPDATE qgep_od.reach
           SET material = NEW.inlet_3_material,
@@ -455,7 +454,7 @@ BEGIN
         RAISE NOTICE 'No %s - nothing to do', let_kind;
       END IF;     
 
-      IF is_inlet THEN
+      IF let_kind='inlet' THEN
         -- set inlet okay
         UPDATE qgep_import.manhole_quarantine
         SET inlet_okay = true
@@ -487,7 +486,7 @@ CREATE TRIGGER after_update_try_inlet_update
   WHEN ( ( NEW.inlet_okay IS NOT TRUE )
   AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE )
   AND NOT( OLD.structure_okay IS NOT TRUE AND NEW.structure_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( TRUE );
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( 'inlet' );
 
 DROP TRIGGER IF EXISTS after_insert_try_inlet_update ON qgep_import.manhole_quarantine;
 
@@ -495,7 +494,7 @@ CREATE TRIGGER after_insert_try_inlet_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( TRUE );
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( 'inlet' );
 
 DROP TRIGGER IF EXISTS after_update_try_outlet_update ON qgep_import.manhole_quarantine;
 
@@ -506,7 +505,7 @@ CREATE TRIGGER after_update_try_outlet_update
   WHEN ( ( NEW.outlet_okay IS NOT TRUE ) 
   AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
   AND NOT( OLD.structure_okay IS NOT TRUE AND NEW.structure_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( FALSE );
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( 'outlet' );
 
 DROP TRIGGER IF EXISTS after_insert_try_outlet_update ON qgep_import.manhole_quarantine;
 
@@ -514,7 +513,7 @@ CREATE TRIGGER after_insert_try_outlet_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( FALSE );
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( 'outlet' );
 
 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_delete_entry() RETURNS trigger AS $BODY$
