@@ -96,6 +96,7 @@ CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
     NULL::smallint AS outlet_2_material,
     NULL::numeric(6, 3) AS outlet_2_clear_hight,
     NULL::numeric(6, 3) AS outlet_2_depth_m,
+    FALSE::boolean AS verified,
     (CASE WHEN EXISTS ( SELECT TRUE FROM qgep_import.manhole_quarantine q WHERE q.obj_id = ws.obj_id )
     THEN TRUE
     ELSE FALSE 
