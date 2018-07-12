@@ -1,4 +1,5 @@
 -- create mobile view
+DROP VIEW IF EXISTS qgep_import.vw_manhole;
 
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS 
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
@@ -154,7 +155,6 @@ BEGIN
 END; $BODY$
 LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS on_mutation_make_insert ON qgep_import.vw_manhole;
 
 CREATE TRIGGER on_mutation_make_insert_or_delete
   INSTEAD OF INSERT OR UPDATE
