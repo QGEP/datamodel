@@ -79,10 +79,14 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # it should be calculated correctly in the live view qgep_od.vw_qgep_wastewater_structure
         row = self.select( 'vw_qgep_wastewater_structure', obj_id, 'qgep_od')
+        self.assertEqual( row['_depth'], decimal.Decimal('2.220'))
+        self.assertEqual( row['co_level'], decimal.Decimal('22.220'))
         self.assertEqual( row['wn_bottom_level'], decimal.Decimal('20'))
 
         # it should be visible in the qgep_import.vw_manhole view
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertEqual( row['_depth'], decimal.Decimal('2.220'))
+        self.assertEqual( row['co_level'], decimal.Decimal('22.220'))
         self.assertEqual( row['wn_bottom_level'], decimal.Decimal('20'))
 
         # it shouldn't be in the quarantine qgep_import.manhole_quarantine
@@ -95,26 +99,31 @@ class TestTriggers(unittest.TestCase, DbTestBase):
     #   -> deleted in quarantine
     def test_calculation_co_level(self):
         # obj_id from the test data
-        obj_id = 'ch13p7mzMA000011'
+        obj_id = 'ch13p7mzMA000071'
 
         # change deleted from false to true
         row = {
                 '_depth': 7.780,
                 'wn_bottom_level': 22.220,
                 'co_level': None,
+                'inlet_3_material': 5081,
                 'outlet_1_material': 5081
         }
 
         # update
         self.update('vw_manhole', row, obj_id, 'qgep_import')
-
+        
         # it should be calculated correctly in the live view qgep_od.vw_qgep_wastewater_structure
         row = self.select( 'vw_qgep_wastewater_structure', obj_id, 'qgep_od')
+        self.assertEqual( row['_depth'], decimal.Decimal('7.780'))
         self.assertEqual( row['co_level'], decimal.Decimal('30'))
+        self.assertEqual( row['wn_bottom_level'], decimal.Decimal('22.220'))
 
         # it should be visible in the qgep_import.vw_manhole view
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertEqual( row['_depth'], decimal.Decimal('7.780'))
         self.assertEqual( row['co_level'], decimal.Decimal('30'))
+        self.assertEqual( row['wn_bottom_level'], decimal.Decimal('22.220'))
 
         # it shouldn't be in the quarantine qgep_import.manhole_quarantine
         row = self.select( 'manhole_quarantine', obj_id, 'qgep_import')
