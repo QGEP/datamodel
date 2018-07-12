@@ -4,7 +4,7 @@ import os
 import psycopg2
 import psycopg2.extras
 import psycopg2.sql
-import decimal
+import decimal 
 from time import sleep
 
 from utils import DbTestBase
@@ -24,6 +24,126 @@ class TestTriggers(unittest.TestCase, DbTestBase):
           pgservice='pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
+
+    # - level calculation failing because only no reference level
+    #   -> not updated structure with calculated values
+    #   -> still in quarantine
+    def test_calculation_level_fail(self):
+        # obj_id from the test data
+        obj_id = 'ch13p7mzMA000011'
+
+        # change deleted from false to true
+        row = {
+                '_depth': 12.220,
+                'co_level': None,
+                'wn_bottom_level': None,
+                'outlet_1_material': 5081
+        }
+
+        # update
+        self.update('vw_manhole', row, obj_id, 'qgep_import')
+
+        # it should be calculated correctly in the live table qgep_od.wastewater_structure
+        row = self.select( 'wastewater_structure', obj_id, 'qgep_od')
+        self.assertNotEqual( row['_depth'], decimal.Decimal('12.220'))
+
+        # it should be visible in the qgep_import.vw_manhole view
+        row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertNotEqual( row['_depth'], decimal.Decimal('12.220'))
+
+        # it shouldn't be in the quarantine qgep_import.manhole_quarantine
+        row = self.select( 'manhole_quarantine', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
+
+        # delete it manually
+        self.delete( 'manhole_quarantine', obj_id, 'qgep_import')
+
+
+    # - ws bottom level calculation
+    #   -> updated structure with calculated values
+    def test_calculation_wn_bottom_level(self):
+        # obj_id from the test data
+        obj_id = 'ch13p7mzMA000071'
+
+        # change deleted from false to true
+        row = {
+                '_depth': 2.220,
+                'wn_bottom_level': None,
+                'co_level': 22.220,
+                'inlet_3_material': 5081,
+                'outlet_1_material': 5081
+        }
+
+        # update
+        self.update('vw_manhole', row, obj_id, 'qgep_import')
+
+        # it should be calculated correctly in the live view qgep_od.vw_qgep_wastewater_structure
+        row = self.select( 'vw_qgep_wastewater_structure', obj_id, 'qgep_od')
+        self.assertEqual( row['wn_bottom_level'], decimal.Decimal('20'))
+
+        # it should be visible in the qgep_import.vw_manhole view
+        row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertEqual( row['wn_bottom_level'], decimal.Decimal('20'))
+
+        # it shouldn't be in the quarantine qgep_import.manhole_quarantine
+        row = self.select( 'manhole_quarantine', obj_id, 'qgep_import')
+        self.assertIsNone( row )
+
+
+    # - cover level calculation
+    #   -> updated structure with calculated values
+    #   -> deleted in quarantine
+    def test_calculation_co_level(self):
+        # obj_id from the test data
+        obj_id = 'ch13p7mzMA000011'
+
+        # change deleted from false to true
+        row = {
+                '_depth': 7.780,
+                'wn_bottom_level': 22.220,
+                'co_level': None,
+                'outlet_1_material': 5081
+        }
+
+        # update
+        self.update('vw_manhole', row, obj_id, 'qgep_import')
+
+        # it should be calculated correctly in the live view qgep_od.vw_qgep_wastewater_structure
+        row = self.select( 'vw_qgep_wastewater_structure', obj_id, 'qgep_od')
+        self.assertEqual( row['co_level'], decimal.Decimal('30'))
+
+        # it should be visible in the qgep_import.vw_manhole view
+        row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertEqual( row['co_level'], decimal.Decimal('30'))
+
+        # it shouldn't be in the quarantine qgep_import.manhole_quarantine
+        row = self.select( 'manhole_quarantine', obj_id, 'qgep_import')
+        self.assertIsNone( row )
+
+
+    # - delete of structure 
+    #   -> delete in live
+    '''
+    def test_delete_structure(self):
+        # obj_id from the test data
+        obj_id = '"ch13p7mzMA000037"'
+
+        # change deleted from false to true
+        row = {
+                'deleted': True
+        }
+
+        # update
+        self.update('vw_manhole', row, obj_id, 'qgep_import')
+
+        # it should be deleted in the live table qgep_od.wastewater_structure
+        row = self.select( 'wastewater_structure', obj_id, 'qgep_od')
+        self.assertIsNone( row )
+
+        # it should not be visible anymore in the qgep_import.vw_manhole view
+        row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNone( row )
+    '''
 
     # - correct update with 1 old outlet and 1 new outlet and 0 old inlet and 0 new inlet
     #   -> updated structure
