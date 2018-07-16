@@ -132,7 +132,6 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     # - delete of structure 
     #   -> delete in live
-    '''
     def test_delete_structure(self):
         # obj_id from the test data
         obj_id = '"ch13p7mzMA000037"'
@@ -152,7 +151,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should not be visible anymore in the qgep_import.vw_manhole view
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
         self.assertIsNone( row )
-    '''
+
 
     # - correct update with 1 old outlet and 1 new outlet and 0 old inlet and 0 new inlet
     #   -> updated structure
