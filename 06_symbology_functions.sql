@@ -371,6 +371,36 @@ END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
 --------------------------------------------------
+-- ON WASTEWATER NODE CHANGE
+--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.on_wasterwaternode_change()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  co_obj_id TEXT;
+  affected_sp RECORD;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      co_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      co_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      co_obj_id = OLD.obj_id;
+  END CASE;
+
+  SELECT ne.fk_wastewater_structure INTO affected_sp
+  FROM qgep_od.wastewater_networkelement ne
+  WHERE obj_id = co_obj_id;
+
+  EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
+
+--------------------------------------------------
 -- ON REACH POINT CHANGE
 --------------------------------------------------
 
@@ -378,8 +408,10 @@ CREATE OR REPLACE FUNCTION qgep_od.on_reach_point_update()
   RETURNS trigger AS
 $BODY$
 DECLARE
-  rp_obj_id TEXT;
-  _ws_obj_id TEXT;
+  rp_obj_id text;
+  _ws_obj_id text;
+  ne_obj_ids text[];
+  ne_obj_id text;
 BEGIN
   CASE
     WHEN TG_OP = 'UPDATE' THEN
@@ -387,23 +419,30 @@ BEGIN
         RETURN NEW;
       END IF;
       rp_obj_id = OLD.obj_id;
+      ne_obj_ids := ARRAY[OLD.fk_wastewater_networkelement, NEW.fk_wastewater_networkelement];
     WHEN TG_OP = 'INSERT' THEN
       rp_obj_id = NEW.obj_id;
+      ne_obj_ids := ARRAY[NEW.fk_wastewater_networkelement];
     WHEN TG_OP = 'DELETE' THEN
       rp_obj_id = OLD.obj_id;
+      ne_obj_ids := ARRAY[OLD.fk_wastewater_networkelement];
   END CASE;
 
 
   UPDATE qgep_od.reach
-  SET progression_geometry = progression_geometry; --To retrigger the calculate_length trigger on reach update
+    SET progression_geometry = progression_geometry
+    WHERE fk_reach_point_from = rp_obj_id OR fk_reach_point_to = rp_obj_id; --To retrigger the calculate_length trigger on reach update
 
-  SELECT ws.obj_id INTO _ws_obj_id
-  FROM qgep_od.wastewater_structure ws
-  LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-  LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = NEW.fk_wastewater_networkelement;
+  FOREACH ne_obj_id IN ARRAY ne_obj_ids
+  LOOP
+      SELECT ws.obj_id INTO _ws_obj_id
+      FROM qgep_od.wastewater_structure ws
+      LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = ne_obj_id;
 
-  EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
-  EXECUTE qgep_od.update_depth(_ws_obj_id);
+      EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
+      EXECUTE qgep_od.update_depth(_ws_obj_id);
+  END LOOP;
 
   RETURN NEW;
 END; $BODY$
@@ -452,6 +491,7 @@ BEGIN
   DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_networkelement ON qgep_od.wastewater_networkelement;
   DROP TRIGGER IF EXISTS on_structure_part_change ON qgep_od.structure_part;
   DROP TRIGGER IF EXISTS on_cover_change ON qgep_od.cover;
+  DROP TRIGGER IF EXISTS on_wasterwaternode_change ON qgep_od.wastewater_node;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep_od.reach;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep_od.channel;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep_od.reach_point;
@@ -484,13 +524,11 @@ BEGIN
   FOR EACH ROW
     EXECUTE PROCEDURE qgep_od.calculate_reach_length();
 
-
   CREATE TRIGGER ws_symbology_update_by_reach
   AFTER INSERT OR UPDATE OR DELETE
     ON qgep_od.reach
   FOR EACH ROW
     EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_reach();
-
 
   CREATE TRIGGER on_wastewater_structure_update
   AFTER UPDATE
@@ -515,6 +553,12 @@ BEGIN
     ON qgep_od.cover
   FOR EACH ROW
     EXECUTE PROCEDURE qgep_od.on_cover_change();
+
+  CREATE TRIGGER on_wasterwaternode_change
+  AFTER INSERT OR UPDATE
+    ON qgep_od.wastewater_node
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_wasterwaternode_change();
 
   CREATE TRIGGER ws_symbology_update_by_channel
   AFTER INSERT OR UPDATE OR DELETE
