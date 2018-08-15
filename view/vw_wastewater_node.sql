@@ -22,6 +22,10 @@ SELECT
  LEFT JOIN qgep_od.wastewater_networkelement WE
  ON WE.obj_id = WN.obj_id;
 
+
+ALTER TABLE qgep_od.vw_wastewater_node ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od'::text, 'wastewater_node'::text);
+
+
 -----------------------------------
 -- wastewater_node INSERT
 -- Function: vw_wastewater_node_insert()
