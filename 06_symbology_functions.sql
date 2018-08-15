@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------
+--------------------------------------------------------
 -- UPDATE wastewater structure symbology
 -- Argument:
 --  * obj_id of wastewater structure or NULL to update all
@@ -483,7 +483,7 @@ $BODY$
 -- To temporarily disable these cache refreshes for batch jobs like migrations
 -----------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep_od.drop_symbology_triggers() RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION qgep_sys.drop_symbology_triggers() RETURNS VOID AS $$
 BEGIN
   DROP TRIGGER IF EXISTS on_reach_point_update ON qgep_od.reach_point;
   DROP TRIGGER IF EXISTS on_reach_change ON qgep_od.reach;
@@ -495,6 +495,7 @@ BEGIN
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep_od.reach;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep_od.channel;
   DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep_od.reach_point;
+  DROP TRIGGER IF EXISTS calculate_reach_length ON qgep_od.reach;
   RETURN;
 END;
 $$ LANGUAGE plpgsql;
