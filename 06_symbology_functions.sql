@@ -187,6 +187,10 @@ VOLATILE;
 --  * obj_id of wastewater structure or NULL to update all
 --------------------------------------------------------
 
+------ 15.8.2018 uk adapted label display only for primary wastwater system
+------ WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
+      				 
+
 CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
   $BODY$
@@ -198,12 +202,12 @@ UPDATE qgep_od.wastewater_structure ws
 SET _label = label
 FROM (
   SELECT ws_obj_id,
-       array_to_string(
+       COALESCE(ws_identifier, '') ||
+       E'\n' ||
+        array_to_string(
          array_agg( 'C' || '=' || co_level::text ORDER BY co_level DESC),
          E'\n'
-       ) ||
-       E'\n' ||
-       COALESCE(ws_identifier, '') ||
+        )||
        E'\n' ||
        array_to_string(
          array_agg(lbl_type || idx || '=' || rp_level ORDER BY lbl_type, idx)
@@ -223,7 +227,9 @@ FROM (
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       INNER JOIN qgep_od.reach RE_to ON RP.obj_id = RE_to.fk_reach_point_to
-      WHERE _all OR NE.fk_wastewater_structure = _obj_id
+      LEFT JOIN qgep_od.wastewater_networkelement NE_to ON NE_to.obj_id = RE_to.obj_id
+      LEFT JOIN qgep_od.channel CH_to ON NE_to.fk_wastewater_structure = CH_to.obj_id
+      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
       UNION
       SELECT 'O' as lbl_type, NULL, RP.level AS rp_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_CurveToLine(RE_from.progression_geometry),0.99))/pi()*180 ASC)
       FROM qgep_od.reach_point RP
@@ -242,7 +248,7 @@ END
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
-
+														      
 --------------------------------------------------
 -- ON COVER CHANGE
 --------------------------------------------------
