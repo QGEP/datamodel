@@ -1,5 +1,5 @@
 
-REPLACE FUNCTION qgep_sys.drop_symbology_triggers() RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION qgep_sys.drop_symbology_triggers() RETURNS VOID AS $$
 BEGIN
   DROP TRIGGER IF EXISTS on_reach_point_update ON qgep_od.reach_point;
   DROP TRIGGER IF EXISTS on_reach_change ON qgep_od.reach;
