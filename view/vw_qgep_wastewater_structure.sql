@@ -307,8 +307,8 @@ BEGIN
     , COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
     , NEW.wn_remark
     , NOW()
-    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
     , COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
+    , COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
     , NEW.obj_id
   );
 
