@@ -480,7 +480,7 @@ BEGIN
       ELSE
         -- do nothing
         RAISE NOTICE 'No %s - nothing to do', let_kind;
-      END IF;     
+      END IF;
 
       IF let_kind='inlet' THEN
         -- set inlet okay
