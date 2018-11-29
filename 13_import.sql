@@ -25,26 +25,26 @@ CREATE TABLE qgep_import.manhole_quarantine
   photo1 text,
   photo2 text,
   inlet_3_material smallint,
-  inlet_3_clear_hight numeric(6,3),
-  inlet_3_depth_m numeric(6,3),
+  inlet_3_clear_height integer,
+  inlet_3_depth_m numeric(7,3),
   inlet_4_material smallint,
-  inlet_4_clear_hight numeric(6,3),
-  inlet_4_depth_m numeric(6,3),
+  inlet_4_clear_height integer,
+  inlet_4_depth_m numeric(7,3),
   inlet_5_material smallint,
-  inlet_5_clear_hight numeric(6,3),
-  inlet_5_depth_m numeric(6,3),
+  inlet_5_clear_height integer,
+  inlet_5_depth_m numeric(7,3),
   inlet_6_material smallint,
-  inlet_6_clear_hight numeric(6,3),
-  inlet_6_depth_m numeric(6,3),
+  inlet_6_clear_height integer,
+  inlet_6_depth_m numeric(7,3),
   inlet_7_material smallint,
-  inlet_7_clear_hight numeric(6,3),
-  inlet_7_depth_m numeric(6,3),
+  inlet_7_clear_height integer,
+  inlet_7_depth_m numeric(7,3),
   outlet_1_material smallint,
-  outlet_1_clear_hight numeric(6,3),
-  outlet_1_depth_m numeric(6,3),
+  outlet_1_clear_height integer,
+  outlet_1_depth_m numeric(7,3),
   outlet_2_material smallint,
-  outlet_2_clear_hight numeric(6,3),
-  outlet_2_depth_m numeric(6,3),
+  outlet_2_clear_height integer,
+  outlet_2_depth_m numeric(7,3),
   structure_okay boolean DEFAULT false,
   inlet_okay boolean DEFAULT false,
   outlet_okay boolean DEFAULT false,
@@ -76,26 +76,26 @@ CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
     NULL::text AS photo1,
     NULL::text AS photo2,
     NULL::smallint AS inlet_3_material,
-    NULL::numeric(6, 3) AS inlet_3_clear_hight,
-    NULL::numeric(6, 3) AS inlet_3_depth_m,
+    NULL::integer AS inlet_3_clear_height,
+    NULL::numeric(7, 3) AS inlet_3_depth_m,
     NULL::smallint AS inlet_4_material,
-    NULL::numeric(6, 3) AS inlet_4_clear_hight,
-    NULL::numeric(6, 3) AS inlet_4_depth_m,
+    NULL::integer AS inlet_4_clear_height,
+    NULL::numeric(7, 3) AS inlet_4_depth_m,
     NULL::smallint AS inlet_5_material,
-    NULL::numeric(6, 3) AS inlet_5_clear_hight,
-    NULL::numeric(6, 3) AS inlet_5_depth_m,
+    NULL::integer AS inlet_5_clear_height,
+    NULL::numeric(7, 3) AS inlet_5_depth_m,
     NULL::smallint AS inlet_6_material,
-    NULL::numeric(6, 3) AS inlet_6_clear_hight,
-    NULL::numeric(6, 3) AS inlet_6_depth_m,
+    NULL::integer AS inlet_6_clear_height,
+    NULL::numeric(7, 3) AS inlet_6_depth_m,
     NULL::smallint AS inlet_7_material,
-    NULL::numeric(6, 3) AS inlet_7_clear_hight,
-    NULL::numeric(6, 3) AS inlet_7_depth_m,
+    NULL::integer AS inlet_7_clear_height,
+    NULL::numeric(7, 3) AS inlet_7_depth_m,
     NULL::smallint AS outlet_1_material,
-    NULL::numeric(6, 3) AS outlet_1_clear_hight,
-    NULL::numeric(6, 3) AS outlet_1_depth_m,
+    NULL::integer AS outlet_1_clear_height,
+    NULL::numeric(7, 3) AS outlet_1_depth_m,
     NULL::smallint AS outlet_2_material,
-    NULL::numeric(6, 3) AS outlet_2_clear_hight,
-    NULL::numeric(6, 3) AS outlet_2_depth_m,
+    NULL::integer AS outlet_2_clear_height,
+    NULL::numeric(7, 3) AS outlet_2_depth_m,
     FALSE::boolean AS verified,
     (CASE WHEN EXISTS ( SELECT TRUE FROM qgep_import.manhole_quarantine q WHERE q.obj_id = ws.obj_id )
     THEN TRUE
@@ -139,25 +139,25 @@ BEGIN
     photo1,
     photo2,
     inlet_3_material,
-    inlet_3_clear_hight,
+    inlet_3_clear_height,
     inlet_3_depth_m,
     inlet_4_material,
-    inlet_4_clear_hight,
+    inlet_4_clear_height,
     inlet_4_depth_m,
     inlet_5_material,
-    inlet_5_clear_hight,
+    inlet_5_clear_height,
     inlet_5_depth_m,
     inlet_6_material,
-    inlet_6_clear_hight,
+    inlet_6_clear_height,
     inlet_6_depth_m,
     inlet_7_material,
-    inlet_7_clear_hight,
+    inlet_7_clear_height,
     inlet_7_depth_m,
     outlet_1_material,
-    outlet_1_clear_hight,
+    outlet_1_clear_height,
     outlet_1_depth_m,
     outlet_2_material,
-    outlet_2_clear_hight,
+    outlet_2_clear_height,
     outlet_2_depth_m
     )
     VALUES
@@ -183,25 +183,25 @@ BEGIN
     NEW.photo1,
     NEW.photo2,
     NEW.inlet_3_material,
-    NEW.inlet_3_clear_hight,
+    NEW.inlet_3_clear_height,
     NEW.inlet_3_depth_m,
     NEW.inlet_4_material,
-    NEW.inlet_4_clear_hight,
+    NEW.inlet_4_clear_height,
     NEW.inlet_4_depth_m,
     NEW.inlet_5_material,
-    NEW.inlet_5_clear_hight,
+    NEW.inlet_5_clear_height,
     NEW.inlet_5_depth_m,
     NEW.inlet_6_material,
-    NEW.inlet_6_clear_hight,
+    NEW.inlet_6_clear_height,
     NEW.inlet_6_depth_m,
     NEW.inlet_7_material,
-    NEW.inlet_7_clear_hight,
+    NEW.inlet_7_clear_height,
     NEW.inlet_7_depth_m,
     NEW.outlet_1_material,
-    NEW.outlet_1_clear_hight,
+    NEW.outlet_1_clear_height,
     NEW.outlet_1_depth_m,
     NEW.outlet_2_material,
-    NEW.outlet_2_clear_hight,
+    NEW.outlet_2_clear_height,
     NEW.outlet_2_depth_m   
     );
   END IF;
@@ -392,7 +392,7 @@ CREATE TRIGGER after_insert_try_structure_update
 -- 9. new lets n - old lets n -> manual update needed
 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_let_update() RETURNS trigger AS $BODY$
-  DECLARE 
+  DECLARE
     let_kind text;
     new_lets integer;
     old_lets integer;
@@ -400,10 +400,10 @@ BEGIN
   let_kind := TG_ARGV[0];
 
   -- count new lets
-  IF let_kind='inlet' AND ( NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_hight IS NOT NULL ) 
-   OR let_kind='outlet' AND ( NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_hight IS NOT NULL ) THEN
-    IF let_kind='inlet' AND ( NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_hight IS NOT NULL )
-     OR let_kind='outlet' AND ( NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_hight IS NOT NULL ) THEN
+  IF let_kind='inlet' AND ( NEW.inlet_3_material IS NOT NULL OR NEW.inlet_3_depth_m IS NOT NULL OR NEW.inlet_3_clear_height IS NOT NULL )
+   OR let_kind='outlet' AND ( NEW.outlet_1_material IS NOT NULL OR NEW.outlet_1_depth_m IS NOT NULL OR NEW.outlet_1_clear_height IS NOT NULL ) THEN
+    IF let_kind='inlet' AND ( NEW.inlet_4_material IS NOT NULL OR NEW.inlet_4_depth_m IS NOT NULL OR NEW.inlet_4_clear_height IS NOT NULL )
+     OR let_kind='outlet' AND ( NEW.outlet_2_material IS NOT NULL OR NEW.outlet_2_depth_m IS NOT NULL OR NEW.outlet_2_clear_height IS NOT NULL ) THEN
       new_lets = 2; -- it's possibly more, but at least > 1
     ELSE
       new_lets = 1;
@@ -436,7 +436,7 @@ BEGIN
           -- update material and dimension on reach
           UPDATE qgep_od.reach
           SET material = NEW.inlet_3_material,
-          clear_height = NEW.inlet_3_clear_hight
+          clear_height = NEW.inlet_3_clear_height
           WHERE obj_id = ( SELECT re.obj_id
             FROM qgep_od.reach re
             LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_to
@@ -457,7 +457,7 @@ BEGIN
           -- update material on reach
           UPDATE qgep_od.reach
           SET material = NEW.outlet_1_material,
-          clear_height = NEW.outlet_1_clear_hight
+          clear_height = NEW.outlet_1_clear_height
           WHERE obj_id = ( SELECT re.obj_id
             FROM qgep_od.reach re
             LEFT JOIN qgep_od.reach_point rp ON rp.obj_id = re.fk_reach_point_from
@@ -480,7 +480,7 @@ BEGIN
       ELSE
         -- do nothing
         RAISE NOTICE 'No %s - nothing to do', let_kind;
-      END IF;     
+      END IF;
 
       IF let_kind='inlet' THEN
         -- set inlet okay

@@ -168,7 +168,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'remark': 'Strassenauslauf',
                 'co_material': 3015,
                 'outlet_1_material': 5081,
-                'outlet_1_clear_hight': 160,
+                'outlet_1_clear_height': 160,
                 'outlet_1_depth_m': 100,
                 'photo1' : 'funky_selfie.png'
         }
@@ -291,10 +291,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'remark': 'Strassenauslauf',
                 'co_material': 3015,
                 'outlet_1_material': 5081,
-                'outlet_1_clear_hight': 160,
+                'outlet_1_clear_height': 160,
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
-                'inlet_3_clear_hight': 160,
+                'inlet_3_clear_height': 160,
                 'inlet_3_depth_m': 100
         }
 
@@ -395,10 +395,10 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'co_material': 3015,
                 'co_level': 500,
                 'outlet_1_material': 5081,
-                'outlet_1_clear_hight': 160,
+                'outlet_1_clear_height': 160,
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
-                'inlet_3_clear_hight': 160,
+                'inlet_3_clear_height': 160,
                 'inlet_3_depth_m': 100
         }
 
