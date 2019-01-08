@@ -418,7 +418,6 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
 
 -- REACH DELETE
 -- Rule: vw_qgep_reach_on_delete()
---reach_points and wastewater_structure will be deleted by on delete rule on qgep_od.reach
 
 CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
   DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
