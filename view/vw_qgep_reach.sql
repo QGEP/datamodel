@@ -421,9 +421,6 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
 
 CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
   DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep_od.wastewater_networkelement WHERE obj_id = OLD.obj_id;
-  DELETE FROM qgep_od.reach_point WHERE obj_id = OLD.rp_from_obj_id;
-  DELETE FROM qgep_od.reach_point WHERE obj_id = OLD.rp_to_obj_id;
 );
 
 --missing: delete also connected wastewater_structure (and subclass channel or other), structure_parts, re_maintenance_events

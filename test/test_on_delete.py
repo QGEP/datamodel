@@ -45,5 +45,87 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         self.assertIsNone(self.select('vw_cover', obj_id))
 
 
+    def test_delete_reach(self):
+        # Create a new reach and reachpoints
+        row = {
+                'identifier': 'RP001'
+        }
+
+        rp001_obj_id = self.insert_check('reach_point', row)
+
+        row = {
+                'identifier': 'RP002'
+        }
+
+        rp002_obj_id = self.insert_check('reach_point', row)
+
+        row = {
+                'identifier': 'WN001'
+        }
+
+        wn001_obj_id = self.insert_check('wastewater_networkelement', row)
+
+        row = {
+                'obj_id': wn001_obj_id,
+                'fk_reach_point_from': rp001_obj_id,
+                'fk_reach_point_to': rp002_obj_id
+        }
+
+        re001_obj_id = self.insert_check('reach', row)
+
+        self.assertIsNotNone(self.select('reach', re001_obj_id))
+        self.assertIsNotNone(self.select('reach_point', rp001_obj_id))
+        self.assertIsNotNone(self.select('reach_point', rp002_obj_id))
+        self.assertIsNotNone(self.select('wastewater_networkelement', wn001_obj_id))
+
+        self.delete('reach', re001_obj_id)
+
+        self.assertIsNone(self.select('reach', re001_obj_id))
+        self.assertIsNone(self.select('reach_point', rp001_obj_id))
+        self.assertIsNone(self.select('reach_point', rp002_obj_id))
+        self.assertIsNone(self.select('wastewater_networkelement', wn001_obj_id))
+
+        # The same but over the view vw_qgep_reach
+        # Create a new reach and reachpoints
+        row = {
+                'identifier': 'RP001'
+        }
+
+        rp001_obj_id = self.insert_check('reach_point', row)
+
+        row = {
+                'identifier': 'RP002'
+        }
+
+        rp002_obj_id = self.insert_check('reach_point', row)
+
+        row = {
+                'identifier': 'WN001'
+        }
+
+        wn001_obj_id = self.insert_check('wastewater_networkelement', row)
+
+        row = {
+                'obj_id': wn001_obj_id,
+                'fk_reach_point_from': rp001_obj_id,
+                'fk_reach_point_to': rp002_obj_id
+        }
+
+        re001_obj_id = self.insert_check('reach', row)
+
+        self.assertIsNotNone(self.select('vw_qgep_reach', re001_obj_id))
+        self.assertIsNotNone(self.select('reach_point', rp001_obj_id))
+        self.assertIsNotNone(self.select('reach_point', rp002_obj_id))
+        self.assertIsNotNone(self.select('wastewater_networkelement', wn001_obj_id))
+
+        self.delete('vw_qgep_reach', re001_obj_id)
+
+        self.assertIsNone(self.select('vw_qgep_reach', re001_obj_id))
+        self.assertIsNone(self.select('reach_point', rp001_obj_id))
+        self.assertIsNone(self.select('reach_point', rp002_obj_id))
+        self.assertIsNone(self.select('wastewater_networkelement', wn001_obj_id))
+
+
+
 if __name__ == '__main__':
     unittest.main()
