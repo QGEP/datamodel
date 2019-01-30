@@ -1,7 +1,7 @@
 ﻿CREATE VIEW qgep_od.vw_change_points AS
 SELECT
   rp_to.obj_id,
-  rp_to.situation_geometry::geometry(Point, :SRID) AS geom,
+  rp_to.situation_geometry::geometry(POINTZ, :SRID) AS geom,
   re.material <> re_next.material AS change_in_material,
   re.clear_height <> re_next.clear_height AS change_in_clear_height,
   (rp_from.level - rp_to.level) / re.length_effective - (rp_next_from.level - rp_next_to.level) / re_next.length_effective AS change_in_slope
