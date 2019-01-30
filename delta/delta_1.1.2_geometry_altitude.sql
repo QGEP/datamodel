@@ -30,6 +30,7 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 
 ALTER TABLE qgep_od.wastewater_node ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
 
 
 
@@ -776,7 +777,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
 
   FROM (
     SELECT ws.obj_id,
-      ST_Collect(co.situation_geometry)::geometry(MultiPoint, 2056) AS situation_geometry,
+      ST_Collect(co.situation_geometry)::geometry(MultiPointZ, 2056) AS situation_geometry,
       CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
     FROM qgep_od.wastewater_structure ws
     FULL OUTER JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
@@ -818,7 +819,7 @@ ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS 
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
     ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(Point,2056) AS situation_geometry,
+    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ,2056) AS situation_geometry,
     ws.co_shape,
     ws.co_diameter,
     ws.co_material,
