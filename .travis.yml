@@ -47,7 +47,7 @@ before_script:
 
 script:
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh -r > /dev/null
-  - nosetests -e test_import.py
+  - nosetests -e test_import.py -e test_geometry.py
   
   # Get current version
   - export VERSION=$(sed 'r' "$TRAVIS_BUILD_DIR/system/CURRENT_VERSION.txt")
