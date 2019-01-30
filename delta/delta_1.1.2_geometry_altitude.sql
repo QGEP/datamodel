@@ -1,8 +1,3 @@
--- dave replace 2056 with %(SRID)s
--- dave replace 2056 with %(SRID)s
--- dave replace % with %%
--- dave probalby use transaction...
-
 -----------------------------------------------
 -----------------------------------------------
 -- UPDATE GEOMETRY OF qgep_od.reach_point
@@ -13,7 +8,7 @@ DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 DROP VIEW IF EXISTS qgep_od.vw_change_points;
 
-ALTER TABLE qgep_od.reach_point ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.reach_point ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
 
 
 
@@ -29,8 +24,8 @@ DROP VIEW IF EXISTS qgep_import.vw_manhole;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 
-ALTER TABLE qgep_od.wastewater_node ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
-ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.wastewater_node ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
 
 
 
@@ -42,7 +37,7 @@ ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE 
 -----------------------------------------------
 DROP VIEW IF EXISTS qgep_od.vw_cover;
 
-ALTER TABLE qgep_od.cover ALTER COLUMN situation_geometry TYPE geometry('POINTZ', 2056) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.cover ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
 
 
 
@@ -70,8 +65,8 @@ CREATE MATERIALIZED VIEW qgep_od.vw_network_node AS
      NULL AS cover_level,
      NULL AS backflow_level,
      NULL AS description,
-     situation_geometry::geometry(POINTZ,2056) AS detail_geometry,
-     situation_geometry::geometry(POINTZ,2056)
+     situation_geometry::geometry(POINTZ,%(SRID)s) AS detail_geometry,
+     situation_geometry::geometry(POINTZ,%(SRID)s)
    FROM qgep_od.reach_point
 
    UNION
@@ -169,7 +164,7 @@ CREATE MATERIALIZED VIEW qgep_od.vw_network_segment AS
      ch.usage_current AS usage_current,
      mat.abbr_de AS material,
      COALESCE(reach_progression, ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))) AS progression_geometry,
-     ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))::geometry(LineString,2056) AS detail_geometry
+     ST_LineMerge(ST_CurveToLine(ST_Force2D(progression_geometry)))::geometry(LineString,%(SRID)s) AS detail_geometry
    FROM qgep_od.reach re
    FULL JOIN
    (
@@ -492,7 +487,7 @@ ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_
 CREATE VIEW qgep_od.vw_change_points AS
 SELECT
   rp_to.obj_id,
-  rp_to.situation_geometry::geometry(POINTZ, 2056) AS geom,
+  rp_to.situation_geometry::geometry(POINTZ, %(SRID)s) AS geom,
   re.material <> re_next.material AS change_in_material,
   re.clear_height <> re_next.clear_height AS change_in_clear_height,
   (rp_from.level - rp_to.level) / re.length_effective - (rp_next_from.level - rp_next_to.level) / re_next.length_effective AS change_in_slope
@@ -547,7 +542,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_overflow AS
     overflow.fk_overflow_to,
     overflow.fk_overflow_characteristic,
     overflow.fk_control_center,
-    st_makeline(n1.situation_geometry, n2.situation_geometry)::geometry(LineString,2056) AS geometry,
+    st_makeline(n1.situation_geometry, n2.situation_geometry)::geometry(LineString,%(SRID)s) AS geometry,
     leapingweir.length,
     leapingweir.opening_shape,
     leapingweir.width,
@@ -606,9 +601,9 @@ SELECT
 
 ca.obj_id,
 ST_MakeLine(ST_Centroid(ST_CurveToLine(perimeter_geometry)),
-wn_rw_current.situation_geometry)::geometry( LineString, 2056 ) AS connection_rw_current_geometry,
+wn_rw_current.situation_geometry)::geometry( LineString, %(SRID)s ) AS connection_rw_current_geometry,
 ST_MakeLine(ST_Centroid(ST_CurveToLine(perimeter_geometry)),
-wn_ww_current.situation_geometry)::geometry( LineString, 2056 ) AS connection_ww_current_geometry
+wn_ww_current.situation_geometry)::geometry( LineString, %(SRID)s ) AS connection_ww_current_geometry
 
 FROM qgep_od.catchment_area ca
 LEFT JOIN qgep_od.wastewater_node wn_rw_current
@@ -777,7 +772,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
 
   FROM (
     SELECT ws.obj_id,
-      ST_Collect(co.situation_geometry)::geometry(MultiPointZ, 2056) AS situation_geometry,
+      ST_Collect(co.situation_geometry)::geometry(MultiPointZ, %(SRID)s) AS situation_geometry,
       CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
     FROM qgep_od.wastewater_structure ws
     FULL OUTER JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
@@ -819,7 +814,7 @@ ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS 
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
     ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ,2056) AS situation_geometry,
+    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ,%(SRID)s) AS situation_geometry,
     ws.co_shape,
     ws.co_diameter,
     ws.co_material,
@@ -870,9 +865,9 @@ CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
 -- Comment: triggerfunction has to be rewritten because of Z coordinate 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
 DECLARE 
-  multi_situation_geometry geometry(MULTIPOINTZ,2056);
+  multi_situation_geometry geometry(MULTIPOINTZ,%(SRID)s);
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ,2056);
+  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ,%(SRID)s);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
@@ -999,7 +994,7 @@ BEGIN
 
   -- catch
   EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %', SQLERRM;
+    RAISE NOTICE 'EXCEPTION: %%', SQLERRM;
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
