@@ -570,8 +570,6 @@ END; $BODY$
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
 
-DROP RULE vw_qgep_reach_update ON qgep_od.vw_qgep_reach;
-
 -- REACH UPDATE
 -- Function: vw_qgep_reach_update()
 
