@@ -31,6 +31,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         # update
         # check if geometry X Y Z of start is addapted on reach_point
         # check if geometry X Y Z of end is addapted on reach_point
+        pass
 
 
     def test_vw_qgep_wastewater_structure_geometry_insert(self):
