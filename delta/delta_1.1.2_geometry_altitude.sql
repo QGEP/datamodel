@@ -8,7 +8,7 @@ DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 DROP VIEW IF EXISTS qgep_od.vw_change_points;
 
-ALTER TABLE qgep_od.reach_point ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.reach_point ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_SetSRID( ST_MakePoint( ST_X(situation_geometry), ST_Y(situation_geometry), COALESCE(level,0) ), %(SRID)s);
 
 
 
@@ -24,7 +24,8 @@ DROP VIEW IF EXISTS qgep_import.vw_manhole;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 
-ALTER TABLE qgep_od.wastewater_node ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.wastewater_node ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_SetSRID( ST_MakePoint( ST_X(situation_geometry), ST_Y(situation_geometry), COALESCE(bottom_level,0) ), %(SRID)s);
+-- in quarantine we do not add the level to the geometry because this will be done on insert
 ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
 
 
@@ -37,7 +38,7 @@ ALTER TABLE qgep_import.manhole_quarantine ALTER COLUMN situation_geometry TYPE 
 -----------------------------------------------
 DROP VIEW IF EXISTS qgep_od.vw_cover;
 
-ALTER TABLE qgep_od.cover ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_Force3D(situation_geometry);
+ALTER TABLE qgep_od.cover ALTER COLUMN situation_geometry TYPE geometry('POINTZ', %(SRID)s) USING ST_SetSRID( ST_MakePoint( ST_X(situation_geometry), ST_Y(situation_geometry), COALESCE(level,0) ), %(SRID)s);
 
 
 
