@@ -105,6 +105,13 @@ CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
+  -- Synchronize geometry with level
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
+  ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+  
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
+  ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+
   INSERT INTO qgep_od.reach_point(
             obj_id
             , elevation_accuracy
@@ -311,10 +318,35 @@ END; $BODY$
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
 
--- REACH UPDATE
--- Rule: vw_qgep_reach_on_update()
 
-CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_reach DO INSTEAD (
+-- REACH UPDATE
+-- Function: vw_qgep_reach_update()
+
+CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_on_update()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+
+  -- Synchronize geometry with level
+  IF NEW.rp_from_level <> OLD.rp_from_level OR (NEW.rp_from_level IS NULL AND OLD.rp_from_level IS NOT NULL) OR (NEW.rp_from_level IS NOT NULL AND OLD.rp_from_level IS NULL) THEN
+    NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
+    ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+  ELSE 
+    IF ST_Z(ST_StartPoint(NEW.progression_geometry)) <> ST_Z(ST_StartPoint(OLD.progression_geometry)) THEN
+      NEW.rp_from_level = ST_Z(ST_StartPoint(NEW.progression_geometry));
+    END IF;
+  END IF;
+
+  -- Synchronize geometry with level
+  IF NEW.rp_to_level <> OLD.rp_to_level OR (NEW.rp_to_level IS NULL AND OLD.rp_to_level IS NOT NULL) OR (NEW.rp_to_level IS NOT NULL AND OLD.rp_to_level IS NULL) THEN
+    NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
+    ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+  ELSE 
+    IF ST_Z(ST_EndPoint(NEW.progression_geometry)) <> ST_Z(ST_EndPoint(OLD.progression_geometry)) THEN
+      NEW.rp_to_level = ST_Z(ST_EndPoint(NEW.progression_geometry));
+    END IF;
+  END IF;
+
   UPDATE qgep_od.reach_point
     SET
         elevation_accuracy = NEW.rp_from_elevation_accuracy
@@ -414,7 +446,17 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
       , wall_roughness = NEW.wall_roughness
       , fk_pipe_profile = NEW.fk_pipe_profile
     WHERE obj_id = OLD.obj_id;
-);
+    
+  RETURN NEW;
+END; $BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER vw_qgep_reach_on_update
+  INSTEAD OF UPDATE
+  ON qgep_od.vw_qgep_reach
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep_od.vw_qgep_reach_on_update();
+
 
 -- REACH DELETE
 -- Rule: vw_qgep_reach_on_delete()
