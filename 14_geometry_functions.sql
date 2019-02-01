@@ -10,10 +10,10 @@ $BODY$
 BEGIN
   CASE
     WHEN TG_OP = 'INSERT' THEN
-      NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.bottom_level,'NaN') ), :SRID;
+      NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.bottom_level,'NaN') ), :SRID );
     WHEN TG_OP = 'UPDATE' THEN
       IF NEW.bottom_level <> OLD.bottom_level OR (NEW.bottom_level IS NULL AND OLD.bottom_level IS NOT NULL) OR (NEW.bottom_level IS NOT NULL AND OLD.bottom_level IS NULL) THEN
-        NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.bottom_level,'NaN') ), :SRID;
+        NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.bottom_level,'NaN') ), :SRID );
       ELSE 
         IF ST_Z(NEW.situation_geometry) <> ST_Z(OLD.situation_geometry) THEN
           NEW.bottom_level = ST_Z(NEW.situation_geometry);
@@ -46,10 +46,10 @@ $BODY$
 BEGIN
   CASE
     WHEN TG_OP = 'INSERT' THEN
-      NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.level,'NaN') ), :SRID;
+      NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.level,'NaN') ), :SRID );
     WHEN TG_OP = 'UPDATE' THEN
       IF NEW.level <> OLD.level OR (NEW.level IS NULL AND OLD.level IS NOT NULL) OR (NEW.level IS NOT NULL AND OLD.level IS NULL) THEN
-        NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.level,'NaN') ), :SRID;
+        NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.level,'NaN') ), :SRID );
       ELSE 
         IF ST_Z(NEW.situation_geometry) <> ST_Z(OLD.situation_geometry) THEN
           NEW.level = ST_Z(NEW.situation_geometry);
