@@ -110,6 +110,7 @@ CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
 
 CREATE OR REPLACE FUNCTION qgep_import.vw_manhole_insert_into_quarantine_or_delete() RETURNS trigger AS $BODY$
 BEGIN
+  IF NEW.verified IS TRUE THEN 
   IF NEW.deleted IS TRUE THEN
     -- delete this entry
     DELETE FROM qgep_od.vw_qgep_wastewater_structure
@@ -204,6 +205,7 @@ BEGIN
     NEW.outlet_2_clear_height,
     NEW.outlet_2_depth_m   
     );
+  END IF;
   END IF;
   RETURN NEW;
 END; $BODY$
