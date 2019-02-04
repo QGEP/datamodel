@@ -22,16 +22,74 @@ class TestViews(unittest.TestCase, DbTestBase):
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
     def test_vw_qgep_reach(self):
-        # to do
-        
-        # insert
-        # check if geometry X Y Z of start is addapted on reach_point
-        # check if geometry X Y Z of end is addapted on reach_point
+        # 1. insert geometry with Z and no rp_from_level and no rp_to_level
+        # INSERT INTO qgep_od.vw_qgep_reach (progression_geometry, rp_from_obj_id, rp_to_obj_id) VALUES (ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 3,4 5 6,7 8 9))'), 2056), 'BBB 1337_0001', 'CCC 1337_0001' );
+        row = {
+                'progression_geometry': '01090000A00808000001000000010200008003000000000000000000F03F000000000000004000000000000008400000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000002240', 
+                'rp_from_obj_id': 'BBB 1337_0001',
+                'rp_to_obj_id': 'CCC 1337_0001'
+        }
+        expected_row = copy.deepcopy(row)
+        # vw_qgep_reach has the geometry but NaN as Z on start_point and NaN as Z on end_point: SELECT ST_SetSRID( ST_ForceCurve(ST_MakeLine(ARRAY[ST_MakePoint(1,2,'NaN'), ST_MakePoint(4,5,6), ST_MakePoint(7,8,'NaN')])), 2056)
+        expected_row['progression_geometry'] = '01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C400000000000002040000000000000F87F' 
+        # rp_from_level is NULL
+        expected_row['rp_from_level'] = None
+        # rp_to_level is NULL
+        expected_row['rp_to_level'] = None
+        obj_id = self.insert_check('vw_qgep_reach', row, expected_row)
+        # reach_point has on rp_to as Z NaN: SELECT ST_SetSRID( ST_MakePoint(1,2,'NaN'), 2056)
+        row = self.select('reach_point', 'BBB 1337_0001')
+        assert row['situation_geometry'] == '01010000A008080000000000000000F03F0000000000000040000000000000F87F'
+        # reach_point has on rp_from as Z NaN: SELECT ST_SetSRID( ST_MakePoint(7,8,'NaN'), 2056)
+        row = self.select('reach_point', 'CCC 1337_0001')
+        assert row['situation_geometry'] == '01010000A0080800000000000000001C400000000000002040000000000000F87F'
 
-        # update
-        # check if geometry X Y Z of start is addapted on reach_point
-        # check if geometry X Y Z of end is addapted on reach_point
-        pass
+        # 2. insert geometry with Z and no rp_from_level and 66 as rp_to_level
+        # INSERT INTO qgep_od.vw_qgep_reach (obj_id, progression_geometry, rp_to_level, rp_from_obj_id, rp_to_obj_id) VALUES ('AAA 1337_0002', ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 3,4 5 6,7 8 9))'), 2056), 66, 'BBB 1337_0002', 'CCC 1337_0002' );
+        row = {
+                'progression_geometry': '01090000A00808000001000000010200008003000000000000000000F03F000000000000004000000000000008400000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000002240', 
+                'rp_to_level': '66',
+                'rp_from_obj_id': 'BBB 1337_0002',
+                'rp_to_obj_id': 'CCC 1337_0002'
+        }
+        expected_row = copy.deepcopy(row)
+        # vw_qgep_reach has the geometry but NaN as Z on start_point and 66 (rp_to_level) as Z on end_point: SELECT ST_SetSRID( ST_ForceCurve(ST_MakeLine(ARRAY[ST_MakePoint(1,2,'NaN'), ST_MakePoint(4,5,6), ST_MakePoint(7,8,66)])), 2056)
+        expected_row['progression_geometry'] = '01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000805040' 
+        # rp_from_level is NULL
+        expected_row['rp_from_level'] = None
+        # rp_to_level is 66.000
+        expected_row['rp_to_level'] = '66.000'
+        obj_id = self.insert_check('vw_qgep_reach', row, expected_row)
+        # reach_point has on rp_from as Z NaN: SELECT ST_SetSRID( ST_MakePoint(1,2,'NaN'), 2056)
+        row = self.select('reach_point', 'BBB 1337_0002')
+        assert row['situation_geometry'] == '01010000A008080000000000000000F03F0000000000000040000000000000F87F'
+        # reach_point has on rp_to as Z 66.000: SELECT ST_SetSRID( ST_MakePoint(7,8,66.000), 2056)
+        row = self.select('reach_point', 'CCC 1337_0002')
+        assert row['situation_geometry'] == '01010000A0080800000000000000001C4000000000000020400000000000805040'
+
+        # 3. insert geometry with Z and 77 as rp_from_level and NULL as rp_to_level
+        # INSERT INTO qgep_od.vw_qgep_reach (obj_id, progression_geometry, rp_from_level, rp_to_level, rp_from_obj_id, rp_to_obj_id) VALUES ('AAA 1337_0003', ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 3,4 5 6,7 8 9))'), 2056), NULL, 77, 'BBB 1337_0003', 'CCC 1337_0003' );
+        row = {
+                'progression_geometry': '01090000A00808000001000000010200008003000000000000000000F03F000000000000004000000000000008400000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000002240', 
+                'rp_from_level': '77.000',
+                'rp_to_level': None,
+                'rp_from_obj_id': 'BBB 1337_0003',
+                'rp_to_obj_id': 'CCC 1337_0003'
+        }
+        expected_row = copy.deepcopy(row)
+        # vw_qgep_reach has the geometry but 77 (rp_from_level) as Z on start_point and NaN as Z on end_point: SELECT ST_SetSRID( ST_ForceCurve(ST_MakeLine(ARRAY[ST_MakePoint(1,2,77), ST_MakePoint(4,5,6), ST_MakePoint(7,8,'NaN')])), 2056)
+        expected_row['progression_geometry'] = '01090000A00808000001000000010200008003000000000000000000F03F000000000000004000000000004053400000000000001040000000000000144000000000000018400000000000001C400000000000002040000000000000F87F' 
+        # rp_from_level is NULL
+        expected_row['rp_from_level'] = '77.000'
+        # rp_to_level is 66.000
+        expected_row['rp_to_level'] = None
+        obj_id = self.insert_check('vw_qgep_reach', row, expected_row)
+        # reach_point has on rp_from as Z 77.000: SELECT ST_SetSRID( ST_MakePoint(1,2,77.000), 2056)
+        row = self.select('reach_point', 'BBB 1337_0003')
+        assert row['situation_geometry'] == '01010000A008080000000000000000F03F00000000000000400000000000405340'
+        # reach_point has on rp_to as Z 66.000: SELECT ST_SetSRID( ST_MakePoint(7,8,'NaN'), 2056)
+        row = self.select('reach_point', 'CCC 1337_0003')
+        assert row['situation_geometry'] == '01010000A0080800000000000000001C400000000000002040000000000000F87F'
 
 
     def test_vw_qgep_wastewater_structure_geometry_insert(self):
@@ -413,3 +471,19 @@ class TestViews(unittest.TestCase, DbTestBase):
 
 if __name__ == '__main__':
     unittest.main()
+
+'''
+-- Tests UPDATE vw_qgep_reach:
+-- UPDATE qgep_od.vw_qgep_reach SET progression_geometry=ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 3,4 5 6,8 9 10))'), 2056) WHERE obj_id='AAA DEXXXXX04'
+-- SELECT obj_id, rp_from_level, rp_to_level, ST_AsText(progression_geometry), rp_from_obj_id, rp_to_obj_id FROM qgep_od.vw_qgep_reach  WHERE obj_id = 'AAA DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'BBB DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'CCC DEXXXXX04'
+-- UPDATE qgep_od.vw_qgep_reach SET progression_geometry=ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 33,4 5 6,8 9 11))'), 2056), rp_from_level=NULL WHERE obj_id='AAA DEXXXXX04'
+-- SELECT obj_id, rp_from_level, rp_to_level, ST_AsText(progression_geometry), rp_from_obj_id, rp_to_obj_id FROM qgep_od.vw_qgep_reach  WHERE obj_id = 'AAA DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'BBB DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'CCC DEXXXXX04'
+-- UPDATE qgep_od.vw_qgep_reach SET progression_geometry=ST_SetSRID(ST_GeomFromText('COMPOUNDCURVE Z ((1 2 44,4 5 6,8 9 33))'), 2056), rp_from_level=77, rp_to_level=88 WHERE obj_id='AAA DEXXXXX04'
+-- SELECT obj_id, rp_from_level, rp_to_level, ST_AsText(progression_geometry), rp_from_obj_id, rp_to_obj_id FROM qgep_od.vw_qgep_reach  WHERE obj_id = 'AAA DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'BBB DEXXXXX04'
+-- SELECT level, ST_AsText(situation_geometry) FROM qgep_od.reach_point WHERE obj_id = 'CCC DEXXXXX04'
+'''
