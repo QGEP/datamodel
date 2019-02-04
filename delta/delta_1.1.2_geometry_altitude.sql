@@ -359,10 +359,18 @@ SELECT re.obj_id,
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
 
+
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
+  -- Synchronize geometry with level
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
+  ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+  
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
+  ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+
   INSERT INTO qgep_od.reach_point(
             obj_id
             , elevation_accuracy
@@ -565,7 +573,6 @@ BEGIN
 END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-
 
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
