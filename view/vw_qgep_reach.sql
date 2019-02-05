@@ -333,7 +333,7 @@ BEGIN
     ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
   ELSE 
     IF ST_Z(ST_StartPoint(NEW.progression_geometry)) <> ST_Z(ST_StartPoint(OLD.progression_geometry)) THEN
-      NEW.rp_from_level = ST_Z(ST_StartPoint(NEW.progression_geometry));
+      NEW.rp_from_level = NULLIF(ST_Z(ST_StartPoint(NEW.progression_geometry)),'NaN');
     END IF;
   END IF;
 
@@ -343,7 +343,7 @@ BEGIN
     ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
   ELSE 
     IF ST_Z(ST_EndPoint(NEW.progression_geometry)) <> ST_Z(ST_EndPoint(OLD.progression_geometry)) THEN
-      NEW.rp_to_level = ST_Z(ST_EndPoint(NEW.progression_geometry));
+      NEW.rp_to_level = NULLIF(ST_Z(ST_EndPoint(NEW.progression_geometry)),'NaN');
     END IF;
   END IF;
 

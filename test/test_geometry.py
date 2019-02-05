@@ -166,6 +166,26 @@ class TestViews(unittest.TestCase, DbTestBase):
         new_row = self.select('reach_point', 'CCC 1337_1010')
         assert new_row['level'] == 999
 
+        # 4. change geometry including Z with startpoint Z NaN and endpoint Z NaN, no change on rp_from_level, no change on rp_to_level
+        # UPDATE qgep_od.vw_qgep_reach SET progression_geometry=ST_SetSRID( ST_ForceCurve(ST_MakeLine(ARRAY[ST_MakePoint(1,2,'NaN'), ST_MakePoint(4,5,6), ST_MakePoint(7,8,'NaN')])), 2056) WHERE obj_id=obj_id'
+        row = {
+                'progression_geometry': '01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C400000000000002040000000000000F87F'
+        }
+        self.update('vw_qgep_reach', row, obj_id)
+        new_row = self.select('vw_qgep_reach', obj_id)
+         # vw_qgep_reach has the geometry
+        assert new_row['progression_geometry'] == '01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C400000000000002040000000000000F87F'
+        # rp_from_level is NULL (startpoint of geometry)
+        assert new_row['rp_from_level'] == None
+        # rp_to_level is NULL (endpoint of geometry)
+        assert new_row['rp_to_level'] == None
+        # reach_point has on rp_from as Z NULL
+        new_row = self.select('reach_point', 'BBB 1337_1010')
+        assert new_row['level'] == None
+        # reach_point has on rp_to as Z NULL
+        new_row = self.select('reach_point', 'CCC 1337_1010')
+        assert new_row['level'] == None
+
 
     def test_vw_qgep_wastewater_structure_geometry_insert(self):
         # 1. insert geometry with Z and no co_level and no wn_bottom_level
@@ -447,6 +467,17 @@ class TestViews(unittest.TestCase, DbTestBase):
         assert new_row['situation_geometry'] == '01010000A0080800000000000020D6434100000000804F32410000000000588140'
         assert new_row['bottom_level'] == 555.000
 
+        # 4. change Z to NaN (don't change bottom_level)
+        # UPDATE qgep_od.vw_wastewater_node SET situation_geometry=ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056) WHERE obj_id = obj_id;
+        row = {
+                'situation_geometry': '01010000A0080800000000000020D6434100000000804F3241000000000000F87F',
+        }
+        self.update('vw_wastewater_node', row, obj_id)
+        # Z (NaN) overwrites bottom_level results in: NULL
+        new_row = self.select('vw_wastewater_node', obj_id)
+        assert new_row['situation_geometry'] == '01010000A0080800000000000020D6434100000000804F3241000000000000F87F'
+        assert new_row['bottom_level'] == None
+
 
     def test_cover_geometry_sync_on_insert(self):
         # 1. level 200 and no Z
@@ -497,7 +528,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         obj_id = self.insert_check('vw_cover', row, expected_row)
 
 
-    def test_cover_node_geometry_sync_on_update(self):
+    def test_cover_geometry_sync_on_update(self):
 
         # first insert
         # no level and no Z
@@ -540,6 +571,17 @@ class TestViews(unittest.TestCase, DbTestBase):
         new_row = self.select('vw_cover', obj_id)
         assert new_row['situation_geometry'] == '01010000A0080800000000000020D6434100000000804F32410000000000588140'
         assert new_row['level'] == 555.000
+
+        # 4. change Z to NaN (don't change level)
+        # UPDATE qgep_od.vw_cover SET situation_geometry=ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056) WHERE obj_id = obj_id;
+        row = {
+                'situation_geometry': '01010000A0080800000000000020D6434100000000804F3241000000000000F87F',
+        }
+        self.update('vw_cover', row, obj_id)
+        # Z (555) overwrites level results in: 555.000
+        new_row = self.select('vw_cover', obj_id)
+        assert new_row['situation_geometry'] == '01010000A0080800000000000020D6434100000000804F3241000000000000F87F'
+        assert new_row['level'] == None
 
 
 

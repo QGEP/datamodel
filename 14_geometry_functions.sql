@@ -19,7 +19,7 @@ BEGIN
         NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.bottom_level,'NaN') ), %1$s);
       ELSE 
         IF ST_Z(NEW.situation_geometry) <> ST_Z(OLD.situation_geometry) THEN
-          NEW.bottom_level = ST_Z(NEW.situation_geometry);
+          NEW.bottom_level = NULLIF(ST_Z(NEW.situation_geometry),'NaN');
         END IF;
       END IF;
   END CASE;
@@ -61,7 +61,7 @@ BEGIN
         NEW.situation_geometry = ST_SetSRID( ST_MakePoint( ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), COALESCE(NEW.level,'NaN') ), %1$s);
       ELSE 
         IF ST_Z(NEW.situation_geometry) <> ST_Z(OLD.situation_geometry) THEN
-          NEW.level = ST_Z(NEW.situation_geometry);
+          NEW.level = NULLIF(ST_Z(NEW.situation_geometry),'NaN');
         END IF;
       END IF;
   END CASE;
