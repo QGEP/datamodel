@@ -3,13 +3,6 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
 
-/* WITH active_maintenance_event AS (
-  SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep_od.maintenance_event me
-  LEFT JOIN
-    qgep_od.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
-    WHERE active_zone IS NOT NULL
-) */
-
 SELECT re.obj_id,
     re.clear_height AS clear_height,
     re.material,
@@ -86,9 +79,6 @@ SELECT re.obj_id,
     rp_to.fk_dataowner AS rp_to_fk_dataowner,
     rp_to.fk_provider AS rp_to_fk_provider,
     rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement
-    /* am.obj_id AS me_obj_id,
-    am.active_zone AS me_active_zone,
-    am.identifier AS me_identifier */
    FROM qgep_od.reach re
      LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
      LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
@@ -96,7 +86,6 @@ SELECT re.obj_id,
      LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
      LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
      LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id;
-     /* LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id; */
 
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
@@ -177,7 +166,6 @@ BEGIN
             obj_id
             , accessibility
             , contract_section
-            -- , detail_geometry_geometry
             , financing
             , gross_costs
             , identifier
@@ -194,16 +182,12 @@ BEGIN
             , subsidies
             , year_of_construction
             , year_of_replacement
-            -- , last_modification
-            -- , fk_dataowner
-            -- , fk_provider
             , fk_owner
             , fk_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
             , NEW.ws_accessibility
             , NEW.ws_contract_section
-            -- , NEW.detail_geometry_geometry
             , NEW.ws_financing
             , NEW.ws_gross_costs
             , NEW.ws_identifier
@@ -220,9 +204,6 @@ BEGIN
             , NEW.ws_subsidies
             , NEW.ws_year_of_construction
             , NEW.ws_year_of_replacement
-            -- , NEW.ws_last_modification
-            -- , NEW.fk_dataowner
-            -- , NEW.fk_provider
             , NEW.ws_fk_owner
             , NEW.ws_fk_operator
            )
@@ -393,7 +374,6 @@ BEGIN
     SET
        accessibility = NEW.ws_accessibility
      , contract_section = NEW.ws_contract_section
-     -- , detail_geometry_geometry = NEW.detail_geometry_geometry
      , financing = NEW.ws_financing
      , gross_costs = NEW.ws_gross_costs
      , identifier = NEW.ws_identifier
@@ -464,8 +444,6 @@ CREATE TRIGGER vw_qgep_reach_on_update
 CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
   DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
 );
-
---missing: delete also connected wastewater_structure (and subclass channel or other), structure_parts, re_maintenance_events
 
 ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach');
 
