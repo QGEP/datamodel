@@ -77,14 +77,15 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'identifier': '20',
                 'ws_type': 'manhole',
-                'situation_geometry': '0104000020080800000100000001010000000000000020D6434100000000804F3241', # SELECT ST_SetSRID(ST_GeomFromText('MULTIPOINT(2600000 1200000)'), 2056)
+                                'situation_geometry': '01040000A0080800000100000001010000800000000020D6434100000000804F324100000000004CCD40', # SELECT ST_SetSRID(ST_GeomFromText('MULTIPOINTZ(2600000 1200000 15000)'), 2056)
                 'co_material': 5355,
                 'wn_backflow_level': decimal.Decimal('100.000')
         }
 
         expected_row = copy.deepcopy(row)
-        expected_row['situation_geometry'] = '0104000020080800000100000001010000000000000020D6434100000000804F3241' # SELECT ST_SetSRID(ST_GeomFromText('MULTIPOINT(2600000 1200000)'), 2056)
-
+        # be aware the Z variable is overwritten by NaN because co_level is NULL
+        expected_row['situation_geometry'] = '01040000A0080800000100000001010000800000000020D6434100000000804F3241000000000000F87F' # SELECT ST_SetSRID(ST_Collect(ST_MakePoint(2600000, 1200000, 'NaN')), 2056)
+        
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row, expected_row)
 
         row = {

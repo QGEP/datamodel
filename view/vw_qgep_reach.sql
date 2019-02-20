@@ -3,13 +3,6 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
 
-/* WITH active_maintenance_event AS (
-  SELECT me.obj_id, me.identifier, me.active_zone, mews.fk_wastewater_structure FROM qgep_od.maintenance_event me
-  LEFT JOIN
-    qgep_od.re_maintenance_event_wastewater_structure mews ON mews.fk_maintenance_event = me.obj_id
-    WHERE active_zone IS NOT NULL
-) */
-
 SELECT re.obj_id,
     re.clear_height AS clear_height,
     re.material,
@@ -86,9 +79,6 @@ SELECT re.obj_id,
     rp_to.fk_dataowner AS rp_to_fk_dataowner,
     rp_to.fk_provider AS rp_to_fk_provider,
     rp_to.fk_wastewater_networkelement AS rp_to_fk_wastewater_networkelement
-    /* am.obj_id AS me_obj_id,
-    am.active_zone AS me_active_zone,
-    am.identifier AS me_identifier */
    FROM qgep_od.reach re
      LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
      LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
@@ -96,7 +86,6 @@ SELECT re.obj_id,
      LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
      LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
      LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id;
-     /* LEFT JOIN active_maintenance_event am ON am.fk_wastewater_structure = ch.obj_id; */
 
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
@@ -105,6 +94,13 @@ CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
+  -- Synchronize geometry with level
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
+  ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+  
+  NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
+  ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+
   INSERT INTO qgep_od.reach_point(
             obj_id
             , elevation_accuracy
@@ -127,7 +123,7 @@ BEGIN
             , NEW.rp_from_outlet_shape -- outlet_shape
             , NEW.rp_from_position_of_connection -- position_of_connection
             , NEW.rp_from_remark -- remark
-            , ST_Force2D(ST_StartPoint(NEW.progression_geometry)) -- situation_geometry
+            , ST_StartPoint(NEW.progression_geometry) -- situation_geometry
             , NEW.rp_from_last_modification -- last_modification
             , NEW.rp_from_fk_dataowner -- fk_dataowner
             , NEW.rp_from_fk_provider -- fk_provider
@@ -158,7 +154,7 @@ BEGIN
             , NEW.rp_to_outlet_shape -- outlet_shape
             , NEW.rp_to_position_of_connection -- position_of_connection
             , NEW.rp_to_remark -- remark
-            , ST_Force2D(ST_EndPoint(NEW.progression_geometry)) -- situation_geometry
+            , ST_EndPoint(NEW.progression_geometry) -- situation_geometry
             , NEW.rp_to_last_modification -- last_modification
             , NEW.rp_to_fk_dataowner -- fk_dataowner
             , NEW.rp_to_fk_provider -- fk_provider
@@ -170,7 +166,6 @@ BEGIN
             obj_id
             , accessibility
             , contract_section
-            -- , detail_geometry_geometry
             , financing
             , gross_costs
             , identifier
@@ -187,16 +182,12 @@ BEGIN
             , subsidies
             , year_of_construction
             , year_of_replacement
-            -- , last_modification
-            -- , fk_dataowner
-            -- , fk_provider
             , fk_owner
             , fk_operator )
 
     VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
             , NEW.ws_accessibility
             , NEW.ws_contract_section
-            -- , NEW.detail_geometry_geometry
             , NEW.ws_financing
             , NEW.ws_gross_costs
             , NEW.ws_identifier
@@ -213,9 +204,6 @@ BEGIN
             , NEW.ws_subsidies
             , NEW.ws_year_of_construction
             , NEW.ws_year_of_replacement
-            -- , NEW.ws_last_modification
-            -- , NEW.fk_dataowner
-            -- , NEW.fk_provider
             , NEW.ws_fk_owner
             , NEW.ws_fk_operator
            )
@@ -311,10 +299,35 @@ END; $BODY$
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
 
--- REACH UPDATE
--- Rule: vw_qgep_reach_on_update()
 
-CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_reach DO INSTEAD (
+-- REACH UPDATE
+-- Function: vw_qgep_reach_update()
+
+CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_on_update()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+
+  -- Synchronize geometry with level
+  IF NEW.rp_from_level <> OLD.rp_from_level OR (NEW.rp_from_level IS NULL AND OLD.rp_from_level IS NOT NULL) OR (NEW.rp_from_level IS NOT NULL AND OLD.rp_from_level IS NULL) THEN
+    NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
+    ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+  ELSE 
+    IF ST_Z(ST_StartPoint(NEW.progression_geometry)) <> ST_Z(ST_StartPoint(OLD.progression_geometry)) THEN
+      NEW.rp_from_level = NULLIF(ST_Z(ST_StartPoint(NEW.progression_geometry)),'NaN');
+    END IF;
+  END IF;
+
+  -- Synchronize geometry with level
+  IF NEW.rp_to_level <> OLD.rp_to_level OR (NEW.rp_to_level IS NULL AND OLD.rp_to_level IS NOT NULL) OR (NEW.rp_to_level IS NOT NULL AND OLD.rp_to_level IS NULL) THEN
+    NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
+    ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+  ELSE 
+    IF ST_Z(ST_EndPoint(NEW.progression_geometry)) <> ST_Z(ST_EndPoint(OLD.progression_geometry)) THEN
+      NEW.rp_to_level = NULLIF(ST_Z(ST_EndPoint(NEW.progression_geometry)),'NaN');
+    END IF;
+  END IF;
+
   UPDATE qgep_od.reach_point
     SET
         elevation_accuracy = NEW.rp_from_elevation_accuracy
@@ -323,7 +336,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
       , outlet_shape = NEW.rp_from_outlet_shape
       , position_of_connection = NEW.rp_from_position_of_connection
       , remark = NEW.rp_from_remark
-      , situation_geometry = ST_Force2D(ST_StartPoint(NEW.progression_geometry))
+      , situation_geometry = ST_StartPoint(NEW.progression_geometry)
       , last_modification = NEW.rp_from_last_modification
       , fk_dataowner = NEW.rp_from_fk_dataowner
       , fk_provider = NEW.rp_from_fk_provider
@@ -338,7 +351,7 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
       , outlet_shape = NEW.rp_to_outlet_shape
       , position_of_connection = NEW.rp_to_position_of_connection
       , remark = NEW.rp_to_remark
-      , situation_geometry = ST_Force2D(ST_EndPoint(NEW.progression_geometry))
+      , situation_geometry = ST_EndPoint(NEW.progression_geometry)
       , last_modification = NEW.rp_to_last_modification
       , fk_dataowner = NEW.rp_to_fk_dataowner
       , fk_provider = NEW.rp_to_fk_provider
@@ -361,7 +374,6 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
     SET
        accessibility = NEW.ws_accessibility
      , contract_section = NEW.ws_contract_section
-     -- , detail_geometry_geometry = NEW.detail_geometry_geometry
      , financing = NEW.ws_financing
      , gross_costs = NEW.ws_gross_costs
      , identifier = NEW.ws_identifier
@@ -414,7 +426,17 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
       , wall_roughness = NEW.wall_roughness
       , fk_pipe_profile = NEW.fk_pipe_profile
     WHERE obj_id = OLD.obj_id;
-);
+    
+  RETURN NEW;
+END; $BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER vw_qgep_reach_on_update
+  INSTEAD OF UPDATE
+  ON qgep_od.vw_qgep_reach
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep_od.vw_qgep_reach_on_update();
+
 
 -- REACH DELETE
 -- Rule: vw_qgep_reach_on_delete()
@@ -422,8 +444,6 @@ CREATE OR REPLACE RULE vw_qgep_reach_on_update AS ON UPDATE TO qgep_od.vw_qgep_r
 CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
   DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
 );
-
---missing: delete also connected wastewater_structure (and subclass channel or other), structure_parts, re_maintenance_events
 
 ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach');
 

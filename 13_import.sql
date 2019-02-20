@@ -6,7 +6,7 @@ CREATE TABLE qgep_import.manhole_quarantine
 (
   obj_id character varying(16),
   identifier character varying(20),
-  situation_geometry geometry(Point,:SRID),
+  situation_geometry geometry(POINTZ,:SRID),
   co_shape integer,
   co_diameter smallint,
   co_material integer,
@@ -57,7 +57,7 @@ CREATE TABLE qgep_import.manhole_quarantine
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS 
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
     ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(Point,:SRID) AS situation_geometry,
+    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ,:SRID) AS situation_geometry,
     ws.co_shape,
     ws.co_diameter,
     ws.co_material,
@@ -224,9 +224,9 @@ BEGIN
 EXECUTE format($TRIGGER$
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
 DECLARE 
-  multi_situation_geometry geometry(MultiPoint,%1$s);
+  multi_situation_geometry geometry(MULTIPOINTZ,%1$s);
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,%1$s);
+  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ,%1$s);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
