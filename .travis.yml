@@ -4,8 +4,12 @@ python:
   - 3.5
 
 addons:
-  postgresql: "9.6"
-
+  postgresql: '10'
+  apt:
+    packages:
+      - postgresql-10-postgis-2.4
+      - postgresql-10-postgis-2.4-scripts
+      - postgresql-client-10
 install:
   - pip install -r requirements.txt
 
@@ -29,11 +33,6 @@ before_install:
     git submodule update --init --recursive
 
 before_script:
-  - sudo apt-get -qq update
-  - sudo apt-get purge oracle-java9-installer oracle-java8-installer
-  - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
-  - sudo -E apt-get -yq install postgresql-9.6-postgis-2.4
-  - sudo -E apt-get -yq --allow-unauthenticated upgrade postgresql-client-9.6
   - |
     for pgsrv in pg_qgep qgep_prod qgep_test qgep_comp; do
       printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\n" >> ~/.pg_service.conf
