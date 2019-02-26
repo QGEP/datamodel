@@ -41,7 +41,7 @@ before_script:
     psql -c "GRANT qgep TO qgepuser;" -U postgres
 
   - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
-  - sudo -E apt-get -yq install postgresql-10-postgis-2.4 postgresql-10-postgis-2.4-scripts
+  - sudo -E apt-get -yq install postgresql-10-postgis-2.4 postgresql-10-postgis-2.4-scripts postgresql-10-client
 
 script:
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh -r > /dev/null
