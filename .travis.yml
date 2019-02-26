@@ -37,7 +37,7 @@ before_install:
 before_script:
   - |
     for pgsrv in pg_qgep qgep_prod qgep_test qgep_comp; do
-      printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\n" >> ~/.pg_service.conf
+      printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\nport=5433\n" >> ~/.pg_service.conf
       psql -c "CREATE DATABASE ${pgsrv};" -U postgres
       psql -c "CREATE EXTENSION postgis;" -U postgres -d ${pgsrv}
       psql -c "CREATE EXTENSION hstore;" -U postgres -d ${pgsrv}
