@@ -369,6 +369,10 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
 /**************************************************************
  * UPDATE
  *************************************************************/
+SELECT set_config('qgep.srid', :SRID::text, false);
+DO $DO$
+BEGIN
+EXECUTE format($TRIGGER$
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
   RETURNS trigger AS
 $BODY$
@@ -522,7 +526,7 @@ BEGIN
     SET situation_geometry = ST_SetSRID( ST_MakePoint(
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
     ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
-    ST_Z(WN.situation_geometry)), :SRID )
+    ST_Z(WN.situation_geometry)), %1$s )
     WHERE obj_id IN
     (
       SELECT obj_id FROM qgep_od.wastewater_networkelement
@@ -534,7 +538,7 @@ BEGIN
     SET situation_geometry = ST_SetSRID( ST_MakePoint(
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
     ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
-    ST_Z(CO.situation_geometry)), :SRID )
+    ST_Z(CO.situation_geometry)), %1$s )
     SET situation_geometry = ST_TRANSLATE(CO.situation_geometry, dx, dy )
     WHERE obj_id IN
     (
@@ -551,7 +555,7 @@ BEGIN
         ST_SetSRID( ST_MakePoint(
             ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
             ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
-            ST_Z(ST_PointN(RE.progression_geometry, 1))), :SRID )
+            ST_Z(ST_PointN(RE.progression_geometry, 1))), %1$s )
       ) )
     WHERE fk_reach_point_from IN
     (
@@ -580,6 +584,10 @@ BEGIN
 
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
+$TRIGGER$, current_setting('qgep.srid'));
+END
+$DO$;
+
 
 DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep_wastewater_structure;
 
