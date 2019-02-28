@@ -163,7 +163,6 @@ BEGIN
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
     ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
     ST_Z(CO.situation_geometry)), %(SRID)s )
-    SET situation_geometry = ST_TRANSLATE(CO.situation_geometry, dx, dy )
     WHERE obj_id IN
     (
       SELECT obj_id FROM qgep_od.structure_part
