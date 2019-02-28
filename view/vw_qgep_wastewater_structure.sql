@@ -518,7 +518,10 @@ BEGIN
 
     -- Move wastewater node as well
     UPDATE qgep_od.wastewater_node WN
-    SET situation_geometry = ST_TRANSLATE(WN.situation_geometry, dx, dy )
+    SET situation_geometry = ST_SetSRID( ST_MakePoint(
+    ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
+    ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
+    ST_Z(WN.situation_geometry)), :SRID )
     WHERE obj_id IN
     (
       SELECT obj_id FROM qgep_od.wastewater_networkelement
@@ -527,6 +530,10 @@ BEGIN
 
     -- Move covers
     UPDATE qgep_od.cover CO
+    SET situation_geometry = ST_SetSRID( ST_MakePoint(
+    ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
+    ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
+    ST_Z(CO.situation_geometry)), :SRID )
     SET situation_geometry = ST_TRANSLATE(CO.situation_geometry, dx, dy )
     WHERE obj_id IN
     (
@@ -540,7 +547,10 @@ BEGIN
       ST_ForceCurve (ST_SetPoint(
         ST_CurveToLine (RE.progression_geometry ),
         0, -- SetPoint index is 0 based, PointN index is 1 based.
-        ST_TRANSLATE(ST_PointN(RE.progression_geometry, 1), dx, dy )
+        ST_SetSRID( ST_MakePoint(
+            ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
+            ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
+            ST_Z(ST_PointN(RE.progression_geometry, 1))), :SRID )
       ) )
     WHERE fk_reach_point_from IN
     (
@@ -554,7 +564,10 @@ BEGIN
       ST_ForceCurve( ST_SetPoint(
         ST_CurveToLine( RE.progression_geometry ),
         ST_NumPoints(RE.progression_geometry) - 1,
-        ST_TRANSLATE(ST_EndPoint(RE.progression_geometry), dx, dy )
+        ST_SetSRID( ST_MakePoint(
+            ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
+            ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
+            ST_Z(ST_PointN(RE.progression_geometry, 1))), 2056 )
       ) )
     WHERE fk_reach_point_to IN
     (
