@@ -517,6 +517,7 @@ BEGIN
     dy = ST_YMin(NEW.situation_geometry) - ST_YMin(OLD.situation_geometry);
 
     -- Move wastewater node as well
+    -- comment: TRANSLATE((ST_MakePoint(500, 900, 'NaN')), 10, 20, 0) would return NaN NaN NaN - so we have this workaround
     UPDATE qgep_od.wastewater_node WN
     SET situation_geometry = ST_SetSRID( ST_MakePoint(
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
