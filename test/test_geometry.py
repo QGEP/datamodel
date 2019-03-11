@@ -374,6 +374,47 @@ class TestViews(unittest.TestCase, DbTestBase):
         new_row = self.select('wastewater_node', '1337_1010')
         assert new_row['situation_geometry'] == '01010000A0080800000000000000407F400000000000208C400000000000003E40'
 
+        # 6.a. update no change on geometry with Z but WITH co_level NULL
+        # UPDATE qgep_od.vw_wastewater_node SET co_level=NULL WHERE obj_id = obj_id
+        row = {
+                'co_level': None,
+                'wn_bottom_level': None
+        }
+        self.update('vw_qgep_wastewater_structure', row, obj_id)
+        new_row = self.select('vw_qgep_wastewater_structure', obj_id)
+        # geometry of ws_qgep_wastewaterstructure has co_level as Z (because it's geometry of cover): ST_SetSRID(ST_Collect(ST_MakePoint(500, 900, 'NaN')), 2056)
+        assert new_row['situation_geometry'] == '01040000A0080800000100000001010000800000000000407F400000000000208C40000000000000F87F'
+        # co_level is new co_level (NULL)
+        assert new_row['co_level'] == None
+        # no change on wn_bottom_level
+        assert new_row['wn_bottom_level'] == None
+        # cover geometry has Z from new co_level: ST_GeometryN( ST_SetSRID(ST_Collect(ST_MakePoint(500, 900, 'NaN')), 2056), 1 )
+        new_row = self.select('cover', '1337_1010')
+        assert new_row['situation_geometry'] == '01010000A0080800000000000000407F400000000000208C40000000000000F87F'
+        # no change on wastewater_node geometry: ST_GeometryN( ST_SetSRID(ST_Collect(ST_MakePoint(500, 900, 'NaN')), 2056), 1 )
+        new_row = self.select('wastewater_node', '1337_1010')
+        assert new_row['situation_geometry'] == '01010000A0080800000000000000407F400000000000208C40000000000000F87F'
+
+        # 6.b. update geometry with no change on Z what is 'NaN' and no change on levels
+        # UPDATE qgep_od.vw_wastewater_node SET situation_geometry=ST_SetSRID(ST_Collect(ST_MakePoint(600, 1000, 'NaN')), 2056) WHERE obj_id = obj_id
+        row = {
+                'situation_geometry': '01040000A0080800000100000001010000800000000000C082400000000000408F40000000000000F87F'
+        }
+        self.update('vw_qgep_wastewater_structure', row, obj_id)
+        new_row = self.select('vw_qgep_wastewater_structure', obj_id)
+        # geometry of ws_qgep_wastewaterstructure has new XY but old Z (NaN) ST_SetSRID(ST_Collect(ST_MakePoint(600, 1000, 'NaN')), 2056)
+        assert new_row['situation_geometry'] == '01040000A0080800000100000001010000800000000000C082400000000000408F40000000000000F87F'
+        # no change on co_level
+        assert new_row['co_level'] == None
+        # no change on wn_bottom_level
+        assert new_row['wn_bottom_level'] == None
+        # cover geometry is updated in XY: ST_GeometryN( ST_SetSRID(ST_Collect(ST_MakePoint(600, 1000, 'NaN')), 2056), 1 )
+        new_row = self.select('cover', '1337_1010')
+        assert new_row['situation_geometry'] == '01010000A0080800000000000000C082400000000000408F40000000000000F87F'
+        # wastewater_node geometry is updated in XY but not Z:: ST_GeometryN( ST_SetSRID(ST_Collect(ST_MakePoint(600, 1000, 'NaN')), 2056), 1 )
+        new_row = self.select('wastewater_node', '1337_1010')
+        assert new_row['situation_geometry'] == '01010000A0080800000000000000C082400000000000408F40000000000000F87F'
+
 
     def test_wastewater_node_geometry_sync_on_insert(self):
         # 1. bottom level 200 and no Z
