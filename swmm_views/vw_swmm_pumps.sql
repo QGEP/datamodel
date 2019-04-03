@@ -14,10 +14,11 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_pumps AS
 
 SELECT 
 	pu.obj_id as name,
-	pu.fk_wastewater_node as inlet_node, -- inlet is the waternode entering the pump
-	pu.fk_overflow_to as outlet_node, -- outlet is the waternode at the top of next reach
+	overflow.fk_wastewater_node as inlet_node, -- inlet is the waternode entering the pump
+	overflow.fk_overflow_to as outlet_node, -- outlet is the waternode at the top of next reach
 	pu.start_level as startup_depth,
 	pu.stop_level as shutoff_depth,
-	pu.identifier as description, -- description of pump
-	pu.remark as tag -- remark of pump
-FROM qgep_od.vw_overflow_pump as pu
+	overflow.identifier as description, -- description of pump
+	overflow.remark as tag -- remark of pump
+FROM qgep_od.pump pu
+JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text;
