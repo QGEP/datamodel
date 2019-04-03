@@ -16,7 +16,7 @@ SELECT
 	concat(ss.remark, ',', wn.remark) as tag,
 	wn.bottom_level as invert_elev,
 	(co.level-wn.bottom_level) as max_depth,
-	'NO' as seepage_loss 	
+	NULL as ksat -- conductivity 	
 FROM (
 	-- recreate vw_special_structure
 	SELECT ss.obj_id, ws.identifier, ws.remark, fk_main_cover, function
@@ -72,7 +72,7 @@ SELECT
 	concat(ws.remark, ',', wn.remark) as tag,
 	wn.bottom_level as invert_elev,
 	(ii.upper_elevation-wn.bottom_level) as max_depth,
-	'YES' as seepage_loss -- voir capacité d'absoption dans QGEP l/s -> mm/h (besoin de surface utile pour calculer)
+	((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as ksat -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN (
 	-- recreate vw_wastewater_node
