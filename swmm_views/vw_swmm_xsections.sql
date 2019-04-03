@@ -20,5 +20,5 @@ SELECT DISTINCT
 		WHEN pp.profile_type = 3354 THEN 'PARABOLIC'	-- open
 		ELSE 'DUMMY' 									-- unknown
 	END as shape 								
-FROM qgep_od.vw_qgep_reach as re
+FROM qgep_od.reach re
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile 
