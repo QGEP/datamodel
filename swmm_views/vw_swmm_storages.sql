@@ -15,11 +15,23 @@ SELECT
 	ss.identifier as description,
 	concat(ss.remark, ',', wn.remark) as tag,
 	wn.bottom_level as invert_elev,
-	(co.level-wn.bottom_level) as max_depth	
-FROM qgep_od.vw_special_structure as ss
-LEFT JOIN qgep_od.vw_wastewater_node wn on fk_wastewater_structure = ss.obj_id
-LEFT JOIN qgep_od.vw_cover co on co.fk_wastewater_structure = ss.obj_id 
-WHERE ss.function IS IN (
+	(co.level-wn.bottom_level) as max_depth,
+	'NO' as seepage_loss 	
+FROM (
+	-- recreate vw_special_structure
+	SELECT ss.obj_id, ws.identifier, ws.remark, fk_main_cover, function
+	FROM qgep_od.special_structure ss
+    LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
+) as ss
+LEFT JOIN (
+	-- recreate vw_wastewater_node
+	SELECT fk_wastewater_structure, situation_geometry, remark, identifier, bottom_level
+	FROM qgep_od.wastewater_node wn
+    LEFT JOIN qgep_od.wastewater_networkelement we ON we.obj_id::text = wn.obj_id::text
+	) as wn
+on fk_wastewater_structure = ss.obj_id
+LEFT JOIN qgep_od.cover co on ss.fk_main_cover = co.obj_id
+WHERE ss.function IN (
 6397, --"pit_without_drain"
 -- 245, --"drop_structure"
 6398, --"hydrolizing_tank"
@@ -59,18 +71,27 @@ SELECT
 	ws.identifier as description,
 	concat(ws.remark, ',', wn.remark) as tag,
 	wn.bottom_level as invert_elev,
-	(ii.upper_elevation-wn.bottom_level) as max_depth	-- is upper_elevation OK?
+	(ii.upper_elevation-wn.bottom_level) as max_depth,
 	'YES' as seepage_loss -- voir capacité d'absoption dans QGEP l/s -> mm/h (besoin de surface utile pour calculer)
 FROM qgep_od.infiltration_installation as ii
-LEFT JOIN qgep_od.vw_wastewater_node wn on fk_wastewater_structure = ii.obj_id
+LEFT JOIN (
+	-- recreate vw_wastewater_node
+	SELECT fk_wastewater_structure, situation_geometry, remark, identifier, bottom_level
+	FROM qgep_od.wastewater_node wn
+    LEFT JOIN qgep_od.wastewater_networkelement we ON we.obj_id::text = wn.obj_id::text
+	) as wn
+on fk_wastewater_structure = ii.obj_id
 LEFT JOIN qgep_od.wastewater_structure ws on ws.obj_id = ii.obj_id
-WHERE ii.function IS IN (
+WHERE ii.kind IN (
+--3282	--"with_soil_passage"
+--3285	--"without_soil_passage"
+--3279	--"surface_infiltration"
+--277	--"gravel_formation"
+--3284	--"combination_manhole_pipe"
+--3281	--"swale_french_drain_infiltration"
+--3087	--"unknown"
+--3280	--"percolation_over_the_shoulder"
+276		--"infiltration_basin"
+--278	--"adsorbing_well"
+--3283	--"infiltration_pipe_sections_gallery"
 )
-
-
-
-
------------------------------------
--- Default value for view
------------------------------------
--- ALTER VIEW qgep_od.vw_cover ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','cover');
