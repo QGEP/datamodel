@@ -12,25 +12,16 @@ SELECT
 	ss.obj_id as Name,
 	st_x(wn.situation_geometry) as X_coordinate,
 	st_y(wn.situation_geometry) as Y_coordinate,
-	ss.identifier as description,
-	concat(ss.remark, ',', wn.remark) as tag,
+	ws.identifier as description,
+	'special_structure' as tag,
 	wn.bottom_level as invert_elev,
 	(co.level-wn.bottom_level) as max_depth,
 	NULL as ksat -- conductivity 	
-FROM (
-	-- recreate vw_special_structure
-	SELECT ss.obj_id, ws.identifier, ws.remark, fk_main_cover, function
-	FROM qgep_od.special_structure ss
-    LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
-) as ss
-LEFT JOIN (
-	-- recreate vw_wastewater_node
-	SELECT fk_wastewater_structure, situation_geometry, remark, identifier, bottom_level
-	FROM qgep_od.wastewater_node wn
-    LEFT JOIN qgep_od.wastewater_networkelement we ON we.obj_id::text = wn.obj_id::text
-	) as wn
-on fk_wastewater_structure = ss.obj_id
-LEFT JOIN qgep_od.cover co on ss.fk_main_cover = co.obj_id
+FROM qgep_od.special_structure ss
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
+LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 WHERE ss.function IN (
 6397, --"pit_without_drain"
 -- 245, --"drop_structure"
@@ -69,19 +60,14 @@ SELECT
 	st_x(wn.situation_geometry) as X_coordinate,
 	st_y(wn.situation_geometry) as Y_coordinate,
 	ws.identifier as description,
-	concat(ws.remark, ',', wn.remark) as tag,
+	'infiltration_installation' as tag,
 	wn.bottom_level as invert_elev,
 	(ii.upper_elevation-wn.bottom_level) as max_depth,
-	((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as ksat -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
+	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as ksat -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
 FROM qgep_od.infiltration_installation as ii
-LEFT JOIN (
-	-- recreate vw_wastewater_node
-	SELECT fk_wastewater_structure, situation_geometry, remark, identifier, bottom_level
-	FROM qgep_od.wastewater_node wn
-    LEFT JOIN qgep_od.wastewater_networkelement we ON we.obj_id::text = wn.obj_id::text
-	) as wn
-on fk_wastewater_structure = ii.obj_id
-LEFT JOIN qgep_od.wastewater_structure ws on ws.obj_id = ii.obj_id
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
+LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE ii.kind IN (
 --3282	--"with_soil_passage"
 --3285	--"without_soil_passage"
