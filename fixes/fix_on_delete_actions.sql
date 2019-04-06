@@ -1,4 +1,4 @@
-﻿ALTER TABLE qgep_od.cover DROP CONSTRAINT oorel_od_cover_structure_part;
+ALTER TABLE qgep_od.cover DROP CONSTRAINT oorel_od_cover_structure_part;
 ALTER TABLE qgep_od.cover ADD CONSTRAINT oorel_od_cover_structure_part FOREIGN KEY (obj_id)
       REFERENCES qgep_od.structure_part(obj_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE;

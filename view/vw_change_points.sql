@@ -1,4 +1,4 @@
-﻿CREATE VIEW qgep_od.vw_change_points AS
+CREATE VIEW qgep_od.vw_change_points AS
 SELECT
   rp_to.obj_id,
   rp_to.situation_geometry::geometry(POINTZ, :SRID) AS geom,

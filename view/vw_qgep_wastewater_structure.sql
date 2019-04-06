@@ -1,4 +1,4 @@
-﻿-- View: vw_qgep_wastewater_structure
+-- View: vw_qgep_wastewater_structure
 
 BEGIN TRANSACTION;
 

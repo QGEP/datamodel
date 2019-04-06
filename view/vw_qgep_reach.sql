@@ -1,4 +1,4 @@
-﻿
+
 DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 CREATE OR REPLACE VIEW qgep_od.vw_qgep_reach AS
@@ -97,7 +97,7 @@ BEGIN
   -- Synchronize geometry with level
   NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
   ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
-  
+
   NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
   ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
 
@@ -312,7 +312,7 @@ BEGIN
   IF NEW.rp_from_level <> OLD.rp_from_level OR (NEW.rp_from_level IS NULL AND OLD.rp_from_level IS NOT NULL) OR (NEW.rp_from_level IS NOT NULL AND OLD.rp_from_level IS NULL) THEN
     NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
     ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
-  ELSE 
+  ELSE
     IF ST_Z(ST_StartPoint(NEW.progression_geometry)) <> ST_Z(ST_StartPoint(OLD.progression_geometry)) THEN
       NEW.rp_from_level = NULLIF(ST_Z(ST_StartPoint(NEW.progression_geometry)),'NaN');
     END IF;
@@ -322,7 +322,7 @@ BEGIN
   IF NEW.rp_to_level <> OLD.rp_to_level OR (NEW.rp_to_level IS NULL AND OLD.rp_to_level IS NOT NULL) OR (NEW.rp_to_level IS NOT NULL AND OLD.rp_to_level IS NULL) THEN
     NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
     ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
-  ELSE 
+  ELSE
     IF ST_Z(ST_EndPoint(NEW.progression_geometry)) <> ST_Z(ST_EndPoint(OLD.progression_geometry)) THEN
       NEW.rp_to_level = NULLIF(ST_Z(ST_EndPoint(NEW.progression_geometry)),'NaN');
     END IF;
@@ -426,7 +426,7 @@ BEGIN
       , wall_roughness = NEW.wall_roughness
       , fk_pipe_profile = NEW.fk_pipe_profile
     WHERE obj_id = OLD.obj_id;
-    
+
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -1,4 +1,4 @@
-﻿DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
+DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
 
 CREATE VIEW qgep_od.vw_catchment_area_connections AS
 SELECT
