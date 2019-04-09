@@ -79,19 +79,23 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/50_maintenance_zones.sq
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.access_aid qgep_od.structure_part --view-name vw_access_aid
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.backflow_prevention qgep_od.structure_part --view-name vw_backflow_prevention
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.benching qgep_od.structure_part --view-name vw_benching
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.cover qgep_od.structure_part --view-name vw_cover
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.dryweather_downspout qgep_od.structure_part --view-name vw_dryweather_downspout
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.dryweather_flume qgep_od.structure_part --view-name vw_dryweather_flume
 
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.channel qgep_od.wastewater_structure --view-name vw_channel
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.manhole qgep_od.wastewater_structure --view-name vw_manhole
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.discharge_point qgep_od.wastewater_structure --view-name vw_discharge_point
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.special_structure qgep_od.wastewater_structure --view-name vw_special_structure
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_cover.sql
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.reach qgep_od.wastewater_networkelement --view-name vw_reach
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_node qgep_od.wastewater_networkelement --view-name vw_wastewater_node
+
+
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_maintenance_examination.py ${PGSERVICE})"
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${PGSERVICE})"
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_discharge_point.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_dryweather_downspout.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_dryweather_flume.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_manhole.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_reach.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_special_structure.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_wastewater_node.sql
+
+
 # psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_cover.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_qgep_wastewater_structure.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_reach.sql
