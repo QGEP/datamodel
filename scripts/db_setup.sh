@@ -76,10 +76,12 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/fixes/fix_od_file.sql
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/50_maintenance_zones.sql
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_access_aid.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_benching.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_backflow_prevention.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_channel.sql
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.access_aid qgep_od.structure_part --view-name vw_access_aid
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.backflow_prevention qgep_od.structure_part --view-name vw_backflow_prevention
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.benching qgep_od.structure_part --view-name vw_benching
+
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.channel qgep_od.wastewater_structure --view-name vw_channel
+
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_cover.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_maintenance_examination.py ${PGSERVICE})"
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${PGSERVICE})"
