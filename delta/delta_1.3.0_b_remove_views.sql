@@ -1,4 +1,4 @@
-DROP RULE _RETURN ON qgep_od.vw_access_aid;
+
 DROP VIEW IF EXISTS qgep_od.vw_access_aid;
 DROP FUNCTION IF EXISTS qgep_od.vw_access_aid_insert();
 
