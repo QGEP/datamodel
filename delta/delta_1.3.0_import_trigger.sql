@@ -1,9 +1,9 @@
+-- create trigger functions and triggers for quarantine table
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
 DECLARE
-  _SRID int := coalesce(TG_ARGV[0]::int, 2056);
-  multi_situation_geometry geometry;
+  multi_situation_geometry geometry(MULTIPOINTZ,%(SRID)s);
 BEGIN
-  multi_situation_geometry := st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ, _SRID);
+  multi_situation_geometry := st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ, %(SRID)s);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
@@ -134,22 +134,3 @@ BEGIN
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
-
-CREATE TRIGGER after_update_try_structure_update
-  AFTER UPDATE
-  ON qgep_import.manhole_quarantine
-  FOR EACH ROW
-  WHEN ( ( NEW.structure_okay IS NOT TRUE )
-  AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
-  AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(%(SRID)s);
-
-DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
-
-CREATE TRIGGER after_insert_try_structure_update
-  AFTER INSERT
-  ON qgep_import.manhole_quarantine
-  FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(%(SRID)s);
