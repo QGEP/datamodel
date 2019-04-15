@@ -6,7 +6,7 @@ CREATE TABLE qgep_import.manhole_quarantine
 (
   obj_id character varying(16),
   identifier character varying(20),
-  situation_geometry geometry(POINTZ,:SRID),
+  situation_geometry geometry(POINTZ, :SRID),
   co_shape integer,
   co_diameter smallint,
   co_material integer,
@@ -53,14 +53,11 @@ CREATE TABLE qgep_import.manhole_quarantine
 );
 
 -- create trigger functions and triggers for quarantine table
-DO $DO$
-BEGIN
-EXECUTE format($TRIGGER$
-CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
+CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update(_SRID integer) RETURNS trigger AS $BODY$
 DECLARE
-  multi_situation_geometry geometry(MULTIPOINTZ,%1$s);
+  multi_situation_geometry geometry(MULTIPOINTZ, _SRID);
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ,%1$s);
+  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ, _SRID);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
@@ -191,9 +188,6 @@ BEGIN
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
-$TRIGGER$, :SRID );
-END
-$DO$;
 
 
 DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
@@ -205,7 +199,7 @@ CREATE TRIGGER after_update_try_structure_update
   WHEN ( ( NEW.structure_okay IS NOT TRUE )
   AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
   AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(:SRID);
 
 DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
 
@@ -213,7 +207,7 @@ CREATE TRIGGER after_insert_try_structure_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(:SRID);
 
 -- Some information:
 -- 1. new lets 0 - old lets 0 -> do nothing
