@@ -134,3 +134,22 @@ BEGIN
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
+
+CREATE TRIGGER after_update_try_structure_update
+  AFTER UPDATE
+  ON qgep_import.manhole_quarantine
+  FOR EACH ROW
+  WHEN ( ( NEW.structure_okay IS NOT TRUE )
+  AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
+  AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE ) )
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(%(SRID)s);
+
+DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
+
+CREATE TRIGGER after_insert_try_structure_update
+  AFTER INSERT
+  ON qgep_import.manhole_quarantine
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(%(SRID)s);
