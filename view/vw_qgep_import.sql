@@ -3,7 +3,7 @@
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
     ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ,:SRID) AS situation_geometry,
+    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ, :SRID) AS situation_geometry,
     ws.co_shape,
     ws.co_diameter,
     ws.co_material,
@@ -164,7 +164,6 @@ CREATE TRIGGER on_mutation_make_insert_or_delete
   EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine_or_delete();
 
 -- create trigger functions and triggers for quarantine table
-SELECT set_config('qgep.srid', , false);
 DO $DO$
 BEGIN
 EXECUTE format($TRIGGER$
@@ -303,7 +302,7 @@ BEGIN
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
-$TRIGGER$, current_setting('qgep.srid'));
+$TRIGGER$, :SRID::text );
 END
 $DO$;
 
