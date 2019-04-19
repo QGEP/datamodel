@@ -97,7 +97,9 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${
 
 
 # psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_cover.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_qgep_wastewater_structure.sql
+# PYTHONPATH=~/Documents/pirogue PATH=~/Documents/pirogue/scripts:$PATH PGSERVICE=pg_qgep pirogue merge ./view/vw_qgep_wastewater_structure.yaml  -v int SRID 2056
+PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_qgep_wastewater_structure.yaml -v int SRID 2056
+
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_reach.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_file.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_oo_overflow.py ${PGSERVICE} ${SRID})"

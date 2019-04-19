@@ -1,0 +1,75 @@
+
+view_name: vw_qgep_wastewater_structure
+view_schema: qgep_od
+
+table: >
+  ( SELECT ws.obj_id,
+    ST_Collect(co.situation_geometry)::geometry(MULTIPOINTZ, %(SRID)s) AS situation_geometry,
+    CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
+    FROM qgep_od.wastewater_structure ws
+    FULL OUTER JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
+    LEFT JOIN qgep_od.cover co ON co.obj_id = sp.obj_id
+    RIGHT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure = ws.obj_id
+    RIGHT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ne.obj_id
+    GROUP BY ws.obj_id )
+
+alias: aggregated_wastewater_structure
+columns:
+  - situation_geometry
+key: obj_id
+fkey_is_pkey: True
+
+joins:
+  wastewater_structure:
+    table: qgep_od.wastewater_structure
+    short_alias: ws
+    is_type: False
+
+  main_co:
+    table: qgep_od.cover
+    referenced_by: wastewater_structure
+    is_type: False
+    skip_columns:
+      - situation_geometry
+
+  main_co_sp:
+    table: qgep_od.structure_part
+    referenced_by: wastewater_structure
+    referencing_key: fk_main_cover
+    is_type: False
+    only_columns:
+      - identifier
+
+  manhole:
+    table: qgep_od.manhole
+    referenced_by: wastewater_structure
+    short_alias: ma
+    is_type: True
+    prefix: ma_
+
+  special_structure:
+    table: qgep_od.special_structure
+    referenced_by: wastewater_structure
+    short_alias: ss
+    is_type: True
+
+  discharge_point:
+    table: qgep_od.discharge_point
+    referenced_by: wastewater_structure
+    short_alias: dp
+    is_type: True
+
+  infiltration_installation:
+    table: qgep_od.infiltration_installation
+    referenced_by: wastewater_structure
+    short_alias: ii
+    is_type: True
+
+  wastewater_node:
+    table: qgep_od.vw_wastewater_node
+    short_alias: wn
+    fkey: obj_id
+    referenced_by_key: wn_obj_id
+    is_type: False
+    skip_columns:
+      - situation_geometry
