@@ -14,6 +14,7 @@ table: >
     GROUP BY ws.obj_id )
 
 alias: aggregated_wastewater_structure
+type_name: ws_type
 columns:
   - situation_geometry
 key: obj_id
@@ -24,6 +25,23 @@ joins:
     table: qgep_od.wastewater_structure
     short_alias: ws
     is_type: False
+    columns_on_top:
+      - fk_owner
+      - status
+    skip_columns:
+      - fk_main_cover
+      - _label
+      - _usage_current
+      - _function_hierarchic
+
+  main_co_sp:
+    table: qgep_od.structure_part
+    referenced_by: wastewater_structure
+    referencing_key: fk_main_cover
+    prefix: co_
+    is_type: False
+    only_columns:
+      - identifier
 
   main_co:
     table: qgep_od.cover
@@ -31,14 +49,9 @@ joins:
     is_type: False
     skip_columns:
       - situation_geometry
-
-  main_co_sp:
-    table: qgep_od.structure_part
-    referenced_by: wastewater_structure
-    referencing_key: fk_main_cover
-    is_type: False
-    only_columns:
-      - identifier
+    prefix: co_
+    remap_columns:
+      cover_shape: co_shape
 
   manhole:
     table: qgep_od.manhole
@@ -46,12 +59,17 @@ joins:
     short_alias: ma
     is_type: True
     prefix: ma_
+    columns_on_top:
+      - function
 
   special_structure:
     table: qgep_od.special_structure
     referenced_by: wastewater_structure
     short_alias: ss
+    prefix: ss_
     is_type: True
+    columns_on_top:
+      - function
 
   discharge_point:
     table: qgep_od.discharge_point
