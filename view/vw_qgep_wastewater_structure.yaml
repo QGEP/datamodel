@@ -2,7 +2,7 @@
 view_name: vw_qgep_wastewater_structure
 view_schema: qgep_od
 
-table: >
+sql_definition: >
   ( SELECT ws.obj_id,
     ST_Collect(co.situation_geometry)::geometry(MULTIPOINTZ, %(SRID)s) AS situation_geometry,
     CASE WHEN COUNT(wn.obj_id) = 1 THEN MIN(wn.obj_id) ELSE NULL END AS wn_obj_id
@@ -19,6 +19,8 @@ columns:
   - situation_geometry
 key: obj_id
 fkey_is_pkey: True
+
+insert_trigger_pre: NEW.identifier = COALESCE(NEW.identifier, NEW.obj_id);
 
 joins:
   wastewater_structure:
