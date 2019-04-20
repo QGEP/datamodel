@@ -39,6 +39,12 @@ joins:
     remap_columns:
       _usage_current: _channel_usage_current
       _function_hierarchic: _channel_function_hierarchic
+    columns_no_insert_or_update:
+      - _usage_current
+      - _function_hierarchic
+      - _label
+      - _depth
+
 
 
   main_co_sp:
