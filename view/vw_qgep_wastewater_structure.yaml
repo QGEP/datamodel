@@ -20,7 +20,17 @@ columns:
 key: obj_id
 fkey_is_pkey: True
 
-insert_trigger_pre: NEW.identifier = COALESCE(NEW.identifier, NEW.obj_id);
+insert_trigger:
+  pre: NEW.identifier = COALESCE(NEW.identifier, NEW.obj_id);
+  post: >
+    UPDATE qgep_od.wastewater_structure
+    SET fk_main_cover = NEW.co_obj_id
+    WHERE obj_id = NEW.obj_id;
+
+update_trigger:
+  declare:
+    - dx float
+    - dy float
 
 joins:
   wastewater_structure:
@@ -59,6 +69,7 @@ joins:
     insert_values:
       obj_id: NEW.co_obj_id
       identifier: COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
+      last_modification: NOW()
 
   main_co:
     table: qgep_od.cover
@@ -82,6 +93,8 @@ joins:
       - function
     remap_columns:
       _orientation: ma_orientation
+    columns_no_insert_or_update:
+      - _orientation
 
   special_structure:
     table: qgep_od.special_structure
@@ -121,4 +134,5 @@ joins:
       fk_provider: COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
       fk_dataowner: COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
       situation_geometry: ST_GeometryN( NEW.situation_geometry, 1 )
+      last_modification: NOW()
 
