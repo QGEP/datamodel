@@ -144,25 +144,9 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
                                      columns_on_top=['identifier']),
            )
 
-print(view_sql)
-
-args="""
-pg_cur: cursor,
-                   table_schema: str,
-                   table_name: str,
-                   table_alias: str=None,
-                   remove_pkey: bool=True,
-                   skip_columns: list=[],
-                   remap_dict: dict = {},
-                   prefix: str= None,
-                   indent: int=2
-                   """
-
 cursor.execute(view_sql, variables)
 
-
 trigger_insert_sql="""
--- INSERT function
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_INSERT()
   RETURNS trigger AS
 $BODY$
@@ -196,51 +180,10 @@ BEGIN
 {insert_wn}
 
 {insert_vw_cover}
-  INSERT INTO qgep_od.vw_cover(
-      obj_id
-    , brand
-    , cover_shape
-    , diameter
-    , fastening
-    , level
-    , material
-    , positional_accuracy
-    , situation_geometry
-    , sludge_bucket
-    , venting
-    , identifier
-    , remark
-    , renovation_demand
-    , last_modification
-    , fk_dataowner
-    , fk_provider
-    , fk_wastewater_structure
-  )
-  VALUES
-  (
-      NEW.co_obj_id
-    , NEW.co_brand
-    , NEW.co_shape
-    , NEW.co_diameter
-    , NEW.co_fastening
-    , NEW.co_level
-    , NEW.co_material
-    , NEW.co_positional_accuracy
-    , ST_GeometryN( NEW.situation_geometry, 1 )
-    , NEW.co_sludge_bucket
-    , NEW.co_venting
-    , COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
-    , NEW.co_remark
-    , NEW.co_renovation_demand
-    , NOW()
-    , NEW.fk_dataowner
-    , NEW.fk_provider
-    , NEW.obj_id
-  );
 
   UPDATE qgep_od.wastewater_structure
-  SET fk_main_cover = NEW.co_obj_id
-  WHERE obj_id = NEW.obj_id;
+    SET fk_main_cover = NEW.co_obj_id
+    WHERE obj_id = NEW.obj_id;
 
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
@@ -298,11 +241,11 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     remove_pkey=False,
                                     indent=6,
                                     skip_columns=[],
-                                    insert_values={'identifier': 'COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)',
+                                    insert_values={'identifier': "COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)",
                                                    'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
                                                    'last_modification': 'NOW()',
-                                                   'fk_provider': 'COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)',
-                                                   'fk_dataowner': 'COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)',
+                                                   'fk_provider': "COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)",
+                                                   'fk_dataowner': "COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)",
                                                    'fk_wastewater_structure': 'NEW.obj_id'}),
            insert_vw_cover=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
@@ -313,32 +256,26 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     remove_pkey=False,
                                     indent=6,
                                     skip_columns=[],
-                                    insert_values={'identifier': 'COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)',
+                                    remap_columns={'cover_shape': 'co_shape'},
+                                    insert_values={'identifier': "COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)",
                                                    'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
                                                    'last_modification': 'NOW()',
-                                                   'fk_provider': 'COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)',
-                                                   'fk_dataowner': 'COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)',
+                                                   'fk_provider': 'NEW.fk_provider',
+                                                   'fk_dataowner': 'NEW.fk_dataowner',
                                                    'fk_wastewater_structure': 'NEW.obj_id'})
            )
 
-print(trigger_insert_sql)
+cursor.execute(trigger_insert_sql)
 
-
-sql = """
-/**************************************************************
- * UPDATE
- *************************************************************/
-SELECT set_config('qgep.srid', :SRID::text, false);
-DO $DO$
-BEGIN
-EXECUTE format($TRIGGER$
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
+update_trigger_sql = """
+REATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
   dx float;
   dy float;
 BEGIN
+{update_cover}
     UPDATE qgep_od.cover
       SET
         brand = NEW.co_brand,
@@ -541,22 +478,20 @@ BEGIN
   END IF;
 
   RETURN NEW;
-END; $BODY$ LANGUAGE plpgsql VOLATILE;
-$TRIGGER$, current_setting('qgep.srid'));
-END
-$DO$;
+END; 
+$BODY$ 
+LANGUAGE plpgsql;
+
 
 
 DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep_wastewater_structure;
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_UPDATE();
+""".format(update_cover='')
 
 
-/**************************************************************
- * DELETE
- *************************************************************/
-
+trigger_delete_sql="""
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_DELETE()
   RETURNS trigger AS
 $BODY$
