@@ -4,7 +4,7 @@
 
 import os
 import psycopg2
-from pirogue.utils import select_columns, insert_command
+from pirogue.utils import select_columns, insert_command, update_command
 
 pg_service = os.getenv('PGSERVICE')
 SRID = os.getenv('SRID')
@@ -488,8 +488,17 @@ DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_UPDATE();
-""".format(update_cover='')
+""".format(update_cover=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='cover',
+                                    table_alias='co',
+                                    prefix='co_',
+                                    indent=6,
+                                    skip_columns=[],
+                                    remap_columns={'cover_shape': 'co_shape'},
+                                    update_values={'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )'}))
 
+print(update_trigger_sql)
 
 trigger_delete_sql="""
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_DELETE()
