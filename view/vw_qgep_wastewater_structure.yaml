@@ -36,6 +36,7 @@ joins:
       - _function_hierarchic
     skip_columns:
       - fk_main_cover
+      - detail_geometry_geometry
     remap_columns:
       _usage_current: _channel_usage_current
       _function_hierarchic: _channel_function_hierarchic
@@ -45,8 +46,6 @@ joins:
       - _label
       - _depth
 
-
-
   main_co_sp:
     table: qgep_od.structure_part
     referenced_by: wastewater_structure
@@ -55,6 +54,11 @@ joins:
     is_type: False
     columns:
       - identifier
+      - remark
+      - renovation_demand
+    insert_values:
+      obj_id: NEW.co_obj_id
+      identifier: COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)
 
   main_co:
     table: qgep_od.cover
@@ -65,6 +69,8 @@ joins:
     prefix: co_
     remap_columns:
       cover_shape: co_shape
+    insert_values:
+      situation_geometry: ST_GeometryN( NEW.situation_geometry, 1 )
 
   manhole:
     table: qgep_od.manhole
@@ -109,3 +115,10 @@ joins:
     is_type: False
     skip_columns:
       - situation_geometry
+      - fk_hydr_geometry
+    insert_values:
+      identifier: COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)
+      fk_provider: COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)
+      fk_dataowner: COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)
+      situation_geometry: ST_GeometryN( NEW.situation_geometry, 1 )
+
