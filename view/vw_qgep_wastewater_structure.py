@@ -494,7 +494,7 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_
                                     table_alias='co',
                                     prefix='co_',
                                     indent=6,
-                                    skip_columns=[],
+                                    skip_columns=['situation_geometry'],
                                     remap_columns={'cover_shape': 'co_shape'},
                                     update_values={'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )'}))
 
