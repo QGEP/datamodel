@@ -268,61 +268,16 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
 cursor.execute(trigger_insert_sql)
 
 update_trigger_sql = """
-REATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
+CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
   dx float;
   dy float;
 BEGIN
-{update_cover}
-    UPDATE qgep_od.cover
-      SET
-        brand = NEW.co_brand,
-        cover_shape = new.co_shape,
-        diameter = new.co_diameter,
-        fastening = new.co_fastening,
-        level = new.co_level,
-        material = new.co_material,
-        positional_accuracy = new.co_positional_accuracy,
-        sludge_bucket = new.co_sludge_bucket,
-        venting = new.co_venting
-    WHERE cover.obj_id::text = OLD.co_obj_id::text;
-
-    UPDATE qgep_od.structure_part
-      SET
-        identifier = new.co_identifier,
-        remark = new.co_remark,
-        renovation_demand = new.co_renovation_demand,
-        last_modification = new.last_modification,
-        fk_dataowner = new.fk_dataowner,
-        fk_provider = new.fk_provider
-    WHERE structure_part.obj_id::text = OLD.co_obj_id::text;
-
-    UPDATE qgep_od.wastewater_structure
-      SET
-        obj_id = NEW.obj_id,
-        identifier = NEW.identifier,
-        accessibility = NEW.accessibility,
-        contract_section = NEW.contract_section,
-        financing = NEW.financing,
-        gross_costs = NEW.gross_costs,
-        inspection_interval = NEW.inspection_interval,
-        location_name = NEW.location_name,
-        records = NEW.records,
-        remark = NEW.remark,
-        renovation_necessity = NEW.renovation_necessity,
-        replacement_value = NEW.replacement_value,
-        rv_base_year = NEW.rv_base_year,
-        rv_construction_type = NEW.rv_construction_type,
-        status = NEW.status,
-        structure_condition = NEW.structure_condition,
-        subsidies = NEW.subsidies,
-        year_of_construction = NEW.year_of_construction,
-        year_of_replacement = NEW.year_of_replacement,
-        fk_owner = NEW.fk_owner,
-        fk_operator = NEW.fk_operator
-     WHERE wastewater_structure.obj_id::text = OLD.obj_id::text;
+  {update_co}
+  {update_sp} 
+  {update_ws}
 
   IF OLD.ws_type <> NEW.ws_type THEN
     CASE
@@ -344,72 +299,21 @@ BEGIN
 
   CASE
     WHEN NEW.ws_type = 'manhole' THEN
-      UPDATE qgep_od.manhole
-      SET
-        dimension1 = NEW.ma_dimension1,
-        dimension2 = NEW.ma_dimension2,
-        function = NEW.ma_function,
-        material = NEW.ma_material,
-        surface_inflow = NEW.ma_surface_inflow
-      WHERE obj_id = OLD.obj_id;
-
+      {update_ma}  
+     
     WHEN NEW.ws_type = 'special_structure' THEN
-      UPDATE qgep_od.special_structure
-      SET
-        bypass = NEW.ss_bypass,
-        emergency_spillway = NEW.ss_emergency_spillway,
-        function = NEW.ss_function,
-        stormwater_tank_arrangement = NEW.ss_stormwater_tank_arrangement,
-        upper_elevation = NEW.ss_upper_elevation
-      WHERE obj_id = OLD.obj_id;
+      {update_ss}  
 
     WHEN NEW.ws_type = 'discharge_point' THEN
-      UPDATE qgep_od.discharge_point
-      SET
-        highwater_level = NEW.dp_highwater_level,
-        relevance = NEW.dp_relevance,
-        terrain_level = NEW.dp_terrain_level,
-        upper_elevation = NEW.dp_upper_elevation,
-        waterlevel_hydraulic = NEW.dp_waterlevel_hydraulic
-      WHERE obj_id = OLD.obj_id;
+      {update_dp}  
 
     WHEN NEW.ws_type = 'infiltration_installation' THEN
-      UPDATE qgep_od.infiltration_installation
-      SET
-        absorption_capacity = NEW.ii_absorption_capacity,
-        defects = NEW.ii_defects,
-        dimension1 = NEW.ii_dimension1,
-        dimension2 = NEW.ii_dimension2,
-        distance_to_aquifer = NEW.ii_distance_to_aquifer,
-        effective_area = NEW.ii_effective_area,
-        emergency_spillway = NEW.ii_emergency_spillway,
-        kind = NEW.ii_kind,
-        labeling = NEW.ii_labeling,
-        seepage_utilization = NEW.ii_seepage_utilization,
-        upper_elevation = NEW.ii_upper_elevation,
-        vehicle_access = NEW.ii_vehicle_access,
-        watertightness = NEW.ii_watertightness
-      WHERE obj_id = OLD.obj_id;
+      {update_ii}
+ 
     ELSE -- do nothing
   END CASE;
-
-  UPDATE qgep_od.vw_wastewater_node NO1
-    SET
-    backflow_level = NEW.wn_backflow_level
-    , bottom_level = NEW.wn_bottom_level
-    -- , situation_geometry = NEW.situation_geometry -- Geometry is handled separately below
-    , identifier = NEW.wn_identifier
-    , remark = NEW.wn_remark
-    -- , last_modification -- Handled by triggers
-    , fk_dataowner = NEW.fk_dataowner
-    , fk_provider = NEW.fk_provider
-    -- Only update if there is a single wastewater node on this structure
-    WHERE fk_wastewater_structure = NEW.obj_id AND
-    (
-      SELECT COUNT(*)
-      FROM qgep_od.vw_wastewater_node NO2
-      WHERE NO2.fk_wastewater_structure = NO1.fk_wastewater_structure
-    ) = 1;
+  
+  {update_wn}
 
   -- Cover geometry has been moved
   IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
@@ -422,7 +326,7 @@ BEGIN
     SET situation_geometry = ST_SetSRID( ST_MakePoint(
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
     ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(WN.situation_geometry), ST_Y(WN.situation_geometry)), dx, dy )),
-    ST_Z(WN.situation_geometry)), %1$s )
+    ST_Z(WN.situation_geometry)), %(SRID)s )
     WHERE obj_id IN
     (
       SELECT obj_id FROM qgep_od.wastewater_networkelement
@@ -434,7 +338,7 @@ BEGIN
     SET situation_geometry = ST_SetSRID( ST_MakePoint(
     ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
     ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(CO.situation_geometry), ST_Y(CO.situation_geometry)), dx, dy )),
-    ST_Z(CO.situation_geometry)), %1$s )
+    ST_Z(CO.situation_geometry)), %(SRID)s )
     WHERE obj_id IN
     (
       SELECT obj_id FROM qgep_od.structure_part
@@ -450,7 +354,7 @@ BEGIN
         ST_SetSRID( ST_MakePoint(
             ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
             ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
-            ST_Z(ST_PointN(RE.progression_geometry, 1))), %1$s )
+            ST_Z(ST_PointN(RE.progression_geometry, 1))), %(SRID)s )
       ) )
     WHERE fk_reach_point_from IN
     (
@@ -467,7 +371,7 @@ BEGIN
         ST_SetSRID( ST_MakePoint(
             ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
             ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
-            ST_Z(ST_PointN(RE.progression_geometry, 1))), %1$s )
+            ST_Z(ST_PointN(RE.progression_geometry, 1))), %(SRID)s )
       ) )
     WHERE fk_reach_point_to IN
     (
@@ -488,17 +392,94 @@ DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_UPDATE();
-""".format(update_cover=update_command(pg_cur=cursor,
+""".format(update_co=update_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='cover',
                                     table_alias='co',
                                     prefix='co_',
                                     indent=6,
                                     skip_columns=['situation_geometry'],
-                                    remap_columns={'cover_shape': 'co_shape'},
-                                    update_values={'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )'}))
+                                    remap_columns={'cover_shape': 'co_shape'}),
+           update_sp=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='structure_part',
+                                    table_alias='sp',
+                                    prefix='co_',
+                                    indent=6,
+                                    skip_columns=['fk_wastewater_structure'],
+                                    update_values={'last_modification': 'NEW.last_modification',
+                                                   'fk_dataowner': 'NEW.fk_dataowner',
+                                                   'fk_provider': 'NEW.fk_provider'}),
+           update_ws=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='wastewater_structure',
+                                    table_alias='ws',
+                                    update_pkey=True,
+                                    indent=6,
+                                    skip_columns=['detail_geometry_geometry', 'last_modification',
+                                                  '_usage_current', '_function_hierarchic', '_label',
+                                                  'fk_main_cover', '_depth'],
+                                    update_values={}),
+           update_ma=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='manhole',
+                                    table_alias='ws',
+                                    prefix='ma_',
+                                    update_pkey=False,
+                                    indent=6,
+                                    skip_columns=['_orientation'],
+                                    remap_columns={'obj_id': 'obj_id'}),
+           update_ss=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='special_structure',
+                                    table_alias='ss',
+                                    prefix='ss_',
+                                    update_pkey=False,
+                                    indent=6,
+                                    skip_columns=[],
+                                    remap_columns={'obj_id': 'obj_id'}),
+           update_dp=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='discharge_point',
+                                    table_alias='dp',
+                                    prefix='dp_',
+                                    update_pkey=False,
+                                    indent=6,
+                                    skip_columns=[],
+                                    remap_columns={'obj_id': 'obj_id'}),
+           update_ii=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='infiltration_installation',
+                                    table_alias='ii',
+                                    prefix='ii_',
+                                    update_pkey=False,
+                                    indent=6,
+                                    skip_columns=[],
+                                    remap_columns={'obj_id': 'obj_id'}),
+           update_wn=update_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='vw_wastewater_node',
+                                    table_type='view',
+                                    table_alias='no1',
+                                    prefix='wn_',
+                                    update_pkey=False,
+                                    indent=6,
+                                    skip_columns=['obj_id', 'situation_geometry',
+                                                  'last_modification', 'fk_wastewater_structure'],
+                                    remap_columns={},
+                                    where_clause="""fk_wastewater_structure = NEW.obj_id AND
+                                    (
+                                      SELECT COUNT(*)
+                                      FROM qgep_od.vw_wastewater_node no2
+                                      WHERE no2.fk_wastewater_structure = no1.fk_wastewater_structure
+                                    ) = 1""")
+           )
 
-print(update_trigger_sql)
+
+
+
+
+cursor.execute(update_trigger_sql, variables)
 
 trigger_delete_sql="""
 CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_DELETE()
