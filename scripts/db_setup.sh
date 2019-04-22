@@ -98,7 +98,6 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${
 
 # psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_cover.sql
 
-# export PYTHONPATH=~/Documents/pirogue && export PATH=~/Documents/pirogue/scripts:$PATH
 PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_wastewater_structure.py
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_reach.sql
