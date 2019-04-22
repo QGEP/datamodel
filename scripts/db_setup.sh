@@ -93,6 +93,8 @@ PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_node qgep_od.wastewater_n
 
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_maintenance_examination.py ${PGSERVICE})"
+
+
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_damage.py ${PGSERVICE})"
 
 
