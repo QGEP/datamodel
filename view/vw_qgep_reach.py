@@ -130,7 +130,7 @@ END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
+CREATE TRIGGER vw_qgep_reach_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_reach_insert();
 """.format(rp_from=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
@@ -189,7 +189,7 @@ CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reac
 cursor.execute(trigger_insert_sql)
 
 trigger_update_sql="""
-CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_reach_on_update()
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_reach_update()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -276,17 +276,17 @@ END; $BODY$
 cursor.execute(trigger_update_sql)
 
 trigger_delete_sql="""
-CREATE TRIGGER vw_qgep_reach_on_update
+CREATE TRIGGER vw_qgep_reach_update
   INSTEAD OF UPDATE
   ON qgep_od.vw_qgep_reach
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_od.ft_vw_qgep_reach_on_update();
+  EXECUTE PROCEDURE qgep_od.ft_vw_qgep_reach_update();
 
 
 -- REACH DELETE
--- Rule: vw_qgep_reach_on_delete()
+-- Rule: vw_qgep_reach_delete()
 
-CREATE OR REPLACE RULE vw_qgep_reach_on_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
+CREATE OR REPLACE RULE vw_qgep_reach_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
   DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
 );
 

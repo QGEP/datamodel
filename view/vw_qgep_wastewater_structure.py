@@ -191,9 +191,9 @@ BEGIN
   RETURN NEW;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_INSERT ON qgep_od.vw_qgep_wastewater_structure;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_INSERT ON qgep_od.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_wastewater_structure
+CREATE TRIGGER vw_qgep_wastewater_structure_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_INSERT();
 """.format(insert_ws=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
@@ -210,7 +210,8 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='ma_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=['_orientation']),
+                                    skip_columns=['_orientation'],
+                                    remap_columns={'obj_id': 'obj_id'}),
            insert_ss=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='special_structure',
@@ -218,7 +219,7 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='ss_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=[]),
+                                    remap_columns={'obj_id': 'obj_id'}),
            insert_dp=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='discharge_point',
@@ -226,7 +227,7 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='dp_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=[]),
+                                    remap_columns={'obj_id': 'obj_id'}),
            insert_ii=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='infiltration_installation',
@@ -234,7 +235,7 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='ii_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=[]),
+                                    remap_columns={'obj_id': 'obj_id'}),
            insert_wn=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='vw_wastewater_node',
@@ -243,7 +244,6 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='wn_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=[],
                                     insert_values={'identifier': "COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)",
                                                    'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
                                                    'last_modification': 'NOW()',
@@ -258,7 +258,6 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
                                     prefix='co_',
                                     remove_pkey=False,
                                     indent=6,
-                                    skip_columns=[],
                                     remap_columns={'cover_shape': 'co_shape'},
                                     insert_values={'identifier': "COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)",
                                                    'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
@@ -391,9 +390,9 @@ LANGUAGE plpgsql;
 
 
 
-DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep_wastewater_structure;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_UPDATE ON qgep_od.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
+CREATE TRIGGER vw_qgep_wastewater_structure_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_UPDATE();
 """.format(update_co=update_command(pg_cur=cursor,
                                     table_schema='qgep_od',
@@ -490,9 +489,9 @@ BEGIN
 RETURN OLD;
 END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_DELETE ON qgep_od.vw_qgep_wastewater_structure;
+DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_DELETE ON qgep_od.vw_qgep_wastewater_structure;
 
-CREATE TRIGGER vw_qgep_wastewater_structure_ON_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_wastewater_structure
+CREATE TRIGGER vw_qgep_wastewater_structure_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_wastewater_structure
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_DELETE();
 """
 cursor.execute(trigger_delete_sql, variables)
