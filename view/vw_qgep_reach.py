@@ -81,7 +81,7 @@ SELECT
                                   indent=4,
                                   skip_columns=['detail_geometry_geometry', 'status', 'fk_owner',
                                                 'fk_dataowner', 'fk_provider', '_usage_current',
-                                                '_function_hierarchic', '_label', '_depth']),
+                                                '_function_hierarchic', '_label', '_depth', 'fk_main_cover']),
            rp_from_cols=select_columns(pg_cur=cursor,
                                        table_schema='qgep_od',
                                        table_name='reach_point',
@@ -107,7 +107,7 @@ trigger_insert_sql="""
 -- REACH INSERT
 -- Function: vw_qgep_reach_insert()
 
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_insert()
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_reach_insert()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -118,195 +118,12 @@ BEGIN
   NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
   ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
 
-  INSERT INTO qgep_od.reach_point(
-            obj_id
-            , elevation_accuracy
-            , identifier
-            , level
-            , outlet_shape
-            , position_of_connection
-            , remark
-            , situation_geometry
-            , last_modification
-            , fk_dataowner
-            , fk_provider
-            , fk_wastewater_networkelement
-          )
-    VALUES (
-            COALESCE(NEW.rp_from_obj_id,qgep_sys.generate_oid('qgep_od','reach_point')) -- obj_id
-            , NEW.rp_from_elevation_accuracy -- elevation_accuracy
-            , NEW.rp_from_identifier -- identifier
-            , NEW.rp_from_level -- level
-            , NEW.rp_from_outlet_shape -- outlet_shape
-            , NEW.rp_from_position_of_connection -- position_of_connection
-            , NEW.rp_from_remark -- remark
-            , ST_StartPoint(NEW.progression_geometry) -- situation_geometry
-            , NEW.rp_from_last_modification -- last_modification
-            , NEW.rp_from_fk_dataowner -- fk_dataowner
-            , NEW.rp_from_fk_provider -- fk_provider
-            , NEW.rp_from_fk_wastewater_networkelement -- fk_wastewater_networkelement
-          )
-    RETURNING obj_id INTO NEW.rp_from_obj_id;
-
-
-    INSERT INTO qgep_od.reach_point(
-            obj_id
-            , elevation_accuracy
-            , identifier
-            , level
-            , outlet_shape
-            , position_of_connection
-            , remark
-            , situation_geometry
-            , last_modification
-            , fk_dataowner
-            , fk_provider
-            , fk_wastewater_networkelement
-          )
-    VALUES (
-            COALESCE(NEW.rp_to_obj_id,qgep_sys.generate_oid('qgep_od','reach_point')) -- obj_id
-            , NEW.rp_to_elevation_accuracy -- elevation_accuracy
-            , NEW.rp_to_identifier -- identifier
-            , NEW.rp_to_level -- level
-            , NEW.rp_to_outlet_shape -- outlet_shape
-            , NEW.rp_to_position_of_connection -- position_of_connection
-            , NEW.rp_to_remark -- remark
-            , ST_EndPoint(NEW.progression_geometry) -- situation_geometry
-            , NEW.rp_to_last_modification -- last_modification
-            , NEW.rp_to_fk_dataowner -- fk_dataowner
-            , NEW.rp_to_fk_provider -- fk_provider
-            , NEW.rp_to_fk_wastewater_networkelement -- fk_wastewater_networkelement
-          )
-    RETURNING obj_id INTO NEW.rp_to_obj_id;
-
-  INSERT INTO qgep_od.wastewater_structure (
-            obj_id
-            , accessibility
-            , contract_section
-            , financing
-            , gross_costs
-            , identifier
-            , inspection_interval
-            , location_name
-            , records
-            , remark
-            , renovation_necessity
-            , replacement_value
-            , rv_base_year
-            , rv_construction_type
-            , status
-            , structure_condition
-            , subsidies
-            , year_of_construction
-            , year_of_replacement
-            , fk_owner
-            , fk_operator )
-
-    VALUES ( COALESCE(NEW.fk_wastewater_structure,qgep_sys.generate_oid('qgep_od','channel')) -- obj_id
-            , NEW.ws_accessibility
-            , NEW.ws_contract_section
-            , NEW.ws_financing
-            , NEW.ws_gross_costs
-            , NEW.ws_identifier
-            , NEW.ws_inspection_interval
-            , NEW.ws_location_name
-            , NEW.ws_records
-            , NEW.ws_remark
-            , NEW.ws_renovation_necessity
-            , NEW.ws_replacement_value
-            , NEW.ws_rv_base_year
-            , NEW.ws_rv_construction_type
-            , NEW.ws_status
-            , NEW.ws_structure_condition
-            , NEW.ws_subsidies
-            , NEW.ws_year_of_construction
-            , NEW.ws_year_of_replacement
-            , NEW.ws_fk_owner
-            , NEW.ws_fk_operator
-           )
-           RETURNING obj_id INTO NEW.fk_wastewater_structure;
-
-  INSERT INTO qgep_od.channel(
-              obj_id
-            , bedding_encasement
-            , connection_type
-            , function_hierarchic
-            , function_hydraulic
-            , jetting_interval
-            , pipe_length
-            , usage_current
-            , usage_planned
-            )
-            VALUES(
-              NEW.fk_wastewater_structure
-            , NEW.ch_bedding_encasement
-            , NEW.ch_connection_type
-            , NEW.ch_function_hierarchic
-            , NEW.ch_function_hydraulic
-            , NEW.ch_jetting_interval
-            , NEW.ch_pipe_length
-            , NEW.ch_usage_current
-            , NEW.ch_usage_planned
-            );
-
-  INSERT INTO qgep_od.wastewater_networkelement (
-            obj_id
-            , identifier
-            , remark
-            , last_modification
-            , fk_dataowner
-            , fk_provider
-            , fk_wastewater_structure )
-    VALUES ( COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','reach')) -- obj_id
-            , NEW.identifier -- identifier
-            , NEW.remark -- remark
-            , NEW.last_modification -- last_modification
-            , NEW.fk_dataowner -- fk_dataowner
-            , NEW.fk_provider -- fk_provider
-            , NEW.fk_wastewater_structure -- fk_wastewater_structure
-           )
-           RETURNING obj_id INTO NEW.obj_id;
-
-  INSERT INTO qgep_od.reach (
-            obj_id
-            , clear_height
-            , coefficient_of_friction
-            , elevation_determination
-            , horizontal_positioning
-            , inside_coating
-            , length_effective
-            , material
-            , progression_geometry
-            , reliner_material
-            , reliner_nominal_size
-            , relining_construction
-            , relining_kind
-            , ring_stiffness
-            , slope_building_plan
-            , wall_roughness
-            , fk_reach_point_from
-            , fk_reach_point_to
-            , fk_pipe_profile )
-    VALUES(
-              NEW.obj_id -- obj_id
-            , NEW.clear_height
-            , NEW.coefficient_of_friction
-            , NEW.elevation_determination
-            , NEW.horizontal_positioning
-            , NEW.inside_coating
-            , NEW.length_effective
-            , NEW.material
-            , NEW.progression_geometry
-            , NEW.reliner_material
-            , NEW.reliner_nominal_size
-            , NEW.relining_construction
-            , NEW.relining_kind
-            , NEW.ring_stiffness
-            , NEW.slope_building_plan
-            , NEW.wall_roughness
-            , NEW.rp_from_obj_id
-            , NEW.rp_to_obj_id
-            , NEW.fk_pipe_profile);
+  {rp_from}
+  {rp_to}
+  {ws}
+  {ch}
+  {ne}
+  {re}
 
   RETURN NEW;
 END; $BODY$
@@ -314,13 +131,65 @@ END; $BODY$
   COST 100;
 
 CREATE TRIGGER vw_qgep_reach_on_insert INSTEAD OF INSERT ON qgep_od.vw_qgep_reach
-  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_reach_insert();
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_reach_insert();
+""".format(rp_from=insert_command(pg_cur=cursor,
+                                    table_schema='qgep_od',
+                                    table_name='reach_point',
+                                    prefix='rp_from_',
+                                    remove_pkey=False,
+                                    indent=2,
+                                    skip_columns=[],
+                                    coalesce_pkey=True,
+                                    insert_values={'situation_geometry': 'ST_StartPoint(NEW.progression_geometry)'},
+                                    returning='obj_id INTO NEW.rp_from_obj_id'),
+           rp_to=insert_command(pg_cur=cursor,
+                                table_schema='qgep_od',
+                                table_name='reach_point',
+                                prefix='rp_to_',
+                                remove_pkey=False,
+                                indent=2,
+                                skip_columns=[],
+                                coalesce_pkey=True,
+                                insert_values={'situation_geometry': 'ST_EndPoint(NEW.progression_geometry)'},
+                                returning='obj_id INTO NEW.rp_to_obj_id'),
+           ws=insert_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='wastewater_structure',
+                             prefix='ws_',
+                             remove_pkey=False,
+                             indent=2,
+                             insert_values={'obj_id': "COALESCE(NEW.fk_wastewater_structure, qgep_sys.generate_oid('qgep_od','channel'))"},
+                             returning='obj_id INTO NEW.fk_wastewater_structure',
+                             skip_columns=['detail_geometry_geometry', 'fk_dataowner', 'fk_provider',
+                                           '_usage_current', '_function_hierarchic', '_label', '_depth', 'fk_main_cover']),
+           ch=insert_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='channel',
+                             prefix='ch_',
+                             remove_pkey=False,
+                             indent=2,
+                             remap_columns={'obj_id': 'fk_wastewater_structure'},
+                             skip_columns=[]),
+           ne=insert_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='wastewater_networkelement',
+                             remove_pkey=False,
+                             indent=2,
+                             insert_values={'obj_id': "COALESCE(NEW.obj_id,qgep_sys.generate_oid('qgep_od','reach'))"},
+                             returning='obj_id INTO NEW.obj_id'),
+           re=insert_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='reach',
+                             remove_pkey=False,
+                             indent=2,
+                             insert_values={'fk_reach_point_from': 'NEW.rp_from_obj_id',
+                                            'fk_reach_point_to': 'NEW.rp_to_obj_id'}),
 
+           )
+cursor.execute(trigger_insert_sql)
 
--- REACH UPDATE
--- Function: vw_qgep_reach_update()
-
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_reach_on_update()
+trigger_update_sql="""
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_reach_on_update()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -344,115 +213,74 @@ BEGIN
       NEW.rp_to_level = NULLIF(ST_Z(ST_EndPoint(NEW.progression_geometry)),'NaN');
     END IF;
   END IF;
+  
+  {rp_from}
+  
+  {rp_to}
+  
+  {ch}
+  
+  {ws}
 
-  UPDATE qgep_od.reach_point
-    SET
-        elevation_accuracy = NEW.rp_from_elevation_accuracy
-      , identifier = NEW.rp_from_identifier
-      , level = NEW.rp_from_level
-      , outlet_shape = NEW.rp_from_outlet_shape
-      , position_of_connection = NEW.rp_from_position_of_connection
-      , remark = NEW.rp_from_remark
-      , situation_geometry = ST_StartPoint(NEW.progression_geometry)
-      , last_modification = NEW.rp_from_last_modification
-      , fk_dataowner = NEW.rp_from_fk_dataowner
-      , fk_provider = NEW.rp_from_fk_provider
-      , fk_wastewater_networkelement = NEW.rp_from_fk_wastewater_networkelement
-    WHERE obj_id = OLD.rp_from_obj_id;
+  {ne}
 
-  UPDATE qgep_od.reach_point
-    SET
-        elevation_accuracy = NEW.rp_to_elevation_accuracy
-      , identifier = NEW.rp_to_identifier
-      , level = NEW.rp_to_level
-      , outlet_shape = NEW.rp_to_outlet_shape
-      , position_of_connection = NEW.rp_to_position_of_connection
-      , remark = NEW.rp_to_remark
-      , situation_geometry = ST_EndPoint(NEW.progression_geometry)
-      , last_modification = NEW.rp_to_last_modification
-      , fk_dataowner = NEW.rp_to_fk_dataowner
-      , fk_provider = NEW.rp_to_fk_provider
-      , fk_wastewater_networkelement = NEW.rp_to_fk_wastewater_networkelement
-    WHERE obj_id = OLD.rp_to_obj_id;
+  {re}
 
-  UPDATE qgep_od.channel
-    SET
-       bedding_encasement = NEW.ch_bedding_encasement
-     , connection_type = NEW.ch_connection_type
-     , function_hierarchic = NEW.ch_function_hierarchic
-     , function_hydraulic = NEW.ch_function_hydraulic
-     , jetting_interval = NEW.ch_jetting_interval
-     , pipe_length = NEW.ch_pipe_length
-     , usage_current = NEW.ch_usage_current
-     , usage_planned = NEW.ch_usage_planned
-  WHERE obj_id = OLD.fk_wastewater_structure;
-
-  UPDATE qgep_od.wastewater_structure
-    SET
-       accessibility = NEW.ws_accessibility
-     , contract_section = NEW.ws_contract_section
-     , financing = NEW.ws_financing
-     , gross_costs = NEW.ws_gross_costs
-     , identifier = NEW.ws_identifier
-     , inspection_interval = NEW.ws_inspection_interval
-     , location_name = NEW.ws_location_name
-     , records = NEW.ws_records
-     , remark = NEW.ws_remark
-     , renovation_necessity = NEW.ws_renovation_necessity
-     , replacement_value = NEW.ws_replacement_value
-     , rv_base_year = NEW.ws_rv_base_year
-     , rv_construction_type = NEW.ws_rv_construction_type
-     , status = NEW.ws_status
-     , structure_condition = NEW.ws_structure_condition
-     , subsidies = NEW.ws_subsidies
-     , year_of_construction = NEW.ws_year_of_construction
-     , year_of_replacement = NEW.ws_year_of_replacement
-     , fk_dataowner = NEW.fk_dataowner
-     , fk_provider = NEW.fk_provider
-     , last_modification = NEW.last_modification
-     , fk_owner = NEW.ws_fk_owner
-     , fk_operator = NEW.ws_fk_operator
-  WHERE obj_id = OLD.fk_wastewater_structure;
-
-
-  UPDATE qgep_od.wastewater_networkelement
-    SET
-        identifier = NEW.identifier
-      , remark = NEW.remark
-      , last_modification = NEW.last_modification
-      , fk_dataowner = NEW.fk_dataowner
-      , fk_provider = NEW.fk_provider
-      , fk_wastewater_structure = NEW.fk_wastewater_structure
-    WHERE obj_id = OLD.obj_id;
-
-  UPDATE qgep_od.reach
-    SET clear_height = NEW.clear_height
-      , coefficient_of_friction = NEW.coefficient_of_friction
-      , elevation_determination = NEW.elevation_determination
-      , horizontal_positioning = NEW.horizontal_positioning
-      , inside_coating = NEW.inside_coating
-      , length_effective = NEW.length_effective
-      , material = NEW.material
-      , progression_geometry = NEW.progression_geometry
-      , reliner_material = NEW.reliner_material
-      , reliner_nominal_size = NEW.reliner_nominal_size
-      , relining_construction = NEW.relining_construction
-      , relining_kind = NEW.relining_kind
-      , ring_stiffness = NEW.ring_stiffness
-      , slope_building_plan = NEW.slope_building_plan
-      , wall_roughness = NEW.wall_roughness
-      , fk_pipe_profile = NEW.fk_pipe_profile
-    WHERE obj_id = OLD.obj_id;
 
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
+""".format(rp_from=update_command(pg_cur=cursor,
+                                  table_schema='qgep_od',
+                                  table_name='reach_point',
+                                  prefix='rp_from_',
+                                  update_pkey=False,
+                                  indent=6,
+                                  update_values={'situation_geometry': 'ST_StartPoint(NEW.progression_geometry)'}),
+           rp_to=update_command(pg_cur=cursor,
+                                table_schema='qgep_od',
+                                table_name='reach_point',
+                                prefix='rp_to_',
+                                update_pkey=False,
+                                indent=6,
+                                update_values={'situation_geometry': 'ST_EndPoint(NEW.progression_geometry)'}),
+           ch=update_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='channel',
+                             prefix='ch_',
+                             update_pkey=False,
+                             indent=6,
+                             remap_columns={'obj_id': 'fk_wastewater_structure'}),
+           ws=update_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='wastewater_structure',
+                             prefix='ws_',
+                             update_pkey=False,
+                             indent=6,
+                             remap_columns={'obj_id': 'fk_wastewater_structure'},
+                             skip_columns=['detail_geometry_geometry', '_usage_current', '_function_hierarchic',
+                                           '_label', '_depth', 'fk_main_cover']),
+           ne=update_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='wastewater_networkelement',
+                             update_pkey=False,
+                             indent=6),
+           re=update_command(pg_cur=cursor,
+                             table_schema='qgep_od',
+                             table_name='reach',
+                             update_pkey=False,
+                             indent=6,
+                             skip_columns=['fk_reach_point_to', 'fk_reach_point_from']),
 
+           )
+cursor.execute(trigger_update_sql)
+
+trigger_delete_sql="""
 CREATE TRIGGER vw_qgep_reach_on_update
   INSTEAD OF UPDATE
   ON qgep_od.vw_qgep_reach
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_od.vw_qgep_reach_on_update();
+  EXECUTE PROCEDURE qgep_od.ft_vw_qgep_reach_on_update();
 
 
 -- REACH DELETE
@@ -468,3 +296,8 @@ ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep_sys.gener
 ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
 ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel');
 """
+cursor.execute(trigger_delete_sql)
+
+
+conn.commit()
+conn.close()
