@@ -77,6 +77,9 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
    LEFT JOIN qgep_od.discharge_point dp ON dp.obj_id = ws.obj_id
    LEFT JOIN qgep_od.infiltration_installation ii ON ii.obj_id = ws.obj_id
    LEFT JOIN qgep_od.vw_wastewater_node wn ON wn.obj_id = aggregated_wastewater_structure.wn_obj_id;
+   
+    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
+    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','structure_part');
 """.format(ws_cols=select_columns(pg_cur=cursor,
                                   table_schema='qgep_od',
                                   table_name='wastewater_structure',
@@ -147,7 +150,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_wastewater_structure AS
 cursor.execute(view_sql, variables)
 
 trigger_insert_sql="""
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_INSERT()
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_wastewater_structure_INSERT()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -191,7 +194,7 @@ END; $BODY$ LANGUAGE plpgsql VOLATILE;
 DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_INSERT ON qgep_od.vw_qgep_wastewater_structure;
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_wastewater_structure
-  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_INSERT();
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_INSERT();
 """.format(insert_ws=insert_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='wastewater_structure',
@@ -268,7 +271,7 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_INSERT INSTEAD OF INSERT ON qgep_
 cursor.execute(trigger_insert_sql)
 
 update_trigger_sql = """
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_UPDATE()
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_wastewater_structure_UPDATE()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -391,7 +394,7 @@ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_UPDATE ON qgep_od.vw_qgep_wastewater_structure;
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_wastewater_structure
-  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_UPDATE();
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_UPDATE();
 """.format(update_co=update_command(pg_cur=cursor,
                                     table_schema='qgep_od',
                                     table_name='cover',
@@ -475,14 +478,10 @@ CREATE TRIGGER vw_qgep_wastewater_structure_ON_UPDATE INSTEAD OF UPDATE ON qgep_
                                     ) = 1""")
            )
 
-
-
-
-
 cursor.execute(update_trigger_sql, variables)
 
 trigger_delete_sql="""
-CREATE OR REPLACE FUNCTION qgep_od.vw_qgep_wastewater_structure_DELETE()
+CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_wastewater_structure_DELETE()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -494,15 +493,9 @@ END; $BODY$ LANGUAGE plpgsql VOLATILE;
 DROP TRIGGER IF EXISTS vw_qgep_wastewater_structure_ON_DELETE ON qgep_od.vw_qgep_wastewater_structure;
 
 CREATE TRIGGER vw_qgep_wastewater_structure_ON_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_wastewater_structure
-  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_qgep_wastewater_structure_DELETE();
-
-/**************************************************************
- * DEFAULT VALUES
- *************************************************************/
-
-ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
-ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','structure_part');
+  FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_DELETE();
 """
+cursor.execute(trigger_delete_sql, variables)
 
 
 conn.commit()
