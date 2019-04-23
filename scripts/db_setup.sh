@@ -106,7 +106,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_file.sql
 
 PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_overflow.yaml -v int SRID ${SRID}
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "$(${DIR}/view/vw_oo_organisation.py ${PGSERVICE} ${SRID})"
+PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_organisation.yaml
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_catchment_area_connections.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_change_points.sql
