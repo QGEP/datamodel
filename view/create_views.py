@@ -7,7 +7,11 @@ from .vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
 from .vw_qgep_reach import vw_qgep_reach
 
 
-def create_views():
+def create_views(srid: int):
+    """
+    Creates the views for QGEP
+    :param srid: the EPSG code for geometry columns
+    """
     Join('qgep_od.access_aid', 'qgep_od.structure_part', view_name='vw_access_aid').create()
     Join('qgep_od.benching', 'qgep_od.structure_part', view_name='vw_benching').create()
     Join('qgep_od.backflow_prevention', 'qgep_od.structure_part', view_name='vw_backflow_prevention').create()
@@ -26,9 +30,10 @@ def create_views():
     yaml_definition = yaml.safe_load(open("view/vw_maintenance_examination.yaml"))
     Merge(yaml_definition).create()
 
-    vw_qgep_wastewater_structure()
-    vw_qgep_reach()
+    vw_qgep_wastewater_structure(srid)
+    vw_qgep_reach(srid)
 
 
 if __name__ == "__main__":
-    create_views()
+    srid = os.getenv('SRID')
+    create_views(srid)

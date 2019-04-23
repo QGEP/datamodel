@@ -7,12 +7,11 @@ import psycopg2
 from pirogue.utils import select_columns, insert_command, update_command
 
 
-def vw_qgep_reach():
+def vw_qgep_reach(srid: int):
     pg_service = os.getenv('PGSERVICE')
-    SRID = os.getenv('SRID')
     assert pg_service
 
-    variables = {'SRID': int(SRID)}
+    variables = {'SRID': int(srid)}
 
     conn = psycopg2.connect("service={0}".format(pg_service))
     cursor = conn.cursor()
@@ -309,4 +308,5 @@ def vw_qgep_reach():
 
 
 if __name__ == "__main__":
-    vw_qgep_reach()
+    srid = os.getenv('SRID')
+    vw_qgep_reach(srid)
