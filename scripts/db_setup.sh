@@ -107,8 +107,8 @@ PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_reach.py
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_file.sql
 
-PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_overflow.yaml  --create-joins -v int SRID ${SRID}
-PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_organisation.yaml -v int SRID ${SRID}
+PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_overflow.yaml --create-joins -v int SRID ${SRID}
+PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_organisation.yaml --create-joins -v int SRID ${SRID}
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_catchment_area_connections.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_change_points.sql
