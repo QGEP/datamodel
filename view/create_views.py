@@ -36,7 +36,7 @@ def create_views(srid: int):
     
     # file
     
-    Merge(safe_load(open("view/vw_oo_overflow.yaml"))).create()
+    Merge(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True).create()
     Merge(safe_load(open("view/vw_oo_organisation.yaml"))).create()
 
     # vw_catchment_area_connections.sql
