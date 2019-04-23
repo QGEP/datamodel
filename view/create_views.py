@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import yaml
+import os
 from pirogue.join import Join
 from pirogue.merge import Merge
 from .vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
