@@ -236,7 +236,7 @@ def vw_qgep_reach():
                                       table_schema='qgep_od',
                                       table_name='reach_point',
                                       prefix='rp_from_',
-                                      update_pkey=True,
+                                      remove_pkey=True,
                                       indent=6,
                                       update_values={'situation_geometry': 'ST_StartPoint(NEW.progression_geometry)'}),
                rp_to=update_command(pg_cur=cursor,
