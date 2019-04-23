@@ -27,6 +27,7 @@ DROP VIEW IF EXISTS qgep_import.vw_manhole;
 -- big views
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_maintenance;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_damage;
 
 -- structure_part
 DROP VIEW IF EXISTS qgep_od.vw_access_aid;
@@ -68,5 +69,7 @@ DROP FUNCTION IF EXISTS qgep_od.vw_reach_insert();
 
 DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 DROP FUNCTION IF EXISTS qgep_od.vw_wastewater_node_insert();
+
+-- other
 
 
