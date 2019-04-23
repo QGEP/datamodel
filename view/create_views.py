@@ -17,7 +17,7 @@ def create_views(srid: int, pg_service: str = None):
     Join('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.backflow_prevention', view_name='vw_backflow_prevention', pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.cover', view_name='vw_cover', pg_service=pg_service).create()
+    Join('qgep_od.structure_part', 'qgep_od.cover', view_name='vw_cover', pkey_default_value=True, pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.dryweather_downspout', view_name='vw_dryweather_downspout', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.dryweather_flume', view_name='vw_dryweather_flume', pg_service=pg_service).create()
     Join('qgep_od.wastewater_structure', 'qgep_od.channel', view_name='vw_channel', pg_service=pg_service).create()

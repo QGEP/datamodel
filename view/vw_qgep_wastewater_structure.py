@@ -484,7 +484,7 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
 
     cursor.execute(update_trigger_sql, variables)
 
-    trigger_delete_sql="""
+    trigger_delete_sql = """
     CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_wastewater_structure_DELETE()
       RETURNS trigger AS
     $BODY$
@@ -500,6 +500,12 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
       FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_wastewater_structure_DELETE();
     """
     cursor.execute(trigger_delete_sql, variables)
+
+    extras = """
+    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
+    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','structure_part');
+    """
+    cursor.execute(extras)
 
     conn.commit()
     conn.close()

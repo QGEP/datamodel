@@ -83,7 +83,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/functions
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.access_aid --view-name vw_access_aid
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.backflow_prevention --view-name vw_backflow_prevention
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.benching --view-name vw_benching
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.cover --view-name vw_cover
+PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.cover --view-name vw_cover --pkey-default-value
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.dryweather_downspout --view-name vw_dryweather_downspout
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.dryweather_flume --view-name vw_dryweather_flume
 

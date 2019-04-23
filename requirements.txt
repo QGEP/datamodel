@@ -1,4 +1,4 @@
-pirogue>=0.5.1
+pirogue>=0.5.3
 psycopg2
 pyyaml
 pum>=0.8.0

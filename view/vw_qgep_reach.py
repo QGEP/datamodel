@@ -294,15 +294,17 @@ def vw_qgep_reach(srid: int, pg_service: str = None):
     CREATE OR REPLACE RULE vw_qgep_reach_delete AS ON DELETE TO qgep_od.vw_qgep_reach DO INSTEAD (
       DELETE FROM qgep_od.reach WHERE obj_id = OLD.obj_id;
     );
-    
+    """
+    cursor.execute(trigger_delete_sql)
+
+    extras = """
     ALTER VIEW qgep_od.vw_qgep_reach ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach');
     
     ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_from_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
     ALTER VIEW qgep_od.vw_qgep_reach ALTER rp_to_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','reach_point');
     ALTER VIEW qgep_od.vw_qgep_reach ALTER fk_wastewater_structure SET DEFAULT qgep_sys.generate_oid('qgep_od','channel');
     """
-    cursor.execute(trigger_delete_sql)
-
+    cursor.execute(extras)
 
     conn.commit()
     conn.close()
