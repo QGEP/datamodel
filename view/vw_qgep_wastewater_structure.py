@@ -7,8 +7,9 @@ import psycopg2
 from pirogue.utils import select_columns, insert_command, update_command
 
 
-def vw_qgep_wastewater_structure(srid: int):
-    pg_service = os.getenv('PGSERVICE')
+def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
+    if not pg_service:
+        pg_service = os.getenv('PGSERVICE')
     assert pg_service
 
     variables = {'SRID': int(srid)}

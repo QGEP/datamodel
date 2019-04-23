@@ -16,4 +16,4 @@ from view.create_views import create_views
 class CreateViews(DeltaPy):
 
     def run(self):
-        create_views(srid=self.variable('SRID'))
+        create_views(srid=self.variable('SRID'), pg_service=self.pg_service)
