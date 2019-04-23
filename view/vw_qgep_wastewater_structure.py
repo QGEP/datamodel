@@ -467,6 +467,7 @@ def vw_qgep_wastewater_structure():
                                         table_alias='no1',
                                         prefix='wn_',
                                         remove_pkey=True,
+                                        pkey='obj_id',
                                         indent=6,
                                         skip_columns=['obj_id', 'situation_geometry',
                                                       'last_modification', 'fk_wastewater_structure'],
