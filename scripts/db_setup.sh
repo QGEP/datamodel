@@ -78,6 +78,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/50_maintenance_zones.sq
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/functions/reach_direction_change.sql
 
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/13_import.sql
 
 
 PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.access_aid --view-name vw_access_aid
@@ -98,10 +99,6 @@ PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_networkelement qgep_od.wa
 PGSERVICE=${PGSERVICE}  pirogue merge ${DIR}/view/vw_maintenance_examination.yaml
 PGSERVICE=${PGSERVICE}  pirogue merge ${DIR}/view/vw_damage.yaml
 
-
-
-# psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_qgep_cover.sql
-
 PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_wastewater_structure.py
 PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_reach.py
 
@@ -113,7 +110,6 @@ PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_organisation.yaml --creat
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_catchment_area_connections.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_change_points.sql
 
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/13_import.sql
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_qgep_import.sql
 
 

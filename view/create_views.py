@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from yaml import safe_load
+import psycopg2
 import os
 from pirogue.join import Join
 from pirogue.merge import Merge
@@ -8,7 +9,15 @@ from .vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
 from .vw_qgep_reach import vw_qgep_reach
 
 
-def create_views(srid: int, pg_service: str = None):
+def run_sql(file_path: str, pg_service: str):
+    sql = open(file_path).read()
+    conn = psycopg2.connect("service={0}".format(pg_service))
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
+
+def create_views(srid: int, pg_service: str):
     """
     Creates the views for QGEP
     :param srid: the EPSG code for geometry columns
@@ -37,15 +46,15 @@ def create_views(srid: int, pg_service: str = None):
     vw_qgep_wastewater_structure(srid, pg_service=pg_service)
     vw_qgep_reach(srid, pg_service=pg_service)
     
-    # file
+    run_sql('view/vw_file.sql', pg_service)
     
     Merge(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service).create()
     Merge(safe_load(open("view/vw_oo_organisation.yaml")), pg_service=pg_service).create()
 
-    # vw_catchment_area_connections.sql
-    # vw_change_points.sql
-    # 13_import.sql
-    # vw_qgep_import.sql
+    run_sql('view/vw_catchment_area_connections.sql', pg_service)
+    run_sql('view/vw_change_points.sql', pg_service)
+    run_sql('view/vw_qgep_import.sql', pg_service)
+
 
 
 if __name__ == "__main__":
