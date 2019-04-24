@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'view'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import psycopg2
 from pum.core.deltapy import DeltaPy

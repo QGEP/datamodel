@@ -9,9 +9,8 @@ from pirogue.merge import Merge
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
-
-from view.vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
-from view.vw_qgep_reach import vw_qgep_reach
+from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
+from vw_qgep_reach import vw_qgep_reach
 
 
 def run_sql(file_path: str, pg_service: str, variables: dict = {}):
