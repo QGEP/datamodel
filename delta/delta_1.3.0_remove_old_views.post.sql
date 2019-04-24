@@ -72,6 +72,26 @@ DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 DROP FUNCTION IF EXISTS qgep_od.vw_wastewater_node_insert();
 
 -- other
+DROP VIEW IF EXISTS qgep_od.vw_administrative_office;
+DROP VIEW IF EXISTS qgep_od.vw_canton;
+DROP VIEW IF EXISTS qgep_od.vw_cooperative;
+DROP VIEW IF EXISTS qgep_od.vw_damage_channel;
+DROP VIEW IF EXISTS qgep_od.vw_damage_manhole;
+DROP VIEW IF EXISTS qgep_od.vw_maintenance_examination;
+DROP VIEW IF EXISTS qgep_od.vw_municipality;
 DROP VIEW IF EXISTS qgep_od.vw_organisation;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_administrative_office;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_canton;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_cooperative;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_municipality;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_private;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_waste_water_association;
+DROP VIEW IF EXISTS qgep_od.vw_organisation_waste_water_treatment_plant;
+DROP VIEW IF EXISTS qgep_od.vw_overflow_leapingweir;
+DROP VIEW IF EXISTS qgep_od.vw_overflow_prank_weir;
+DROP VIEW IF EXISTS qgep_od.vw_overflow_pump;
+DROP VIEW IF EXISTS qgep_od.vw_private;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_association;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_treatment_plant;
 
 
