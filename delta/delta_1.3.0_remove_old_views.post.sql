@@ -72,5 +72,6 @@ DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 DROP FUNCTION IF EXISTS qgep_od.vw_wastewater_node_insert();
 
 -- other
+DROP VIEW IF EXISTS qgep_od.vw_organisation;
 
 
