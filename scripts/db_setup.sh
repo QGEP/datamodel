@@ -81,36 +81,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/functions
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/13_import.sql
 
 
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.access_aid --view-name vw_access_aid
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.backflow_prevention --view-name vw_backflow_prevention
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.benching --view-name vw_benching
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.cover --view-name vw_cover --pkey-default-value
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.dryweather_downspout --view-name vw_dryweather_downspout
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.structure_part qgep_od.dryweather_flume --view-name vw_dryweather_flume
-
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_structure qgep_od.channel --view-name vw_channel
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_structure qgep_od.manhole --view-name vw_manhole
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_structure qgep_od.discharge_point --view-name vw_discharge_point
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_structure qgep_od.special_structure --view-name vw_special_structure
-
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_networkelement qgep_od.reach --view-name vw_reach
-PGSERVICE=${PGSERVICE} pirogue join qgep_od.wastewater_networkelement qgep_od.wastewater_node --view-name vw_wastewater_node
-
-PGSERVICE=${PGSERVICE}  pirogue merge ${DIR}/view/vw_maintenance_examination.yaml
-PGSERVICE=${PGSERVICE}  pirogue merge ${DIR}/view/vw_damage.yaml
-
-PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_wastewater_structure.py
-PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/vw_qgep_reach.py
-
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/view/vw_file.sql
-
-PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_overflow.yaml --create-joins -v int SRID ${SRID}
-PGSERVICE=${PGSERVICE} pirogue merge ${DIR}/view/vw_oo_organisation.yaml --create-joins -v int SRID ${SRID}
-
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_catchment_area_connections.sql
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_change_points.sql
-
-psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/view/vw_qgep_import.sql
+PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/create_views.py
 
 
 if [[ $roles ]]; then
