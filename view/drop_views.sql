@@ -2,8 +2,10 @@
 DROP VIEW IF EXISTS qgep_import.vw_manhole;
 
 -- big views
-DROP VIEW IF EXISTS qgep_od.vw_vw_qgep_maintenance;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_maintenance;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_damage;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_overflow;
 
 -- structure_part
 DROP VIEW IF EXISTS qgep_od.vw_access_aid;
@@ -45,3 +47,23 @@ DROP FUNCTION IF EXISTS qgep_od.vw_reach_insert();
 
 DROP VIEW IF EXISTS qgep_od.vw_wastewater_node;
 DROP FUNCTION IF EXISTS qgep_od.vw_wastewater_node_insert();
+
+-- organisation
+DROP VIEW IF EXISTS qgep_od.vw_organisation;
+DROP VIEW IF EXISTS qgep_od.vw_administrative_office;
+DROP VIEW IF EXISTS qgep_od.vw_canton;
+DROP VIEW IF EXISTS qgep_od.vw_cooperative;
+DROP VIEW IF EXISTS qgep_od.vw_municipality;
+DROP VIEW IF EXISTS qgep_od.vw_private;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_treatment_plant;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_treatment_plant;
+
+-- overlfows
+DROP VIEW IF EXISTS qgep_od.vw_leapingweir;
+DROP VIEW IF EXISTS qgep_od.vw_prank_weir;
+DROP VIEW IF EXISTS qgep_od.vw_pump;
+
+-- manual views
+DROP VIEW IF EXISTS qgep_od.vw_file;
+DROP VIEW IF EXISTS qgep_od.vw_change_points;
+DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
