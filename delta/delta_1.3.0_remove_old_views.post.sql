@@ -19,8 +19,6 @@ DROP RULE IF EXISTS vw_reach_ON_DELETE ON qgep_od.vw_reach;
 DROP RULE IF EXISTS vw_special_structure_ON_DELETE ON qgep_od.vw_special_structure;
 DROP RULE IF EXISTS vw_wastewater_node_ON_DELETE ON qgep_od.vw_wastewater_node;
 
-
-
 -- import
 DROP VIEW IF EXISTS qgep_import.vw_manhole;
 
