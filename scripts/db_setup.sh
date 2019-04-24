@@ -52,8 +52,6 @@ while getopts ":rfs:p:" opt; do
   esac
 done
 
-export PYTHONPATH=${DIR}:${PYTHONPATH}
-
 if [[ $force ]]; then
   psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS qgep_sys CASCADE"
   psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS qgep_od CASCADE"

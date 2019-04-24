@@ -6,9 +6,9 @@ import os, sys, inspect
 from pirogue.join import Join
 from pirogue.merge import Merge
 
-# folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
-# if folder not in sys.path:
-#     sys.path.insert(0, folder)
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+
 
 from view.vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
 from view.vw_qgep_reach import vw_qgep_reach
