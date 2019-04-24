@@ -17,6 +17,7 @@ def run_sql(file_path: str, pg_service: str):
     conn.commit()
     conn.close()
 
+
 def create_views(srid: int, pg_service: str):
     """
     Creates the views for QGEP
@@ -54,7 +55,6 @@ def create_views(srid: int, pg_service: str):
     run_sql('view/vw_catchment_area_connections.sql', pg_service)
     run_sql('view/vw_change_points.sql', pg_service)
     run_sql('view/vw_qgep_import.sql', pg_service)
-
 
 
 if __name__ == "__main__":
