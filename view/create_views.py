@@ -14,6 +14,9 @@ def create_views(srid: int, pg_service: str = None):
     :param srid: the EPSG code for geometry columns
     :param pg_service: the PostgreSQL service, if not given it will be determined from environment variable in Pirogue
     """
+
+    variables = {'SRID': srid}
+
     Join('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.backflow_prevention', view_name='vw_backflow_prevention', pg_service=pg_service).create()
@@ -36,7 +39,7 @@ def create_views(srid: int, pg_service: str = None):
     
     # file
     
-    Merge(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, pg_service=pg_service).create()
+    Merge(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service).create()
     Merge(safe_load(open("view/vw_oo_organisation.yaml")), pg_service=pg_service).create()
 
     # vw_catchment_area_connections.sql
