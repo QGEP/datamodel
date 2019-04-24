@@ -2,11 +2,16 @@
 
 from yaml import safe_load
 import psycopg2
-import os
+import os, sys, inspect
 from pirogue.join import Join
 from pirogue.merge import Merge
-from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
-from vw_qgep_reach import vw_qgep_reach
+
+folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
+if folder not in sys.path:
+    sys.path.insert(0, folder)
+
+from .vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
+from .vw_qgep_reach import vw_qgep_reach
 
 
 def run_sql(file_path: str, pg_service: str, variables: dict = {}):
