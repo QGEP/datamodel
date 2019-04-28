@@ -2,15 +2,26 @@
 #
 # -- View: vw_qgep_wastewater_structure
 
+import argparse
 import os
 import psycopg2
-from pirogue.utils import select_columns, insert_command, update_command
+from yaml import safe_load
+from pirogue.utils import select_columns, insert_command, update_command, table_parts
 
 
-def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
+def vw_qgep_wastewater_structure(srid: int,
+                                 pg_service: str = None,
+                                 extra_definition: dict = None):
+    """
+    Creates qgep_wastewater_structure view
+    :param srid: EPSG code for geometries
+    :param pg_service: the PostgreSQL service name
+    :param extra_definition: a dictionary for additional read-only columns
+    """
     if not pg_service:
         pg_service = os.getenv('PGSERVICE')
     assert pg_service
+    extra_definition = extra_definition or {}
 
     variables = {'SRID': int(srid)}
 
@@ -36,6 +47,8 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
         ss.function as ss_function,
         ws.fk_owner,
         ws.status,
+        
+        {extra_cols}
         
         {ws_cols},
     
@@ -78,11 +91,21 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
         LEFT JOIN qgep_od.special_structure ss ON ss.obj_id = ws.obj_id
         LEFT JOIN qgep_od.discharge_point dp ON dp.obj_id = ws.obj_id
         LEFT JOIN qgep_od.infiltration_installation ii ON ii.obj_id = ws.obj_id
-        LEFT JOIN qgep_od.vw_wastewater_node wn ON wn.obj_id = aggregated_wastewater_structure.wn_obj_id;
+        LEFT JOIN qgep_od.vw_wastewater_node wn ON wn.obj_id = aggregated_wastewater_structure.wn_obj_id
+        {extra_joins};
        
         ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
         ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','structure_part');
-    """.format(ws_cols=select_columns(pg_cur=cursor,
+    """.format(extra_cols='\n    '.join([select_columns(pg_cur=cursor,
+                                                        table_schema=table_parts(table_def['table'])[0],
+                                                        table_name=table_parts(table_def['table'])[1],
+                                                        skip_columns=table_def.get('skip_columns', []),
+                                                        remap_columns=table_def.get('remap_columns', {}),
+                                                        prefix=table_def.get('prefix', None),
+                                                        table_alias=table_def.get('alias', None)
+                                                        ) + ','
+                                        for table_def in extra_definition.get('joins', {}).values()]),
+               ws_cols=select_columns(pg_cur=cursor,
                                       table_schema='qgep_od',
                                       table_name='wastewater_structure',
                                       table_alias='ws',
@@ -147,6 +170,10 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
                                          prefix='wn_',
                                          remap_columns={},
                                          columns_on_top=['identifier']),
+               extra_joins='\n    '.join(['LEFT JOIN {tbl} {alias} ON {jon}'.format(tbl=table_def['table'],
+                                                                                    alias=table_def.get('alias', ''),
+                                                                                    jon=table_def['join_on'])
+                                          for table_def in extra_definition.get('joins', {}).values()])
                )
 
     cursor.execute(view_sql, variables)
@@ -512,5 +539,13 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None):
 
 
 if __name__ == "__main__":
-    srid = os.getenv('SRID')
-    vw_qgep_wastewater_structure(srid)
+    # create the top-level parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--srid', help='EPSG code for SRID')
+    parser.add_argument('-e', '--extra-definition', help='YAML file path for extra additions to the view')
+    parser.add_argument('-p', '--pg_service', help='the PostgreSQL service name')
+    args = parser.parse_args()
+    srid = args.srid or os.getenv('SRID')
+    pg_service = args.pg_service or os.getenv('PGSERVICE')
+    extra_definition = safe_load(open(args.extra_definition)) if args.extra_definition else {}
+    vw_qgep_wastewater_structure(srid=srid, pg_service=pg_service, extra_definition=extra_definition)

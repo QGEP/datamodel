@@ -3,16 +3,23 @@
 # -- View: vw_qgep_wastewater_structure
 
 import os
+import argparse
 import psycopg2
-from pirogue.utils import select_columns, insert_command, update_command
+from yaml import safe_load
+from pirogue.utils import select_columns, insert_command, update_command, table_parts
 
 
-def vw_qgep_reach(srid: int, pg_service: str = None):
+def vw_qgep_reach(pg_service: str = None,
+                  extra_definition: dict = None):
+    """
+    Creates qgep_reach view
+    :param pg_service: the PostgreSQL service name
+    :param extra_definition: a dictionary for additional read-only columns
+    """
     if not pg_service:
         pg_service = os.getenv('PGSERVICE')
     assert pg_service
-
-    variables = {'SRID': int(srid)}
+    extra_definition = extra_definition or {}
 
     conn = psycopg2.connect("service={0}".format(pg_service))
     cursor = conn.cursor()
@@ -39,6 +46,7 @@ def vw_qgep_reach(srid: int, pg_service: str = None):
           WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/re.length_effective*1000,1) 
           ELSE NULL 
         END AS _slope_per_mill,
+        {extra_cols}
         {re_cols},
         {ne_cols},
         {ch_cols},
@@ -51,8 +59,18 @@ def vw_qgep_reach(srid: int, pg_service: str = None):
          LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id = re.fk_reach_point_to
          LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
          LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
-         LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id;
-    """.format(re_cols=select_columns(pg_cur=cursor,
+         LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
+         {extra_joins};
+    """.format(extra_cols='\n    '.join([select_columns(pg_cur=cursor,
+                                                        table_schema=table_parts(table_def['table'])[0],
+                                                        table_name=table_parts(table_def['table'])[1],
+                                                        skip_columns=table_def.get('skip_columns', []),
+                                                        remap_columns=table_def.get('remap_columns', {}),
+                                                        prefix=table_def.get('prefix', None),
+                                                        table_alias=table_def.get('alias', None)
+                                                        ) + ','
+                                        for table_def in extra_definition.get('joins', {}).values()]),
+               re_cols=select_columns(pg_cur=cursor,
                                       table_schema='qgep_od',
                                       table_name='reach',
                                       table_alias='re',
@@ -100,6 +118,10 @@ def vw_qgep_reach(srid: int, pg_service: str = None):
                                          remove_pkey=False,
                                          indent=4,
                                          skip_columns=['situation_geometry']),
+               extra_joins='\n    '.join(['LEFT JOIN {tbl} {alias} ON {jon}'.format(tbl=table_def['table'],
+                                                                                    alias=table_def.get('alias', ''),
+                                                                                    jon=table_def['join_on'])
+                                          for table_def in extra_definition.get('joins', {}).values()])
 
                )
 
@@ -311,5 +333,11 @@ def vw_qgep_reach(srid: int, pg_service: str = None):
 
 
 if __name__ == "__main__":
-    srid = os.getenv('SRID')
-    vw_qgep_reach(srid)
+    # create the top-level parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-e', '--extra-definition', help='YAML file path for extra additions to the view')
+    parser.add_argument('-p', '--pg_service', help='the PostgreSQL service name')
+    args = parser.parse_args()
+    pg_service = args.pg_service or os.getenv('PGSERVICE')
+    extra_definition = safe_load(open(args.extra_definition)) if args.extra_definition else {}
+    vw_qgep_reach(pg_service=pg_service, extra_definition=extra_definition)
