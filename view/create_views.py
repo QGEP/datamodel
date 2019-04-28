@@ -2,7 +2,6 @@
 
 from yaml import safe_load
 import psycopg2
-import os, sys, inspect
 from pirogue.join import Join
 from pirogue.merge import Merge
 
@@ -22,14 +21,24 @@ def run_sql(file_path: str, pg_service: str, variables: dict = {}):
     conn.close()
 
 
-def create_views(srid: int, pg_service: str):
+def create_views(srid: int,
+                 pg_service: str,
+                 qgep_reach_extra: str = None,
+                 qgep_wastewater_structure_extra: str = None):
     """
     Creates the views for QGEP
     :param srid: the EPSG code for geometry columns
     :param pg_service: the PostgreSQL service, if not given it will be determined from environment variable in Pirogue
-    """
+    :param qgep_reach_extra: YAML file path of the definition of additional columns for vw_qgep_reach view
+    :param qgep_wastewater_structure_extra: YAML file path of the definition of additional columns for vw_qgep_wastewater_structure_extra view"""
 
     variables = {'SRID': srid}
+
+    # open YAML files
+    if qgep_reach_extra:
+        qgep_reach_extra = safe_load(open(qgep_reach_extra))
+    if qgep_wastewater_structure_extra:
+        qgep_wastewater_structure_extra = safe_load(open(qgep_reach_extra))
 
     Join('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
@@ -48,8 +57,8 @@ def create_views(srid: int, pg_service: str):
     Merge(safe_load(open("view/vw_maintenance_examination.yaml")), pg_service=pg_service).create()
     Merge(safe_load(open("view/vw_damage.yaml")), pg_service=pg_service).create()
 
-    vw_qgep_wastewater_structure(srid, pg_service=pg_service)
-    vw_qgep_reach(srid, pg_service=pg_service)
+    vw_qgep_wastewater_structure(srid, pg_service=pg_service, extra_definition=qgep_wastewater_structure_extra)
+    vw_qgep_reach(pg_service=pg_service, extra_definition=qgep_reach_extra)
     
     run_sql('view/vw_file.sql', pg_service, variables)
     

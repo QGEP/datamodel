@@ -18,4 +18,10 @@ class CreateViews(DeltaPy):
         conn.commit()
         conn.close()
 
-        create_views(srid=self.variable('SRID'), pg_service=self.pg_service)
+        qgep_wastewater_structure_extra = self.variable('qgep_wastewater_structure_extra', None)
+        qgep_reach_extra = self.variable('qgep_reach_extra', None)
+
+        create_views(srid=self.variable('SRID'),
+                     pg_service=self.pg_service,
+                     qgep_wastewater_structure_extra=qgep_wastewater_structure_extra,
+                     qgep_reach_extra=qgep_reach_extra)
