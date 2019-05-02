@@ -40,6 +40,8 @@ def create_views(srid: int,
     if qgep_wastewater_structure_extra:
         qgep_wastewater_structure_extra = safe_load(open(qgep_reach_extra))
 
+    run_sql('view/drop_views.sql', pg_service, variables)
+
     Join('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
     Join('qgep_od.structure_part', 'qgep_od.backflow_prevention', view_name='vw_backflow_prevention', pg_service=pg_service).create()
