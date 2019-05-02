@@ -38,7 +38,7 @@ def create_views(srid: int,
     if qgep_reach_extra:
         qgep_reach_extra = safe_load(open(qgep_reach_extra))
     if qgep_wastewater_structure_extra:
-        qgep_wastewater_structure_extra = safe_load(open(qgep_reach_extra))
+        qgep_wastewater_structure_extra = safe_load(open(qgep_wastewater_structure_extra))
 
     run_sql('view/drop_views.sql', pg_service, variables)
 
@@ -75,4 +75,7 @@ def create_views(srid: int,
 if __name__ == "__main__":
     pg_service = os.getenv('PGSERVICE')
     srid = os.getenv('SRID')
+    qgep_wastewater_structure_extra = os.getenv('qgep_wastewater_structure_extra')
+    qgep_reach_extra = os.getenv('qgep_reach_extra')
     create_views(srid, pg_service)
+
