@@ -77,5 +77,7 @@ if __name__ == "__main__":
     srid = os.getenv('SRID')
     qgep_wastewater_structure_extra = os.getenv('qgep_wastewater_structure_extra')
     qgep_reach_extra = os.getenv('qgep_reach_extra')
-    create_views(srid, pg_service)
+    create_views(srid, pg_service,
+                 qgep_reach_extra=qgep_reach_extra,
+                 qgep_wastewater_structure_extra=qgep_wastewater_structure_extra)
 
