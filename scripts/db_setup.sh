@@ -81,7 +81,7 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/functions
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/13_import.sql
 
 
-PGSERVICE=${PGSERVICE} SRID=${SRID} ${DIR}/view/create_views.py
+${DIR}/view/create_views.py --pg_service ${PGSERVICE} --srid ${SRID}
 
 
 if [[ $roles ]]; then

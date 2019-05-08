@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 
 table: qgep_od.overflow
 view_name: vw_qgep_overflow

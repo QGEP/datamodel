@@ -2,6 +2,7 @@
 
 from yaml import safe_load
 import psycopg2
+import argparse
 from pirogue.join import Join
 from pirogue.merge import Merge
 
@@ -73,11 +74,15 @@ def create_views(srid: int,
 
 
 if __name__ == "__main__":
-    pg_service = os.getenv('PGSERVICE')
-    srid = os.getenv('SRID')
-    qgep_wastewater_structure_extra = os.getenv('qgep_wastewater_structure_extra')
-    qgep_reach_extra = os.getenv('qgep_reach_extra')
-    create_views(srid, pg_service,
-                 qgep_reach_extra=qgep_reach_extra,
-                 qgep_wastewater_structure_extra=qgep_wastewater_structure_extra)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--pg_service', help='postgres service')
+    parser.add_argument('-s', '--srid', help='SRID EPSG code, defaults to 2056', type=int, default=2056)
+    parser.add_argument('--qgep_wastewater_structure_extra', help='YAML definition file path for additions to vw_qgep_wastewater_structure view')
+    parser.add_argument('--qgep_reach_extra', help='YAML definition file path for additions to vw_qgep_reach view')
+    args = parser.parse_args()
+
+    create_views(args.srid, args.pg_service,
+                 qgep_reach_extra=args.qgep_reach_extra,
+                 qgep_wastewater_structure_extra=args.qgep_wastewater_structure_extra)
 
