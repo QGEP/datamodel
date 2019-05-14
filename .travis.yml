@@ -62,7 +62,6 @@ script:
   # Create last version of qgep db using db_setup.sh script as comp db
   - export PGSERVICE=qgep_comp
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh > /dev/null
-  - pum baseline -p qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b $VERSION
 
   # Run pum's test and upgrade
   - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --exclude-schema public -v int SRID 2056
