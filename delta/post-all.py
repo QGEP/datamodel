@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys, os
+import psycopg2
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from pum.core.deltapy import DeltaPy
@@ -17,3 +18,11 @@ class CreateViews(DeltaPy):
                      pg_service=self.pg_service,
                      qgep_wastewater_structure_extra=qgep_wastewater_structure_extra,
                      qgep_reach_extra=qgep_reach_extra)
+
+        # refresh network views
+        conn = psycopg2.connect("service={0}".format(self.pg_service))
+        cursor = conn.cursor()
+        cursor.execute('REFRESH MATERIALIZED view qgep_od.vw_network_node;')
+        cursor.execute('REFRESH MATERIALIZED view qgep_od.vw_network_segment;')
+        conn.commit()
+        conn.close()
