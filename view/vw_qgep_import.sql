@@ -3,7 +3,7 @@
 CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
  SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
     ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ, :SRID) AS situation_geometry,
+    (st_dump(ws.situation_geometry)).geom::geometry(POINTZ, %(SRID)s) AS situation_geometry,
     ws.co_shape,
     ws.co_diameter,
     ws.co_material,
@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW qgep_import.vw_manhole AS
    FROM qgep_od.vw_qgep_wastewater_structure ws;
 
 
--- create triggerfunction and trigger for mobile view
+-- create trigger function and trigger for mobile view
 
 CREATE OR REPLACE FUNCTION qgep_import.vw_manhole_insert_into_quarantine_or_delete() RETURNS trigger AS $BODY$
 BEGIN

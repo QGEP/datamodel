@@ -1,0 +1,24 @@
+
+table: qgep_od.overflow
+view_name: vw_qgep_overflow
+
+additional_columns:
+  geometry: ST_MakeLine(n1.situation_geometry, n2.situation_geometry)::geometry('LineString',%(SRID)s)
+additional_joins: >
+  LEFT JOIN qgep_od.wastewater_node n1 ON overflow.fk_wastewater_node::text = n1.obj_id::text
+  LEFT JOIN qgep_od.wastewater_node n2 ON overflow.fk_overflow_to::text = n2.obj_id::text;
+
+
+joins:
+  leapingweir:
+    table: qgep_od.leapingweir
+
+  prank_weir:
+    table: qgep_od.prank_weir
+
+  pump:
+    table: qgep_od.pump
+
+
+
+
