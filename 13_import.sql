@@ -6,7 +6,7 @@ CREATE TABLE qgep_import.manhole_quarantine
 (
   obj_id character varying(16),
   identifier character varying(20),
-  situation_geometry geometry(Point,:SRID),
+  situation_geometry geometry(POINTZ, :SRID),
   co_shape integer,
   co_diameter smallint,
   co_material integer,
@@ -220,15 +220,15 @@ CREATE TRIGGER on_mutation_make_insert_or_delete
   EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine_or_delete();
 
 -- create triggerfunctions and triggers for quarantine table 
-SELECT set_config('qgep.srid', :SRID::text, false);
+=======
 DO $DO$
 BEGIN
 EXECUTE format($TRIGGER$
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
-DECLARE 
-  multi_situation_geometry geometry(MultiPoint,%1$s);
+DECLARE
+  multi_situation_geometry geometry(MULTIPOINTZ,%1$s);
 BEGIN
-  multi_situation_geometry = st_collect(NEW.situation_geometry)::geometry(MultiPoint,%1$s);
+  multi_situation_geometry := st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ, %1$s);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
@@ -244,7 +244,7 @@ BEGIN
     co_diameter = NEW.co_diameter,
     co_material = NEW.co_material,
     co_positional_accuracy = NEW.co_positional_accuracy,
-    co_level = 
+    co_level =
       (CASE WHEN NEW.co_level IS NULL AND NEW.wn_bottom_level IS NOT NULL AND NEW._depth IS NOT NULL
       THEN NEW.wn_bottom_level + NEW._depth
       ELSE NEW.co_level
@@ -258,7 +258,7 @@ BEGIN
     ma_function = NEW.ma_function,
     ss_function = NEW.ss_function,
     remark = NEW.remark,
-    wn_bottom_level = 
+    wn_bottom_level =
       (CASE WHEN NEW.wn_bottom_level IS NULL AND NEW.co_level IS NOT NULL AND NEW._depth IS NOT NULL
       THEN NEW.co_level - NEW._depth
       ELSE NEW.wn_bottom_level
@@ -325,7 +325,7 @@ BEGIN
       identifier
     )
     VALUES
-    ( 
+    (
       NEW.obj_id,
       NEW.photo1
     );
@@ -340,7 +340,7 @@ BEGIN
       identifier
     )
     VALUES
-    ( 
+    (
       NEW.obj_id,
       NEW.photo2
     );
@@ -369,10 +369,10 @@ CREATE TRIGGER after_update_try_structure_update
   AFTER UPDATE
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  WHEN ( ( NEW.structure_okay IS NOT TRUE ) 
+  WHEN ( ( NEW.structure_okay IS NOT TRUE )
   AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
   AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(:SRID);
 
 DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
 
@@ -380,7 +380,7 @@ CREATE TRIGGER after_insert_try_structure_update
   AFTER INSERT
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
+  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update(:SRID);
 
 -- Some information:
 -- 1. new lets 0 - old lets 0 -> do nothing
@@ -532,7 +532,7 @@ CREATE TRIGGER after_update_try_outlet_update
   AFTER UPDATE
   ON qgep_import.manhole_quarantine
   FOR EACH ROW
-  WHEN ( ( NEW.outlet_okay IS NOT TRUE ) 
+  WHEN ( ( NEW.outlet_okay IS NOT TRUE )
   AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
   AND NOT( OLD.structure_okay IS NOT TRUE AND NEW.structure_okay IS TRUE ) )
   EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_let_update( 'outlet' );
@@ -563,3 +563,4 @@ CREATE TRIGGER after_mutation_delete_when_okay
   FOR EACH ROW
   WHEN ( NEW.structure_okay IS TRUE AND NEW.inlet_okay IS TRUE AND NEW.outlet_okay IS TRUE )
   EXECUTE PROCEDURE qgep_import.manhole_quarantine_delete_entry();
+

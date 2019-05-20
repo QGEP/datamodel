@@ -1,13 +1,21 @@
 language: python
+dist: xenial
 
 python:
-  - 3.5
-
+  - 3.6
+  
 addons:
-  postgresql: "9.6"
+  postgresql: 9.6
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.4
 
 install:
   - pip install -r requirements.txt
+
+branches:
+  only:
+  - master
 
 env:
   # QGEP-Ninja token
@@ -29,11 +37,6 @@ before_install:
     git submodule update --init --recursive
 
 before_script:
-  - sudo apt-get -qq update
-  - sudo apt-get purge oracle-java9-installer oracle-java8-installer
-  - sudo apt-get autoremove -y postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.5
-  - sudo -E apt-get -yq install postgresql-9.6-postgis-2.4
-  - sudo -E apt-get -yq --allow-unauthenticated upgrade postgresql-client-9.6
   - |
     for pgsrv in pg_qgep qgep_prod qgep_test qgep_comp; do
       printf "[${pgsrv}]\nhost=localhost\ndbname=${pgsrv}\nuser=postgres\n" >> ~/.pg_service.conf
@@ -46,8 +49,8 @@ before_script:
     psql -c "GRANT qgep TO qgepuser;" -U postgres
 
 script:
-  - $TRAVIS_BUILD_DIR/scripts/db_setup.sh -r > /dev/null
-  - nosetests -e test_import.py
+  - ${TRAVIS_BUILD_DIR}/scripts/db_setup.sh -r > /dev/null
+  - nosetests -e test_import.py -e test_geometry.py
   
   # Get current version
   - export VERSION=$(sed 'r' "$TRAVIS_BUILD_DIR/system/CURRENT_VERSION.txt")
@@ -59,7 +62,6 @@ script:
   # Create last version of qgep db using db_setup.sh script as comp db
   - export PGSERVICE=qgep_comp
   - $TRAVIS_BUILD_DIR/scripts/db_setup.sh > /dev/null
-  - pum baseline -p qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b $VERSION
 
   # Run pum's test and upgrade
   - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --exclude-schema public -v int SRID 2056

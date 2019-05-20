@@ -1,0 +1,12 @@
+
+
+table: qgep_od.maintenance_event
+view_name: vw_qgep_maintenance
+allow_type_change: false
+allow_parent_only: true
+
+joins:
+  examination:
+    table: qgep_od.examination
+
+

@@ -18,8 +18,8 @@ CREATE MATERIALIZED VIEW qgep_od.vw_network_node AS
      NULL AS cover_level,
      NULL AS backflow_level,
      NULL AS description,
-     situation_geometry::geometry(Point,:SRID) AS detail_geometry,
-     situation_geometry::geometry(Point,:SRID)
+     situation_geometry::geometry(POINTZ,:SRID) AS detail_geometry,
+     situation_geometry::geometry(POINTZ,:SRID)
    FROM qgep_od.reach_point
 
    UNION

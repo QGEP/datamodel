@@ -4,25 +4,25 @@ The QGEP Datamodel
 ==================
 
 This repository contains a bare QGEP datamodel. This is an SQL implementation
-of the VSA-DSS datamodel (including SIA405). It ships with SQL scripts required
+of the VSA-DSS datamodel (including SIA405 Waste water). It ships with SQL scripts required
 to setup an empty PostgreSQL/PostGIS database to use as basis for the QGEP
 project.
 
 The latest release can be downloaded here: https://github.com/QGEP/datamodel/releases/
 
-Ordinary data tables (od\_)
+Ordinary data tables (qgep\_od.)
 ---------------------------
 
 These tables contain the business data. In these tables the information which
 is maintained by organizations can be found.
 
-Value Lists (vl\_)
+Value Lists (qgep\_vl.)
 ------------------
 
-These tables contain value lists which are referenced by od\_ tables. The value
+These tables contain value lists which are referenced by qgep_od. tables. The value
 lists contain additional information in different languages about the values.
 
-Information Schema (is\_)
+Information Schema (qgep\_sys.is\_)
 -------------------------
 
 These tables contain meta information about the schema.
@@ -33,7 +33,7 @@ Views (vw\_)
 The VSA-DSS model is built in an object relational way. Its PostgreSQL
 implementation does not make use of object inheritance and instead uses a pure
 relational approach. For base classes (like od\_wastewater\_structure) there
-are multiple child classes (like od\_manhole or od\_special\_structure) which
+are multiple child classes (like qgep\_od.manhole or gep\_od.special\_structure) which
 are linked with the same `obj_id` to the parent object.
 
 For easier usage views are provided which give access to the merged attributes
