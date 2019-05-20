@@ -99,3 +99,5 @@ BEGIN
   END IF;
   RETURN NEW;
 END; $BODY$
+
+LANGUAGE plpgsql;
