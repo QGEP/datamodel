@@ -220,7 +220,7 @@ CREATE TRIGGER on_mutation_make_insert_or_delete
   EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine_or_delete();
 
 -- create triggerfunctions and triggers for quarantine table 
-=======
+SELECT set_config('qgep.srid', :SRID::text, false);
 DO $DO$
 BEGIN
 EXECUTE format($TRIGGER$
