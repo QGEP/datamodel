@@ -32,12 +32,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # obj_id from the test data
         obj_id = 'ch13p7mzMA000011'
 
-        # change deleted from false to true
         row = {
                 '_depth': 12.220,
                 'co_level': None,
                 'wn_bottom_level': None,
-                'outlet_1_material': 5081
+                'outlet_1_material': 5081,
+                'verified': True
         }
 
         # update
@@ -65,13 +65,13 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # obj_id from the test data
         obj_id = 'ch13p7mzMA000071'
 
-        # change deleted from false to true
         row = {
                 '_depth': 2.220,
                 'wn_bottom_level': None,
                 'co_level': 22.220,
                 'inlet_3_material': 5081,
-                'outlet_1_material': 5081
+                'outlet_1_material': 5081,
+                'verified': True
         }
 
         # update
@@ -101,13 +101,13 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # obj_id from the test data
         obj_id = 'ch13p7mzMA000071'
 
-        # change deleted from false to true
         row = {
                 '_depth': 7.780,
                 'wn_bottom_level': 22.220,
                 'co_level': None,
                 'inlet_3_material': 5081,
-                'outlet_1_material': 5081
+                'outlet_1_material': 5081,
+                'verified': True
         }
 
         # update
@@ -138,7 +138,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
         # change deleted from false to true
         row = {
-                'deleted': True
+                'deleted': True,
+                'verified': True
         }
 
         # update
@@ -170,7 +171,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'outlet_1_material': 5081,
                 'outlet_1_clear_height': 160,
                 'outlet_1_depth_m': 100,
-                'photo1' : 'funky_selfie.png'
+                'photo1' : 'funky_selfie.png',
+                'verified': True
         }
 
         # update
@@ -229,7 +231,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # change co_material from 233 to 666, what not exists in the table qgep_vl.cover_material
         row = {
                 'co_material': 666,
-                'outlet_1_material': 5081
+                'outlet_1_material': 5081,
+                'verified': True
         }
 
         # update
@@ -295,7 +298,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
                 'inlet_3_clear_height': 160,
-                'inlet_3_depth_m': 100
+                'inlet_3_depth_m': 100,
+                'verified': True
         }
 
         # update
@@ -350,7 +354,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # change co_material from 233 to 3015
         row = {
                 'remark': 'Strassenauslauf',
-                'co_material': 3015
+                'co_material': 3015,
+                'verified': True
         }
 
         # update
@@ -399,7 +404,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
                 'outlet_1_depth_m': 100,
                 'inlet_3_material': 5081,
                 'inlet_3_clear_height': 160,
-                'inlet_3_depth_m': 100
+                'inlet_3_depth_m': 100,
+                'verified': True
         }
 
         # update
