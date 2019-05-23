@@ -134,7 +134,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
     #   -> delete in live
     def test_delete_structure(self):
         # obj_id from the test data
-        obj_id = '"ch13p7mzMA000037"'
+        obj_id = 'ch13p7mzMA000037'
 
         # change deleted from false to true
         row = {
@@ -152,6 +152,31 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should not be visible anymore in the qgep_import.vw_manhole view
         row = self.select( 'vw_manhole', obj_id, 'qgep_import')
         self.assertIsNone( row )
+
+
+    # - delete of structure but have verified at false
+    #   -> do not delete in live
+    def test_delete_structure_failing(self):
+        # obj_id from the test data
+        obj_id = 'ch13p7mzMA000044'
+
+        # change deleted from false to true
+        # but do not set verified to true
+        row = {
+                'deleted': True,
+                'verified': False
+        }
+
+        # update
+        self.update('vw_manhole', row, obj_id, 'qgep_import')
+
+        # it should not be deleted in the live table qgep_od.wastewater_structure
+        row = self.select( 'wastewater_structure', obj_id, 'qgep_od')
+        self.assertIsNotNone( row )
+
+        # it should still be visible anymore in the qgep_import.vw_manhole view
+        row = self.select( 'vw_manhole', obj_id, 'qgep_import')
+        self.assertIsNotNone( row )
 
 
     # - correct update with 1 old outlet and 1 new outlet and 0 old inlet and 0 new inlet
