@@ -13,10 +13,6 @@ addons:
 install:
   - pip install -r requirements.txt
 
-branches:
-  only:
-  - master
-
 env:
   # QGEP-Ninja token
   secure: "qG+4iP4R+SLTGz9/ulzSOz76pT1XCnOWAAuS1QlUm6Gn8WzDdAgMaHS4c0JcfxYs+gq+2LMNzDJx+HzHnQBgXmUCLars4LDOh3ov2+xOCcCWjE6BY5HyXDMp6gW0kMCL72JWSNLiI2Y0cy7uGd2Wgu1i0zI6gx9f6kLZYp0HJNEZ0PYEtokxKph9ijKXPwU8WwldvDJz4DzpOt8pRrL3uFJNIIZJjG50gIu0X/iDDyJayAKbCqAlYsjyAMeCZE3qpYtcoo8Di8CD98yhnKVKTPPk3ftvpR9MHtfnWNCbAZrJ+tZycTPKYp0MZZ642WZhpFuNHZHvg0vJO2kifcYP7NF1feyd6bNKm+jtcDWC7FrHAhqmxGad+et7Fvs7XuLYZdx6XJjFP1bumHxxRqUrt6TcE+4UoBVTGupa94V/RBO5xM3YGNzky8Aj8EyypQqscPPZplDNKQzxbGa3dSQu5G1IrHkzigiKrr7zsraPp+m4X3gWmwo4htxaGFgUzTINQ3FnG5kGe4g1R7F5JwbTcsAcPR+KRJvF0jT6t5Pntqjd0YBhfp0mYxfpZb+wRSdM6GXMPiZuqunqAQPNSnFX9CBAEw/OrVpndiN5QPETmSIsr32SBF6qilldVEy03qRKvni4JmXBiB5OypmxNMSL0YmZ9cOT3+oQ5g0RERQV2ZU="
