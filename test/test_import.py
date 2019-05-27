@@ -5,25 +5,20 @@ import psycopg2
 import psycopg2.extras
 import psycopg2.sql
 import decimal 
-from time import sleep
 
 from utils import DbTestBase
 
-class TestTriggers(unittest.TestCase, DbTestBase):
 
+class TestTriggers(unittest.TestCase, DbTestBase):
 
     @classmethod
     def tearDownClass(cls):
         cls.conn.rollback()
 
-
     @classmethod
     def setUpClass(cls):
-        pgservice=os.environ.get('PGSERVICE')
-        if not pgservice:
-          pgservice='pg_qgep'
+        pgservice = os.environ.get('PGSERVICE') or 'pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
-
 
     # - level calculation failing because only no reference level
     #   -> not updated structure with calculated values

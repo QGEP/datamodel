@@ -3,6 +3,7 @@ import unittest
 import os
 import glob
 
+
 class TestTypos(unittest.TestCase):
 
     def test_typos(self):
@@ -15,6 +16,7 @@ class TestTypos(unittest.TestCase):
                     self.assertNotIn('AddGeometryColumn', line,
                             msg="""AddGeometryColumn should no longer be used. Use
                             ALTER TABLE syntax instead""")
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,12 +3,14 @@ import unittest
 import psycopg2
 import psycopg2.extras
 
+
 class DbTestBase:
 
     def select(self, table, obj_id, schema='qgep_od'):
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-        cur.execute("SELECT * FROM {schema}.{table} WHERE obj_id='{obj_id}'".format(table=table, schema=schema, obj_id=obj_id))
+        cur.execute("SELECT * FROM {schema}.{table} WHERE obj_id=%(obj_id)s"
+                    .format(table=table, schema=schema),
+                    {'obj_id': obj_id})
         return cur.fetchone()
 
     def cursor(self):
@@ -16,37 +18,25 @@ class DbTestBase:
 
     def insert(self, table, row, schema='qgep_od'):
         cur = self.conn.cursor()
-
-        cols = list(row.keys())
-        cols_str = ','.join(cols)
-        vals = [str(row[x]) for x in cols]
-        vals_str_list = ["%s"] * len(vals)
-        vals_str = ','.join(vals_str_list)
-
-        cur.execute(
-            "INSERT INTO {schema}.{table} ({cols}) VALUES ({vals_str}) RETURNING obj_id".format(table = table, schema=schema, cols=cols_str, vals_str=vals_str),
-            list(row.values())
-        )
-
+        cols = ', '.join(row.keys())
+        values = ', '.join(["%({key})s".format(key=key) for key in row.keys()])
+        cur.execute("INSERT INTO {schema}.{table} ({cols}) VALUES ({values}) RETURNING obj_id"
+                    .format(table=table, schema=schema, cols=cols, values=values),
+                    row)
         return cur.fetchone()[0]
 
     def update(self, table, row, obj_id, schema='qgep_od'):
         cur = self.conn.cursor()
-
-        cols = ['{}=%s'.format(key) for key, _ in row.items()]
-        cols_str = ','.join(cols)
-
-        cur.execute(
-            "UPDATE {schema}.{table} SET {cols_str} WHERE obj_id=%s".format(table = table, schema=schema, cols_str=cols_str),
-            list(row.values()) + [obj_id]
-        )
+        cols = ','.join(['{key}=%({key})s'.format(key=key) for key in row.keys()])
+        row['obj_id'] = obj_id
+        cur.execute("UPDATE {schema}.{table} SET {cols} WHERE obj_id=%(obj_id)s"
+                    .format(table=table, schema=schema, cols=cols),
+                    row)
 
     def delete(self, table, obj_id, schema='qgep_od'):
         cur = self.conn.cursor()
-
-        cur.execute(
-            "DELETE FROM {schema}.{table} WHERE obj_id=%s".format(table = table, schema=schema), [obj_id]
-        )
+        cur.execute("DELETE FROM {schema}.{table} WHERE obj_id=%s"
+                    .format(table=table, schema=schema), [obj_id])
 
     def insert_check(self, table, row, expected_row=None, schema='qgep_od'):
         obj_id = self.insert(table, row, schema)
@@ -64,9 +54,7 @@ class DbTestBase:
     def update_check(self, table, row, obj_id, schema='qgep_od'):
         self.update(table, row, obj_id, schema)
         result = self.select(table, obj_id, schema)
-
         self.check_result(row, result, table, 'update', schema)
-
 
     def check_result(self, expected, result, table, test_name, schema='qgep_od'):
         # TODO: don't convert to unicode, type inference for smallint is

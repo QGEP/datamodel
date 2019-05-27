@@ -3,10 +3,9 @@ import os
 
 import psycopg2
 import psycopg2.extras
-import decimal
-from time import sleep
 
 from utils import DbTestBase
+
 
 class TestRemovedFields(unittest.TestCase, DbTestBase):
 
@@ -16,9 +15,7 @@ class TestRemovedFields(unittest.TestCase, DbTestBase):
 
     @classmethod
     def setUpClass(cls):
-        pgservice=os.environ.get('PGSERVICE')
-        if not pgservice:
-          pgservice='pg_qgep'
+        pgservice = os.environ.get('PGSERVICE') or 'pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
 
