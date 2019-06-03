@@ -11,7 +11,7 @@ BEGIN
     FROM qgep_od.wastewater_networkelement
     WHERE fk_wastewater_structure = OLD.fk_wastewater_structure;
   IF reach_count = 0 THEN
-    RAISE NOTICE 'Removing channel (%%) since no reach are left', OLD.fk_wastewater_structure;
+    RAISE NOTICE 'Removing channel (%%) since no reach is left', OLD.fk_wastewater_structure;
     DELETE FROM qgep_od.channel WHERE obj_id = OLD.fk_wastewater_structure;
     DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.fk_wastewater_structure;
   END IF;
