@@ -12,7 +12,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.conn.rollback()
+        cls.conn.commit()
 
     @classmethod
     def setUpClass(cls):
