@@ -264,7 +264,7 @@ def main():
     conn = http.client.HTTPSConnection('uploads.github.com')
     for release_file in release_files:
         _, filename = os.path.split(release_file)
-        headers['Content-Type'] = 'text/plain'
+        headers['Content-Type'] = 'application/octet-stream'
 #        headers['Transfer-Encoding'] = 'gzip'
         url = '{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13], filename=filename)
         print('Upload to {}'.format(url))
