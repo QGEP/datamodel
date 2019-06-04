@@ -3,10 +3,10 @@ import os
 
 import psycopg2
 import psycopg2.extras
-import decimal
 import copy
 
 from utils import DbTestBase
+
 
 class TestViews(unittest.TestCase, DbTestBase):
 
@@ -16,9 +16,7 @@ class TestViews(unittest.TestCase, DbTestBase):
 
     @classmethod
     def setUpClass(cls):
-        pgservice=os.environ.get('PGSERVICE')
-        if not pgservice:
-          pgservice='pg_qgep'
+        pgservice = os.environ.get('PGSERVICE') or 'pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
     def test_vw_qgep_reach_geometry_insert(self):

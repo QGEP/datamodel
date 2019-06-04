@@ -8,6 +8,7 @@ import copy
 
 from utils import DbTestBase
 
+
 class TestViews(unittest.TestCase, DbTestBase):
 
     @classmethod
@@ -16,11 +17,8 @@ class TestViews(unittest.TestCase, DbTestBase):
 
     @classmethod
     def setUpClass(cls):
-        pgservice=os.environ.get('PGSERVICE')
-        if not pgservice:
-          pgservice='pg_qgep'
+        pgservice=os.environ.get('PGSERVICE') or 'pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
-
 
     def test_vw_reach(self):
         row = {
