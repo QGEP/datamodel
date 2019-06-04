@@ -264,13 +264,15 @@ def main():
     conn = http.client.HTTPSConnection('uploads.github.com')
     for release_file in release_files:
         _, filename = os.path.split(release_file)
-        headers['Content-Type'] = 'application/octet-stream'
+        headers['Content-Type'] = 'text/plain'
 #        headers['Transfer-Encoding'] = 'gzip'
-        url = '{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13], filename=filename)
+        url = '{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13],
+                                                     filename=filename)
         print('Upload to {}'.format(url))
 
         with open(release_file, 'rb') as f:
-            conn.request('POST', url, f, headers)
+            data = f.read()
+            conn.request('POST', url, data, headers)
 
         response = conn.getresponse()
         result = response.read()
