@@ -56,6 +56,7 @@ DROP VIEW IF EXISTS qgep_od.vw_cooperative;
 DROP VIEW IF EXISTS qgep_od.vw_municipality;
 DROP VIEW IF EXISTS qgep_od.vw_private;
 DROP VIEW IF EXISTS qgep_od.vw_waste_water_treatment_plant;
+DROP VIEW IF EXISTS qgep_od.vw_waste_water_association;
 
 -- overflows
 DROP VIEW IF EXISTS qgep_od.vw_leapingweir;
