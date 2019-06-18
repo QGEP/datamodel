@@ -1,110 +1,92 @@
-#!/usr/bin/env python
 
-import yaml
-import sys
-from sql_export_view import SqlExportView
 
-if len(sys.argv) > 1:
-    pg_service = sys.argv[1]
-else:
-    pg_service = "pg_qgep"
-
-definition = yaml.load("""
-
-name: qgep_export.vw_export_wastewater_structure
-
-from: qgep_od.vw_qgep_wastewater_structure
-
-exclude_join_fields:
-  - geometry%
-  - label_1%
-  - label_2%
+view_name: vw_export_wastewater_structure
+table: qgep_od.vw_qgep_wastewater_structure
+pkey: obj_id
 
 joins:
   cover_shape:
     table: qgep_vl.cover_cover_shape
-    key: code
-    fkey: cover_shape
+    fkey: co_shape
+    prefix: cover_shape_
   cover_fastening:
     table: qgep_vl.cover_fastening
-    key: code
-    fkey: fastening
+    fkey: co_fastening
+    prefix: cover_fastening_
   cover_material:
     table: qgep_vl.cover_material
-    key: code
-    fkey: cover_material
+    fkey: co_material
+    prefix: cover_material_
   positional_accuracy:
     table: qgep_vl.cover_positional_accuracy
-    key: code
-    fkey: positional_accuracy
+    fkey: co_positional_accuracy
+    prefix: positional_accuracy_
   sludge_bucket:
     table: qgep_vl.cover_sludge_bucket
-    key: code
-    fkey: sludge_bucket
+    fkey: co_sludge_bucket
+    prefix: sludge_bucket_
   venting:
     table: qgep_vl.cover_venting
-    key: code
-    fkey: venting
+    fkey: co_venting
+    prefix: venting_
   renovation_demand:
     table: qgep_vl.structure_part_renovation_demand
-    key: code
-    fkey: renovation_demand
+    fkey: co_renovation_demand
+    prefix: renovation_demand_
   financing:
     table: qgep_vl.wastewater_structure_financing
-    key: code
     fkey: financing
+    prefix: financing_
   renovation_necessity:
     table: qgep_vl.wastewater_structure_renovation_necessity
-    key: code
     fkey: renovation_necessity
+    prefix: renovation_necessity_
   rv_construction_type:
     table: qgep_vl.wastewater_structure_rv_construction_type
-    key: code
     fkey: rv_construction_type
+    prefix: rv_construction_type_
   status:
     table: qgep_vl.wastewater_structure_status
-    key: code
     fkey: status
+    prefix: status_
   structure_condition:
     table: qgep_vl.wastewater_structure_structure_condition
-    key: code
     fkey: structure_condition
+    prefix: structure_condition_
   owner:
     table: qgep_od.organisation
-    key: obj_id
     fkey: fk_owner
+    prefix: owner_
   operator:
     table: qgep_od.organisation
-    key: obj_id
     fkey: fk_operator
+    prefix: operator_
   manhole_function:
     table: qgep_vl.manhole_function
-    key: code
-    fkey: manhole_function
+    fkey: ma_function
+    prefix: manhole_function_
   material:
     table: qgep_vl.manhole_material
-    key: code
-    fkey: material
+    fkey: ma_material
+    prefix: material_
   surface_inflow:
     table: qgep_vl.manhole_surface_inflow
-    key: code
-    fkey: surface_inflow
+    fkey: ma_surface_inflow
+    prefix: surface_inflow_
   bypass:
     table: qgep_vl.special_structure_bypass
-    key: code
-    fkey: bypass
+    fkey: ss_bypass
+    prefix: bypass_
   special_structure_function:
     table: qgep_vl.special_structure_function
-    key: code
-    fkey: special_structure_function
+    fkey: ss_function
+    prefix: special_structure_function_
   stormwater_tank_arrangement:
     table: qgep_vl.special_structure_stormwater_tank_arrangement
-    key: code
-    fkey: stormwater_tank_arrangement
+    fkey: ss_stormwater_tank_arrangement
+    prefix: stormwater_tank_arrangement_
   relevance:
     table: qgep_vl.discharge_point_relevance
-    key: code
-    fkey: relevance
-""")
+    fkey: dp_relevance
+    prefix: relevance_
 
-print(SqlExportView(pg_service, definition).sql())

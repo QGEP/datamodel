@@ -3,8 +3,7 @@
 from yaml import safe_load
 import psycopg2
 import argparse
-from pirogue.join import Join
-from pirogue.merge import Merge
+from pirogue import SingleInheritance, MultipleInheritance
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -43,30 +42,30 @@ def create_views(srid: int,
 
     run_sql('view/drop_views.sql', pg_service, variables)
 
-    Join('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.backflow_prevention', view_name='vw_backflow_prevention', pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.cover', view_name='vw_cover', pkey_default_value=True, pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.dryweather_downspout', view_name='vw_dryweather_downspout', pg_service=pg_service).create()
-    Join('qgep_od.structure_part', 'qgep_od.dryweather_flume', view_name='vw_dryweather_flume', pg_service=pg_service).create()
-    Join('qgep_od.wastewater_structure', 'qgep_od.channel', view_name='vw_channel', pg_service=pg_service).create()
-    Join('qgep_od.wastewater_structure', 'qgep_od.manhole', view_name='vw_manhole', pg_service=pg_service).create()
-    Join('qgep_od.wastewater_structure', 'qgep_od.discharge_point', view_name='vw_discharge_point', pg_service=pg_service).create()
-    Join('qgep_od.wastewater_structure', 'qgep_od.special_structure', view_name='vw_special_structure', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.backflow_prevention', view_name='vw_backflow_prevention', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.cover', view_name='vw_cover', pkey_default_value=True, pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.dryweather_downspout', view_name='vw_dryweather_downspout', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.structure_part', 'qgep_od.dryweather_flume', view_name='vw_dryweather_flume', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.channel', view_name='vw_channel', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.manhole', view_name='vw_manhole', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.discharge_point', view_name='vw_discharge_point', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.special_structure', view_name='vw_special_structure', pg_service=pg_service).create()
 
-    Join('qgep_od.wastewater_networkelement', 'qgep_od.reach', view_name='vw_reach', pg_service=pg_service).create()
-    Join('qgep_od.wastewater_networkelement', 'qgep_od.wastewater_node', view_name='vw_wastewater_node', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.reach', view_name='vw_reach', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.wastewater_node', view_name='vw_wastewater_node', pg_service=pg_service).create()
 
-    Merge(safe_load(open("view/vw_maintenance_examination.yaml")), pg_service=pg_service).create()
-    Merge(safe_load(open("view/vw_damage.yaml")), pg_service=pg_service).create()
+    MultipleInheritance(safe_load(open("view/vw_maintenance_examination.yaml")), drop=True, pg_service=pg_service).create()
+    MultipleInheritance(safe_load(open("view/vw_damage.yaml")), drop=True, pg_service=pg_service).create()
 
     vw_qgep_wastewater_structure(srid, pg_service=pg_service, extra_definition=qgep_wastewater_structure_extra)
     vw_qgep_reach(pg_service=pg_service, extra_definition=qgep_reach_extra)
     
     run_sql('view/vw_file.sql', pg_service, variables)
     
-    Merge(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service).create()
-    Merge(safe_load(open("view/vw_oo_organisation.yaml")), pg_service=pg_service).create()
+    MultipleInheritance(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service, drop=True).create()
+    MultipleInheritance(safe_load(open("view/vw_oo_organisation.yaml")), drop=True, pg_service=pg_service).create()
 
     run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
     run_sql('view/vw_change_points.sql', pg_service, variables)
