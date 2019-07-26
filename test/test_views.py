@@ -6,7 +6,7 @@ import psycopg2.extras
 import decimal
 import copy
 
-from utils import DbTestBase
+from .utils import DbTestBase
 
 
 class TestViews(unittest.TestCase, DbTestBase):
@@ -24,7 +24,9 @@ class TestViews(unittest.TestCase, DbTestBase):
         row = {
                 'clear_height': 100,
                 'coefficient_of_friction': 10,
-                'identifier': '20'
+                'identifier': '20',
+                'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 100), ST_MakePoint(3000001, 1500001, 100)), 2056))')
+
         }
 
         obj_id = self.insert_check('vw_reach', row)
@@ -46,43 +48,44 @@ class TestViews(unittest.TestCase, DbTestBase):
         obj_id = self.insert_check('vw_prank_weir', row)
 
         row = {
-                'identifier': '30',
-                'level_max': decimal.Decimal('400.321')
+            'identifier': '30',
+            'level_max': decimal.Decimal('400.321')
         }
 
         self.update_check('vw_prank_weir', row, obj_id)
 
     def test_vw_qgep_reach(self):
         row = {
-                'clear_height': 100,
-                'coefficient_of_friction': 10,
-                'ws_identifier': 'pra',
-                'ch_usage_current': 4514
+            'clear_height': 100,
+            'coefficient_of_friction': 10,
+            'ws_identifier': 'pra',
+            'ch_usage_current': 4514,
+            'progression_geometry': self.execute("ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 'NaN'), ST_MakePoint(3000001, 1500001, 'NaN')), 2056))")
         }
 
         obj_id = self.insert_check('vw_qgep_reach', row)
 
         row = {
-                'clear_height': 200,
-                'coefficient_of_friction': 20,
-                'ws_identifier': '10',
-                'ch_usage_current': 4516
+            'clear_height': 200,
+            'coefficient_of_friction': 20,
+            'ws_identifier': '10',
+            'ch_usage_current': 4516
         }
 
         self.update_check('vw_qgep_reach', row, obj_id)
 
     def test_vw_qgep_wastewater_structure(self):
         row = {
-                'identifier': '20',
-                'ws_type': 'manhole',
-                                'situation_geometry': '01040000A0080800000100000001010000800000000020D6434100000000804F324100000000004CCD40', # SELECT ST_SetSRID(ST_GeomFromText('MULTIPOINTZ(2600000 1200000 15000)'), 2056)
-                'co_material': 5355,
-                'wn_backflow_level': decimal.Decimal('100.000')
+            'identifier': '20',
+            'ws_type': 'manhole',
+            'situation_geometry': self.execute("ST_SetSRID(ST_GeomFromText('MULTIPOINTZ(2600000 1200000 15000)'), 2056)"),
+            #    'co_material': 5355,
+            'wn_backflow_level': decimal.Decimal('100.000')
         }
 
         expected_row = copy.deepcopy(row)
         # be aware the Z variable is overwritten by NaN because co_level is NULL
-        expected_row['situation_geometry'] = '01040000A0080800000100000001010000800000000020D6434100000000804F3241000000000000F87F' # SELECT ST_SetSRID(ST_Collect(ST_MakePoint(2600000, 1200000, 'NaN')), 2056)
+        expected_row['situation_geometry'] = self.execute("ST_SetSRID(ST_Collect(ST_MakePoint(2600000, 1200000, 'NaN')), 2056)")
         
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row, expected_row)
 

@@ -6,7 +6,7 @@ import psycopg2.extras
 import psycopg2.sql
 import decimal 
 
-from utils import DbTestBase
+from .utils import DbTestBase
 
 
 class TestTriggers(unittest.TestCase, DbTestBase):

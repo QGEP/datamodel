@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 import copy
 
-from utils import DbTestBase
+from .utils import DbTestBase
 
 
 class TestViews(unittest.TestCase, DbTestBase):
