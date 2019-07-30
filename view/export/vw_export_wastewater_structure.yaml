@@ -3,6 +3,7 @@
 view_name: vw_export_wastewater_structure
 table: qgep_od.vw_qgep_wastewater_structure
 pkey: obj_id
+view_schema: qgep_export
 
 joins:
   cover_shape:
