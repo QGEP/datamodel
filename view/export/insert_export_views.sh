@@ -7,7 +7,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 psql "service=${PGSERVICE}" -c "DROP SCHEMA IF EXISTS qgep_export CASCADE;"
 psql "service=${PGSERVICE}" -c "CREATE SCHEMA qgep_export;"
-psql "service=${PGSERVICE}" -c "GRANT ALL ON SCHEMA qgep_export TO postgres;"
 psql "service=${PGSERVICE}" -c "GRANT USAGE ON SCHEMA qgep_export TO qgep_viewer;"
 psql "service=${PGSERVICE}" -c "GRANT ALL ON SCHEMA qgep_export TO qgep_user;"
 psql "service=${PGSERVICE}" -c "COMMENT ON SCHEMA qgep_export IS 'QGEP export views';"
