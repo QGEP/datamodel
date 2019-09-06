@@ -1047,7 +1047,7 @@ WITH (
 CREATE SEQUENCE qgep_od.seq_maintenance_event_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep_od.maintenance_event ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','maintenance_event');
 COMMENT ON COLUMN qgep_od.maintenance_event.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep_od.maintenance_event ADD COLUMN base_data  varchar(50) ;
+ALTER TABLE qgep_od.maintenance_event ADD COLUMN base_data text;
 COMMENT ON COLUMN qgep_od.maintenance_event.base_data IS 'e.g. damage protocol / Z.B. Schadensprotokoll / par ex. protocole de dommages';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN cost  decimal(10,2) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.cost IS '';
