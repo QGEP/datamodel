@@ -25,6 +25,8 @@ END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
 
+DROP TRIGGER IF EXISTS on_wasterwaternode_change ON qgep_od.wastewater_node;
+
 
 CREATE TRIGGER on_wasterwaternode_change
   AFTER INSERT OR UPDATE
