@@ -310,7 +310,6 @@ def vw_qgep_wastewater_structure(srid: int,
                                                        'fk_wastewater_structure': 'NEW.obj_id'})
                )
 
-    print(trigger_insert_sql)
     cursor.execute(trigger_insert_sql)
 
     update_trigger_sql = """
@@ -464,7 +463,7 @@ def vw_qgep_wastewater_structure(srid: int,
                                         indent=6,
                                         skip_columns=['detail_geometry_geometry', 'last_modification',
                                                       '_usage_current', '_function_hierarchic', '_label',
-                                                      'fk_main_cover', 'fk_main_wastewater_node','_depth'],
+                                                      'fk_main_cover', 'fk_main_wastewater_node', '_depth'],
                                         update_values={}),
                update_ma=update_command(pg_cur=cursor,
                                         table_schema='qgep_od',
