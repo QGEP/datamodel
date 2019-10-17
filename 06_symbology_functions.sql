@@ -212,7 +212,7 @@ FROM (
            , E'\n'
          ) ||
 	   array_to_string(
-         array_append(array_agg('R' || '=' || bottom_level), '')
+         array_append(array_agg('B' || '=' || bottom_level), '')
            , E'\n'
          )
 	AS label
