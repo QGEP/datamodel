@@ -1,5 +1,5 @@
 
--- Add Wastewater node level to ws label in french
+-- Add Wastewater node level to ws label
 
 CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
