@@ -107,7 +107,7 @@ BEGIN
                  target_table::text || 
                  ' FOR EACH ROW EXECUTE PROCEDURE qgep_sys.if_modified_func(' ||
                  quote_literal(audit_query_text) || _ignored_cols_snip || ');';
-        RAISE NOTICE '%',_q_txt;
+        RAISE NOTICE '%%',_q_txt;
         EXECUTE _q_txt;
         stm_targets = 'TRUNCATE';
     ELSE
@@ -117,7 +117,7 @@ BEGIN
              target_table ||
              ' FOR EACH STATEMENT EXECUTE PROCEDURE qgep_sys.if_modified_func('||
              quote_literal(audit_query_text) || ');';
-    RAISE NOTICE '%',_q_txt;
+    RAISE NOTICE '%%',_q_txt;
     EXECUTE _q_txt;
 
     -- store primary key names
@@ -211,7 +211,7 @@ BEGIN
 		 target_view::TEXT || 
 		 ' FOR EACH ROW EXECUTE PROCEDURE qgep_sys.if_modified_func(' ||
 		 quote_literal(audit_query_text) || _ignored_cols_snip || ');';
-	RAISE NOTICE '%',_q_txt;
+	RAISE NOTICE '%%',_q_txt;
 	EXECUTE _q_txt;
 
     -- store uid columns if not already present
