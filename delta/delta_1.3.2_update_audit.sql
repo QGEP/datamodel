@@ -89,6 +89,7 @@ END;
 $body$
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = pg_catalog, public;
 
 CREATE OR REPLACE FUNCTION qgep_sys.audit_table(target_table regclass, audit_rows BOOLEAN, audit_query_text BOOLEAN, ignored_cols text[]) RETURNS void AS $body$
 DECLARE
