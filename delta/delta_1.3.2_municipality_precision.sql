@@ -1,2 +1,2 @@
-ALTER TABLE qgep_od.catchment_area
-ALTER COLUMN surface_area TYPE decimal(8,4) ;
+ALTER TABLE qgep_od.municipality
+ALTER COLUMN total_surface TYPE decimal(10,4) ;
