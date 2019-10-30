@@ -661,7 +661,7 @@ CREATE INDEX in_qgep_od_municipality_perimeter_geometry ON qgep_od.municipality 
 COMMENT ON COLUMN qgep_od.municipality.perimeter_geometry IS 'Border of the municipality / Gemeindegrenze / Limites communales';
 ALTER TABLE qgep_od.municipality ADD COLUMN population  integer ;
 COMMENT ON COLUMN qgep_od.municipality.population IS 'Permanent opulation (based on statistics of the municipality) / Ständige Einwohner (laut Einwohnerkontrolle der Gemeinde) / Habitants permanents (selon le contrôle des habitants de la commune)';
-ALTER TABLE qgep_od.municipality ADD COLUMN total_surface  decimal(8,2) ;
+ALTER TABLE qgep_od.municipality ADD COLUMN total_surface  decimal(8,4) ;
 COMMENT ON COLUMN qgep_od.municipality.total_surface IS 'Total surface without lakes / Fläche ohne Seeanteil / Surface sans partie de lac';
 -------
 CREATE TRIGGER
