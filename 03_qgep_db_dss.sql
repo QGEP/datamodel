@@ -661,7 +661,7 @@ CREATE INDEX in_qgep_od_municipality_perimeter_geometry ON qgep_od.municipality 
 COMMENT ON COLUMN qgep_od.municipality.perimeter_geometry IS 'Border of the municipality / Gemeindegrenze / Limites communales';
 ALTER TABLE qgep_od.municipality ADD COLUMN population  integer ;
 COMMENT ON COLUMN qgep_od.municipality.population IS 'Permanent opulation (based on statistics of the municipality) / Ständige Einwohner (laut Einwohnerkontrolle der Gemeinde) / Habitants permanents (selon le contrôle des habitants de la commune)';
-ALTER TABLE qgep_od.municipality ADD COLUMN total_surface  decimal(8,2) ;
+ALTER TABLE qgep_od.municipality ADD COLUMN total_surface  decimal(10,4) ;
 COMMENT ON COLUMN qgep_od.municipality.total_surface IS 'Total surface without lakes / Fläche ohne Seeanteil / Surface sans partie de lac';
 -------
 CREATE TRIGGER
@@ -2666,7 +2666,7 @@ ALTER TABLE qgep_od.catchment_area ADD COLUMN sewer_infiltration_water_productio
 COMMENT ON COLUMN qgep_od.catchment_area.sewer_infiltration_water_production_current IS 'yyy_Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Fremdwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit  d''eaux claires parasites (ECP) moyen actuel, rejeté dans les canalisation d’eaux usées ou mixtes';
 ALTER TABLE qgep_od.catchment_area ADD COLUMN sewer_infiltration_water_production_planned  decimal(9,3) ;
 COMMENT ON COLUMN qgep_od.catchment_area.sewer_infiltration_water_production_planned IS 'yyy_Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Mittlerer Fremdwasseranfall, der im Planungszustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird. / Débit  d''eaux claires parasites (ECP) moyen prévu, rejeté dans les canalisation d’eaux usées ou mixtes';
-ALTER TABLE qgep_od.catchment_area ADD COLUMN surface_area  decimal(8,2) ;
+ALTER TABLE qgep_od.catchment_area ADD COLUMN surface_area  decimal(10,4) ;
 COMMENT ON COLUMN qgep_od.catchment_area.surface_area IS 'yyy_redundantes Attribut Flaeche, welches die aus dem Perimeter errechnete Flaeche [ha] enthält / Redundantes Attribut Flaeche, welches die aus dem Perimeter errechnete Flaeche [ha] enthält / Attribut redondant indiquant la surface calculée à partir du périmètre en ha';
 ALTER TABLE qgep_od.catchment_area ADD COLUMN waste_water_production_current  decimal(9,3) ;
 COMMENT ON COLUMN qgep_od.catchment_area.waste_water_production_current IS 'yyy_Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Mittlerer Schmutzabwasseranfall, der im Ist-Zustand in die Schmutz- oder Mischabwasserkanalisation eingeleitet wird / Débit moyen actuel des eaux usées rejetées dans les canalisations d’eaux usées ou d''eaux mixtes';
