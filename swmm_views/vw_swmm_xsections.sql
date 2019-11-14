@@ -20,9 +20,9 @@ SELECT DISTINCT
 		ELSE 'CIRCULAR'
 	END as Shape,
 	CASE 
-		WHEN re.clear_height = 0 THEN 100
-		WHEN re.clear_height IS NULL THEN 100
-		ELSE re.clear_height
+		WHEN re.clear_height = 0 THEN 0.1
+		WHEN re.clear_height IS NULL THEN 0.1
+		ELSE re.clear_height/1000 -- [mm] to [m]
 	END as Geom1,
 	0 as Geom2,
 	0 as Geom3,
