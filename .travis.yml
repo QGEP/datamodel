@@ -53,6 +53,7 @@ script:
 
   # Create a db from a dump file. This simulate the prod db
   - pum restore -p qgep_prod -x --exclude-schema public --exclude-schema topology -- $TRAVIS_BUILD_DIR/test_data/qgep_demodata_1.0.0.dump
+  - PGSERVICE=qgep_prod psql -v ON_ERROR_STOP=on -f test_data/data_fixes.sql
   - pum baseline -p qgep_prod -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -b 1.0.0
 
   # Create last version of qgep db using db_setup.sh script as comp db

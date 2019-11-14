@@ -13,6 +13,11 @@ class DbTestBase:
                     {'obj_id': obj_id})
         return cur.fetchone()
 
+    def execute(self, sql: str):
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("SELECT {}".format(sql))
+        return cur.fetchone()[0]
+
     def cursor(self):
         return self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 

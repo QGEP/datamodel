@@ -4,7 +4,7 @@ import os
 import psycopg2
 import psycopg2.extras
 
-from utils import DbTestBase
+from .utils import DbTestBase
 
 
 class TestRemovedFields(unittest.TestCase, DbTestBase):
