@@ -23,4 +23,6 @@ SELECT
 	overflow.identifier as description,
 	pu.obj_id::varchar as tag	
 FROM qgep_od.pump pu
-JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text;
+JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = pu.obj_id::text
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);

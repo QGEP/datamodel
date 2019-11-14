@@ -30,4 +30,7 @@ SELECT DISTINCT
 	1 as Barrels,
 	NULL as Culvert
 FROM qgep_od.reach re
-LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile 
+LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);

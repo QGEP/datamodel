@@ -62,6 +62,7 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 -- 3008, --"unknown"
 -- 2745, --"vortex_manhole"
 )
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 UNION ALL
 SELECT
 	wn.obj_id as Name,
@@ -99,3 +100,4 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
