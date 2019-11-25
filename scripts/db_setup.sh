@@ -93,3 +93,23 @@ pum baseline -p ${PGSERVICE} -t qgep_sys.pum_info -d ${DIR}/delta/ -b ${VERSION}
 
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/14_geometry_functions.sql
+
+## SWMM Views
+
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/01_vw_swmm_create_schema.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/02_vw_swmm_junctions.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/03_vw_swmm_aquifers.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/04_vw_swmm_conduits.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/05_vw_swmm_dividers.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/06_vw_swmm_landuses.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/07_vw_swmm_losses.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/08_vw_swmm_outfalls.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/09_vw_swmm_subcatchments.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/10_vw_swmm_vertices.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/11_vw_swmm_pumps.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/12_vw_swmm_polygons.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/13_vw_swmm_storages.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/14_vw_swmm_xsections.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/15_vw_swmm_coordinates.sql
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/swmm_views/16_vw_swmm_tags.sql
+
