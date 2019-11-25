@@ -1,10 +1,9 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_tags;
-
-
 --------
--- View for the swmm module class junction
+-- View for the swmm module class tags
 -- 20190329 qgep code sprint SB, TP
 --------
+
+DROP VIEW IF EXISTS qgep_swmm.vw_tags;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_tags AS
 

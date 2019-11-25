@@ -1,9 +1,9 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
-
 --------
--- View for the swmm module class junction
+-- View for the swmm module class aquifiers
 -- 20190329 qgep code sprint SB, TP
 --------
+
+DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_aquifers AS
 
@@ -22,4 +22,4 @@ SELECT
 	average_groundwater_level as WaterTableElevation,
 	0.3 as UnsatZoneMoisture,
 	null as UpperEvapPattern
-FROM qgep_od.aquifier as aq
+FROM qgep_od.aquifier as aq;

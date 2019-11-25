@@ -1,10 +1,9 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_storages;
-
-
 --------
 -- View for the swmm module class storages
 -- 20190329 qgep code sprint SB, TP
 --------
+
+DROP VIEW IF EXISTS qgep_swmm.vw_storages;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_storages AS
 

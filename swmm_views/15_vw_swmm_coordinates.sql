@@ -1,10 +1,9 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
-
-
 --------
--- View for the swmm module class junction
+-- View for the swmm module class coordinates
 -- 20190329 qgep code sprint SB, TP
 --------
+
+DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_coordinates AS
 
@@ -49,4 +48,4 @@ SELECT
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_raingages
-WHERE geom IS NOT NULL
+WHERE geom IS NOT NULL;

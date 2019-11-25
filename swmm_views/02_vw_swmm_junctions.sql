@@ -1,10 +1,9 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
-
-
 --------
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
 --------
+
+DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_junctions AS
 
@@ -80,5 +79,5 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 -- 4799, --"separating_structure"
 -- 3008, --"unknown"
 -- 2745, --"vortex_manhole"
-)
+);
 
