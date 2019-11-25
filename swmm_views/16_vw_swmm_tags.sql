@@ -57,4 +57,4 @@ SELECT
 	name as name,
 	tag as value
 FROM qgep_swmm.vw_subcatchments
-WHERE tag IS NOT NULL
+WHERE tag IS NOT NULL;

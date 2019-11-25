@@ -80,4 +80,3 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 -- 3008, --"unknown"
 -- 2745, --"vortex_manhole"
 );
-

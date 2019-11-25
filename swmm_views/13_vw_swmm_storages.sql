@@ -99,4 +99,4 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
