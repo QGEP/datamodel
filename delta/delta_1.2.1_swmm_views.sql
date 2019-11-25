@@ -7,7 +7,7 @@ DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_aquifers AS
 
-SELECT 
+SELECT
 	aq.obj_id as Name,
 	0.5 as Porosity,
 	0.15 as WiltingPoint,
@@ -22,7 +22,8 @@ SELECT
 	average_groundwater_level as WaterTableElevation,
 	0.3 as UnsatZoneMoisture,
 	null as UpperEvapPattern
-FROM qgep_od.aquifier as aqDROP VIEW IF EXISTS qgep_swmm.vw_conduits;
+FROM qgep_od.aquifier as aq
+DROP VIEW IF EXISTS qgep_swmm.vw_conduits;
 
 
 --------
@@ -36,7 +37,7 @@ SELECT
 	re.obj_id as Name,
 	coalesce(from_wn.obj_id, 'default_qgep_node') as FromNode,
 	coalesce(to_wn.obj_id, 'default_qgep_node') as ToNode,
-	CASE 
+	CASE
 		--WHEN re.length_effective <= 0.01 THEN st_length(progression_geometry)
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) <= 0.01 THEN 0.01
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) >= 0.01 THEN st_length(progression_geometry)
@@ -63,7 +64,8 @@ LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 
-WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
 
 
 --------
@@ -80,7 +82,7 @@ SELECT
 FROM qgep_swmm.vw_junctions
 WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,
@@ -89,7 +91,7 @@ SELECT
 FROM qgep_swmm.vw_outfalls
 WHERE geom is not null
 
--- UNION 
+-- UNION
 
 -- SELECT
 	-- Name as Node,
@@ -98,7 +100,7 @@ WHERE geom is not null
 -- FROM qgep_swmm.vw_dividers
 -- WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,
@@ -107,22 +109,24 @@ SELECT
 FROM qgep_swmm.vw_storages
 WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_raingages
-WHERE geom is not nullDROP SCHEMA IF EXISTS qgep_swmm CASCADE;
-CREATE SCHEMA IF NOT EXISTS qgep_swmm;DROP VIEW IF EXISTS qgep_swmm.vw_dividers;
+WHERE geom is not null
+DROP SCHEMA IF EXISTS qgep_swmm CASCADE;
+CREATE SCHEMA IF NOT EXISTS qgep_swmm;
+DROP VIEW IF EXISTS qgep_swmm.vw_dividers;
 
 
 --------
 -- View for the swmm module class dividers
 -- 20190329 qgep code sprint SB, TP
 -- Question attribute Diverted Link: Name of link which receives the diverted flow. overflow > fk_overflow_to
- 
+
 --------
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_dividers AS
@@ -162,6 +166,7 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 WHERE function  = 4799 -- separating_structure
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+
 DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
 
 
@@ -210,7 +215,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
-WHERE wn.obj_id is not null 
+WHERE wn.obj_id is not null
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 --AND function != 4799 -- separating_structure -> used in swmm dividers
 AND function NOT IN ( -- must be the same list in vw_swmm_storages
@@ -249,6 +254,7 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 
 
 
+
 --------
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
@@ -265,6 +271,7 @@ SELECT
 	0 as lastSwept
 
 FROM qgep_vl.planning_zone_kind
+
 
 DROP VIEW IF EXISTS qgep_swmm.vw_losses;
 
@@ -283,15 +290,16 @@ SELECT DISTINCT
 	0::float as Kavg,
 	CASE
 		WHEN ts.obj_id is not null THEN 'YES'
-		ELSE 'NO' 
+		ELSE 'NO'
 	END as flap_gate,
 	0::float as Seepage
 FROM qgep_od.reach re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
-LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile 
+LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id::text = re.fk_reach_point_from::text
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
-LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id  -- wastewater node of the downstream wastewater nodeDROP VIEW IF EXISTS qgep_swmm.vw_outfalls;
+LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id  -- wastewater node of the downstream wastewater node
+DROP VIEW IF EXISTS qgep_swmm.vw_outfalls;
 
 
 --------
@@ -316,7 +324,8 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = dp.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE wn.obj_id IS NOT NULL
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)DROP VIEW IF EXISTS qgep_swmm.vw_polygons;
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+DROP VIEW IF EXISTS qgep_swmm.vw_polygons;
 
 --------
 -- View for the swmm module class junction
@@ -325,18 +334,19 @@ AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_polygons AS
 
-SELECT 
-	Subcatchment, 
+SELECT
+	Subcatchment,
 	round(ST_X((dp).geom)::numeric,2) as X_Coord,
 	round(ST_Y((dp).geom)::numeric,2) as Y_Coord
 FROM (
-	SELECT 
-		Name As Subcatchment, 
-		ST_DumpPoints(geom) AS dp, 
-		ST_NPoints(geom) as nvert 
+	SELECT
+		Name As Subcatchment,
+		ST_DumpPoints(geom) AS dp,
+		ST_NPoints(geom) as nvert
 	FROM qgep_swmm.vw_subcatchments
 	) as foo
-WHERE (dp).path[2] != nvert	-- dont select last verticeDROP VIEW IF EXISTS qgep_swmm.vw_pumps;
+WHERE (dp).path[2] != nvert	-- dont select last vertice
+DROP VIEW IF EXISTS qgep_swmm.vw_pumps;
 
 
 --------
@@ -350,7 +360,7 @@ WHERE (dp).path[2] != nvert	-- dont select last verticeDROP VIEW IF EXISTS qgep_
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_pumps AS
 
-SELECT 
+SELECT
 	pu.obj_id as Name,
 	overflow.fk_wastewater_node as FromNode, -- inlet is the waternode entering the pump
 	overflow.fk_overflow_to as ToNode, -- outlet is the waternode at the top of next reach
@@ -364,6 +374,7 @@ FROM qgep_od.pump pu
 JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = pu.obj_id::text
 WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
 DROP VIEW IF EXISTS qgep_swmm.vw_storages;
 
 
@@ -442,7 +453,7 @@ SELECT
 	0 as SurchargeDepth,
 	0 as Fevap,
 	NULL as Psi,
-	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h 
+	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
 	NULL as IMD, 	
 	--st_x(wn.situation_geometry) as X_coordinate,
 	--st_y(wn.situation_geometry) as Y_coordinate,
@@ -466,7 +477,8 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)--------
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+--------
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
 --------
@@ -474,28 +486,28 @@ DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_') as Name,
 	('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as RainGage,
 	coalesce(fk_wastewater_networkelement_rw_current, replace(ca.obj_id, ' ', '_')) as Outlet,
-	CASE 
+	CASE
 		when surface_area is null then st_area(perimeter_geometry)
 		when surface_area < 0.01 then st_area(perimeter_geometry)
 		else surface_area
 	END as Area,
 	25 as percImperv,
-	CASE 
+	CASE
 		WHEN wn.situation_geometry IS NOT NULL
 		THEN 	
 		(
-		st_maxdistance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry)) 
+		st_maxdistance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry))
 		+ st_distance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry))
 		)/2
-		ELSE 
+		ELSE
 		(
-		st_maxdistance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry)) 
+		st_maxdistance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry))
 		+ st_distance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry))
-		)/2 
+		)/2
 	END as Width, -- Width of overland flow path estimation
 	0.5 as percSlope,
 	0 as CurbLen,
@@ -511,7 +523,7 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id;
 DROP VIEW IF EXISTS qgep_swmm.vw_subareas;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_') as Subcatchment,
 	0.01 as NImperv,
 	0.1 as NPerv,
@@ -528,7 +540,7 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_raingages;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_raingages AS
-SELECT 
+SELECT
 	('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as Name,
 	'INTENSITY'::varchar as Format,
 	'0:15'::varchar as Interval,
@@ -541,7 +553,7 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_infiltration;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_infiltration AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_')  as Subcatchment,
 	3 as MaxRate,
 	0.5 as MinRate,
@@ -555,15 +567,16 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_coverages;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_coverages AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_')  as Subcatchment,
 	pzk.value_en as landUse,
 	round((st_area(st_intersection(ca.perimeter_geometry, pz.perimeter_geometry))/st_area(ca.perimeter_geometry))::numeric,2)*100 as percent
 FROM qgep_od.catchment_area ca, qgep_od.planning_zone pz
 LEFT JOIN qgep_vl.planning_zone_kind pzk on pz.kind = pzk.code
-WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry) 
+WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry)
 AND st_isvalid(ca.perimeter_geometry) AND st_isvalid(pz.perimeter_geometry)
-ORDER BY ca.obj_id, percent DESC;DROP VIEW IF EXISTS qgep_swmm.vw_tags;
+ORDER BY ca.obj_id, percent DESC;
+DROP VIEW IF EXISTS qgep_swmm.vw_tags;
 
 
 --------
@@ -580,7 +593,7 @@ SELECT
 FROM qgep_swmm.vw_junctions
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Node' as type,
@@ -589,7 +602,7 @@ SELECT
 FROM qgep_swmm.vw_outfalls
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Node' as type,
@@ -598,7 +611,7 @@ SELECT
 FROM qgep_swmm.vw_storages
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Link' as type,
@@ -607,7 +620,7 @@ SELECT
 FROM qgep_swmm.vw_conduits
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Link' as type,
@@ -623,7 +636,8 @@ SELECT
 	name as name,
 	tag as value
 FROM qgep_swmm.vw_subcatchments
-WHERE tag IS NOT NULLDROP VIEW IF EXISTS qgep_swmm.vw_vertices;
+WHERE tag IS NOT NULL
+DROP VIEW IF EXISTS qgep_swmm.vw_vertices;
 
 
 --------
@@ -633,19 +647,20 @@ WHERE tag IS NOT NULLDROP VIEW IF EXISTS qgep_swmm.vw_vertices;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_vertices AS
 
-SELECT 
-	link, 
+SELECT
+	link,
 	ROUND(ST_X((dp).geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y((dp).geom)::numeric,2) as Y_Coord
 FROM (
-	SELECT 
-		Name As Link, 
-		ST_DumpPoints(geom) AS dp, 
-		ST_NPoints(geom) as nvert 
+	SELECT
+		Name As Link,
+		ST_DumpPoints(geom) AS dp,
+		ST_NPoints(geom) as nvert
 	FROM qgep_swmm.vw_conduits
 	) as foo
 WHERE (dp).path[1] != 1		-- dont select first vertice
 and (dp).path[1] != nvert	-- dont select last vertice
+
 DROP VIEW IF EXISTS qgep_swmm.vw_xsections;
 
 
@@ -667,7 +682,7 @@ SELECT DISTINCT
 		WHEN pp.profile_type = 3354 THEN 'PARABOLIC'	-- open
 		ELSE 'CIRCULAR'
 	END as Shape,
-	CASE 
+	CASE
 		WHEN re.clear_height = 0 THEN 0.1
 		WHEN re.clear_height IS NULL THEN 0.1
 		ELSE re.clear_height/1000 -- [mm] to [m]
