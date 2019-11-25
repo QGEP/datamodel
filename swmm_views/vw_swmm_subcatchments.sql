@@ -6,28 +6,28 @@ DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_') as Name,
 	('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as RainGage,
 	coalesce(fk_wastewater_networkelement_rw_current, replace(ca.obj_id, ' ', '_')) as Outlet,
-	CASE 
+	CASE
 		when surface_area is null then st_area(perimeter_geometry)
 		when surface_area < 0.01 then st_area(perimeter_geometry)
 		else surface_area
 	END as Area,
 	25 as percImperv,
-	CASE 
+	CASE
 		WHEN wn.situation_geometry IS NOT NULL
 		THEN 	
 		(
-		st_maxdistance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry)) 
+		st_maxdistance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry))
 		+ st_distance(wn.situation_geometry, ST_ExteriorRing(perimeter_geometry))
 		)/2
-		ELSE 
+		ELSE
 		(
-		st_maxdistance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry)) 
+		st_maxdistance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry))
 		+ st_distance(st_centroid(perimeter_geometry), ST_ExteriorRing(perimeter_geometry))
-		)/2 
+		)/2
 	END as Width, -- Width of overland flow path estimation
 	0.5 as percSlope,
 	0 as CurbLen,
@@ -43,7 +43,7 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id;
 DROP VIEW IF EXISTS qgep_swmm.vw_subareas;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_') as Subcatchment,
 	0.01 as NImperv,
 	0.1 as NPerv,
@@ -60,7 +60,7 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_raingages;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_raingages AS
-SELECT 
+SELECT
 	('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as Name,
 	'INTENSITY'::varchar as Format,
 	'0:15'::varchar as Interval,
@@ -73,7 +73,7 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_infiltration;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_infiltration AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_')  as Subcatchment,
 	3 as MaxRate,
 	0.5 as MinRate,
@@ -87,12 +87,12 @@ FROM qgep_od.catchment_area as ca;
 DROP VIEW IF EXISTS qgep_swmm.vw_coverages;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_coverages AS
-SELECT 
+SELECT
 	replace(ca.obj_id, ' ', '_')  as Subcatchment,
 	pzk.value_en as landUse,
 	round((st_area(st_intersection(ca.perimeter_geometry, pz.perimeter_geometry))/st_area(ca.perimeter_geometry))::numeric,2)*100 as percent
 FROM qgep_od.catchment_area ca, qgep_od.planning_zone pz
 LEFT JOIN qgep_vl.planning_zone_kind pzk on pz.kind = pzk.code
-WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry) 
+WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry)
 AND st_isvalid(ca.perimeter_geometry) AND st_isvalid(pz.perimeter_geometry)
 ORDER BY ca.obj_id, percent DESC;

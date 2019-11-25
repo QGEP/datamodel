@@ -15,7 +15,7 @@ SELECT
 FROM qgep_swmm.vw_junctions
 WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,
@@ -24,7 +24,7 @@ SELECT
 FROM qgep_swmm.vw_outfalls
 WHERE geom is not null
 
--- UNION 
+-- UNION
 
 -- SELECT
 	-- Name as Node,
@@ -33,7 +33,7 @@ WHERE geom is not null
 -- FROM qgep_swmm.vw_dividers
 -- WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,
@@ -42,7 +42,7 @@ SELECT
 FROM qgep_swmm.vw_storages
 WHERE geom is not null
 
-UNION 
+UNION
 
 SELECT
 	Name as Node,

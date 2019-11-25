@@ -19,7 +19,7 @@ SELECT DISTINCT
 		WHEN pp.profile_type = 3354 THEN 'PARABOLIC'	-- open
 		ELSE 'CIRCULAR'
 	END as Shape,
-	CASE 
+	CASE
 		WHEN re.clear_height = 0 THEN 0.1
 		WHEN re.clear_height IS NULL THEN 0.1
 		ELSE re.clear_height/1000 -- [mm] to [m]

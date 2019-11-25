@@ -15,7 +15,7 @@ SELECT
 FROM qgep_swmm.vw_junctions
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Node' as type,
@@ -24,7 +24,7 @@ SELECT
 FROM qgep_swmm.vw_outfalls
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Node' as type,
@@ -33,7 +33,7 @@ SELECT
 FROM qgep_swmm.vw_storages
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Link' as type,
@@ -42,7 +42,7 @@ SELECT
 FROM qgep_swmm.vw_conduits
 WHERE tag IS NOT NULL
 
-UNION 
+UNION
 
 SELECT
 	'Link' as type,

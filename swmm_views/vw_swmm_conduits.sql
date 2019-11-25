@@ -12,7 +12,7 @@ SELECT
 	re.obj_id as Name,
 	coalesce(from_wn.obj_id, 'default_qgep_node') as FromNode,
 	coalesce(to_wn.obj_id, 'default_qgep_node') as ToNode,
-	CASE 
+	CASE
 		--WHEN re.length_effective <= 0.01 THEN st_length(progression_geometry)
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) <= 0.01 THEN 0.01
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) >= 0.01 THEN st_length(progression_geometry)

@@ -12,7 +12,7 @@ DROP VIEW IF EXISTS qgep_swmm.vw_pumps;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_pumps AS
 
-SELECT 
+SELECT
 	pu.obj_id as Name,
 	overflow.fk_wastewater_node as FromNode, -- inlet is the waternode entering the pump
 	overflow.fk_overflow_to as ToNode, -- outlet is the waternode at the top of next reach

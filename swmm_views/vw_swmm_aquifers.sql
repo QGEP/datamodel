@@ -7,7 +7,7 @@ DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
 
 CREATE OR REPLACE VIEW qgep_swmm.vw_aquifers AS
 
-SELECT 
+SELECT
 	aq.obj_id as Name,
 	0.5 as Porosity,
 	0.15 as WiltingPoint,
