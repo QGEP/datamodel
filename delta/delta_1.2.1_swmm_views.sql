@@ -1,5 +1,7 @@
-DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
+DROP SCHEMA IF EXISTS qgep_swmm CASCADE;
+CREATE SCHEMA IF NOT EXISTS qgep_swmm;
 
+DROP VIEW IF EXISTS qgep_swmm.vw_aquifiers;
 --------
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
@@ -123,8 +125,6 @@ FROM qgep_swmm.vw_raingages
 WHERE geom IS NOT NULL;
 
 
-DROP SCHEMA IF EXISTS qgep_swmm CASCADE;
-CREATE SCHEMA IF NOT EXISTS qgep_swmm;
 
 
 DROP VIEW IF EXISTS qgep_swmm.vw_dividers;
