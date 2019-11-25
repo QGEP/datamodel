@@ -22,7 +22,9 @@ SELECT
 	average_groundwater_level as WaterTableElevation,
 	0.3 as UnsatZoneMoisture,
 	null as UpperEvapPattern
-FROM qgep_od.aquifier as aq
+FROM qgep_od.aquifier as aq;
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_conduits;
 
 
@@ -64,7 +66,9 @@ LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 
-WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
 
 
@@ -80,7 +84,7 @@ SELECT
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_junctions
-WHERE geom is not null
+WHERE geom IS NOT NULL
 
 UNION
 
@@ -89,7 +93,7 @@ SELECT
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_outfalls
-WHERE geom is not null
+WHERE geom IS NOT NULL
 
 -- UNION
 
@@ -98,7 +102,7 @@ WHERE geom is not null
 	-- ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	-- ROUND(ST_Y(geom)::numeric,2) as Y_Coord		
 -- FROM qgep_swmm.vw_dividers
--- WHERE geom is not null
+-- WHERE geom IS NOT NULL
 
 UNION
 
@@ -107,7 +111,7 @@ SELECT
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_storages
-WHERE geom is not null
+WHERE geom IS NOT NULL
 
 UNION
 
@@ -116,9 +120,13 @@ SELECT
 	ROUND(ST_X(geom)::numeric,2) as X_Coord,
 	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
 FROM qgep_swmm.vw_raingages
-WHERE geom is not null
+WHERE geom IS NOT NULL;
+
+
 DROP SCHEMA IF EXISTS qgep_swmm CASCADE;
 CREATE SCHEMA IF NOT EXISTS qgep_swmm;
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_dividers;
 
 
@@ -165,7 +173,8 @@ LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::te
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 WHERE function  = 4799 -- separating_structure
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
 
 DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
 
@@ -193,7 +202,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ma.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
-WHERE wn.obj_id is not null
+WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 --AND function != 4798 -- separating_structure -> used in swmm dividers
 
@@ -215,7 +224,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
-WHERE wn.obj_id is not null
+WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 --AND function != 4799 -- separating_structure -> used in swmm dividers
 AND function NOT IN ( -- must be the same list in vw_swmm_storages
@@ -249,9 +258,7 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 -- 4799, --"separating_structure"
 -- 3008, --"unknown"
 -- 2745, --"vortex_manhole"
-)
-
-
+);
 
 
 
@@ -270,7 +277,7 @@ SELECT
 	0 as fractionAvailable,
 	0 as lastSwept
 
-FROM qgep_vl.planning_zone_kind
+FROM qgep_vl.planning_zone_kind;
 
 
 DROP VIEW IF EXISTS qgep_swmm.vw_losses;
@@ -289,7 +296,7 @@ SELECT DISTINCT
 	0::float as Kexit,
 	0::float as Kavg,
 	CASE
-		WHEN ts.obj_id is not null THEN 'YES'
+		WHEN ts.obj_id IS NOT NULL THEN 'YES'
 		ELSE 'NO'
 	END as flap_gate,
 	0::float as Seepage
@@ -298,7 +305,9 @@ LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::t
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id::text = re.fk_reach_point_from::text
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
-LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id  -- wastewater node of the downstream wastewater node
+LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id;  -- wastewater node of the downstream wastewater node
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_outfalls;
 
 
@@ -324,7 +333,9 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = dp.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE wn.obj_id IS NOT NULL
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_polygons;
 
 --------
@@ -345,7 +356,9 @@ FROM (
 		ST_NPoints(geom) as nvert
 	FROM qgep_swmm.vw_subcatchments
 	) as foo
-WHERE (dp).path[2] != nvert	-- dont select last vertice
+WHERE (dp).path[2] != nvert;	-- dont select last vertice
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_pumps;
 
 
@@ -374,6 +387,7 @@ FROM qgep_od.pump pu
 JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = pu.obj_id::text
 WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
 
 DROP VIEW IF EXISTS qgep_swmm.vw_storages;
 
@@ -477,7 +491,9 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
+
 --------
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
@@ -576,6 +592,8 @@ LEFT JOIN qgep_vl.planning_zone_kind pzk on pz.kind = pzk.code
 WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry)
 AND st_isvalid(ca.perimeter_geometry) AND st_isvalid(pz.perimeter_geometry)
 ORDER BY ca.obj_id, percent DESC;
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_tags;
 
 
@@ -636,7 +654,9 @@ SELECT
 	name as name,
 	tag as value
 FROM qgep_swmm.vw_subcatchments
-WHERE tag IS NOT NULL
+WHERE tag IS NOT NULL;
+
+
 DROP VIEW IF EXISTS qgep_swmm.vw_vertices;
 
 
@@ -659,7 +679,8 @@ FROM (
 	FROM qgep_swmm.vw_conduits
 	) as foo
 WHERE (dp).path[1] != 1		-- dont select first vertice
-and (dp).path[1] != nvert	-- dont select last vertice
+and (dp).path[1] != nvert;	-- dont select last vertice
+
 
 DROP VIEW IF EXISTS qgep_swmm.vw_xsections;
 
@@ -697,3 +718,5 @@ LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
 WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+
+

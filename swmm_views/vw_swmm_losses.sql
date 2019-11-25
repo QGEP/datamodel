@@ -14,7 +14,7 @@ SELECT DISTINCT
 	0::float as Kexit,
 	0::float as Kavg,
 	CASE
-		WHEN ts.obj_id is not null THEN 'YES'
+		WHEN ts.obj_id IS NOT NULL THEN 'YES'
 		ELSE 'NO'
 	END as flap_gate,
 	0::float as Seepage
