@@ -23,8 +23,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # Create a new cover(structure part) with manhole(wastewater structure)
         row = {
             'identifier': 'CO698',
-            'co_level': decimal.Decimal('102.000'),
-            'wn_bottom_level': decimal.Decimal('100.000'),
+            'co_level': decimal.Decimal('100.000'),
             'ws_type': 'manhole',
             'situation_geometry': '01010000A0080800000000000060E346410000000060E336410000000000005940'  # ST_SetSRID(ST_MakePoint(3000000, 1500000, 100), 2056)
         }
