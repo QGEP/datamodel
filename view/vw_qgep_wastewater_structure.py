@@ -532,7 +532,7 @@ def vw_qgep_wastewater_structure(srid: int,
     extras = """
     ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
     ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','cover');
-    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER wn_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_networkelement');
+    ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER wn_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_node');
     """
     cursor.execute(extras)
 
