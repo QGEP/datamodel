@@ -55,7 +55,8 @@ class TestTriggers(unittest.TestCase, DbTestBase):
 
     def test_identifier(self):
         row = {
-            'co_level': decimal.Decimal('100.000'),
+            'co_level': decimal.Decimal('102.000'),
+            'wn_bottom_level': decimal.Decimal('100.000'),
             'ws_type': 'manhole',
             'situation_geometry': self.execute('ST_SetSrid(ST_MakePoint(3000000, 1500000, 100), 2056)')
         }
