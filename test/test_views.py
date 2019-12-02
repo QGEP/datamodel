@@ -84,8 +84,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         }
 
         expected_row = copy.deepcopy(row)
-        # be aware the Z variable is overwritten by NaN because co_level is NULL
-        expected_row['situation_geometry'] = self.execute("ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)")
+        expected_row['situation_geometry'] = self.execute("ST_SetSRID(ST_MakePoint(2600000, 1200000, 15000), 2056)")
         
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row, expected_row)
 
