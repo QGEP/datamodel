@@ -14,6 +14,8 @@ class CreateViews(DeltaPy):
         qgep_wastewater_structure_extra = self.variables.get('qgep_wastewater_structure_extra', None)
         qgep_reach_extra = self.variables.get('qgep_reach_extra', None)
 
+        if not self.variables.get('SRID'):
+            raise RuntimeError('SRID not specified. Add `-v int SRID 2056` (or the corresponding EPSG code) to the upgrade command.')
         create_views(srid=self.variables.get('SRID'),
                      pg_service=self.pg_service,
                      qgep_wastewater_structure_extra=qgep_wastewater_structure_extra,
