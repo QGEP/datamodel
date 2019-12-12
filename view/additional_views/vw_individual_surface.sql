@@ -8,11 +8,11 @@ DROP VIEW IF EXISTS qgep_od.vw_individual_surface;
 CREATE OR REPLACE VIEW qgep_od.vw_individual_surface AS
 
 SELECT
-   IS.obj_id
-   , IS.function
-   , IS.inclination
-   , IS.pavement
-   , IS.perimeter_geometry
+   IE.obj_id
+   , IE.function
+   , IE.inclination
+   , IE.pavement
+   , IE.perimeter_geometry
    , CN.identifier
    , CN.remark
    , CN.sewer_infiltration_water_production
@@ -22,9 +22,9 @@ SELECT
   , CN.fk_wastewater_networkelement
   , CN.fk_owner
   , CN.fk_operator
-  FROM qgep_od.individual_surface IS
+  FROM qgep_od.individual_surface IE
  LEFT JOIN qgep_od.connection_object CN
- ON CN.obj_id = IS.obj_id;
+ ON CN.obj_id = IE.obj_id;
 
 -----------------------------------
 -- individual_surface INSERT
