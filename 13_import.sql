@@ -58,10 +58,7 @@ DO $DO$
 BEGIN
 EXECUTE format($TRIGGER$
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
-DECLARE
-  multi_situation_geometry geometry(MULTIPOINTZ,%1$s);
 BEGIN
-  multi_situation_geometry := st_collect(NEW.situation_geometry)::geometry(MULTIPOINTZ, %1$s);
 
   -- in case there is a depth, but no refercing value - it should stay in quarantene
   IF( NEW._depth IS NOT NULL AND NEW.co_level IS NULL AND NEW.wn_bottom_level IS NULL ) THEN
@@ -72,7 +69,7 @@ BEGIN
   IF( SELECT TRUE FROM qgep_od.vw_qgep_wastewater_structure WHERE obj_id = NEW.obj_id ) THEN
     UPDATE qgep_od.vw_qgep_wastewater_structure SET
     identifier = NEW.identifier,
-    situation_geometry = multi_situation_geometry,
+    situation_geometry = ST_Force2D(NEW.situation_geometry),
     co_shape = NEW.co_shape,
     co_diameter = NEW.co_diameter,
     co_material = NEW.co_material,
@@ -124,7 +121,7 @@ BEGIN
     (
     NEW.obj_id,
     NEW.identifier,
-    multi_situation_geometry,
+    ST_Force2D(NEW.situation_geometry),
     NEW.co_shape,
     NEW.co_diameter,
     NEW.co_material,
