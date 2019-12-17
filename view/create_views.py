@@ -56,6 +56,8 @@ def create_views(srid: int,
     SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.reach', view_name='vw_reach', pg_service=pg_service).create()
     SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.wastewater_node', view_name='vw_wastewater_node', pkey_default_value=True, pg_service=pg_service).create()
 
+    SingleInheritance('qgep_od.connection_object', 'qgep_od.individual_surface', view_name='vw_individual_surface', pkey_default_value=True, pg_service=pg_service).create()
+
     MultipleInheritance(safe_load(open("view/vw_maintenance_examination.yaml")), drop=True, pg_service=pg_service).create()
     MultipleInheritance(safe_load(open("view/vw_damage.yaml")), drop=True, pg_service=pg_service).create()
 
