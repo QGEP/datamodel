@@ -1,5 +1,5 @@
 -- create trigger functions and triggers for quarantine table
-SELECT set_config('qgep.srid', :SRID::text, false);
+SELECT set_config('qgep.srid', %(SRID)s::text, false);
 DO $DO$
 BEGIN
 EXECUTE format($TRIGGER$
@@ -131,7 +131,7 @@ BEGIN
 
   -- catch
   EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'EXCEPTION: %%', SQLERRM;
+    RAISE NOTICE 'EXCEPTION: %%%%', SQLERRM;
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
