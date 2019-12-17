@@ -63,7 +63,11 @@ DROP VIEW IF EXISTS qgep_od.vw_leapingweir;
 DROP VIEW IF EXISTS qgep_od.vw_prank_weir;
 DROP VIEW IF EXISTS qgep_od.vw_pump;
 
+-- others
+DROP VIEW IF EXISTS qgep_od.vw_individual_surface;
+
 -- manual views
 DROP VIEW IF EXISTS qgep_od.vw_file;
 DROP VIEW IF EXISTS qgep_od.vw_change_points;
 DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
+
