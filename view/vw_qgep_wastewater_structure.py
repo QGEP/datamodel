@@ -57,7 +57,7 @@ def vw_qgep_wastewater_structure(srid: int,
         main_co_sp.renovation_demand AS co_renovation_demand,
 
         {main_co_cols},
-        aggregated_wastewater_structure.situation_geometry,
+        ST_Force2D(COALESCE(wn.situation_geometry, main_co.situation_geometry))::geometry(Point, %(SRID)s) AS situation_geometry,
 
         {ma_columns},
 
@@ -74,15 +74,7 @@ def vw_qgep_wastewater_structure(srid: int,
         ws._usage_current AS _channel_usage_current,
         ws._function_hierarchic AS _channel_function_hierarchic
 
-        FROM (
-          SELECT ws.obj_id,
-            ST_Collect(co.situation_geometry)::geometry(MULTIPOINTZ, %(SRID)s) AS situation_geometry
-          FROM qgep_od.wastewater_structure ws
-          LEFT JOIN qgep_od.structure_part sp ON sp.fk_wastewater_structure = ws.obj_id
-          LEFT JOIN qgep_od.cover co ON co.obj_id = sp.obj_id
-          GROUP BY ws.obj_id
-        ) aggregated_wastewater_structure
-        LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = aggregated_wastewater_structure.obj_id
+        FROM qgep_od.wastewater_structure ws
         LEFT JOIN qgep_od.cover main_co ON main_co.obj_id = ws.fk_main_cover
         LEFT JOIN qgep_od.structure_part main_co_sp ON main_co_sp.obj_id = ws.fk_main_cover
         LEFT JOIN qgep_od.manhole ma ON ma.obj_id = ws.obj_id
@@ -287,7 +279,7 @@ def vw_qgep_wastewater_structure(srid: int,
                                         pkey='obj_id',
                                         indent=6,
                                         insert_values={'identifier': "COALESCE(NULLIF(NEW.wn_identifier,''), NEW.identifier)",
-                                                       'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
+                                                       'situation_geometry': 'ST_SetSRID(ST_MakePoint(ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), \'nan\'), {srid} )'.format(srid=srid),
                                                        'last_modification': 'NOW()',
                                                        'fk_provider': "COALESCE(NULLIF(NEW.wn_fk_provider,''), NEW.fk_provider)",
                                                        'fk_dataowner': "COALESCE(NULLIF(NEW.wn_fk_dataowner,''), NEW.fk_dataowner)",
@@ -303,7 +295,7 @@ def vw_qgep_wastewater_structure(srid: int,
                                         indent=6,
                                         remap_columns={'cover_shape': 'co_shape'},
                                         insert_values={'identifier': "COALESCE(NULLIF(NEW.co_identifier,''), NEW.identifier)",
-                                                       'situation_geometry': 'ST_GeometryN( NEW.situation_geometry, 1 )',
+                                                       'situation_geometry': 'ST_SetSRID(ST_MakePoint(ST_X(NEW.situation_geometry), ST_Y(NEW.situation_geometry), \'nan\'), {srid} )'.format(srid=srid),
                                                        'last_modification': 'NOW()',
                                                        'fk_provider': 'NEW.fk_provider',
                                                        'fk_dataowner': 'NEW.fk_dataowner',
@@ -361,8 +353,8 @@ def vw_qgep_wastewater_structure(srid: int,
 
       -- Cover geometry has been moved
       IF NOT ST_Equals( OLD.situation_geometry, NEW.situation_geometry) THEN
-        dx = ST_XMin(NEW.situation_geometry) - ST_XMin(OLD.situation_geometry);
-        dy = ST_YMin(NEW.situation_geometry) - ST_YMin(OLD.situation_geometry);
+        dx = ST_X(NEW.situation_geometry) - ST_X(OLD.situation_geometry);
+        dy = ST_Y(NEW.situation_geometry) - ST_Y(OLD.situation_geometry);
 
         -- Move wastewater node as well
         -- comment: TRANSLATE((ST_MakePoint(500, 900, 'NaN')), 10, 20, 0) would return NaN NaN NaN - so we have this workaround

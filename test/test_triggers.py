@@ -57,7 +57,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = {
             'co_level': decimal.Decimal('100.000'),
             'ws_type': 'manhole',
-            'situation_geometry': self.execute('ST_SetSrid(ST_Multi(ST_MakePoint(3000000, 1500000, 100)), 2056)')
+            'situation_geometry': self.execute('ST_SetSrid(ST_MakePoint(3000000, 1500000), 2056)')
         }
 
         obj_id = self.insert_check('vw_qgep_wastewater_structure', row)
