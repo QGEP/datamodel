@@ -57,54 +57,6 @@ CREATE TABLE qgep_import.manhole_quarantine
 
 -- create mobile view
 
-CREATE OR REPLACE VIEW qgep_import.vw_manhole AS 
- SELECT DISTINCT ON (ws.obj_id) ws.obj_id,
-    ws.identifier,
-    (st_dump(ws.situation_geometry)).geom::geometry(Point,%(SRID)s) AS situation_geometry,
-    ws.co_shape,
-    ws.co_diameter,
-    ws.co_material,
-    ws.co_positional_accuracy,
-    ws.co_level,
-    ws._depth::numeric(6, 3) AS _depth,
-    ws._channel_usage_current,
-    ws.ma_material,
-    ws.ma_dimension1,
-    ws.ma_dimension2,
-    ws.ws_type,
-    ws.ma_function,
-    ws.ss_function,
-    ws.remark,
-    ws.wn_bottom_level,
-    NULL::text AS photo1,
-    NULL::text AS photo2,
-    NULL::smallint AS inlet_3_material,
-    NULL::numeric(6, 3) AS inlet_3_clear_hight,
-    NULL::numeric(6, 3) AS inlet_3_depth_m,
-    NULL::smallint AS inlet_4_material,
-    NULL::numeric(6, 3) AS inlet_4_clear_hight,
-    NULL::numeric(6, 3) AS inlet_4_depth_m,
-    NULL::smallint AS inlet_5_material,
-    NULL::numeric(6, 3) AS inlet_5_clear_hight,
-    NULL::numeric(6, 3) AS inlet_5_depth_m,
-    NULL::smallint AS inlet_6_material,
-    NULL::numeric(6, 3) AS inlet_6_clear_hight,
-    NULL::numeric(6, 3) AS inlet_6_depth_m,
-    NULL::smallint AS inlet_7_material,
-    NULL::numeric(6, 3) AS inlet_7_clear_hight,
-    NULL::numeric(6, 3) AS inlet_7_depth_m,
-    NULL::smallint AS outlet_1_material,
-    NULL::numeric(6, 3) AS outlet_1_clear_hight,
-    NULL::numeric(6, 3) AS outlet_1_depth_m,
-    NULL::smallint AS outlet_2_material,
-    NULL::numeric(6, 3) AS outlet_2_clear_hight,
-    NULL::numeric(6, 3) AS outlet_2_depth_m,
-    (CASE WHEN EXISTS ( SELECT TRUE FROM qgep_import.manhole_quarantine q WHERE q.obj_id = ws.obj_id )
-    THEN TRUE
-    ELSE FALSE 
-    END) AS in_quarantine
-
-   FROM qgep_od.vw_qgep_wastewater_structure ws;
 
 
 -- create triggerfunction and trigger for mobile view
@@ -205,11 +157,7 @@ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS on_mutation_make_insert ON qgep_import.vw_manhole;
 
-CREATE TRIGGER on_mutation_make_insert
-  INSTEAD OF INSERT OR UPDATE
-  ON qgep_import.vw_manhole
-  FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine();
+
 
 -- create triggerfunctions and triggers for quarantine table 
 CREATE OR REPLACE FUNCTION qgep_import.manhole_quarantine_try_structure_update() RETURNS trigger AS $BODY$
@@ -331,22 +279,8 @@ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
 
-CREATE TRIGGER after_update_try_structure_update
-  AFTER UPDATE
-  ON qgep_import.manhole_quarantine
-  FOR EACH ROW
-  WHEN ( ( NEW.structure_okay IS NOT TRUE ) 
-  AND NOT( OLD.inlet_okay IS NOT TRUE AND NEW.inlet_okay IS TRUE )
-  AND NOT( OLD.outlet_okay IS NOT TRUE AND NEW.outlet_okay IS TRUE ) )
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
-
 DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
 
-CREATE TRIGGER after_insert_try_structure_update
-  AFTER INSERT
-  ON qgep_import.manhole_quarantine
-  FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.manhole_quarantine_try_structure_update();
 
 -- Some information:
 -- 1. new lets 0 - old lets 0 -> do nothing
