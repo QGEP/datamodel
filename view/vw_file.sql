@@ -41,9 +41,11 @@ CREATE OR REPLACE FUNCTION qgep_od.vw_file_delete()
 $BODY$
   BEGIN
     DELETE FROM qgep_od.file WHERE obj_id = OLD.obj_id;
-  END; $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+    RETURN OLD;
+  END;
+$BODY$
+LANGUAGE plpgsql VOLATILE
+COST 100;
 
 
 -- ******************************************************************************
