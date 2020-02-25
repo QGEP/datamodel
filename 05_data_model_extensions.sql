@@ -21,16 +21,16 @@ ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _label text;
 COMMENT ON COLUMN qgep_od.wastewater_structure._label IS 'not part of the VSA-DSS data model
 added solely for QGEP';
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _cover_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._cover_label IS 'not part of the VSA-DSS data model
+COMMENT ON COLUMN qgep_od.wastewater_structure._cover_label IS 'stores the cover altitude to be used for labelling, not part of the VSA-DSS data model
 added solely for QGEP';
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _input_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._input_label IS 'not part of the VSA-DSS data model
+COMMENT ON COLUMN qgep_od.wastewater_structure._input_label IS 'stores the list of input altitudes to be used for labelling, not part of the VSA-DSS data model
 added solely for QGEP';
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _output_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._output_label IS 'not part of the VSA-DSS data model
+COMMENT ON COLUMN qgep_od.wastewater_structure._output_label IS 'stores the list of output altitudes to be used for labelling, not part of the VSA-DSS data model
 added solely for QGEP';
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _bottom_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'not part of the VSA-DSS data model
+COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'stores the bottom altitude to be used for labelling, not part of the VSA-DSS data model
 added solely for QGEP';
 
 
