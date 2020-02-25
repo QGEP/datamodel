@@ -76,3 +76,22 @@ Installation:
 
  * `export PG_SERVICE=pg_qgep`
  * Run `scripts/db_setup.sh`
+
+Using Docker (for dev):
+----------------
+
+```
+# prepare
+docker-compose build
+
+# (re)set postgis
+docker-compose up --build --renew-anon-volumes -d postgis
+
+# create the datamodel
+docker-compose run datamodel [release | release_struct | build | build_pum]
+```
+
+- *release* : installs the demo data from the release
+- *release_struct* : installs structure (empty model) from the release
+- *build* : installs the structure using installation scripts
+- *build_pum* : installs the demo data through successive pum migrations
