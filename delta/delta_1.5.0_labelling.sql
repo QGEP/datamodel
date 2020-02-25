@@ -85,3 +85,6 @@ END
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
+
+-- Update all labels
+SELECT qgep_od.update_wastewater_structure_label(NULL, true);
