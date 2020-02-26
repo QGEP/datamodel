@@ -1,17 +1,35 @@
-FROM python:3.7-buster
+ARG POSTGIS_VERSION=11-2.5
+FROM postgis/postgis:${POSTGIS_VERSION}
 
+# System deps
 RUN apt-get update
-RUN apt-get install -y postgresql-client wget
 
-ARG DATAMODEL_VERSION=1.4.0
+# TODO : have pirogue support python 3.5 them remove this and replace by 3.5 section below
+# INSTALL SYSTEM DEPS (PYTHON-3.7)
+# ADAPTED FROM https://linuxize.com/post/how-to-install-python-3-7-on-debian-9/
+RUN apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+RUN wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz
+RUN tar -xf Python-3.7.3.tar.xz
+WORKDIR /Python-3.7.3
+RUN ./configure --with-ensurepip=install
+RUN make -j 8
+RUN make altinstall
+RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 10
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 10
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
+WORKDIR /
+# /ADAPTED
+RUN apt-get install -y libpq-dev
+# # /INSTALL SYSTEM DEPS (PYTHON-3.7)
 
-# get releases of schema only / demo data (db: qgep)
-RUN mkdir /data
-RUN wget https://github.com/QGEP/datamodel/releases/download/${DATAMODEL_VERSION}/qgep_v${DATAMODEL_VERSION}_structure_with_value_lists.sql -O /data/structure.sql
-RUN wget https://github.com/QGEP/datamodel/releases/download/${DATAMODEL_VERSION}/qgep_v${DATAMODEL_VERSION}_structure_and_demo_data.backup -O /data/demo_data.backup
+# INSTALL SYSTEM DEPS (PYTHON-3.5 debian stretch)
+# RUN apt-get install -y python3 python3-pip libpq-dev wget
+# /INSTALL SYSTEM DEPS (PYTHON-3.5 debian stretch)
 
-# add deps
-ADD ./requirements.txt .
+
+# Python deps
+ADD requirements.txt .
 RUN pip3 install nose
 RUN pip3 install -r ./requirements.txt
 
@@ -19,13 +37,22 @@ RUN pip3 install -r ./requirements.txt
 ADD . /src
 WORKDIR /src
 
+# Cache folder for downloads (TODO : keep this on the host as volumes)
+RUN mkdir /downloads
+RUN chown postgres /downloads
+
 # Configure the postgres connections
-RUN printf '[qgep_release]\nhost=postgis\nport=5432\ndbname=qgep_release\nuser=postgres\n' >> ~/.pg_service.conf
-RUN printf '[qgep_release_struct]\nhost=postgis\nport=5432\ndbname=qgep_release_struct\nuser=postgres\n' >> ~/.pg_service.conf
-RUN printf '[qgep_build]\nhost=postgis\nport=5432\ndbname=qgep_build\nuser=postgres\n' >> ~/.pg_service.conf
-RUN printf '[qgep_build_pum]\nhost=postgis\nport=5432\ndbname=qgep_build_pum\nuser=postgres\n' >> ~/.pg_service.conf
+RUN printf '[qgep_release]\ndbname=qgep_release\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
+RUN printf '[qgep_release_struct]\ndbname=qgep_release_struct\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
+RUN printf '[qgep_build]\ndbname=qgep_build\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
+RUN printf '[qgep_build_pum]\ndbname=qgep_build_pum\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
 
-RUN chmod +x /src/.docker/docker-entrypoint.sh
+# Main script
+RUN chmod +x /src/.docker/init_qgep.sh
+ENV PATH="/src/.docker:${PATH}"
 
-ENTRYPOINT ["/src/.docker/docker-entrypoint.sh"]
-CMD [""]
+# Execute the main script on database initialization (zzz to be after postgis init)
+RUN ln -s /src/.docker/init_qgep.sh /docker-entrypoint-initdb.d/zzz_init_qgep.sh
+
+# Some defaults
+ENV POSTGRES_PASSWORD=postgres

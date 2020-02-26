@@ -77,52 +77,18 @@ Installation:
  * `export PG_SERVICE=pg_qgep`
  * Run `scripts/db_setup.sh`
 
-Using Docker (for dev):
+Using Docker (quickstart):
 ----------------
 
-This sets up four different databases :
-
-- *release* : installs the demo data from the release 1.4
-- *release_struct* : installs structure (empty model) from the release 1.4
-- *build* : installs the structure using installation scripts
-- *build_pum* : installs the demo data through successive pum migrations
+Install Docker, then run :
 
 ```bash
-# prepare
-cd .docker
-docker-compose build
-
-# (re)set postgis
-docker-compose up --build --renew-anon-volumes -d postgis
-
-# create the datamodel
-docker-compose run datamodel [release | release_struct | build | build_pum | other_arbitrary_command ]
+docker run -d --name qgep -p 5432:5432 olivierdalang/qgep_datamodel
 ```
 
-Example usage:
-```bash
-cd .docker
+This sets up two different databases, that should be available via `127.0.0.1:5432` with user and password `postgres` :
 
-# get the release structure
-docker-compose run datamodel release_struct
+- *qgep_structure* : the structure using installation scripts
+- *qgep_data* : the demo data (produced through successive pum migrations of initial demo data)
 
-# build the model from scratch
-docker-compose run datamodel build
-
-# migrate the release structure using pum upgrade
-docker-compose run datamodel pum upgrade -t qgep_sys.pum_info -p qgep_release_struct -d delta -v int SRID 2056
-
-# check the results is the same than the build using pum check
-docker-compose run datamodel pum check -p1 qgep_build -p2 qgep_release_struct -o check-results
-```
-
-Running tests:
-```bash
-cd .docker
-
-# build the model from scratch
-docker-compose run datamodel build
-
-# run the tests
-docker-compose run -e PGSERVICE=qgep_build datamodel nosetests --exe -e test_import.py -e test_geometry.py
-```
+Head to `.docker/README.md` for advanced usage of the QGEP Docker setup.
