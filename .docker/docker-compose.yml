@@ -8,6 +8,8 @@ services:
       - 5432:5432
 
   datamodel:
-    build: .
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
     volumes:
-      - .:/src
+      - ..:/src

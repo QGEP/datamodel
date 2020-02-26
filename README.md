@@ -89,6 +89,7 @@ This sets up four different databases :
 
 ```bash
 # prepare
+cd .docker
 docker-compose build
 
 # (re)set postgis
@@ -100,6 +101,8 @@ docker-compose run datamodel [release | release_struct | build | build_pum | oth
 
 Example usage:
 ```bash
+cd .docker
+
 # get the release structure
 docker-compose run datamodel release_struct
 
@@ -115,6 +118,8 @@ docker-compose run datamodel pum check -p1 qgep_build -p2 qgep_release_struct -o
 
 Running tests:
 ```bash
+cd .docker
+
 # build the model from scratch
 docker-compose run datamodel build
 
