@@ -80,7 +80,14 @@ Installation:
 Using Docker (for dev):
 ----------------
 
-```
+This sets up four different databases :
+
+- *release* : installs the demo data from the release 1.4
+- *release_struct* : installs structure (empty model) from the release 1.4
+- *build* : installs the structure using installation scripts
+- *build_pum* : installs the demo data through successive pum migrations
+
+```bash
 # prepare
 docker-compose build
 
@@ -88,10 +95,29 @@ docker-compose build
 docker-compose up --build --renew-anon-volumes -d postgis
 
 # create the datamodel
-docker-compose run datamodel [release | release_struct | build | build_pum]
+docker-compose run datamodel [release | release_struct | build | build_pum | other_arbitrary_command ]
 ```
 
-- *release* : installs the demo data from the release
-- *release_struct* : installs structure (empty model) from the release
-- *build* : installs the structure using installation scripts
-- *build_pum* : installs the demo data through successive pum migrations
+Example usage:
+```bash
+# get the release structure
+docker-compose run datamodel release_struct
+
+# build the model from scratch
+docker-compose run datamodel build
+
+# migrate the release structure using pum upgrade
+docker-compose run datamodel pum upgrade -t qgep_sys.pum_info -p qgep_release_struct -d delta -v int SRID 2056
+
+# check the results is the same than the build using pum check
+docker-compose run datamodel pum check -p1 qgep_build -p2 qgep_release_struct -o check-results
+```
+
+Running tests:
+```bash
+# build the model from scratch
+docker-compose run datamodel build
+
+# run the tests
+docker-compose run -e PGSERVICE=qgep_build datamodel nosetests --exe -e test_import.py -e test_geometry.py
+```

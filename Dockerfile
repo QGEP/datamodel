@@ -12,12 +12,14 @@ RUN wget https://github.com/QGEP/datamodel/releases/download/${DATAMODEL_VERSION
 
 # add deps
 ADD requirements.txt .
+RUN pip3 install nose
 RUN pip3 install -r ./requirements.txt
 
 # Add source
 ADD . /src
 WORKDIR /src
 
+# Configure the postgres connections
 RUN printf '[qgep_release]\nhost=postgis\nport=5432\ndbname=qgep_release\nuser=postgres\n' >> ~/.pg_service.conf
 RUN printf '[qgep_release_struct]\nhost=postgis\nport=5432\ndbname=qgep_release_struct\nuser=postgres\n' >> ~/.pg_service.conf
 RUN printf '[qgep_build]\nhost=postgis\nport=5432\ndbname=qgep_build\nuser=postgres\n' >> ~/.pg_service.conf
