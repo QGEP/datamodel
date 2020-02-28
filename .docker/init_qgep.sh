@@ -21,6 +21,8 @@ if [ "$1" == "wait" ]; then
     sleep 3
   done
   echo "Initialization complete !"
+  # Let some time for postgres to restart...
+  sleep 3
   exit 0
 
 fi
