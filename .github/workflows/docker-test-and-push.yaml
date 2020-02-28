@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - docker_dev
     tags:
       - '*'
 
@@ -27,14 +26,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: "build dockerfile"
-        run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag olivierdalang/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} .
+        run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} .
         env:
           PGIS: ${{ matrix.pgis }}
 
       - name: "run tests"
         id: tests
         run: |
-          docker run -d -p 5432:5432 --name qgep olivierdalang/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
+          docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
           docker exec qgep init_qgep.sh wait
           docker exec -e PGSERVICE=qgep_build qgep nosetests --exe -e test_import.py -e test_geometry.py
         env:
@@ -51,23 +50,23 @@ jobs:
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
-          docker push olivierdalang/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
+          docker push opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
 
       - name: "push to dockerhub (:tag)"
         if: matrix.pgis == env.pgis_stable && github.ref != 'refs/heads/master'
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
-          docker tag olivierdalang/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} olivierdalang/qgep_datamodel:${GITHUB_REF##*/}
-          docker push olivierdalang/qgep_datamodel:${GITHUB_REF##*/}
+          docker tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} opengisch/qgep_datamodel:${GITHUB_REF##*/}
+          docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}
 
       - name: "push to dockerhub (:latest)"
         if: github.ref == 'refs/heads/master'
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
-          docker tag olivierdalang/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} olivierdalang/qgep_datamodel:latest
-          docker push olivierdalang/qgep_datamodel:latest
+          docker tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} opengisch/qgep_datamodel:latest
+          docker push opengisch/qgep_datamodel:latest
 
       - name: "failure logs"
         if: failure()

@@ -83,7 +83,7 @@ Using Docker (quickstart):
 Install Docker, then run :
 
 ```bash
-docker run -d --name qgep -p 5432:5432 olivierdalang/qgep_datamodel
+docker run -d --name qgep -p 5432:5432 opengisch/qgep_datamodel
 ```
 
 This sets up two different databases, that should be available via `127.0.0.1:5432` with user and password `postgres` :
