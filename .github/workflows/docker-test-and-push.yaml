@@ -6,6 +6,9 @@ on:
       - master
     tags:
       - '*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   docker-tests:
@@ -40,6 +43,7 @@ jobs:
           PGIS: ${{ matrix.pgis }}
           
       - name: "dockerhub login"
+        if: github.event_name != 'pull_request'
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -47,13 +51,14 @@ jobs:
           docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_PASSWORD"
 
       - name: "push to dockerhub"
+        if: github.event_name != 'pull_request'
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
           docker push opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
 
       - name: "push to dockerhub (:tag)"
-        if: matrix.pgis == env.pgis_stable && github.ref != 'refs/heads/master'
+        if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable && github.ref != 'refs/heads/master'
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
@@ -61,7 +66,7 @@ jobs:
           docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}
 
       - name: "push to dockerhub (:latest)"
-        if: github.ref == 'refs/heads/master'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
         env:
           PGIS: ${{ matrix.pgis }}
         run: |
