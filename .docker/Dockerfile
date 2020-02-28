@@ -30,7 +30,7 @@ RUN apt-get install -y libpq-dev
 
 # Python deps
 ADD requirements.txt .
-RUN pip3 install nose
+RUN pip3 install pytest
 RUN pip3 install -r ./requirements.txt
 
 # Add source

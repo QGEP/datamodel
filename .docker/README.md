@@ -11,8 +11,8 @@ docker run -d --name qgep -p 5432:5432 opengisch/qgep_datamodel
 
 This sets up two different databases, that should be available via `127.0.0.1:5432` with user and password `postgres` :
 
-- *qgep_structure* : the structure using installation scripts
-- *qgep_data* : the demo data (produced through successive pum migrations of initial demo data)
+- *qgep_build* : the structure using installation scripts
+- *qgep_build_pum* : the demo data (produced through successive pum migrations of initial demo data)
 
 Reinitialization
 ----------------
@@ -48,7 +48,7 @@ docker run -d --rm -p 5432:5432 -v "${PWD}:/src" --name qgep opengisch/qgep_data
 
 # example 1: run some tests on a built database
 docker exec qgep init_qgep.sh structure
-docker exec -e PGSERVICE=qgep_structure qgep nosetests --exe -e test_import.py -e test_geometry.py
+docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
 
 # example 2: compare released data version 1.2.0 with freshly built structure
 docker exec qgep init_qgep.sh release_struct 1.2.0
