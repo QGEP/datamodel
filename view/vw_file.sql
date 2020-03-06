@@ -28,6 +28,8 @@ CREATE OR REPLACE VIEW qgep_od.vw_file AS
     f.remark
    FROM qgep_od.file f
      LEFT JOIN qgep_od.data_media dm ON dm.obj_id::text = f.fk_data_media::text;
+     
+ALTER VIEW qgep_od.vw_file ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','file');
 
 -- ******************************************************************************
 -- 3. FUNCTIONS :

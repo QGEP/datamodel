@@ -1,0 +1,79 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  docker-tests:
+    name: Docker
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
+        pgis: ["9.6-2.5", "10-2.5", "11-2.5", "12-2.5"]
+      fail-fast: false
+
+    env:
+      # which pgis version to use for :tag images (must be in the matrix above)
+      pgis_stable: "11-2.5"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "build dockerfile"
+        run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} .
+        env:
+          PGIS: ${{ matrix.pgis }}
+
+      - name: "run tests"
+        id: tests
+        run: |
+          docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
+          docker exec qgep init_qgep.sh wait
+          docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
+        env:
+          PGIS: ${{ matrix.pgis }}
+          
+      - name: "dockerhub login"
+        if: github.event_name != 'pull_request'
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_PASSWORD"
+
+      - name: "push to dockerhub"
+        if: github.event_name != 'pull_request'
+        env:
+          PGIS: ${{ matrix.pgis }}
+        run: |
+          docker push opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
+
+      - name: "push to dockerhub (:tag)"
+        if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable && github.ref != 'refs/heads/master'
+        env:
+          PGIS: ${{ matrix.pgis }}
+        run: |
+          docker tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} opengisch/qgep_datamodel:${GITHUB_REF##*/}
+          docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}
+
+      - name: "push to dockerhub (:latest)"
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        env:
+          PGIS: ${{ matrix.pgis }}
+        run: |
+          docker tag opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/} opengisch/qgep_datamodel:latest
+          docker push opengisch/qgep_datamodel:latest
+
+      - name: "failure logs"
+        if: failure()
+        run: |
+          docker logs qgep
