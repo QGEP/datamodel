@@ -240,7 +240,7 @@ FROM (
       WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE NE.fk_wastewater_structure = _obj_id END
       -- Bottom
       UNION
-      SELECT NULL AS co_level, NULL::text AS rpi_level, NULL::text AS rpo_level, ws1.obj_id ws, NULL, NULL, coalesce(round(wn.bottom_level, 2)::text, '?') AS wn_bottom_level
+      SELECT NULL AS co_level, NULL::text AS rpi_level, NULL::text AS rpo_level, ws1.obj_id ws, NULL, NULL, round(wn.bottom_level, 2)::text AS wn_bottom_level
       FROM qgep_od.wastewater_structure ws1
       LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws1.fk_main_wastewater_node
       WHERE _all OR ws1.obj_id = _obj_id
