@@ -190,6 +190,18 @@ class TestTriggers(unittest.TestCase, DbTestBase):
             '_output_label': '\nO1=93.00\nO2=92.00',
         })
         check_values(expected)
+
+        # Test label generation on reach update (level to null)
+
+        row_reach_c = {
+            'rp_from_level': None
+        }
+        self.update('vw_qgep_reach', row_reach_c, reach_c_id)
+
+        expected.update({
+            '_output_label': '\nO1=?\nO2=92.00',
+        })
+        check_values(expected)
         
         # TODO : reenable this (currently, deleting reaches doesn't trigger update on labels)
         # Test label generation on reach delete
