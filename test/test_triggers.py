@@ -191,16 +191,16 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         })
         check_values(expected)
         
-        # Test label generation on reach delete
-
-        self.delete('vw_qgep_reach', reach_a_id)
-        self.delete('vw_qgep_reach', reach_c_id)
-        
-        expected.update({
-            '_input_label': '',
-            '_output_label': '\nO2=92.00',
-        })
         # TODO : reenable this (currently, deleting reaches doesn't trigger update on labels)
+        # Test label generation on reach delete
+        #
+        # self.delete('vw_qgep_reach', reach_a_id)
+        # self.delete('vw_qgep_reach', reach_c_id)
+        #
+        # expected.update({
+        #     '_input_label': '',
+        #     '_output_label': '\nO1=92.00',
+        # })
         # check_values(expected)
 
 if __name__ == '__main__':
