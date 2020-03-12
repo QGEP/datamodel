@@ -1,8 +1,4 @@
---------
--- View for the swmm module class subcatchments
--- 20190329 qgep code sprint SB, TP
---------
-DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments;
+DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments CASCADE;
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 SELECT
   replace(ca.obj_id, ' ', '_') as Name,
@@ -37,6 +33,78 @@ FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.wastewater_networkelement we on we.obj_id = ca.fk_wastewater_networkelement_rw_current
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
+
+DROP VIEW IF EXISTS qgep_swmm.vw_polygons;
+CREATE OR REPLACE VIEW qgep_swmm.vw_polygons AS
+
+SELECT
+  Subcatchment,
+  round(ST_X((dp).geom)::numeric,2) as X_Coord,
+  round(ST_Y((dp).geom)::numeric,2) as Y_Coord
+  FROM (
+    SELECT
+      Name As Subcatchment,
+      ST_DumpPoints(geom) AS dp,
+      ST_NPoints(geom) as nvert
+      FROM qgep_swmm.vw_subcatchments
+    ) as foo
+WHERE (dp).path[2] != nvert;	-- dont select last vertex
+
+DROP VIEW IF EXISTS qgep_swmm.vw_tags;
+
+CREATE OR REPLACE VIEW qgep_swmm.vw_tags AS
+
+SELECT
+	'Node' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_junctions
+WHERE tag IS NOT NULL
+
+UNION
+
+SELECT
+	'Node' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_outfalls
+WHERE tag IS NOT NULL
+
+UNION
+
+SELECT
+	'Node' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_storages
+WHERE tag IS NOT NULL
+
+UNION
+
+SELECT
+	'Link' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_conduits
+WHERE tag IS NOT NULL
+
+UNION
+
+SELECT
+	'Link' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_pumps
+WHERE tag IS NOT NULL
+
+UNION
+
+SELECT
+	'Subcatch' as type,
+	name as name,
+	tag as value
+FROM qgep_swmm.vw_subcatchments
+WHERE tag IS NOT NULL;
 
 -- Creates subarea related to the subcatchment
 DROP VIEW IF EXISTS qgep_swmm.vw_subareas;
@@ -78,7 +146,7 @@ WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnect
 
 
 -- Creates a default raingage for each subcatchment
-DROP VIEW IF EXISTS qgep_swmm.vw_raingages;
+DROP VIEW IF EXISTS qgep_swmm.vw_raingages CASCADE;
 CREATE OR REPLACE VIEW qgep_swmm.vw_raingages AS
 SELECT
   ('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as Name,
@@ -89,6 +157,43 @@ SELECT
   st_centroid(perimeter_geometry) as geom
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
+
+DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
+CREATE OR REPLACE VIEW qgep_swmm.vw_coordinates AS
+
+SELECT
+	Name as Node,
+	ROUND(ST_X(geom)::numeric,2) as X_Coord,
+	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
+FROM qgep_swmm.vw_junctions
+WHERE geom IS NOT NULL
+
+UNION
+
+SELECT
+	Name as Node,
+	ROUND(ST_X(geom)::numeric,2) as X_Coord,
+	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
+FROM qgep_swmm.vw_outfalls
+WHERE geom IS NOT NULL
+
+UNION
+
+SELECT
+	Name as Node,
+	ROUND(ST_X(geom)::numeric,2) as X_Coord,
+	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
+FROM qgep_swmm.vw_storages
+WHERE geom IS NOT NULL
+
+UNION
+
+SELECT
+	Name as Node,
+	ROUND(ST_X(geom)::numeric,2) as X_Coord,
+	ROUND(ST_Y(geom)::numeric,2) as Y_Coord
+FROM qgep_swmm.vw_raingages
+WHERE geom IS NOT NULL;
 
 -- Creates default infiltration for each subcatchment
 DROP VIEW IF EXISTS qgep_swmm.vw_infiltration;
@@ -103,16 +208,24 @@ SELECT
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments;
 
-
--- creates coverages
-DROP VIEW IF EXISTS qgep_swmm.vw_coverages;
-CREATE OR REPLACE VIEW qgep_swmm.vw_coverages AS
-SELECT
-  replace(ca.obj_id, ' ', '_')  as Subcatchment,
-  pzk.value_en as landUse,
-  round((st_area(st_intersection(ca.perimeter_geometry, pz.perimeter_geometry))/st_area(ca.perimeter_geometry))::numeric,2)*100 as percent
-FROM qgep_od.catchment_area ca, qgep_od.planning_zone pz
-LEFT JOIN qgep_vl.planning_zone_kind pzk on pz.kind = pzk.code
-WHERE st_intersects(ca.perimeter_geometry, pz.perimeter_geometry)
-AND st_isvalid(ca.perimeter_geometry) AND st_isvalid(pz.perimeter_geometry)
-ORDER BY ca.obj_id, percent DESC;
+DROP VIEW IF EXISTS qgep_swmm.vw_losses;
+CREATE OR REPLACE VIEW qgep_swmm.vw_losses AS
+SELECT DISTINCT
+  re.obj_id as Link,
+  0::float as Kentry,
+  0::float as Kexit,
+  0::float as Kavg,
+  CASE
+    WHEN ts.obj_id IS NOT NULL THEN 'YES'
+    ELSE 'NO'
+  END as flap_gate,
+  0::float as Seepage
+FROM qgep_od.reach re
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
+LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
+LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id::text = re.fk_reach_point_from::text
+LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
+LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+;
