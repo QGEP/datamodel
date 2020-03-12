@@ -75,6 +75,145 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         identifier = row['identifier']
         assert identifier, "Identifier not set on insert: {}".format(repr(identifier))
 
+    def test_labels(self):
+
+        strct_id = None
+
+        def check_values(expected_values_for_field):
+            row = self.select('vw_qgep_wastewater_structure', strct_id)
+            for field, expected_value in expected_values_for_field.items():
+                assert row[field] == expected_value, "Field {} is incorrect: {} instead of {}".format(
+                    field, repr(row[field]), repr(expected_value)
+                )
+        
+        # Test label generation on insert
+
+        row_strct = {
+            'identifier': 'A',
+            'situation_geometry': self.execute('ST_SetSrid(ST_MakePoint(3000000, 1500000), 2056)'),
+            'ws_type': 'manhole',
+            'co_level': decimal.Decimal('100.000'),
+        }
+        strct_id = self.insert('vw_qgep_wastewater_structure', row_strct)
+        strct_row = self.select('vw_qgep_wastewater_structure', strct_id)
+
+        expected = {
+            '_label': 'A',
+            '_cover_label': '\nC=100.00',
+            '_bottom_label': '',
+            '_input_label': '',
+            '_output_label': '',
+        }
+
+        check_values(expected)
+
+        # Test label generation on update
+
+        row_strct = {
+            'identifier': 'B',
+            'co_level': decimal.Decimal('98.000'),
+            'wn_bottom_level': decimal.Decimal('90.1234567'),
+        }
+        self.update('vw_qgep_wastewater_structure', row_strct, strct_id)
+
+        expected.update({
+            '_label': 'B',
+            '_cover_label': '\nC=98.00',
+            '_bottom_label': '\nB=90.12',
+        })
+        check_values(expected)
+
+        # Test label generation on reach insert
+
+        row_reach_a = {
+            'identifier': 'R1',
+            'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000001, 1500001, 100), ST_MakePoint(3000000, 1500000, 100)), 2056))'),
+            'ch_function_hierarchic': 5062,
+            'rp_to_fk_wastewater_networkelement': strct_row['wn_obj_id'],
+            'rp_to_level': 95
+        }
+        reach_a_id = self.insert('vw_qgep_reach', row_reach_a)
+        
+        expected.update({
+            '_input_label': '\nI1=95.00',
+        })
+        check_values(expected)
+
+        row_reach_b = {
+            'identifier': 'R2',
+            'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 92), ST_MakePoint(3000000, 1500001, 90)), 2056))'),
+            'ch_function_hierarchic': 5062,
+            'rp_from_fk_wastewater_networkelement': strct_row['wn_obj_id'],
+            'rp_from_level': 92
+        }
+        reach_b_id = self.insert('vw_qgep_reach', row_reach_b)
+        
+        expected.update({
+            '_output_label': '\nO1=92.00',
+        })
+        check_values(expected)
+
+        row_reach_c = {
+            'identifier': 'R3',
+            'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 93), ST_MakePoint(3000001, 1500000, 90)), 2056))'),
+            'ch_function_hierarchic': 5062,
+            'rp_from_fk_wastewater_networkelement': strct_row['wn_obj_id'],
+            'rp_from_level': 93
+        }
+        reach_c_id = self.insert('vw_qgep_reach', row_reach_c)
+
+        expected.update({
+            '_output_label': '\nO1=92.00\nO2=93.00',
+        })
+        check_values(expected)
+
+        # Test label generation on reach update (change level)
+
+        row_reach_a = {
+            'rp_to_level': 94
+        }
+        self.update('vw_qgep_reach', row_reach_a, reach_a_id)
+        
+        expected.update({
+            '_input_label': '\nI1=94.00',
+        })
+        check_values(expected)
+
+        # Test label generation on reach update (change azimuth)
+
+        row_reach_b = {
+            'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 92), ST_MakePoint(3000000, 1499999, 90)), 2056))'),
+        }
+        self.update('vw_qgep_reach', row_reach_b, reach_b_id)
+        
+        expected.update({
+            '_output_label': '\nO1=93.00\nO2=92.00',
+        })
+        check_values(expected)
+
+        # Test label generation on reach update (level to null)
+
+        row_reach_c = {
+            'rp_from_level': None
+        }
+        self.update('vw_qgep_reach', row_reach_c, reach_c_id)
+
+        expected.update({
+            '_output_label': '\nO1=?\nO2=92.00',
+        })
+        check_values(expected)
+        
+        # TODO : reenable this (currently, deleting reaches doesn't trigger update on labels)
+        # Test label generation on reach delete
+        #
+        # self.delete('vw_qgep_reach', reach_a_id)
+        # self.delete('vw_qgep_reach', reach_c_id)
+        #
+        # expected.update({
+        #     '_input_label': '',
+        #     '_output_label': '\nO1=92.00',
+        # })
+        # check_values(expected)
 
 if __name__ == '__main__':
     unittest.main()
