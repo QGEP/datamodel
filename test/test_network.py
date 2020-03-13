@@ -57,7 +57,6 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         cur.execute("REFRESH MATERIALIZED VIEW qgep_od.vw_network_segment")
         cur.execute("REFRESH MATERIALIZED VIEW qgep_od.vw_network_node")
 
-    @unittest.expectedFailure
     def test_network_basic(self):
         """
           *
@@ -91,7 +90,6 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         self.assertEqual( len(segments), 4)
         self.assertEqual( len(nodes), 5)
 
-    @unittest.expectedFailure
     def test_network_blind_connection(self):
         """
                     *
@@ -157,7 +155,6 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         self.assertEqual( len(segments), 4)
         self.assertEqual( len(nodes), 5)
 
-    @unittest.expectedFailure
     def test_network_two_blind_connection(self):
         """
                      *     *
