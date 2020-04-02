@@ -7,7 +7,7 @@ It also provides backwards-compatible views for the plugin.
 
 CREATE TABLE qgep_network.node (
   id SERIAL PRIMARY KEY,
-  node_type TEXT, -- one of wasterwater_node, reachpoint or blind_connection
+  node_type TEXT, -- one of wastewater_node, reachpoint or blind_connection
   ne_id TEXT NULL REFERENCES qgep_od.wastewater_networkelement(obj_id), -- reference to the network element (this will reference the reach object for reachpoints)
   rp_id TEXT NULL REFERENCES qgep_od.reach_point(obj_id), -- will only be set for reachpoints
   geom geometry('POINT', 2056)
@@ -39,7 +39,7 @@ BEGIN
   -- Insert reachpoints
   INSERT INTO qgep_network.node(node_type, ne_id, rp_id, geom)
   SELECT
-    'reachpoint',
+    'reach_point',
     r.obj_id, -- the reachpoint also keeps a reference to it's reach, as it can be used by blind connections that happen exactly on start/end points
     rp.obj_id,
     ST_Force2D(rp.situation_geometry)
@@ -88,7 +88,7 @@ BEGIN
   -- Insert edge between reachpoint (from) to the closest node belonging to the wasterwater network element
   INSERT INTO qgep_network.segment (segment_type, from_node, to_node, geom)
   SELECT DISTINCT ON(n1.id)
-         'junction',
+         'special_structure',
          n2.id,
          n1.id,
          ST_MakeLine(n2.geom, n1.geom)
@@ -109,7 +109,7 @@ BEGIN
   -- Insert edge between reachpoint (to) to the closest node belonging to the wasterwater network element
   INSERT INTO qgep_network.segment (segment_type, from_node, to_node, geom)
   SELECT DISTINCT ON(n1.id)
-         'junction',
+         'special_structure',
          n1.id,
          n2.id,
          ST_MakeLine(n1.geom, n2.geom)
@@ -137,8 +137,8 @@ LANGUAGE plpgsql;
 
 -- Retro-compatbility views, compatible with previous implementation.
 
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_segment;
 DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node;
-DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_segmen;
 
 CREATE MATERIALIZED VIEW qgep_od.vw_network_node AS
 WITH cover_levels_per_network_element AS (
@@ -150,43 +150,75 @@ WITH cover_levels_per_network_element AS (
   JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
   GROUP BY ne.obj_id
 )
-SELECT s.id as gid,
+SELECT n.id as gid,
        CASE
-         WHEN node_type = 'reachpoint' THEN s.rp_id
-         WHEN node_type = 'wasterwater_node' THEN s.ne_id
-         ELSE s.ne_id || '-BLIND-' || row_number() OVER (PARTITION BY s.node_type, s.ne_id ORDER BY ST_X(s.geom))
+         WHEN n.node_type = 'reach_point' THEN n.rp_id
+         WHEN n.node_type = 'wastewater_node' THEN n.ne_id
+         ELSE n.ne_id || '-BLIND-' || row_number() OVER (PARTITION BY n.node_type, n.ne_id ORDER BY ST_X(n.geom))
        END AS obj_id,
-       node_type as type,
-       s.geom AS situation_geometry,
+       n.node_type as type,
        CASE
-         WHEN node_type = 'reachpoint' THEN rp.identifier
-         WHEN node_type = 'wasterwater_node' THEN ne.identifier
-         ELSE ne.identifier || '-BLIND-' || row_number() OVER (PARTITION BY s.node_type, s.ne_id ORDER BY ST_X(s.geom))
+         WHEN n.node_type = 'reach_point' THEN 'reach_point'
+         WHEN mh.obj_id IS NOT NULL THEN 'manhole'
+         WHEN ws.obj_id IS NOT NULL THEN 'special_structure'
+         ELSE 'other'
+       END AS node_type,
+       CASE
+         WHEN n.node_type = 'reach_point' THEN rp.level
+         WHEN n.node_type = 'wastewater_node' THEN nd.bottom_level
+         ELSE NULL
+       END as level,
+       NULL::text AS usage_current,
+       co.level as cover_level,
+       NULL::float AS backflow_level,
+       CASE
+         WHEN n.node_type = 'reach_point' THEN rp.identifier
+         WHEN n.node_type = 'wastewater_node' THEN ne.identifier
+         ELSE ne.identifier || '-BLIND-' || row_number() OVER (PARTITION BY n.node_type, n.ne_id ORDER BY ST_X(n.geom))
        END AS description,
-       rp.level as level,
-       n.bottom_level as bottom_level,
-       co.level as cover_level
-FROM qgep_network.node s
+       n.geom AS situation_geometry,
+       n.geom AS detail_geometry
+FROM qgep_network.node n
 LEFT JOIN qgep_od.reach_point rp ON rp_id = rp.obj_id
-LEFT JOIN qgep_od.wastewater_networkelement ne ON ne_id = ne.obj_id
-LEFT JOIN qgep_od.wastewater_node n ON ne_id = n.obj_id
-LEFT JOIN cover_levels_per_network_element co ON ne_id = co.obj_id AND node_type = 'wastewater_node';
+LEFT JOIN qgep_od.wastewater_networkelement ne ON n.ne_id = ne.obj_id
+LEFT JOIN qgep_od.wastewater_node nd ON n.ne_id = nd.obj_id
+LEFT JOIN cover_levels_per_network_element co ON n.ne_id = co.obj_id AND n.node_type = 'wastewater_node'
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+LEFT JOIN qgep_od.manhole mh ON mh.obj_id = ws.obj_id;
 
 CREATE MATERIALIZED VIEW qgep_od.vw_network_segment AS
 SELECT s.id as gid,
-       s.geom AS progression_geometry,
-       COALESCE(ne_id, '') AS obj_id, -- plugin can't pickle QVariant NULLs
+       COALESCE(
+         s.ne_id, 
+         CASE
+           WHEN n1.type = 'wastewater_node' THEN n1.obj_id
+           WHEN n2.type = 'wastewater_node' THEN n2.obj_id
+           ELSE ''
+         END
+       ) AS obj_id,
        s.segment_type AS type,
+       r.clear_height AS clear_height,
+       ST_Length(geom) AS length_calc,
+       ST_Length(r.progression_geometry) AS length_full,
        n1.obj_id AS from_obj_id,
        n2.obj_id AS to_obj_id,
        n1.obj_id AS from_obj_id_interpolate,
        n2.obj_id AS to_obj_id_interpolate,
        0 AS from_pos,
        1 AS to_pos,
-       ST_Length(geom) AS length_calc,
-       r.clear_height AS clear_height,
+       CASE
+         WHEN s.segment_type = 'reach' THEN NULL
+         WHEN n1.level IS NOT NULL AND n2.level IS NOT NULL THEN Greatest(n1.level, n2.level)
+         ELSE COALESCE(n1.level, n2.level)
+       END AS bottom_level,
+       ch.usage_current AS usage_current,
+       mat.abbr_de AS material,
+       s.geom AS progression_geometry,
        s.geom AS detail_geometry
 FROM qgep_network.segment s
 JOIN qgep_od.vw_network_node n1 ON n1.gid = s.from_node
 JOIN qgep_od.vw_network_node n2 ON n2.gid = s.to_node
-LEFT JOIN qgep_od.reach r ON r.obj_id = s.ne_id;
+LEFT JOIN qgep_od.reach r ON r.obj_id = s.ne_id
+LEFT JOIN qgep_vl.reach_material mat ON r.material = mat.code
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = s.ne_id
+LEFT JOIN qgep_od.channel ch ON ch.obj_id = ne.fk_wastewater_structure;
