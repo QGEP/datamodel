@@ -54,8 +54,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
 
     def refresh_graph(self):
         cur = self.cursor()
-        cur.execute("REFRESH MATERIALIZED VIEW qgep_od.vw_network_segment")
-        cur.execute("REFRESH MATERIALIZED VIEW qgep_od.vw_network_node")
+        cur.execute("SELECT qgep_network.refresh_network_simple()")
 
     def test_network_basic(self):
         """
@@ -99,7 +98,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
                     v
                     *
                     ⇓
-         MH ⇐ *----------------->*
+         MH ⇐ *-----o------------>*
                      first
         first is connected FROM manhole, second is connected TO first directly (blind connection)
         """
@@ -119,10 +118,9 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         cur.execute("SELECT * FROM qgep_od.vw_network_node")
         nodes = cur.fetchall()
 
-        self.assertEqual( len(segments), 4)
-        self.assertEqual( len(nodes), 5)
+        self.assertEqual( len(segments), 5)
+        self.assertEqual( len(nodes), 6)
 
-    @unittest.expectedFailure
     def test_network_blind_connection_overlaid(self):
         """
           *
@@ -130,7 +128,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
           | second
           |
           v
-          *    ⤵
+          *   ⤵
          MH ⇐ *----------------->*
                      first
         first is connected FROM manhole, second is connected TO first directly (blind connection)
@@ -164,7 +162,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
                      v     v
                      *     *
                      ⇓     ⇓
-         MH ⇐ *----------------->*
+         MH ⇐ *------o-----o------>*
                      first
         first is connected FROM manhole, second and third are connected TO first directly (blind connection)
         """
@@ -186,10 +184,9 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         cur.execute("SELECT * FROM qgep_od.vw_network_node")
         nodes = cur.fetchall()
 
-        self.assertEqual( len(segments), 6)
-        self.assertEqual( len(nodes), 7)
+        self.assertEqual( len(segments), 8)
+        self.assertEqual( len(nodes), 9)
 
-    @unittest.expectedFailure
     def test_network_two_opposing_blind_connection(self):
         """
                        *
@@ -199,7 +196,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
                        v
                        *
                        ⇓  first
-         MH ⇐ *----------------->*
+         MH ⇐ *--------o--------->*
                        ⇑
                        *
                        |
@@ -228,8 +225,8 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         cur.execute("SELECT * FROM qgep_od.vw_network_node")
         nodes = cur.fetchall()
 
-        self.assertEqual( len(segments), 5)
-        self.assertEqual( len(nodes), 6)
+        self.assertEqual( len(segments), 7)
+        self.assertEqual( len(nodes), 8)
 
 
 if __name__ == '__main__':
