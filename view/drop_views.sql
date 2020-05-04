@@ -1,3 +1,8 @@
+
+-- export views
+DROP VIEW IF EXISTS qgep_od.vw_export_reach;
+DROP VIEW IF EXISTS qgep_od.vw_export_wastewater_structure;
+
 -- import
 DROP VIEW IF EXISTS qgep_import.vw_manhole;
 
