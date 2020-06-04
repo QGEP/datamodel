@@ -2,6 +2,13 @@
 
 set -e
 
+if [ ! "$#" == "0" ]; then
+  if [ ! "$1" == "wait" ] && [ ! "$1" == "release" ] && [ ! "$1" == "release_struct" ] && [ ! "$1" == "build" ] && [ ! "$1" == "build_pum" ]; then
+    echo "arg must be one of : 'wait' 'release' 'release_struct' 'build' 'build_pum'"
+    exit 1
+  fi
+fi
+
 until psql -U postgres -c '\q' > /dev/null 2>&1; do
   echo "waiting for postgres..."
   sleep 3
@@ -28,6 +35,10 @@ if [ "$1" == "wait" ]; then
 fi
 
 if [ "$1" == "release" ]; then
+  if [ "$2" == "" ]; then
+    echo 'you must provide the release version as second argument'
+    exit 1
+  fi
   
   echo '----------------------------------------'
   echo "Installing demo data from release"
@@ -47,6 +58,10 @@ if [ "$1" == "release" ]; then
 fi
 
 if [ "$1" == "release_struct" ]; then
+  if [ "$2" == "" ]; then
+    echo 'you must provide the release version as second argument'
+    exit 1
+  fi
 
   echo '----------------------------------------'
   echo "Installing structure from release"
