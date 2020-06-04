@@ -25,6 +25,7 @@ class TestNetwork(unittest.TestCase, DbTestBase):
 
     def tearDown(self):
         self.conn.rollback()
+        self.vacuum()
 
     def setUp(self):
         pgservice=os.environ.get('PGSERVICE') or 'pg_qgep'

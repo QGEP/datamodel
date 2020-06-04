@@ -117,3 +117,11 @@ class DbTestBase:
         Helper to make 2D point geometries
         """
         return self.execute('ST_SetSrid(ST_MakePoint(%s, %s), %s)', [x, y, srid])
+
+    def vacuum(self):
+        old_isolation_level = self.conn.isolation_level
+        self.conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+        query = "VACUUM FULL"
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+        self.conn.set_isolation_level(old_isolation_level)
