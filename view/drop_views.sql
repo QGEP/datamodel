@@ -77,25 +77,25 @@ DROP VIEW IF EXISTS qgep_od.vw_change_points;
 DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
 
 -- qgep_wmm views
-DROP VIEW IF EXISTS qgep_swmm.vw_aquifers;
-DROP VIEW IF EXISTS qgep_swmm.vw_conduits;
-DROP VIEW IF EXISTS qgep_swmm.vw_coordinates;
-DROP VIEW IF EXISTS qgep_swmm.vw_coverages;
-DROP VIEW IF EXISTS qgep_swmm.vw_dividers;
-DROP VIEW IF EXISTS qgep_swmm.vw_dwf;
-DROP VIEW IF EXISTS qgep_swmm.vw_infiltration;
-DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
-DROP VIEW IF EXISTS qgep_swmm.vw_landuses;
-DROP VIEW IF EXISTS qgep_swmm.vw_losses;
-DROP VIEW IF EXISTS qgep_swmm.vw_outfalls;
-DROP VIEW IF EXISTS qgep_swmm.vw_polygons;
-DROP VIEW IF EXISTS qgep_swmm.vw_pumps;
-DROP VIEW IF EXISTS qgep_swmm.vw_raingages;
-DROP VIEW IF EXISTS qgep_swmm.vw_storages;
-DROP VIEW IF EXISTS qgep_swmm.vw_subareas;
-DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments;
-DROP VIEW IF EXISTS qgep_swmm.vw_tags;
-DROP VIEW IF EXISTS qgep_swmm.vw_vertices;
-DROP VIEW IF EXISTS qgep_swmm.vw_xsections;
+DROP VIEW IF EXISTS qgep_swmm.vw_aquifers CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_conduits CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_coordinates CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_coverages CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_dividers CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_dwf CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_infiltration CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_junctions CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_landuses CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_losses CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_outfalls CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_polygons CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_pumps CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_raingages CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_storages CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_subareas CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_tags CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_vertices CASCADE;
+DROP VIEW IF EXISTS qgep_swmm.vw_xsections CASCADE;
 
 
