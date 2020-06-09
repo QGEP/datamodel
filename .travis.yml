@@ -23,6 +23,8 @@ git:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
+  # Fix /var/ramfs filling up (see https://github.com/QGEP/datamodel/pull/137 and https://github.com/travis-ci/travis-ci/issues/9036)
+  - sudo mount -o remount,size=50% /var/ramfs
   - |
     echo "Setting up readonly access via https"
     sed -i 's|git@github.com:|https://github.com/|' .gitmodules
