@@ -5,12 +5,14 @@ This generates a graph representing the network.
 It also provides backwards-compatible views for the plugin.
 */
 
+CREATE SCHEMA qgep_network;
+
 CREATE TABLE qgep_network.node (
   id SERIAL PRIMARY KEY,
   node_type TEXT, -- one of wastewater_node, reachpoint or blind_connection
   ne_id TEXT NULL REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE, -- reference to the network element (this will reference the reach object for reachpoints)
   rp_id TEXT NULL REFERENCES qgep_od.reach_point(obj_id) ON DELETE CASCADE, -- will only be set for reachpoints
-  geom geometry('POINT', :SRID)
+  geom geometry('POINT', %(SRID)s)
 );
 
 CREATE TABLE qgep_network.segment (
@@ -19,7 +21,7 @@ CREATE TABLE qgep_network.segment (
   from_node INT REFERENCES qgep_network.node(id) ON DELETE CASCADE,
   to_node INT REFERENCES qgep_network.node(id) ON DELETE CASCADE,
   ne_id TEXT NULL REFERENCES qgep_od.wastewater_networkelement(obj_id), -- reference to the network element (will only be set for segments corresponding to reaches)
-  geom geometry('LINESTRING', :SRID)
+  geom geometry('LINESTRING', %(SRID)s)
 );
 
 CREATE OR REPLACE FUNCTION qgep_network.refresh_network_simple() RETURNS void AS $body$

@@ -4,7 +4,7 @@
 table: qgep_od.vw_qgep_reach
 view_name: vw_export_reach
 pkey: obj_id
-view_schema: qgep_export
+view_schema: qgep_od
 
 
 joins:

@@ -3,7 +3,7 @@
 from yaml import safe_load
 import psycopg2
 import argparse
-from pirogue import SingleInheritance, MultipleInheritance
+from pirogue import SingleInheritance, MultipleInheritance, SimpleJoins
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -72,6 +72,9 @@ def create_views(srid: int,
     run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
+
+    SimpleJoins(safe_load(open('view/export/vw_export_reach.yaml')), pg_service).create()
+    SimpleJoins(safe_load(open('view/export/vw_export_wastewater_structure.yaml')), pg_service).create()
 
 
 if __name__ == "__main__":

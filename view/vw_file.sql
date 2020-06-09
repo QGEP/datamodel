@@ -18,7 +18,7 @@
 CREATE OR REPLACE VIEW qgep_od.vw_file AS
   SELECT f.obj_id,
     f.identifier,
-    f.kind AS file_kind,
+    f.kind,
     f.object,
     f.class,
     -- dm.path,
@@ -75,7 +75,7 @@ $BODY$
     SELECT
       NEW.class,
       NEW.identifier,
-      NEW.file_kind,
+      NEW.kind,
       NEW.object,
       SUBSTRING(NEW._url, LENGTH("path")+1, LENGTH(NEW._url)), -- path_relative,
       NEW.dataowner, -- fk_dataowner,
@@ -113,7 +113,7 @@ NEW._url = replace(NEW._url, '\', '/');
     SET
     class = NEW.class,
     identifier = NEW.identifier,
-    kind = NEW.file_kind,
+    kind = NEW.kind,
     object = NEW.object,
     path_relative = SUBSTRING(NEW._url, LENGTH(dm.path)+1, LENGTH(NEW._url)),
     fk_dataowner = NEW.dataowner,

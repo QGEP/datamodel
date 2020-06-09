@@ -47,8 +47,8 @@ docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=9.6-2.5 --tag ope
 docker run -d --rm -p 5432:5432 -v "${PWD}:/src" --name qgep opengisch/qgep_datamodel
 
 # example 1: run some tests on a built database
-docker exec qgep init_qgep.sh structure
 docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
+docker exec -e PGSERVICE=qgep_build_pum qgep pytest test/test_import.py
 
 # example 2: compare released data version 1.2.0 with freshly built structure
 docker exec qgep init_qgep.sh release_struct 1.2.0

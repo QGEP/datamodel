@@ -39,6 +39,7 @@ jobs:
           docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
           docker exec qgep init_qgep.sh wait
           docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
+          docker exec -e PGSERVICE=qgep_build_pum qgep pytest test/test_import.py
         env:
           PGIS: ${{ matrix.pgis }}
           
