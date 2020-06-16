@@ -33,16 +33,27 @@ jobs:
         env:
           PGIS: ${{ matrix.pgis }}
 
-      - name: "run tests"
-        id: tests
+      - name: "initialize qgep container"
         run: |
           docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${PGIS}-${GITHUB_REF##*/}
           docker exec qgep init_qgep.sh wait
-          docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
-          docker exec -e PGSERVICE=qgep_build_pum qgep pytest test/test_import.py
         env:
           PGIS: ${{ matrix.pgis }}
-          
+
+      - name: "run tests on qgep_build (structure)"
+        run: |
+          docker start qgep
+          docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
+        env:
+          PGIS: ${{ matrix.pgis }}
+
+      - name: "run tests on qgep_build_pum (production)"
+        run: |
+          docker start qgep
+          docker exec -e PGSERVICE=qgep_build_pum qgep pytest
+        env:
+          PGIS: ${{ matrix.pgis }}
+
       - name: "dockerhub login"
         if: github.event_name != 'pull_request'
         env:
