@@ -22,4 +22,7 @@ LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::t
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id::text = re.fk_reach_point_from::text
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
-LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id;  -- wastewater node of the downstream wastewater node
+LEFT JOIN qgep_od.throttle_shut_off_unit ts ON ts.fk_wastewater_node = from_wn.obj_id
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+;  -- wastewater node of the downstream wastewater node

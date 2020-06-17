@@ -73,6 +73,24 @@ def create_views(srid: int,
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
 
+    # Recreate swmm views
+    run_sql('swmm_views/01_vw_swmm_create_schema.sql', pg_service, variables)
+    run_sql('swmm_views/02_vw_swmm_junctions.sql', pg_service, variables)
+    run_sql('swmm_views/03_vw_swmm_aquifers.sql', pg_service, variables)
+    run_sql('swmm_views/04_vw_swmm_conduits.sql', pg_service, variables)
+    run_sql('swmm_views/05_vw_swmm_dividers.sql', pg_service, variables)
+    run_sql('swmm_views/06_vw_swmm_landuses.sql', pg_service, variables)
+    run_sql('swmm_views/07_vw_swmm_losses.sql', pg_service, variables)
+    run_sql('swmm_views/08_vw_swmm_outfalls.sql', pg_service, variables)
+    run_sql('swmm_views/09_vw_swmm_subcatchments.sql', pg_service, variables)
+    run_sql('swmm_views/10_vw_swmm_vertices.sql', pg_service, variables)
+    run_sql('swmm_views/11_vw_swmm_pumps.sql', pg_service, variables)
+    run_sql('swmm_views/12_vw_swmm_polygons.sql', pg_service, variables)
+    run_sql('swmm_views/13_vw_swmm_storages.sql', pg_service, variables)
+    run_sql('swmm_views/14_vw_swmm_xsections.sql', pg_service, variables)
+    run_sql('swmm_views/15_vw_swmm_coordinates.sql', pg_service, variables)
+    run_sql('swmm_views/16_vw_swmm_tags.sql', pg_service, variables)
+
     SimpleJoins(safe_load(open('view/export/vw_export_reach.yaml')), pg_service).create()
     SimpleJoins(safe_load(open('view/export/vw_export_wastewater_structure.yaml')), pg_service).create()
 
