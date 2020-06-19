@@ -91,4 +91,8 @@ This sets up two different databases, that should be available via `127.0.0.1:54
 - *qgep_build* : the structure using installation scripts
 - *qgep_build_pum* : the demo data (produced through successive pum migrations of initial demo data)
 
+**WARNING** : The Docker setup is currently meant for testing purposes only.
+The following instructions do not set up a correct installation (data not
+persisted, no password, etc.)
+
 Head to `.docker/README.md` for advanced usage of the QGEP Docker setup.

@@ -1,6 +1,10 @@
 Docker setup for QGEP
 =========================
 
+**WARNING** : The Docker setup is currently meant for testing purposes only.
+The following instructions do not set up a correct installation (data not
+persisted, no password, etc.)
+
 Normal usage
 ----------------
 
@@ -33,6 +37,22 @@ docker exec qgep init_qgep.sh release 1.4.0
 # download and restore a specific release (structure only demo data) to the qgep_release_struct database
 docker exec qgep init_qgep.sh release_struct 1.4.0
 ```
+
+Docker tags (QGEP versions)
+----------------
+
+The docker image comes in multiple versions of QGEP, postgres and postgis.
+
+By default, the first time you run the image, the version downloaded is the latest released version
+of QGEP running on postgres 11, postgis 2.5.
+
+If you need a different version, or if you prefer to explicitely define which version is being used, you
+can specify the version like this (this corresponds to QGEP 1.5.0, Postgres 10, Postgis 2.5 ):
+```bash
+docker run -d --name qgep -p 5432:5432 opengisch/qgep_datamodel:v1.5.0-10-2.5
+```
+
+The list of all available tags can be found here : https://hub.docker.com/r/opengisch/qgep_datamodel/tags?page=1&ordering=-name
 
 Development of the datamodel
 ----------------
