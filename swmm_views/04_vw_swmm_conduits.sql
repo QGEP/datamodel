@@ -26,7 +26,7 @@ SELECT
 	0 as MaxFlow,
 	ne.identifier || ', ' || ne.remark as description,
 	ne.fk_wastewater_structure as tag,
-	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE) as geom
+	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineString, %(SRID)s)  as geom
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 
