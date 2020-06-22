@@ -62,7 +62,7 @@ BEGIN
          sub2.node_id_1,
          sub2.node_id_2,
          obj_id,
-         ST_Line_Substring(
+         ST_LineSubstring(
            ST_CurveToLine(ST_Force2D(progression_geometry)), ratio_1, ratio_2
          )
   FROM (
