@@ -32,7 +32,7 @@ SELECT
   NULL::varchar as SnowPack, -- default value
   ca.identifier || ', ' || ca.remark as description,
   ca.obj_id as tag,
-  ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE) as geom
+  ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE)::geometry(LineString, %(SRID)s) as geom
 FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.wastewater_networkelement we on we.obj_id = ca.fk_wastewater_networkelement_rw_current
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
@@ -86,7 +86,7 @@ SELECT
   '0:15'::varchar as Interval,
   '1.0'::varchar as SCF,
   'TIMESERIES default_qgep_raingage_timeserie'::varchar as Source,
-  st_centroid(perimeter_geometry) as geom
+  st_centroid(perimeter_geometry)::geometry(Point, %(SRID)s) as geom
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
 
