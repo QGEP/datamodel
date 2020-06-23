@@ -110,4 +110,5 @@ BEGIN
 
 END;
 $body$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+    SECURITY DEFINER;
