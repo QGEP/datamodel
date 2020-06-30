@@ -6,6 +6,12 @@ import psycopg2.extras
 
 class DbTestBase:
 
+    def assert_count(self, table, schema, expected):
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("SELECT COUNT(*) FROM {schema}.{table}".format(table=table, schema=schema))
+        count = cur.fetchone()[0]
+        assert count == expected, "Relation {}.{} : expected {} rows, got {} rows".format(schema, table, expected, count)
+
     def select(self, table, obj_id, schema='qgep_od'):
         cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM {schema}.{table} WHERE obj_id=%(obj_id)s"

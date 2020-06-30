@@ -43,7 +43,7 @@ jobs:
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
-          docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
+          docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py --ignore test/test_swmm.py
         env:
           PGIS: ${{ matrix.pgis }}
 
