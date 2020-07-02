@@ -48,6 +48,7 @@ before_script:
 
 script:
   - ${TRAVIS_BUILD_DIR}/scripts/db_setup.sh -r > /dev/null
+  # Run tests that depend on data model. Tests that require demo data are ignored and run below.
   - nosetests -e test_import.py -e test_geometry.py -e test_swmm.py
   
   # Get current version
@@ -64,8 +65,6 @@ script:
 
   # Run pum's test and upgrade
   - yes | pum test-and-upgrade -pp qgep_prod -pt qgep_test -pc qgep_comp -t qgep_sys.pum_info -d $TRAVIS_BUILD_DIR/delta/ -f /tmp/qwat_dump -i constraints views --exclude-schema public -v int SRID 2056
-
-
 
   # Run tests on qgep_prod
   - export PGSERVICE=qgep_prod
