@@ -15,11 +15,11 @@ class TestSwmm(unittest.TestCase, DbTestBase):
     This is supposed to run against the demo data."""
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         cls.conn.rollback()
 
     @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         pgservice=os.environ.get('PGSERVICE') or 'pg_qgep'
         cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
 
