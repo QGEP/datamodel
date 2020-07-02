@@ -32,7 +32,7 @@ SELECT
   NULL::varchar as SnowPack, -- default value
   ca.identifier || ', ' || ca.remark as description,
   ca.obj_id as tag,
-  ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE)::geometry(LineString, %(SRID)s) as geom
+  ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE)::geometry(Polygon, %(SRID)s) as geom
 FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.wastewater_networkelement we on we.obj_id = ca.fk_wastewater_networkelement_rw_current
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
