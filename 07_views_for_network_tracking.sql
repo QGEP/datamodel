@@ -18,7 +18,7 @@ CREATE TABLE qgep_network.segment (
   segment_type TEXT, -- either reach (if it's a reach segment) or junction (if it represents junction from/to a reachpoint)
   from_node INT REFERENCES qgep_network.node(id) ON DELETE CASCADE,
   to_node INT REFERENCES qgep_network.node(id) ON DELETE CASCADE,
-  ne_id TEXT NULL REFERENCES qgep_od.wastewater_networkelement(obj_id), -- reference to the network element (will only be set for segments corresponding to reaches)
+  ne_id TEXT NULL REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE, -- reference to the network element (will only be set for segments corresponding to reaches)
   geom geometry('LINESTRING', :SRID)
 );
 
