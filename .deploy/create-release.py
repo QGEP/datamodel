@@ -37,13 +37,13 @@ def files_description(version):
 ## Descriptions of the files
 File | Description
 ------------ | -------------
-qgep_v{version}_structure.sql | Contains the structure of tables and system schema content
-qgep_v{version}_structure_with_value_lists.sql | Contains the structure of tables, system schema data and value lists data
-qgep_v{version}_demo_data.backup | Data-only backup of the `qgep_od` schema (i.e. ordinary data) from demonstration set of data
-qgep_v{version}_structure_and_demo_data.backup | Complete backup with structure and data of the demonstration set of data
+qgep_{version}_structure.sql | Contains the structure of tables and system schema content
+qgep_{version}_structure_with_value_lists.sql | Contains the structure of tables, system schema data and value lists data
+qgep_{version}_demo_data.backup | Data-only backup of the `qgep_od` schema (i.e. ordinary data) from demonstration set of data
+qgep_{version}_structure_and_demo_data.backup | Complete backup with structure and data of the demonstration set of data
 
-* If you plan to **use QGEP for production**, it is more likely you will be using the plain SQL `qgep_v{version}_structure_with_value_lists.sql`.
-* If you want to **give a try at QGEP**, you will likely restore the `qgep_v{version}_structure_and_demo_data.backup` backup file.
+* If you plan to **use QGEP for production**, it is more likely you will be using the plain SQL `qgep_{version}_structure_with_value_lists.sql`.
+* If you want to **give a try at QGEP**, you will likely restore the `qgep_{version}_structure_and_demo_data.backup` backup file.
 """.format(version=version)
 
 
@@ -67,7 +67,7 @@ def create_plain_structure_only():
     print('travis_fold:start:plain SQL structure only')
 
     # structure
-    dump_s = 'qgep_v{version}_structure.sql'.format(
+    dump_s = 'qgep_{version}_structure.sql'.format(
         version=os.environ['TRAVIS_TAG'])
 
     print('Creating dump {}'.format(dump_s))
@@ -81,7 +81,7 @@ def create_plain_structure_only():
                     )
 
     # dump all from qgep_sys except logged_actions
-    dump_i = 'qgep_v{version}_pum_info.sql'.format(
+    dump_i = 'qgep_{version}_pum_info.sql'.format(
         version=os.environ['TRAVIS_TAG'])
     print('Creating dump {}'.format(dump_i))
     dump_file_i = '/tmp/{dump}'.format(dump=dump_i)
@@ -112,7 +112,7 @@ def create_plain_value_list(structure_dump_file):
     """
     print('travis_fold:start:value lists dump')
 
-    dump = 'qgep_v{version}_structure_with_value_lists.sql'.format(
+    dump = 'qgep_{version}_structure_with_value_lists.sql'.format(
         version=os.environ['TRAVIS_TAG'])
 
     print('Creating dump {}'.format(dump))
@@ -148,7 +148,7 @@ def create_backup_data():
     :return: the file name
     """
     # Create data-only dumps (with sample data)
-    dump = 'qgep_v{version}_demo_data.backup'.format(
+    dump = 'qgep_{version}_demo_data.backup'.format(
         version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
@@ -173,7 +173,7 @@ def create_backup_complete():
     :return: the file name
     """
     # Create data + structure dumps (with sample data)
-    dump = 'qgep_v{version}_structure_and_demo_data.backup'.format(
+    dump = 'qgep_{version}_structure_and_demo_data.backup'.format(
         version = os.environ['TRAVIS_TAG'])
     print('travis_fold:start:{}'.format(dump))
     print('Creating dump {}'.format(dump))
