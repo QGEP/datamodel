@@ -15,7 +15,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	ws.identifier || ', ' || ws.remark as description,
+	ws.identifier::text  as description,
 	ma.obj_id as tag,
 	wn.situation_geometry as geom
 FROM qgep_od.manhole ma
@@ -37,7 +37,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	ws.identifier || ', ' || ws.remark as description,
+	ws.identifier::text  as description,
 	ss.obj_id as tag,
 	wn.situation_geometry as geom
 FROM qgep_od.special_structure ss
