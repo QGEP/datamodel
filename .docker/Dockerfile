@@ -2,31 +2,8 @@ ARG POSTGIS_VERSION=11-2.5
 FROM postgis/postgis:${POSTGIS_VERSION}
 
 # System deps
-RUN apt-get update
-
-# TODO : have pirogue support python 3.5 them remove this and replace by 3.5 section below
-# INSTALL SYSTEM DEPS (PYTHON-3.7)
-# ADAPTED FROM https://linuxize.com/post/how-to-install-python-3-7-on-debian-9/
-RUN apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
-RUN wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz
-RUN tar -xf Python-3.7.3.tar.xz
-WORKDIR /Python-3.7.3
-RUN ./configure --with-ensurepip=install
-RUN make -j 8
-RUN make altinstall
-RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 10
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 10
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python get-pip.py
-WORKDIR /
-# /ADAPTED
-RUN apt-get install -y libpq-dev
-# # /INSTALL SYSTEM DEPS (PYTHON-3.7)
-
-# INSTALL SYSTEM DEPS (PYTHON-3.5 debian stretch)
-# RUN apt-get install -y python3 python3-pip libpq-dev wget
+RUN apt-get update && apt-get install -y python3 python3-pip libpq-dev wget && apt-get clean
 # /INSTALL SYSTEM DEPS (PYTHON-3.5 debian stretch)
-
 
 # Python deps
 ADD requirements.txt .
