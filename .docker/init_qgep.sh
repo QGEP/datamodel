@@ -22,9 +22,9 @@ recreate_db(){
 }
 
 if [ "$1" == "wait" ]; then
-
+  printf "initializing QGEP…"
   until [ -f ${PGDATA}/entrypoint-done-flag ]; do
-    printf "🐘"
+    printf " 🐘"
     sleep 3
   done
   echo ""
