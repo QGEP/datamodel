@@ -24,9 +24,10 @@ recreate_db(){
 if [ "$1" == "wait" ]; then
 
   until [ -f ${PGDATA}/entrypoint-done-flag ]; do
-    echo "waiting for initialization to complete..."
+    printf "🐘"
     sleep 3
   done
+  echo ""
   echo "Initialization complete !"
   # Let some time for postgres to restart...
   sleep 3
