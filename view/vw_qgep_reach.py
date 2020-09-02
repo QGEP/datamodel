@@ -45,14 +45,14 @@ def vw_qgep_reach(pg_service: str = None,
         CASE 
           WHEN rp_from.level > 0 AND rp_to.level > 0 THEN round((rp_from.level - rp_to.level)/re.length_effective*1000,1) 
           ELSE NULL 
-        END AS _slope_per_mill,
-        {extra_cols}
-        {re_cols},
-        {ne_cols},
-        {ch_cols},
-        {ws_cols},
-        {rp_from_cols},
-        {rp_to_cols}
+        END AS _slope_per_mill
+        , {extra_cols}
+        {re_cols}
+        , {ne_cols}
+        , {ch_cols}
+        , {ws_cols}
+        , {rp_from_cols}
+        , {rp_to_cols}
       FROM qgep_od.reach re
          LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
          LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
@@ -61,15 +61,15 @@ def vw_qgep_reach(pg_service: str = None,
          LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
          LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
          {extra_joins};
-    """.format(extra_cols='\n    '.join([select_columns(pg_cur=cursor,
-                                                        table_schema=table_parts(table_def['table'])[0],
-                                                        table_name=table_parts(table_def['table'])[1],
-                                                        skip_columns=table_def.get('skip_columns', []),
-                                                        remap_columns=table_def.get('remap_columns', {}),
-                                                        prefix=table_def.get('prefix', None),
-                                                        table_alias=table_def.get('alias', None)
-                                                        ) + ','
-                                        for table_def in extra_definition.get('joins', {}).values()]),
+    """.format(extra_cols='\n    , '.join([select_columns(pg_cur=cursor,
+                                                          table_schema=table_parts(table_def['table'])[0],
+                                                          table_name=table_parts(table_def['table'])[1],
+                                                          skip_columns=table_def.get('skip_columns', []),
+                                                          remap_columns=table_def.get('remap_columns', {}),
+                                                          prefix=table_def.get('prefix', None),
+                                                          table_alias=table_def.get('alias', None)
+                                                          )
+                                          for table_def in extra_definition.get('joins', {}).values()]),
                re_cols=select_columns(pg_cur=cursor,
                                       table_schema='qgep_od',
                                       table_name='reach',

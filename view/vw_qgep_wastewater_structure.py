@@ -41,42 +41,42 @@ def vw_qgep_wastewater_structure(srid: int,
           WHEN dp.obj_id IS NOT NULL THEN 'discharge_point'
           WHEN ii.obj_id IS NOT NULL THEN 'infiltration_installation'
           ELSE 'unknown'
-        END AS ws_type,
+        END AS ws_type
 
-        ma.function AS ma_function,
-        ss.function as ss_function,
-        ws.fk_owner,
-        ws.status,
+        , ma.function AS ma_function
+        , ss.function as ss_function
+        , ws.fk_owner
+        , ws.status
 
         {extra_cols}
 
-        {ws_cols},
+        , {ws_cols}
 
-        main_co_sp.identifier AS co_identifier,
-        main_co_sp.remark AS co_remark,
-        main_co_sp.renovation_demand AS co_renovation_demand,
+        , main_co_sp.identifier AS co_identifier
+        , main_co_sp.remark AS co_remark
+        , main_co_sp.renovation_demand AS co_renovation_demand
 
-        {main_co_cols},
-        ST_Force2D(COALESCE(wn.situation_geometry, main_co.situation_geometry))::geometry(Point, %(SRID)s) AS situation_geometry,
+        , {main_co_cols}
+        , ST_Force2D(COALESCE(wn.situation_geometry, main_co.situation_geometry))::geometry(Point, %(SRID)s) AS situation_geometry
 
-        {ma_columns},
+        , {ma_columns}
 
-        {ss_columns},
+        , {ss_columns}
 
-        {ii_columns},
+        , {ii_columns}
 
-        {dp_columns},
+        , {dp_columns}
 
-        {wn_cols},
-        {ne_cols},
+        , {wn_cols}
+        , {ne_cols}
 
-        ws._label,
-        ws._cover_label,
-        ws._bottom_label,
-        ws._input_label,
-        ws._output_label,
-        ws._usage_current AS _channel_usage_current,
-        ws._function_hierarchic AS _channel_function_hierarchic
+        , ws._label
+        , ws._cover_label
+        , ws._bottom_label
+        , ws._input_label
+        , ws._output_label
+        , ws._usage_current AS _channel_usage_current
+        , ws._function_hierarchic AS _channel_function_hierarchic
 
         FROM qgep_od.wastewater_structure ws
         LEFT JOIN qgep_od.cover main_co ON main_co.obj_id = ws.fk_main_cover
