@@ -63,7 +63,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 {'id': 'N', 'rp_from_level': 1001},
                 {'id': 'E', 'rp_from_level': 1002},
                 {'id': 'S', 'rp_from_level': 1003},
-                {'id': 'N', 'rp_from_level': 1004}
+                {'id': 'W', 'rp_from_level': 1004}
             ]
         }
         for way, reach_points in reaches.items():
@@ -95,7 +95,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 self.connect_reach(obj_id, from_id=start_point['wn_obj_id'], to_id=end_point['wn_obj_id'])
 
         self.assertEqual(self.select('vw_qgep_wastewater_structure', manholes['main']['obj_id'])['_input_label'], '\nI1=1011.00\nI2=1012.00\nI3=1013.00\nI4=1014.00')
-        self.assertEqual(self.select('vw_qgep_wastewater_structure', manholes['main']['obj_id'])['_output_label'], '\nO1=1004.00\nO2=1001.00\nO3=1002.00\nO4=1003.00')
+        self.assertEqual(self.select('vw_qgep_wastewater_structure', manholes['main']['obj_id'])['_output_label'], '\nO1=1001.00\nO2=1002.00\nO3=1003.00\nO4=1004.00')
 
 
 if __name__ == '__main__':
