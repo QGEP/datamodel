@@ -6,9 +6,6 @@
 -- -> inlet node is the water node where the QGEP pump is located
 -- -> outlet node is the water node at the end of the reach going out of the pump
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_pumps;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_pumps AS
 
 SELECT

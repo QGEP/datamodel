@@ -2,7 +2,6 @@
 -- View for the swmm module class subcatchments
 -- 20190329 qgep code sprint SB, TP
 --------
-DROP VIEW IF EXISTS qgep_swmm.vw_subcatchments;
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 SELECT
   replace(ca.obj_id, ' ', '_') as Name,
@@ -39,7 +38,6 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
 
 -- Creates subarea related to the subcatchment
-DROP VIEW IF EXISTS qgep_swmm.vw_subareas;
 CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
 SELECT
   replace(ca.obj_id, ' ', '_') as Subcatchment,
@@ -63,7 +61,6 @@ LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_ar
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
 
 -- Creates Dry Weather Flow related to the catchment area
-DROP VIEW IF EXISTS qgep_swmm.vw_dwf;
 CREATE OR REPLACE VIEW qgep_swmm.vw_dwf AS
 SELECT
   fk_wastewater_networkelement_rw_current as Node, -- id of the junction
@@ -78,7 +75,6 @@ WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnect
 
 
 -- Creates a default raingage for each subcatchment
-DROP VIEW IF EXISTS qgep_swmm.vw_raingages;
 CREATE OR REPLACE VIEW qgep_swmm.vw_raingages AS
 SELECT
   ('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as Name,
@@ -91,7 +87,6 @@ FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnected catchments
 
 -- Creates default infiltration for each subcatchment
-DROP VIEW IF EXISTS qgep_swmm.vw_infiltration;
 CREATE OR REPLACE VIEW qgep_swmm.vw_infiltration AS
 SELECT
   replace(ca.obj_id, ' ', '_')  as Subcatchment,
@@ -105,7 +100,6 @@ WHERE fk_wastewater_networkelement_rw_current IS NOT NULL; -- to avoid unconnect
 
 
 -- creates coverages
-DROP VIEW IF EXISTS qgep_swmm.vw_coverages;
 CREATE OR REPLACE VIEW qgep_swmm.vw_coverages AS
 SELECT
   replace(ca.obj_id, ' ', '_')  as Subcatchment,

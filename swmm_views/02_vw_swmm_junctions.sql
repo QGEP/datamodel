@@ -2,9 +2,6 @@
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_junctions AS
 
 -- manholes

@@ -2,9 +2,6 @@
 -- View for the swmm module class conduits
 -- 20190329 qgep code sprint SB, TP
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_conduits;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_conduits AS
 
 SELECT
