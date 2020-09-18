@@ -85,8 +85,8 @@ def vw_qgep_wastewater_structure(srid: int,
         LEFT JOIN qgep_od.special_structure ss ON ss.obj_id = ws.obj_id
         LEFT JOIN qgep_od.discharge_point dp ON dp.obj_id = ws.obj_id
         LEFT JOIN qgep_od.infiltration_installation ii ON ii.obj_id = ws.obj_id
-        LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = ws.fk_main_wastewater_node
-        LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws.fk_main_wastewater_node
+        RIGHT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = ws.fk_main_wastewater_node
+        RIGHT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws.fk_main_wastewater_node
         {extra_joins};
 
         ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
