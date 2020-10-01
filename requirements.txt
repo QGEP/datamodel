@@ -1,4 +1,6 @@
 pirogue>=1.2.5
 psycopg2
 pyyaml
-pum>=0.8.4
+# pum>=0.8.4
+# TEMP : using verbose_output_test branch for now
+https://github.com/olivierdalang/pum/archive/9b27e75fb9ed198db16f9bef8adaba36efed2a67.zip#egg=pum  
