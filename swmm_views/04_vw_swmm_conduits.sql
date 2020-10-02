@@ -24,7 +24,7 @@ SELECT
 	coalesce((rp_to.level-to_wn.bottom_level),0) as OutletOffset,
 	0 as InitFlow,
 	0 as MaxFlow,
-	ne.identifier || ', ' || ne.remark as description,
+	CONCAT(ne.identifier, ', ', ne.remark) as description,
 	ne.fk_wastewater_structure as tag,
 	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom
 FROM qgep_od.reach as re
