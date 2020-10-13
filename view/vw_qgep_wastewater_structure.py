@@ -89,7 +89,7 @@ def vw_qgep_wastewater_structure(srid: int,
         LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws.fk_main_wastewater_node
         LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
         {extra_joins}
-        WHERE ch.obj_id IS NOT NULL;
+        WHERE ch.obj_id IS NULL;
 
         ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
         ALTER VIEW qgep_od.vw_qgep_wastewater_structure ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','cover');
