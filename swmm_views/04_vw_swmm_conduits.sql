@@ -23,7 +23,11 @@ SELECT
 	0 as MaxFlow,
 	ne.identifier::text  as description,
 	ne.fk_wastewater_structure as tag,
-	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom
+	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom,
+	CASE 
+		WHEN status = 7959 THEN 'planned'
+		ELSE 'current'
+	END as state
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 
@@ -35,4 +39,5 @@ LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
-WHERE ch.function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+WHERE ch.function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND status IN (6530, 6533, 8493, 7959);
