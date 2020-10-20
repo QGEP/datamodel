@@ -29,7 +29,7 @@ SELECT
   0.5 as percSlope, -- default value
   0 as CurbLen, -- default value
   NULL::varchar as SnowPack, -- default value
-  ca.identifier || ', ' || ca.remark as description,
+  CONCAT(ca.identifier, ', ', ca.remark) as description,
   ca.obj_id as tag,
   ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE)::geometry(Polygon, %(SRID)s) as geom
 FROM qgep_od.catchment_area as ca
@@ -54,7 +54,7 @@ SELECT
   25 as PctZero,-- default value, Percent of the impervious area with no depression storage.
   'OUTLET'::varchar as RouteTo,
   NULL::float as PctRouted,
-  ca.identifier || ', ' || ca.remark as description,
+  CONCAT(ca.identifier, ', ', ca.remark) as description,
   ca.obj_id::varchar as tag
 FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
