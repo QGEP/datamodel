@@ -22,7 +22,7 @@ SELECT
 	ss.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
-		WHEN status = 7959 THEN 'planned'
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
 FROM qgep_od.special_structure ss
@@ -63,7 +63,7 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 -- 2745, --"vortex_manhole"
 )
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 7959)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 UNION ALL
 SELECT
 	wn.obj_id as Name,
@@ -85,7 +85,7 @@ SELECT
 	ii.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
-		WHEN status = 7959 THEN 'planned'
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
 FROM qgep_od.infiltration_installation as ii
@@ -106,4 +106,4 @@ WHERE ii.kind IN (
 --3283	--"infiltration_pipe_sections_gallery"
 )
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 7959);
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959);

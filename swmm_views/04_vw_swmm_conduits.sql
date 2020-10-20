@@ -25,7 +25,7 @@ SELECT
 	ne.fk_wastewater_structure as tag,
 	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom,
 	CASE 
-		WHEN status = 7959 THEN 'planned'
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
 FROM qgep_od.reach as re
@@ -39,5 +39,19 @@ LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to
 LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewater_networkelement
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
+-- select only the primary channels pwwf.*
 WHERE ch.function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 7959);
+-- select only operationals and "planned"
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
+-- 6526	"other.calculation_alternative"
+-- 6529	"other.project"
+-- 7959	"other.planned"
+-- 6530	"operational.tentative"
+-- 6533	"operational.will_be_suspended"
+-- 8493	"operational"
+
+-- 6532	"abanndoned.filled"
+-- 3027	"unknown"
+-- 3633	"inoperative"
+-- 6523	"abanndoned.suspended_not_filled"
+-- 6524	"abanndoned.suspended_unknown"

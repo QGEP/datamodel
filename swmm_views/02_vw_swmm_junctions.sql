@@ -16,7 +16,7 @@ SELECT
 	ma.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
-		WHEN status = 7959 THEN 'planned'
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
 FROM qgep_od.manhole ma
@@ -26,7 +26,7 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 7959)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 --AND function != 4798 -- separating_structure -> used in swmm dividers
 
 UNION ALL
@@ -43,7 +43,7 @@ SELECT
 	ss.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
-		WHEN status = 7959 THEN 'planned'
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
 FROM qgep_od.special_structure ss
@@ -53,7 +53,7 @@ LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 7959)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 --AND function != 4799 -- separating_structure -> used in swmm dividers
 AND function NOT IN ( -- must be the same list in vw_swmm_storages
 6397, --"pit_without_drain"
