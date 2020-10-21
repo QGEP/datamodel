@@ -81,7 +81,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_vertices", "qgep_swmm", 32)
 
     def test_count_vw_xsections(self):
-        self.assert_count("vw_xsections", "qgep_swmm", 2348)
+        self.assert_count("vw_xsections", "qgep_swmm", 17200)
 
 if __name__ == '__main__':
     unittest.main()

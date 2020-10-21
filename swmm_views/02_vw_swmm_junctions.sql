@@ -2,9 +2,6 @@
 -- View for the swmm module class junction
 -- 20190329 qgep code sprint SB, TP
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_junctions;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_junctions AS
 
 -- manholes
@@ -15,7 +12,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	CONCAT(ws.identifier, ', ', ws.remark) as description,
+	ws.identifier::text  as description,
 	ma.obj_id as tag,
 	wn.situation_geometry as geom
 FROM qgep_od.manhole ma
@@ -37,7 +34,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	CONCAT(ws.identifier, ', ', ws.remark) as description,
+	ws.identifier::text  as description,
 	ss.obj_id as tag,
 	wn.situation_geometry as geom
 FROM qgep_od.special_structure ss

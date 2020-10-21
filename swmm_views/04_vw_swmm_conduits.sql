@@ -2,9 +2,6 @@
 -- View for the swmm module class conduits
 -- 20190329 qgep code sprint SB, TP
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_conduits;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_conduits AS
 
 SELECT
@@ -24,7 +21,7 @@ SELECT
 	coalesce((rp_to.level-to_wn.bottom_level),0) as OutletOffset,
 	0 as InitFlow,
 	0 as MaxFlow,
-	CONCAT(ne.identifier, ', ', ne.remark) as description,
+	ne.identifier::text  as description,
 	ne.fk_wastewater_structure as tag,
 	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom
 FROM qgep_od.reach as re

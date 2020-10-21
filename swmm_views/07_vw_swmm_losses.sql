@@ -2,9 +2,6 @@
 -- View for the swmm module class losses
 -- 20190329 qgep code sprint SB, TP
 --------
-
-DROP VIEW IF EXISTS qgep_swmm.vw_losses;
-
 CREATE OR REPLACE VIEW qgep_swmm.vw_losses AS
 
 SELECT DISTINCT
