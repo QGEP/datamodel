@@ -43,15 +43,15 @@ jobs:
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
-          # Run tests that depend on data model. Tests that require demo data are ignored and run below in qgep_build_pum
+          # Run tests that depend on data model. Tests that require demo data are ignored and run below in qgep_prod
           docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py --ignore test/test_swmm.py
         env:
           PGIS: ${{ matrix.pgis }}
 
-      - name: "run tests on qgep_build_pum (production)"
+      - name: "run tests on qgep_prod (production)"
         run: |
           docker start qgep
-          docker exec -e PGSERVICE=qgep_build_pum qgep pytest
+          docker exec -e PGSERVICE=qgep_prod qgep pytest
         env:
           PGIS: ${{ matrix.pgis }}
 
