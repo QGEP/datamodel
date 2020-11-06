@@ -2,6 +2,13 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 SELECT
   concat(replace(ca.obj_id, ' ', '_'), '_', state) as Name,
   ('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as RainGage,
+  CASE
+    WHEN state = 'rw_current' then fk_wastewater_networkelement_rw_current
+    WHEN state = 'rw_planned'  then fk_wastewater_networkelement_rw_planned
+    WHEN state = 'ww_current' then fk_wastewater_networkelement_ww_current
+    WHEN state = 'ww_planned'  then fk_wastewater_networkelement_ww_planned
+    ELSE replace(ca.obj_id, ' ', '_')
+  END as Outlet,
   coalesce(fk_wastewater_networkelement_rw_current, replace(ca.obj_id, ' ', '_')) as Outlet,
   CASE
     when surface_area is null then st_area(perimeter_geometry)
