@@ -28,6 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: "assert version is up to date"
+        run: |
+          LAST_VERSION=$(ls delta | sort -r | sed '/^delta_/!d' | head -n 1 | cut -d_ -f2)
+          CUR_VERSION=$(cat system/CURRENT_VERSION.txt)
+          [[ "${LAST_VERSION}" == "${CUR_VERSION}" ]] || (echo "Version mismatch ${LAST_VERSION} != ${CUR_VERSION}" && exit 1)
+
       - name: "build dockerfile"
         run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS} .
         env:
