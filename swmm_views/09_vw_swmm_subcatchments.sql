@@ -9,7 +9,6 @@ SELECT
     WHEN state = 'ww_planned'  then fk_wastewater_networkelement_ww_planned
     ELSE replace(ca.obj_id, ' ', '_')
   END as Outlet,
-  coalesce(fk_wastewater_networkelement_rw_current, replace(ca.obj_id, ' ', '_')) as Outlet,
   CASE
     when surface_area is null then st_area(perimeter_geometry)
     when surface_area < 0.01 then st_area(perimeter_geometry)
@@ -40,7 +39,7 @@ SELECT
   NULL::varchar as SnowPack, -- default value
   ca.identifier || ', ' || ca.remark as description,
   ca.obj_id as tag,
-  ST_Simplify(ST_CurveToLine(perimeter_geometry), 5, TRUE)::geometry(Polygon, 2056) as geom,
+  ST_Simplify(ST_CurveToLine(perimeter_geometry), 0.2, TRUE)::geometry(Polygon, %(SRID)s) as geom,
   CASE
     WHEN state = 'rw_current' OR state = 'ww_current' THEN 'current'
     WHEN state = 'rw_planned' OR state = 'ww_planned' THEN 'planned'
@@ -68,7 +67,8 @@ FROM (
 -- Creates subarea related to the subcatchment
 CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
 SELECT
-  replace(ca.obj_id, ' ', '_') as Subcatchment,
+  --replace(ca.obj_id, ' ', '_') as Subcatchment,
+  concat(replace(ca.obj_id, ' ', '_'), '_', state) as Subcatchment,
   0.01 as NImperv, -- default value, Manning's n for overland flow over the impervious portion of the subcatchment 
   0.1 as NPerv,-- default value, Manning's n for overland flow over the pervious portion of the subcatchment
   CASE
@@ -87,15 +87,25 @@ SELECT
   state as state
 FROM 
 (
-SELECT ca.*, sr.surface_storage, 'current' as state
+SELECT ca.*, sr.surface_storage, 'rw_current' as state
 FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
-WHERE fk_wastewater_networkelement_rw_current IS NOT NULL OR fk_wastewater_networkelement_ww_current IS NOT NULL -- to avoid unconnected catchments
+WHERE fk_wastewater_networkelement_rw_current IS NOT NULL -- to avoid unconnected catchments
 UNION ALL
-SELECT ca.*, sr.surface_storage, 'planned' as state
+SELECT ca.*, sr.surface_storage, 'ww_current' as state
 FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
-WHERE fk_wastewater_networkelement_rw_planned IS NOT NULL OR fk_wastewater_networkelement_ww_planned IS NOT NULL -- to avoid unconnected catchments
+WHERE fk_wastewater_networkelement_ww_current IS NOT NULL -- to avoid unconnected catchments
+UNION ALL
+SELECT ca.*, sr.surface_storage, 'rw_planned' as state
+FROM qgep_od.catchment_area as ca
+LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
+WHERE fk_wastewater_networkelement_rw_planned IS NOT NULL -- to avoid unconnected catchments
+UNION ALL
+SELECT ca.*, sr.surface_storage, 'ww_planned' as state
+FROM qgep_od.catchment_area as ca
+LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
+WHERE fk_wastewater_networkelement_ww_planned IS NOT NULL -- to avoid unconnected catchments
 ) as ca;
 
 -- Creates Dry Weather Flow related to the catchment area
@@ -156,7 +166,10 @@ WHERE fk_wastewater_networkelement_rw_planned IS NOT NULL -- to avoid unconnecte
 -- Creates default infiltration for each subcatchment
 CREATE OR REPLACE VIEW qgep_swmm.vw_infiltration AS
 SELECT
-  replace(ca.obj_id, ' ', '_')  as Subcatchment,
+  CASE 
+    WHEN state = 'current' THEN concat(replace(ca.obj_id, ' ', '_'), '_', 'rw_current')
+    WHEN state = 'planned' THEN concat(replace(ca.obj_id, ' ', '_'), '_', 'rw_planned')
+  END as Subcatchment,
   3 as MaxRate,
   0.5 as MinRate,
   4 as Decay,
