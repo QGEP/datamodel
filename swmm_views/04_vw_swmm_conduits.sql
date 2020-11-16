@@ -23,7 +23,7 @@ SELECT
 	0 as MaxFlow,
 	ne.identifier::text  as description,
 	ne.fk_wastewater_structure as tag,
-	ST_Simplify(ST_CurveToLine(progression_geometry), 20, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom,
+	ST_SimplifyPreserveTopology(ST_CurveToLine(progression_geometry), 0.5, TRUE)::geometry(LineStringZ, %(SRID)s)  as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
