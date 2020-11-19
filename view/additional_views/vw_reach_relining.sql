@@ -1,4 +1,4 @@
-﻿-- View: qgep_od.vw_reach_relining
+-- View: qgep_od.vw_reach_relining
 
 -- DROP VIEW qgep_od.vw_reach_relining;
 

@@ -1,4 +1,4 @@
-﻿-- View: qgep_od.vw_qgep_maintenance_on_wws
+-- View: qgep_od.vw_qgep_maintenance_on_wws
 
 -- DROP VIEW qgep_od.vw_qgep_maintenance_on_wws;
 

@@ -1,4 +1,4 @@
-﻿-- View: qgep_od.vw_qgep_maintenance_on_reach
+-- View: qgep_od.vw_qgep_maintenance_on_reach
 
 -- DROP VIEW qgep_od.vw_qgep_maintenance_on_reach;
 
