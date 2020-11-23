@@ -70,7 +70,7 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 6478, --"septic_tank"
 -- 2998, --"manhole"
 -- 2768, --"oil_separator"
--- 246, --"pump_station"
+-- 246, --"pump_station" added 20201119
 3673, --"stormwater_tank_with_overflow"
 3674, --"stormwater_tank_retaining_first_flush"
 5574, --"stormwater_retaining_channel"
