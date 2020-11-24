@@ -37,7 +37,7 @@ SELECT
   0.5 as percSlope, -- default value
   0 as CurbLen, -- default value
   NULL::varchar as SnowPack, -- default value
-  ca.identifier || ', ' || ca.remark as description,
+  CONCAT(ca.identifier, ', ', ca.remark) as description,
   ca.obj_id as tag,
   ST_SimplifyPreserveTopology(ST_CurveToLine(perimeter_geometry), 0.5)::geometry(Polygon, %(SRID)s) as geom,
   CASE
