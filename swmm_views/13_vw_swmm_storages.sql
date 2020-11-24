@@ -18,8 +18,8 @@ SELECT
 	NULL as Psi,
 	NULL as Ksat, -- conductivity
 	NULL as IMD,	
-	concat(ws.identifier::text, ', ', ssf.value_en) as description,
-	ss.obj_id as tag,
+	ws.identifier::text as description,
+	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
 	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
@@ -80,8 +80,8 @@ SELECT
 	NULL as Psi,
 	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
 	NULL as IMD,
-	concat(ws.identifier::text, ', ', iik.value_en) as description,
-	ii.obj_id as tag,
+	ws.identifier::text as description,
+	CONCAT_WS(',','infiltration_installation', iik.value_en) as tag,
 	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'

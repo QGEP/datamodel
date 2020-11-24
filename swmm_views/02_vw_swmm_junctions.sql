@@ -12,8 +12,8 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	concat(ws.identifier::text, ', manhole')  as description,
-	ma.obj_id as tag,
+	ws.identifier::text as description,
+	CONCAT_WS(',', 'manhole', mf.value_en) as tag,
 	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
@@ -24,6 +24,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ma.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.manhole_function mf on ma.function = mf.code
 WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
@@ -38,8 +39,8 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	concat(ws.identifier::text, ', ', ssf.value_en) as description,
-	ss.obj_id as tag,
+	ws.identifier::text as description,
+	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
 	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
@@ -97,8 +98,8 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	'junction without structure' as description,
-	from_wn.obj_id as tag,
+	from_wn.obj_id as description,
+	'junction without structure' as tag,
 	from_wn.situation_geometry as geom,
 	CASE 
 		WHEN ws.status IN (7959, 6529, 6526) THEN 'planned'
@@ -128,8 +129,8 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	'junction without structure' as description,
-	to_wn.obj_id as tag,
+	to_wn.obj_id as description,
+	'junction without structure' as tag,
 	to_wn.situation_geometry as geom,
 	CASE 
 		WHEN ws.status IN (7959, 6529, 6526) THEN 'planned'

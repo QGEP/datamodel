@@ -9,7 +9,7 @@ SELECT
 	st_x(wn.situation_geometry) as X_coordinate,
 	st_y(wn.situation_geometry) as Y_coordinate,
 	ws.identifier as description,
-	'manhole' as tag,
+	CONCAT_WS(',', 'manhole', mf.value_en) as tag,
 	wn.bottom_level as invert_elev,
 	(co.level-wn.bottom_level) as max_depth,
 	'???' as diverted_link,
@@ -22,6 +22,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ma.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.manhole_function mf on ma.function = mf.code
 WHERE function = 4798 -- separating_structure
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
@@ -33,7 +34,7 @@ SELECT
 	st_x(wn.situation_geometry) as X_coordinate,
 	st_y(wn.situation_geometry) as Y_coordinate,
 	ws.identifier as description,
-	'special_stucture' as tag,
+	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
 	wn.bottom_level as invert_elev,
 	(co.level-wn.bottom_level) as max_depth,
 	'???' as diverted_link,
@@ -46,6 +47,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.special_structure_function ssf on ss.function = ssf.code
 WHERE function  = 4799 -- separating_structure
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
