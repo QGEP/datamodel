@@ -12,7 +12,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	ws.identifier::text  as description,
+	concat(ws.identifier::text, ', manhole')  as description,
 	ma.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
@@ -38,7 +38,7 @@ SELECT
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	ws.identifier::text  as description,
+	concat(ws.identifier::text, ', ', ssf.value_en) as description,
 	ss.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
@@ -50,6 +50,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.special_structure_function ssf on ss.function = ssf.code
 WHERE wn.obj_id IS NOT NULL
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
@@ -88,6 +89,7 @@ AND function NOT IN ( -- must be the same list in vw_swmm_storages
 
 UNION
 
+-- wastewater_node not linked to wastewater structures
 SELECT
 	from_wn.obj_id as Name,
 	coalesce(from_wn.bottom_level,0) as InvertElev,

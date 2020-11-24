@@ -18,7 +18,7 @@ SELECT
 	NULL as Psi,
 	NULL as Ksat, -- conductivity
 	NULL as IMD,	
-	ws.identifier || ', ' || ws.remark as description,
+	concat(ws.identifier::text, ', ', ssf.value_en) as description,
 	ss.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
@@ -30,6 +30,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.special_structure_function ssf on ss.function = ssf.code
 WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 6397, --"pit_without_drain"
 -- 245, --"drop_structure"
@@ -78,10 +79,8 @@ SELECT
 	0 as Fevap,
 	NULL as Psi,
 	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
-	NULL as IMD, 	
-	--st_x(wn.situation_geometry) as X_coordinate,
-	--st_y(wn.situation_geometry) as Y_coordinate,
-	ws.identifier || ', ' || ws.remark as description,
+	NULL as IMD,
+	concat(ws.identifier::text, ', ', iik.value_en) as description,
 	ii.obj_id as tag,
 	wn.situation_geometry as geom,
 	CASE 
@@ -92,6 +91,7 @@ FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_vl.infiltration_installation_kind iik on ii.kind = iik.code
 WHERE ii.kind IN (
 --3282	--"with_soil_passage"
 --3285	--"without_soil_passage"
