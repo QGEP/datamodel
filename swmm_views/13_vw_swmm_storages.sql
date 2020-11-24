@@ -79,7 +79,6 @@ SELECT
 	0 as Fevap,
 	NULL as Psi,
 	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
-<<<<<<< HEAD
 	NULL as IMD,
 	ws.identifier::text as description,
 	CONCAT_WS(',','infiltration_installation', iik.value_en) as tag,
@@ -88,14 +87,6 @@ SELECT
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state
-=======
-	NULL as IMD, 	
-	--st_x(wn.situation_geometry) as X_coordinate,
-	--st_y(wn.situation_geometry) as Y_coordinate,
-	CONCAT(ws.identifier, ', ', ws.remark) as description,
-	ii.obj_id as tag,
-	wn.situation_geometry as geom
->>>>>>> upstream/master
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
