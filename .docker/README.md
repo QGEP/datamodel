@@ -16,7 +16,7 @@ docker run -d --name qgep -p 5432:5432 opengisch/qgep_datamodel
 This sets up two different databases, that should be available via `127.0.0.1:5432` with user and password `postgres` :
 
 - *qgep_build* : the structure using installation scripts
-- *qgep_build_pum* : the demo data (produced through successive pum migrations of initial demo data)
+- *qgep_prod* : the demo data (produced through successive pum migrations of initial demo data)
 
 Reinitialization
 ----------------
@@ -68,11 +68,15 @@ docker run -d --rm -p 5432:5432 -v "$(pwd):/src" --name qgep opengisch/qgep_data
 
 # example 1: run tests on the structure/demo data database
 docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py
-docker exec -e PGSERVICE=qgep_build_pum qgep pytest
+docker exec -e PGSERVICE=qgep_prod qgep pytest
 
 # example 2: compare released data version 1.2.0 with freshly built structure
 docker exec qgep init_qgep.sh release_struct 1.2.0
 docker exec qgep init_qgep.sh build
 docker exec qgep pum upgrade -t qgep_sys.pum_info -p qgep_release_struct -d delta -v int SRID 2056
 docker exec qgep pum check -p1 qgep_build -p2 qgep_release_struct -v 1
+
+# example 3: create the release files (you need to mount to /tmp volume)
+docker run -d --rm -p 5432:5432 -v "${PWD}:/src" -v "${PWD}/_tmp:/tmp" --name qgep opengisch/qgep_datamodel
+docker exec -e PGSERVICE=qgep_build -e TRAVIS_TAG=1.5.0 -e TRAVIS_SECURE_ENV_VARS=true qgep .deploy/create-release.py
 ```
