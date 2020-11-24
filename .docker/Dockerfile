@@ -22,7 +22,7 @@ RUN chown postgres /downloads
 RUN printf '[qgep_release]\ndbname=qgep_release\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
 RUN printf '[qgep_release_struct]\ndbname=qgep_release_struct\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
 RUN printf '[qgep_build]\ndbname=qgep_build\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
-RUN printf '[qgep_build_pum]\ndbname=qgep_build_pum\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
+RUN printf '[qgep_prod]\ndbname=qgep_prod\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
 RUN printf '[qgep_pum_test]\ndbname=qgep_pum_test\nuser=postgres\n' >> /etc/postgresql-common/pg_service.conf
 
 # required for pum test-and-upgrade to pickup the service

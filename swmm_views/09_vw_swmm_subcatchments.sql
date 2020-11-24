@@ -1,3 +1,9 @@
+
+--------
+-- View for the swmm module class subcatchments
+-- 20190329 qgep code sprint SB, TP
+--------
+
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 SELECT
   concat(replace(ca.obj_id, ' ', '_'), '_', state) as Name,

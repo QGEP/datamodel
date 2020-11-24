@@ -28,6 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: "assert version is up to date"
+        run: |
+          LAST_VERSION=$(ls delta | sort -r | sed '/^delta_/!d' | head -n 1 | cut -d_ -f2)
+          CUR_VERSION=$(cat system/CURRENT_VERSION.txt)
+          [[ "${LAST_VERSION}" == "${CUR_VERSION}" ]] || (echo "Version mismatch ${LAST_VERSION} != ${CUR_VERSION}" && exit 1)
+
       - name: "build dockerfile"
         run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS} .
         env:
@@ -43,15 +49,15 @@ jobs:
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
-          # Run tests that depend on data model. Tests that require demo data are ignored and run below in qgep_build_pum
+          # Run tests that depend on data model. Tests that require demo data are ignored and run below in qgep_prod
           docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py --ignore test/test_swmm.py
         env:
           PGIS: ${{ matrix.pgis }}
 
-      - name: "run tests on qgep_build_pum (production)"
+      - name: "run tests on qgep_prod (production)"
         run: |
           docker start qgep
-          docker exec -e PGSERVICE=qgep_build_pum qgep pytest
+          docker exec -e PGSERVICE=qgep_prod qgep pytest
         env:
           PGIS: ${{ matrix.pgis }}
 
