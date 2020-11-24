@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments AS
 SELECT
   concat(replace(ca.obj_id, ' ', '_'), '_', state) as Name,
-  ('raingage@' || replace(ca.obj_id, ' ', '_'))::varchar as RainGage,
+  concat('raingage@', replace(ca.obj_id, ' ', '_'))::varchar as RainGage,
   CASE
     WHEN state = 'rw_current' then fk_wastewater_networkelement_rw_current
     WHEN state = 'rw_planned'  then fk_wastewater_networkelement_rw_planned
@@ -12,7 +12,7 @@ SELECT
   CASE
     when surface_area is null then st_area(perimeter_geometry)
     when surface_area < 0.01 then st_area(perimeter_geometry)
-    else surface_area
+    else surface_area * 10000 -- conversion for ha to m2
   END as Area,
   CASE
     WHEN state = 'rw_current' then discharge_coefficient_rw_current
@@ -157,10 +157,18 @@ FROM
 SELECT ca.*,'current' as state
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL -- to avoid unconnected catchments
-UNION ALL
+UNION
 SELECT ca.*,'planned' as state
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_planned IS NOT NULL -- to avoid unconnected catchments
+UNION
+SELECT ca.*,'current' as state
+FROM qgep_od.catchment_area as ca
+WHERE fk_wastewater_networkelement_ww_current IS NOT NULL -- to avoid unconnected catchments
+UNION
+SELECT ca.*,'planned' as state
+FROM qgep_od.catchment_area as ca
+WHERE fk_wastewater_networkelement_ww_planned IS NOT NULL -- to avoid unconnected catchments
 ) as ca;
 
 -- Creates default infiltration for each subcatchment
