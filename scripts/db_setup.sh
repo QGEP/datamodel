@@ -33,6 +33,10 @@ while getopts ":rfs:p:" opt; do
       ;;
     r)
       roles=True
+      permissions=True
+      ;;
+    p)
+      permissions=True
       ;;
     s)
       SRID=$OPTARG
@@ -85,7 +89,10 @@ ${DIR}/view/create_views.py --pg_service ${PGSERVICE} --srid ${SRID}
 
 
 if [[ $roles ]]; then
-  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/12_roles.sql
+  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/12_0_roles.sql
+fi
+if [[ $permissions ]]; then
+  psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -f ${DIR}/12_1_roles.sql
 fi
 
 VERSION=$(cat ${DIR}/system/CURRENT_VERSION.txt)
