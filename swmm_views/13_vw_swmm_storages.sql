@@ -18,14 +18,19 @@ SELECT
 	NULL as Psi,
 	NULL as Ksat, -- conductivity
 	NULL as IMD,	
-	CONCAT(ws.identifier, ', ', ws.remark) as description,
-	ss.obj_id as tag,
-	wn.situation_geometry as geom
+	ws.identifier::text as description,
+	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
+	wn.situation_geometry as geom,
+	CASE 
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
+		ELSE 'current'
+	END as state
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
+LEFT JOIN qgep_vl.special_structure_function ssf on ss.function = ssf.code
 WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 6397, --"pit_without_drain"
 -- 245, --"drop_structure"
@@ -49,8 +54,8 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 3676, --"stormwater_retention_tank"
 5575, --"stormwater_retention_channel"
 5576, --"stormwater_storage_channel"
-3677, --"stormwater_composite_tank"
-5372 --"stormwater_overflow"
+3677 --"stormwater_composite_tank"
+-- 5372 --"stormwater_overflow"
 -- 5373, --"floating_material_separator"
 -- 383	, --"side_access"
 -- 227, --"jetting_manhole"
@@ -59,6 +64,7 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 -- 2745, --"vortex_manhole"
 )
 AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 UNION ALL
 SELECT
 	wn.obj_id as Name,
@@ -73,16 +79,19 @@ SELECT
 	0 as Fevap,
 	NULL as Psi,
 	(((absorption_capacity * 60 * 60) / 1000) / effective_area) * 1000 as Ksat, -- conductivity (liter/s * 60 * 60) -> liter/h, (liter/h / 1000)	-> m3/h,  (m/h *1000) -> mm/h
-	NULL as IMD, 	
-	--st_x(wn.situation_geometry) as X_coordinate,
-	--st_y(wn.situation_geometry) as Y_coordinate,
-	CONCAT(ws.identifier, ', ', ws.remark) as description,
-	ii.obj_id as tag,
-	wn.situation_geometry as geom
+	NULL as IMD,
+	ws.identifier::text as description,
+	CONCAT_WS(',','infiltration_installation', iik.value_en) as tag,
+	wn.situation_geometry as geom,
+	CASE 
+		WHEN status IN (7959, 6529, 6526) THEN 'planned'
+		ELSE 'current'
+	END as state
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_vl.infiltration_installation_kind iik on ii.kind = iik.code
 WHERE ii.kind IN (
 --3282	--"with_soil_passage"
 --3285	--"without_soil_passage"
@@ -96,4 +105,5 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074);
+AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
