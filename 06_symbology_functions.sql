@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_symbology(_obj_id
   RETURNS VOID AS
   $BODY$
 BEGIN
+-- Set _function_hierarchic and _usage_current on wastewater_structure
 UPDATE qgep_od.wastewater_structure ws
 SET
   _function_hierarchic = function_hierarchic,
@@ -36,6 +37,17 @@ FROM(
                                 vl_usg_curr_from.order_usage_current ASC NULLS LAST, vl_usg_curr_to.order_usage_current ASC NULLS LAST ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 ) symbology_ws
 WHERE symbology_ws.ws_obj_id = ws.obj_id;
+
+-- Set _function_hierarchic and _usage_current on wastewater_node
+UPDATE qgep_od.wastewater_node wn
+SET _usage_current = ws._usage_current, _function_hierarchic = ws._function_hierarchic
+FROM (
+  SELECT _function_hierarchic, _usage_current, fk_main_wastewater_node
+  FROM qgep_od.wastewater_structure ws
+  WHERE ws.obj_id = _obj_id
+) ws
+WHERE wn.obj_id = ws.fk_main_wastewater_node;
+
 END
 $BODY$
 LANGUAGE plpgsql

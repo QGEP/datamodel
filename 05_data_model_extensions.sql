@@ -64,3 +64,17 @@ UPDATE qgep_vl.channel_usage_current SET order_usage_current=8 WHERE code = 4571
 UPDATE qgep_vl.channel_usage_current SET order_usage_current=9 WHERE code = 5322;
 
 
+-- table wastewater_node is extended to hold additional attributes necessary for symbology reasons
+-- extended attributes are started with an underscore
+-- _usage_current is necessary for coloring the wastewater_node symbols
+-- _function_hierarchic is necessary for scale-based filtering (display minor wastewater_nodes only at larger scales)
+
+-- TABLE wastewater_node
+ALTER TABLE qgep_od.wastewater_node ADD COLUMN _usage_current integer;
+COMMENT ON COLUMN qgep_od.wastewater_node._usage_current IS 'not part of the VSA-DSS data model
+added solely for QGEP
+has to be updated by triggers';
+ALTER TABLE qgep_od.wastewater_node ADD COLUMN _function_hierarchic integer;
+COMMENT ON COLUMN qgep_od.wastewater_node._function_hierarchic IS 'not part of the VSA-DSS data model
+added solely for QGEP
+has to be updated by triggers';
