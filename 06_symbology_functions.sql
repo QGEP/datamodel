@@ -42,7 +42,7 @@ LANGUAGE plpgsql
 VOLATILE;
 
 --------------------------------------------------------
--- UPDATE wastewater structure symbology
+-- UPDATE wastewater node symbology
 -- Argument:
 --  * obj_id of wastewater networkelement or NULL to update all
 --------------------------------------------------------

@@ -16,7 +16,7 @@ has to be updated by triggers';
 
 
 --------------------------------------------------------
--- UPDATE wastewater structure symbology
+-- UPDATE wastewater node symbology
 -- Argument:
 --  * obj_id of wastewater networkelement or NULL to update all
 --------------------------------------------------------
@@ -92,3 +92,73 @@ BEGIN
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
 
+
+
+
+  -------------------- SYMBOLOGY UPDATE ON REACH POINT TABLE CHANGES ----------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.ws_symbology_update_by_reach_point()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  _ws_id TEXT;
+  _ne_id TEXT;
+  rp_obj_id TEXT;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      rp_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      rp_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      rp_obj_id = OLD.obj_id;
+  END CASE;
+
+  -- TODO : INTO will only store one row's result in the variable, while the query has two results, is that correct ? Consider using INTO STRICT.
+  SELECT ws.obj_id, ne.obj_id INTO _ws_id, _ne_id
+    FROM qgep_od.wastewater_structure ws
+    LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+    LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+    WHERE rp.obj_id = rp_obj_id;
+
+  EXECUTE qgep_od.update_wastewater_structure_symbology(_ws_id);
+  EXECUTE qgep_od.update_wastewater_node_symbology(_ne_id);
+
+  RETURN NEW;
+END; $BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+  -------------------- SYMBOLOGY UPDATE ON REACH TABLE CHANGES ----------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.ws_symbology_update_by_reach()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  _ws_id TEXT;
+  _ne_id TEXT;
+  symb_attribs RECORD;
+  re_obj_id TEXT;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      re_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      re_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      re_obj_id = OLD.obj_id;
+  END CASE;
+
+  -- TODO : INTO will only store one row's result in the variable, while the query has two results, is that correct ? Consider using INTO STRICT.
+  SELECT ws.obj_id, ne.obj_id INTO _ws_id, _ne_id
+    FROM qgep_od.reach re
+    LEFT JOIN qgep_od.reach_point rp ON ( rp.obj_id = re.fk_reach_point_from OR rp.obj_id = re.fk_reach_point_to )
+    LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = rp.fk_wastewater_networkelement
+    LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+    WHERE re.obj_id = re_obj_id;
+
+  EXECUTE qgep_od.update_wastewater_structure_symbology(_ws_id);
+  EXECUTE qgep_od.update_wastewater_node_symbology(_ne_id);
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
