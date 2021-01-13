@@ -215,5 +215,74 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # })
         # check_values(expected)
 
+    def test_symbology(self):
+        """tests updating of _function_hierarchic and _usage_current on wastewater_node and wastewater_structure"""
+
+        def check_values(table, obj_id, expected_values_for_field):
+            row = self.select(table, obj_id)
+            for field, expected_value in expected_values_for_field.items():
+                assert field in row, "Field {} not present in results ! Available fields are {}".format(
+                    field, ', '.join(row.keys())
+                )
+                assert row[field] == expected_value, "Field {} is incorrect: {} instead of {}".format(
+                    field, repr(row[field]), repr(expected_value)
+                )
+
+        strct_from_id = self.insert('vw_qgep_wastewater_structure', {
+            'identifier': 'A',
+            'situation_geometry': self.execute('ST_SetSrid(ST_MakePoint(3000000, 1500000), 2056)'),
+            'ws_type': 'manhole',
+            'co_level': decimal.Decimal('100.000'),
+        })
+        strct_from_row = self.select('vw_qgep_wastewater_structure', strct_from_id)
+
+        strct_to_id = self.insert('vw_qgep_wastewater_structure', {
+            'identifier': 'B',
+            'situation_geometry': self.execute('ST_SetSrid(ST_MakePoint(3000001, 1500001), 2056)'),
+            'ws_type': 'manhole',
+            'co_level': decimal.Decimal('100.000'),
+        })
+        strct_to_row = self.select('vw_qgep_wastewater_structure', strct_to_id)
+
+        reach_id = self.insert('vw_qgep_reach', {
+            'identifier': 'R1',
+            'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000001, 1500001, 100), ST_MakePoint(3000000, 1500000, 100)), 2056))'),
+            'ch_function_hierarchic': 5062,
+            'rp_from_fk_wastewater_networkelement': strct_from_row['wn_obj_id'],
+            'rp_to_fk_wastewater_networkelement': strct_to_row['wn_obj_id'],
+        })
+
+        check_values('vw_qgep_wastewater_structure', strct_from_id, {
+            '_channel_function_hierarchic': 5062,
+        })
+        check_values('vw_qgep_wastewater_structure', strct_to_id, {
+            '_channel_function_hierarchic': 5062,
+        })
+
+        check_values('vw_wastewater_node', strct_from_row['wn_obj_id'], {
+            '_function_hierarchic': 5062,
+        })
+        check_values('vw_wastewater_node', strct_to_row['wn_obj_id'], {
+            '_function_hierarchic': 5062,
+        })
+
+        # We change _function hierarchic on the reach
+        self.update('vw_qgep_reach', {'ch_function_hierarchic': 5063}, reach_id)
+
+        check_values('vw_qgep_wastewater_structure', strct_from_id, {
+            '_channel_function_hierarchic': 5063,
+        })
+        check_values('vw_qgep_wastewater_structure', strct_to_id, {
+            '_channel_function_hierarchic': 5063,
+        })
+
+        check_values('vw_wastewater_node', strct_from_row['wn_obj_id'], {
+            '_function_hierarchic': 5063,
+        })
+        check_values('vw_wastewater_node', strct_to_row['wn_obj_id'], {
+            '_function_hierarchic': 5063,
+        })
+
+
 if __name__ == '__main__':
     unittest.main()
