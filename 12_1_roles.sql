@@ -22,6 +22,7 @@ GRANT ALL ON ALL TABLES IN SCHEMA qgep_od TO qgep_user;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA qgep_od TO qgep_user;
 ALTER DEFAULT PRIVILEGES IN SCHEMA qgep_od GRANT ALL ON TABLES TO qgep_user;
 ALTER DEFAULT PRIVILEGES IN SCHEMA qgep_od GRANT ALL ON SEQUENCES TO qgep_user;
+DO $$ BEGIN EXECUTE 'GRANT CREATE ON DATABASE ' || (SELECT current_database()) || ' TO "qgep_user"'; END $$;  -- required for ili2pg imports/exports
 
 /* Manager */
 GRANT ALL ON SCHEMA qgep_vl TO qgep_manager;
