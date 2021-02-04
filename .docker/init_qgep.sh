@@ -87,7 +87,7 @@ if [ "$#" == "0" ] || [ "$1" == "build" ]; then
   echo '----------------------------------------'
   echo "Building database normally"
 
-  PGSERVICE=qgep_build ./scripts/db_setup.sh
+  PGSERVICE=qgep_build ./scripts/db_setup.sh -r
 
   echo "Done ! Database qgep_build can now be used."
   echo '----------------------------------------'
