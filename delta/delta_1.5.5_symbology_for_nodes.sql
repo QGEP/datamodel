@@ -25,6 +25,14 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_node_symbology(_obj_id text
   RETURNS VOID AS
   $BODY$
 BEGIN
+
+-- Otherwise this will result in very slow query due to on_structure_part_change_networkelement
+-- being triggered for all rows. See https://github.com/QGEP/datamodel/pull/166#issuecomment-760245405
+IF _all THEN
+  RAISE INFO 'Temporarily disabling symbology triggers';
+  PERFORM qgep_sys.drop_symbology_triggers();
+END IF;
+
 UPDATE qgep_od.wastewater_node n
 SET
   _function_hierarchic = function_hierarchic,
@@ -52,6 +60,13 @@ FROM(
                                 vl_usg_curr_from.order_usage_current ASC NULLS LAST, vl_usg_curr_to.order_usage_current ASC NULLS LAST ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 ) symbology_ne
 WHERE symbology_ne.ne_obj_id = n.obj_id;
+
+-- See above
+IF _all THEN
+  RAISE INFO 'Reenabling symbology triggers';
+  PERFORM qgep_sys.create_symbology_triggers();
+END IF;
+
 END
 $BODY$
 LANGUAGE plpgsql
