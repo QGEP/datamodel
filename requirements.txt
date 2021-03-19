@@ -1,5 +1,4 @@
-# TODO : replace with pirogue>=1.2.6 once released
-https://github.com/olivierdalang/pirogue/archive/d4682103de6b07dfa45c68e1efeaac222abf3761.zip#egg=pirogue
+pirogue>=1.3.0
 psycopg2
 pyyaml
 pum==0.9.12
