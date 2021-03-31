@@ -45,7 +45,7 @@ SELECT
   NULL::varchar as SnowPack, -- default value
   CONCAT(ca.identifier, ', ', ca.remark) as description,
   ca.obj_id as tag,
-  ST_SimplifyPreserveTopology(ST_CurveToLine(perimeter_geometry), 0.5)::geometry(Polygon, %(SRID)s) as geom,
+  ST_CurveToLine(perimeter_geometry)::geometry(Polygon, %(SRID)s) as geom,
   CASE
     WHEN state = 'rw_current' OR state = 'ww_current' THEN 'current'
     WHEN state = 'rw_planned' OR state = 'ww_planned' THEN 'planned'

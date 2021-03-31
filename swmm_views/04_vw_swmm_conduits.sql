@@ -23,7 +23,7 @@ SELECT
 	0 as MaxFlow,
 	ws.identifier::text as description,
 	cfh.value_en as tag,
-	ST_SimplifyPreserveTopology(ST_CurveToLine(progression_geometry), 0.5)::geometry(LineStringZ, %(SRID)s)  as geom,
+	ST_CurveToLine(progression_geometry)::geometry(LineStringZ, %(SRID)s)  as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
