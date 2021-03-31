@@ -43,7 +43,7 @@ SELECT
   0.5 as percSlope, -- default value
   0 as CurbLen, -- default value
   NULL::varchar as SnowPack, -- default value
-  CONCAT(ca.identifier, ', ', ca.remark) as description,
+  CONCAT(ca.identifier, ', ', regexp_replace(ca.remark,'[\n\r]+', ', ', 'g' )) as description,
   ca.obj_id as tag,
   ST_CurveToLine(perimeter_geometry)::geometry(Polygon, %(SRID)s) as geom,
   CASE
@@ -85,7 +85,7 @@ SELECT concat(replace(ca.obj_id::text, ' '::text, '_'::text), '_', ca.state) AS 
 	0 AS pctzero,
 	'OUTLET'::character varying AS routeto,
 	NULL::double precision AS pctrouted,
-	(ca.identifier::text || ', '::text) || ca.remark::text AS description,
+	CONCAT(ca.identifier, ', ', regexp_replace(ca.remark,'[\n\r]+', ', ', 'g' )) AS description,
 	ca.obj_id AS tag,
 	CASE
 		WHEN ca.state = 'rw_current'::text OR ca.state = 'ww_current'::text THEN 'current'::text
@@ -123,19 +123,20 @@ SELECT
     WHEN state = 'planned' THEN fk_wastewater_networkelement_rw_planned
   END as Node, -- id of the junction
   'FLOW'::varchar as Constituent,
-  CASE
-	  WHEN surface_area IS NOT NULL 
-    THEN 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * surface_area * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * surface_area * 160 / (24 * 60 * 60)
-      END
-    ELSE 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-      END
-  END as Baseline, -- 160 Litre / inhabitant /day
+	CASE
+		WHEN ca.surface_area IS NOT NULL THEN
+		CASE
+			WHEN ca.state = 'current'::text AND ca.population_density_current IS NOT NULL THEN ca.population_density_current::numeric * ca.surface_area * 160::numeric / (24 * 60 * 60)::numeric
+			WHEN ca.state = 'planned'::text AND ca.population_density_planned IS NOT NULL THEN ca.population_density_planned::numeric * ca.surface_area * 160::numeric / (24 * 60 * 60)::numeric
+			ELSE 0::numeric
+		END::double precision
+		ELSE
+		CASE
+			WHEN ca.state = 'current'::text AND ca.population_density_current IS NOT NULL THEN ca.population_density_current::double precision * st_area(ca.perimeter_geometry) * 160::double precision / (24 * 60 * 60)::double precision
+			WHEN ca.state = 'planned'::text AND ca.population_density_planned IS NOT NULL THEN ca.population_density_planned::double precision * st_area(ca.perimeter_geometry) * 160::double precision / (24 * 60 * 60)::double precision
+			ELSE 0::double precision
+		END
+	END AS baseline, -- 160 Litre / inhabitant /day
   'dailyPatternDWF'::varchar as Patterns,
   state as state
 FROM 
