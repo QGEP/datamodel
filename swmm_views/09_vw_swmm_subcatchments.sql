@@ -72,19 +72,19 @@ FROM (
 
 -- Creates subarea related to the subcatchment
 SELECT concat(replace(ca.obj_id::text, ' '::text, '_'::text), '_', ca.state) AS subcatchment,
-	0.013 AS nimperv,
-	0.15 AS nperv,
-		CASE
-			WHEN ca.surface_storage IS NOT NULL THEN ca.surface_storage
-			ELSE 2::numeric
-		END AS simperv,
-		CASE
-			WHEN ca.surface_storage IS NOT NULL THEN ca.surface_storage
-			ELSE 5::numeric
-		END AS sperv,
-	0 AS pctzero,
-	'OUTLET'::character varying AS routeto,
-	NULL::double precision AS pctrouted,
+  0.01 as NImperv, -- default value, Manning's n for overland flow over the impervious portion of the subcatchment 
+  0.1 as NPerv,-- default value, Manning's n for overland flow over the pervious portion of the subcatchment
+  CASE
+	  WHEN surface_storage IS NOT NULL THEN surface_storage	
+	  ELSE 0.05 -- default value
+  END as SImperv,-- Depth of depression storage on the impervious portion of the subcatchment (inches or millimeters)
+  CASE
+  	WHEN surface_storage IS NOT NULL THEN surface_storage	
+  	ELSE 0.05 -- default value
+  END as SPerv,-- Depth of depression storage on the pervious portion of the subcatchment (inches or millimeters)
+  25 as PctZero,-- default value, Percent of the impervious area with no depression storage.
+  'OUTLET'::varchar as RouteTo,
+  NULL::float as PctRouted,
 	CONCAT(ca.identifier, ', ', regexp_replace(ca.remark,'[\n\r]+', ', ', 'g' )) AS description,
 	ca.obj_id AS tag,
 	CASE
