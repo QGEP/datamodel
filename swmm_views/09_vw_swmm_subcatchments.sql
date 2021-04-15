@@ -71,6 +71,7 @@ FROM (
 
 
 -- Creates subarea related to the subcatchment
+CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
 SELECT concat(replace(ca.obj_id::text, ' '::text, '_'::text), '_', ca.state) AS subcatchment,
   0.01 as NImperv, -- default value, Manning's n for overland flow over the impervious portion of the subcatchment 
   0.1 as NPerv,-- default value, Manning's n for overland flow over the pervious portion of the subcatchment
