@@ -11,7 +11,7 @@ SELECT
   NULL as StageData,
   'NO'::varchar as tide_gate,
   NULL::varchar as RouteTo,
-  CONCAT(ws.identifier, ', ', regexp_replace(ws.remark,'[\n\r]+', ', ', 'g' ))) as description,
+  CONCAT(ws.identifier, ', ', regexp_replace(ws.remark,'[\n\r]+', ', ', 'g' )) as description,
   dp.obj_id::varchar as tag,
   wn.situation_geometry as geom,
 	CASE 
