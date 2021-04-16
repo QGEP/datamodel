@@ -43,9 +43,9 @@ SELECT
   0.5 as percSlope, -- default value
   0 as CurbLen, -- default value
   NULL::varchar as SnowPack, -- default value
-  CONCAT(ca.identifier, ', ', ca.remark) as description,
+  CONCAT(ca.identifier, ', ', regexp_replace(ca.remark,'[\n\r]+', ', ', 'g' )) as description,
   ca.obj_id as tag,
-  ST_SimplifyPreserveTopology(ST_CurveToLine(perimeter_geometry), 0.5)::geometry(Polygon, %(SRID)s) as geom,
+  ST_CurveToLine(perimeter_geometry)::geometry(Polygon, %(SRID)s) as geom,
   CASE
     WHEN state = 'rw_current' OR state = 'ww_current' THEN 'current'
     WHEN state = 'rw_planned' OR state = 'ww_planned' THEN 'planned'
@@ -72,24 +72,27 @@ FROM (
 
 -- Creates subarea related to the subcatchment
 CREATE OR REPLACE VIEW qgep_swmm.vw_subareas AS
-SELECT
-  concat(replace(ca.obj_id, ' ', '_'), '_', state) as Subcatchment,
+SELECT concat(replace(ca.obj_id::text, ' '::text, '_'::text), '_', ca.state) AS subcatchment,
   0.01 as NImperv, -- default value, Manning's n for overland flow over the impervious portion of the subcatchment 
   0.1 as NPerv,-- default value, Manning's n for overland flow over the pervious portion of the subcatchment
   CASE
-	WHEN surface_storage IS NOT NULL THEN surface_storage	
-	ELSE 0.05 -- default value
+	  WHEN surface_storage IS NOT NULL THEN surface_storage	
+	  ELSE 0.05 -- default value
   END as SImperv,-- Depth of depression storage on the impervious portion of the subcatchment (inches or millimeters)
-    CASE
-	WHEN surface_storage IS NOT NULL THEN surface_storage	
-	ELSE 0.05 -- default value
+  CASE
+  	WHEN surface_storage IS NOT NULL THEN surface_storage	
+  	ELSE 0.05 -- default value
   END as SPerv,-- Depth of depression storage on the pervious portion of the subcatchment (inches or millimeters)
   25 as PctZero,-- default value, Percent of the impervious area with no depression storage.
   'OUTLET'::varchar as RouteTo,
   NULL::float as PctRouted,
-  ca.identifier || ', ' || ca.remark as description,
-  ca.obj_id::varchar as tag,
-  state as state
+	CONCAT(ca.identifier, ', ', regexp_replace(ca.remark,'[\n\r]+', ', ', 'g' )) AS description,
+	ca.obj_id AS tag,
+	CASE
+		WHEN ca.state = 'rw_current'::text OR ca.state = 'ww_current'::text THEN 'current'::text
+		WHEN ca.state = 'rw_planned'::text OR ca.state = 'ww_planned'::text THEN 'planned'::text
+		ELSE 'planned'::text
+	END AS state
 FROM 
 (
 SELECT ca.*, sr.surface_storage, 'rw_current' as state
@@ -121,19 +124,20 @@ SELECT
     WHEN state = 'planned' THEN fk_wastewater_networkelement_rw_planned
   END as Node, -- id of the junction
   'FLOW'::varchar as Constituent,
-  CASE
-	  WHEN surface_area IS NOT NULL 
-    THEN 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * surface_area * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * surface_area * 160 / (24 * 60 * 60)
-      END
-    ELSE 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-      END
-  END as Baseline, -- 160 Litre / inhabitant /day
+	CASE
+		WHEN ca.surface_area IS NOT NULL THEN
+		CASE
+			WHEN ca.state = 'current'::text AND ca.population_density_current IS NOT NULL THEN ca.population_density_current::numeric * ca.surface_area * 160::numeric / (24 * 60 * 60)::numeric
+			WHEN ca.state = 'planned'::text AND ca.population_density_planned IS NOT NULL THEN ca.population_density_planned::numeric * ca.surface_area * 160::numeric / (24 * 60 * 60)::numeric
+			ELSE 0::numeric
+		END::double precision
+		ELSE
+		CASE
+			WHEN ca.state = 'current'::text AND ca.population_density_current IS NOT NULL THEN ca.population_density_current::double precision * st_area(ca.perimeter_geometry) * 160::double precision / (24 * 60 * 60)::double precision
+			WHEN ca.state = 'planned'::text AND ca.population_density_planned IS NOT NULL THEN ca.population_density_planned::double precision * st_area(ca.perimeter_geometry) * 160::double precision / (24 * 60 * 60)::double precision
+			ELSE 0::double precision
+		END
+	END AS baseline, -- 160 Litre / inhabitant /day
   'dailyPatternDWF'::varchar as Patterns,
   state as state
 FROM 
