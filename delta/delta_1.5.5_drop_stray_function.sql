@@ -16,6 +16,8 @@
 -- truncated) :
 
 /*
+Check...DIFFERENCES FOUND
+functions
 - ('qgep_sys', 'create_symbology_triggers', None, '\nBEGIN\n  -- only update ->
 + ('qgep_sys', 'create_symbology_triggers', None, '\nBEGIN\n  -- only update ->
 - ('qgep_sys', 'drop_symbology_triggers', None, '\nBEGIN\n  DROP TRIGGER IF EXI
@@ -60,57 +62,23 @@
 - ('qgep_od', 'ft_overflow_pump_delete', None, '\n\tBEGIN\n\t\tDELETE FROM qgep
 - ('qgep_od', 'ft_overflow_pump_insert', None, "\n\tBEGIN\n\t\tINSERT INTO qgep
 - ('qgep_od', 'ft_overflow_pump_update', None, '\n\tBEGIN\n\tUPDATE qgep_od.ove
-- ('qgep_od', 'ft_vw_channel_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-+ ('qgep_od', 'ft_vw_channel_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-- ('qgep_od', 'ft_vw_channel_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-+ ('qgep_od', 'ft_vw_channel_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-- ('qgep_od', 'ft_vw_discharge_point_insert', None, "\nBEGIN\nINSERT INTO qgep_
-+ ('qgep_od', 'ft_vw_discharge_point_insert', None, "\nBEGIN\nINSERT INTO qgep_
-- ('qgep_od', 'ft_vw_discharge_point_update', None, '\nBEGIN\nUPDATE qgep_od.wa
-+ ('qgep_od', 'ft_vw_discharge_point_update', None, '\nBEGIN\nUPDATE qgep_od.wa
-- ('qgep_od', 'ft_vw_manhole_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-+ ('qgep_od', 'ft_vw_manhole_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-- ('qgep_od', 'ft_vw_manhole_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-+ ('qgep_od', 'ft_vw_manhole_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-- ('qgep_od', 'ft_vw_organisation_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_organisation_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_organisation_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  I
-+ ('qgep_od', 'ft_vw_organisation_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  I
-- ('qgep_od', 'ft_vw_organisation_update', None, "\nDECLARE\n  \nBEGIN\n  \n  U
-+ ('qgep_od', 'ft_vw_organisation_update', None, "\nDECLARE\n  \nBEGIN\n  \n  U
-- ('qgep_od', 'ft_vw_qgep_damage_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_qgep_damage_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_qgep_damage_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  IN
-+ ('qgep_od', 'ft_vw_qgep_damage_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  IN
-- ('qgep_od', 'ft_vw_qgep_damage_update', None, "\nDECLARE\n  \nBEGIN\n  \n  UP
-+ ('qgep_od', 'ft_vw_qgep_damage_update', None, "\nDECLARE\n  \nBEGIN\n  \n  UP
-- ('qgep_od', 'ft_vw_qgep_overflow_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_qgep_overflow_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_qgep_overflow_insert', None, "\nDECLARE\n  \nBEGIN\n  \n
-+ ('qgep_od', 'ft_vw_qgep_overflow_insert', None, "\nDECLARE\n  \nBEGIN\n  \n
-- ('qgep_od', 'ft_vw_qgep_overflow_update', None, "\nDECLARE\n  \nBEGIN\n  \n
-+ ('qgep_od', 'ft_vw_qgep_overflow_update', None, "\nDECLARE\n  \nBEGIN\n  \n
-- ('qgep_od', 'ft_vw_qgep_reach_insert', None, "\n    BEGIN\n      -- Synchroni
-+ ('qgep_od', 'ft_vw_qgep_reach_insert', None, "\n    BEGIN\n      -- Synchroni
-- ('qgep_od', 'ft_vw_qgep_reach_update', None, "\n    BEGIN\n    \n      -- Syn
-+ ('qgep_od', 'ft_vw_qgep_reach_update', None, "\n    BEGIN\n    \n      -- Syn
-- ('qgep_od', 'ft_vw_qgep_wastewater_structure_insert', None, "\n    BEGIN\n\n
-+ ('qgep_od', 'ft_vw_qgep_wastewater_structure_insert', None, "\n    BEGIN\n\n
-- ('qgep_od', 'ft_vw_qgep_wastewater_structure_update', None, "\n    DECLARE\n
-+ ('qgep_od', 'ft_vw_qgep_wastewater_structure_update', None, "\n    DECLARE\n
-- ('qgep_od', 'ft_vw_special_structure_insert', None, "\nBEGIN\nINSERT INTO qge
-+ ('qgep_od', 'ft_vw_special_structure_insert', None, "\nBEGIN\nINSERT INTO qge
-- ('qgep_od', 'ft_vw_special_structure_update', None, '\nBEGIN\nUPDATE qgep_od.
-+ ('qgep_od', 'ft_vw_special_structure_update', None, '\nBEGIN\nUPDATE qgep_od.
 - ('qgep_od', 'vw_cover_insert', None, "\nBEGIN\n  INSERT INTO qgep_od.structur
 - ('qgep_od', 'vw_qgep_reach_insert', None, "\nBEGIN\n  -- Synchronize geometry
 - ('qgep_od', 'vw_qgep_reach_on_update', None, "\nBEGIN\n\n  -- Synchronize geo
 - ('qgep_od', 'vw_qgep_wastewater_structure_delete', None, '\nDECLARE\nBEGIN\n
 - ('qgep_od', 'vw_qgep_wastewater_structure_insert', None, "\nBEGIN\n\n  NEW.id
 - ('qgep_od', 'vw_qgep_wastewater_structure_update', None, "\nDECLARE\n  dx flo
+columns
+sequences
+constraints
+views
+rules
+indexes
+triggers
+tables
 */
 
--- 1. Remove stray functions
+-- 1. Remove stray elements
 
 DROP FUNCTION IF EXISTS qgep_od.drop_symbology_triggers();
 DROP FUNCTION IF EXISTS qgep_od.ft_damage_channel_delete();
@@ -152,64 +120,121 @@ DROP FUNCTION IF EXISTS qgep_od.ft_overflow_prank_weir_update();
 DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_delete();
 DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_insert();
 DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_update();
+DROP FUNCTION IF EXISTS qgep_od.vw_cover_insert();
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_insert();
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_on_update();
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_delete();
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_insert();
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_update();
 
--- 2. Recreate inconsistent functions
 
--- TODO : these differences are still found by pum check (inspect through pgadmin
--- too see full differences)
 
-/*
-- ('qgep_sys', 'create_symbology_triggers', None, '\nBEGIN\n  -- only update ->
-+ ('qgep_sys', 'create_symbology_triggers', None, '\nBEGIN\n  -- only update ->
-- ('qgep_sys', 'drop_symbology_triggers', None, '\nBEGIN\n  DROP TRIGGER IF EXI
-+ ('qgep_sys', 'drop_symbology_triggers', None, '\nBEGIN\n  DROP TRIGGER IF EXI
+-- 2. Recreate inconsistent functions (copied from 06_symbology_functions.sql)
 
-- ('qgep_od', 'ft_vw_channel_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-+ ('qgep_od', 'ft_vw_channel_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-- ('qgep_od', 'ft_vw_channel_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-+ ('qgep_od', 'ft_vw_channel_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-- ('qgep_od', 'ft_vw_discharge_point_insert', None, "\nBEGIN\nINSERT INTO qgep_
-+ ('qgep_od', 'ft_vw_discharge_point_insert', None, "\nBEGIN\nINSERT INTO qgep_
-- ('qgep_od', 'ft_vw_discharge_point_update', None, '\nBEGIN\nUPDATE qgep_od.wa
-+ ('qgep_od', 'ft_vw_discharge_point_update', None, '\nBEGIN\nUPDATE qgep_od.wa
-- ('qgep_od', 'ft_vw_manhole_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-+ ('qgep_od', 'ft_vw_manhole_insert', None, "\nBEGIN\nINSERT INTO qgep_od.waste
-- ('qgep_od', 'ft_vw_manhole_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-+ ('qgep_od', 'ft_vw_manhole_update', None, '\nBEGIN\nUPDATE qgep_od.wastewater
-- ('qgep_od', 'ft_vw_organisation_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_organisation_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_organisation_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  I
-+ ('qgep_od', 'ft_vw_organisation_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  I
-- ('qgep_od', 'ft_vw_organisation_update', None, "\nDECLARE\n  \nBEGIN\n  \n  U
-+ ('qgep_od', 'ft_vw_organisation_update', None, "\nDECLARE\n  \nBEGIN\n  \n  U
-- ('qgep_od', 'ft_vw_qgep_damage_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_qgep_damage_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_qgep_damage_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  IN
-+ ('qgep_od', 'ft_vw_qgep_damage_insert', None, "\nDECLARE\n  \nBEGIN\n  \n  IN
-- ('qgep_od', 'ft_vw_qgep_damage_update', None, "\nDECLARE\n  \nBEGIN\n  \n  UP
-+ ('qgep_od', 'ft_vw_qgep_damage_update', None, "\nDECLARE\n  \nBEGIN\n  \n  UP
-- ('qgep_od', 'ft_vw_qgep_overflow_delete', None, "\n    BEGIN\n    CASE\n
-+ ('qgep_od', 'ft_vw_qgep_overflow_delete', None, "\n    BEGIN\n    CASE\n
-- ('qgep_od', 'ft_vw_qgep_overflow_insert', None, "\nDECLARE\n  \nBEGIN\n  \n
-+ ('qgep_od', 'ft_vw_qgep_overflow_insert', None, "\nDECLARE\n  \nBEGIN\n  \n
-- ('qgep_od', 'ft_vw_qgep_overflow_update', None, "\nDECLARE\n  \nBEGIN\n  \n
-+ ('qgep_od', 'ft_vw_qgep_overflow_update', None, "\nDECLARE\n  \nBEGIN\n  \n
-- ('qgep_od', 'ft_vw_qgep_reach_insert', None, "\n    BEGIN\n      -- Synchroni
-+ ('qgep_od', 'ft_vw_qgep_reach_insert', None, "\n    BEGIN\n      -- Synchroni
-- ('qgep_od', 'ft_vw_qgep_reach_update', None, "\n    BEGIN\n    \n      -- Syn
-+ ('qgep_od', 'ft_vw_qgep_reach_update', None, "\n    BEGIN\n    \n      -- Syn
-- ('qgep_od', 'ft_vw_qgep_wastewater_structure_insert', None, "\n    BEGIN\n\n
-+ ('qgep_od', 'ft_vw_qgep_wastewater_structure_insert', None, "\n    BEGIN\n\n
-- ('qgep_od', 'ft_vw_qgep_wastewater_structure_update', None, "\n    DECLARE\n
-+ ('qgep_od', 'ft_vw_qgep_wastewater_structure_update', None, "\n    DECLARE\n
-- ('qgep_od', 'ft_vw_special_structure_insert', None, "\nBEGIN\nINSERT INTO qge
-+ ('qgep_od', 'ft_vw_special_structure_insert', None, "\nBEGIN\nINSERT INTO qge
-- ('qgep_od', 'ft_vw_special_structure_update', None, '\nBEGIN\nUPDATE qgep_od.
-+ ('qgep_od', 'ft_vw_special_structure_update', None, '\nBEGIN\nUPDATE qgep_od.
-- ('qgep_od', 'vw_cover_insert', None, "\nBEGIN\n  INSERT INTO qgep_od.structur
-- ('qgep_od', 'vw_qgep_reach_insert', None, "\nBEGIN\n  -- Synchronize geometry
-- ('qgep_od', 'vw_qgep_reach_on_update', None, "\nBEGIN\n\n  -- Synchronize geo
-- ('qgep_od', 'vw_qgep_wastewater_structure_delete', None, '\nDECLARE\nBEGIN\n
-- ('qgep_od', 'vw_qgep_wastewater_structure_insert', None, "\nBEGIN\n\n  NEW.id
-- ('qgep_od', 'vw_qgep_wastewater_structure_update', None, "\nDECLARE\n  dx flo
-*/
+-----------------------------------------------------------------------
+-- Drop Symbology Triggers
+-- To temporarily disable these cache refreshes for batch jobs like migrations
+-----------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_sys.drop_symbology_triggers() RETURNS VOID AS $$
+BEGIN
+  DROP TRIGGER IF EXISTS on_reach_point_update ON qgep_od.reach_point;
+  DROP TRIGGER IF EXISTS on_reach_2_change ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS on_reach_1_delete ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS on_wastewater_structure_update ON qgep_od.wastewater_structure;
+  DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_networkelement ON qgep_od.wastewater_networkelement;
+  DROP TRIGGER IF EXISTS on_structure_part_change ON qgep_od.structure_part;
+  DROP TRIGGER IF EXISTS on_cover_change ON qgep_od.cover;
+  DROP TRIGGER IF EXISTS on_wasterwaternode_change ON qgep_od.wastewater_node;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep_od.channel;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep_od.reach_point;
+  DROP TRIGGER IF EXISTS calculate_reach_length ON qgep_od.reach;
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------------------------------------------------------
+-- Create Symbology Triggers
+-----------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_sys.create_symbology_triggers() RETURNS VOID AS $$
+BEGIN
+  -- only update -> insert and delete are handled by reach trigger
+  CREATE TRIGGER on_reach_point_update
+  AFTER UPDATE
+    ON qgep_od.reach_point
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_point_update();
+
+  CREATE TRIGGER on_reach_2_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_change();
+
+  CREATE TRIGGER on_reach_1_delete
+  AFTER DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_delete();
+
+  CREATE TRIGGER calculate_reach_length
+  BEFORE INSERT OR UPDATE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.calculate_reach_length();
+
+  CREATE TRIGGER ws_symbology_update_by_reach
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_reach();
+
+  CREATE TRIGGER on_wastewater_structure_update
+  AFTER UPDATE
+    ON qgep_od.wastewater_structure
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_wastewater_structure_update();
+
+  CREATE TRIGGER ws_label_update_by_wastewater_networkelement
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.wastewater_networkelement
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_structure_part_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.structure_part
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_cover_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.cover
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_cover_change();
+
+  CREATE TRIGGER on_wasterwaternode_change
+  AFTER INSERT OR UPDATE
+    ON qgep_od.wastewater_node
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_wasterwaternode_change();
+
+  CREATE TRIGGER ws_symbology_update_by_channel
+  AFTER INSERT OR UPDATE OR DELETE
+  ON qgep_od.channel
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_channel();
+
+  -- only update -> insert and delete are handled by reach trigger
+  CREATE TRIGGER ws_symbology_update_by_reach_point
+  AFTER UPDATE
+    ON qgep_od.reach_point
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_reach_point();
+
+
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;

@@ -1,4 +1,5 @@
-pirogue>=1.3.4
+# pirogue>=1.? # TODO : use release from pypi once olivierdalang:deterministic_column_order is merged
+https://github.com/olivierdalang/pirogue/archive/2bf869f1a9905dd9f51176843165b47e16e4ee19.zip#egg=pirogue
 psycopg2
 pyyaml
 pum==0.9.14
