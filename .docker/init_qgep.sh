@@ -104,7 +104,7 @@ if [ "$#" == "0" ] || [ "$1" == "prod" ]; then
   pum restore -p qgep_prod -x --exclude-schema public --exclude-schema topology -- ./test_data/qgep_demodata_1.0.0.dump
   PGSERVICE=qgep_prod psql -v ON_ERROR_STOP=on -f test_data/data_fixes.sql
   pum baseline -p qgep_prod -t qgep_sys.pum_info -d ./delta/ -b 1.0.0
-  yes | pum test-and-upgrade -pp qgep_prod -pt qgep_pum_test -pc qgep_build -t qgep_sys.pum_info -f /tmp/dump -d ./delta/ -i constraints views --exclude-schema public -v int SRID 2056
+  yes | pum test-and-upgrade -pp qgep_prod -pt qgep_pum_test -pc qgep_build -t qgep_sys.pum_info -f /tmp/dump -d ./delta/ --exclude-schema public -v int SRID 2056
 
   echo "Done ! Database qgep_prod can now be used."
   echo '----------------------------------------'
