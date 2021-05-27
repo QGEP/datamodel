@@ -1,4 +1,4 @@
-pirogue>=1.2.5
+pirogue>=1.3.4
 psycopg2
 pyyaml
 # pum==0.??  # TODO : get pum from pypi again once https://github.com/opengisch/pum/pull/97 was merged

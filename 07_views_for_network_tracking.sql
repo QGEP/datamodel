@@ -22,7 +22,7 @@ CREATE TABLE qgep_network.segment (
   geom geometry('LINESTRING', :SRID)
 );
 
-CREATE OR REPLACE FUNCTION qgep_network.refresh_network_simple() RETURNS void AS $body$
+CREATE OR REPLACE FUNCTION qgep_network.refresh_network_simple() RETURNS void SECURITY DEFINER AS $body$
 BEGIN
 
   TRUNCATE qgep_network.segment CASCADE;
