@@ -121,12 +121,13 @@ DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_delete();
 DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_insert();
 DROP FUNCTION IF EXISTS qgep_od.ft_overflow_pump_update();
 DROP FUNCTION IF EXISTS qgep_od.vw_cover_insert();
-DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_insert();
-DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_on_update();
-DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_delete();
-DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_insert();
-DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_update();
-
+-- CASCADE required for the following calls, as at this point, the view and its trigger may not yet be dropped
+-- They will be recreated anyways. This would not be useful if we always ran drop_views in a pre-all step
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_insert() CASCADE;
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_reach_on_update() CASCADE;
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_delete() CASCADE;
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_insert() CASCADE;
+DROP FUNCTION IF EXISTS qgep_od.vw_qgep_wastewater_structure_update() CASCADE;
 
 
 -- 2. Recreate inconsistent functions (copied from 06_symbology_functions.sql)
