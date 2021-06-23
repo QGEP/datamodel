@@ -47,13 +47,12 @@ jobs:
 
       - name: "create release"
         run: |
-          .deploy/create-release.py
+          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-release.py
           ls artifacts
         env:
           PGHOST: localhost
           PGPASSWORD: postgres
           PGUSER: postgres
-          CI_TAG: ${GITHUB_REF#refs/*/}
 
       - name: "run tests on qgep_build (structure)"
         run: |
