@@ -78,5 +78,5 @@ docker exec qgep pum check -p1 qgep_build -p2 qgep_release_struct -v 1
 
 # example 3: create the release files (you need to mount to /tmp volume)
 docker run -d --rm -p 5432:5432 -v "${PWD}:/src" -v "${PWD}/_tmp:/tmp" --name qgep opengisch/qgep_datamodel
-docker exec -e PGSERVICE=qgep_build -e CI_TAG=1.5.0 -e TRAVIS_SECURE_ENV_VARS=true qgep .deploy/create-release.py
+docker exec -e PGSERVICE=qgep_build -e CI_TAG=1.5.0 qgep .deploy/create-release.py
 ```
