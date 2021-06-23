@@ -45,6 +45,16 @@ jobs:
           docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
           docker exec qgep init_qgep.sh wait
 
+      - name: "create release"
+        run: |
+          .deploy/create-release.py
+          ls artifacts
+        env:
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          PGUSER: postgres
+          CI_TAG: ${GITHUB_REF#refs/*/}
+
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
@@ -77,6 +87,18 @@ jobs:
         run: |
           docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:latest
           docker push opengisch/qgep_datamodel:latest
+
+      - uses: AButler/upload-release-assets@v2.0
+        if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
+        with:
+          files: 'artifacts/*'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup tmate session
+        if: failure()
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
 
       - name: "failure logs"
         if: failure()
