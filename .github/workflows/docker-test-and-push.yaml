@@ -95,13 +95,13 @@ jobs:
           files: 'artifacts/*'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "failure logs"
+        if: failure()
+        run: |
+          docker logs qgep
+
       - name: Setup tmate session
         if: failure()
         uses: mxschmitt/action-tmate@v3
         with:
           limit-access-to-actor: true
-
-      - name: "failure logs"
-        if: failure()
-        run: |
-          docker logs qgep
