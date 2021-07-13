@@ -41,9 +41,11 @@ jobs:
         run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${{ matrix.pgis }} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} .
 
       - name: "initialize qgep container"
-        run: |
-          docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
-          docker exec qgep init_qgep.sh wait
+        run: docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
+
+      - name: "wait for qgep container"
+        run: docker exec qgep init_qgep.sh wait
+        timeout-minutes: 10
 
       - name: "create release"
         run: |
