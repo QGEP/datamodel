@@ -1,122 +1,32 @@
--- Adapting the differences between the qgep kek extension and the latest release of vsa-kek 2019. The following attributes were moved to the subclasses damage_channel and damage_manhole instead of damage
-
--- Kanalschaden damage_channel
-ALTER TABLE qgep_od.damage_channel ADD COLUMN quantification1  integer ;
-COMMENT ON COLUMN qgep_od.damage_channel.quantification1 IS 'yyy_Quantifizierung 1 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 2.6 beschrieben / Quantifizierung 1 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 2.6 beschrieben / Quantification 1 selon la SN EN 13508-2. Les entrées autorisées sont décrites dans les chapitres 2.3 - 2.6';
-
-ALTER TABLE qgep_od.damage_channel ADD COLUMN quantification2  integer ;
-COMMENT ON COLUMN qgep_od.damage_channel.quantification2 IS 'yyy_Quantifizierung 2 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 2.6 beschrieben / Quantifizierung 2 gemäss SN EN 13508-2. Zulässige Eingaben sind in Kapitel 2.3 - 2.6 beschrieben / Quantification 2 selon la SN EN 13508. Les entrées autorisées sont décrites dans le chapitre 2.3 - 2.6.';
-
- ALTER TABLE qgep_od.damage_channel ADD COLUMN damage_begin  smallint ;
-COMMENT ON COLUMN qgep_od.damage_channel.damage_begin IS 'yyy_Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 2.1.6 genau beschrieben. / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 2.1.6 genau beschrieben. / Emplacement circonférentiel: Début du dommage. Valeurs et procédure sont décrites en détail dans le paragraphe 2.1.6';
- ALTER TABLE qgep_od.damage_channel ADD COLUMN damage_end  smallint ;
-COMMENT ON COLUMN qgep_od.damage_channel.damage_end IS 'yyy_Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 2.1.6 genau beschrieben. / Lage am Umfang: Ende des Schadens. Werte und Vorgehen sind unter Absatz 2.1.6 genau beschrieben. / Emplacement circonférentiel: Fin du dommage. Valeurs et procédure sont décrites en détail dans le paragraphe 2.1.6';
-
--- in Subklasse, weil bei Kanalschaden MANDATORY, Normschachtschaden nicht
- ALTER TABLE qgep_od.damage_channel ADD COLUMN distance  decimal(7,2) ;
-COMMENT ON COLUMN qgep_od.damage_channel.distance IS 'yyy_Länge von Rohranfang bis zur Feststellung bzw. Länge ab Oberkante Deckel (siehe Richtlinie Absatz 2.1.1) in m mit zwei Nachkommastellen / Länge von Rohranfang bis zur Feststellung bzw. Länge ab Oberkante Deckel (siehe Richtlinie Absatz 2.1.1) in m mit zwei Nachkommastellen / Longueur entre le début de la canalisation resp. longueur entre le bord supérieur du couvercle et l’observation (cf. paragraphe 2.1.1) en m avec deux chiffres après la virgule.';
-
-
--- Copy data from Superclass to Subclass
--- https://www.postgresqltutorial.com/postgresql-update-join/
-
-UPDATE qgep_od.damage_channel dc
-SET 
-	quantification1 = dg.quantification1,
-	quantification2 = dg.quantification2,
-	damage_begin = dg.damage_begin,
-	damage_end = dg.damage_end,
-	distance = dg.distance
-	
-FROM qgep_od.damage dg
-WHERE  dc.obj_id = dg.obj_id; 
-
-
-
-
--- Normschachtschaden
--- Quantifizierung1 neu als Textattribut 
-ALTER TABLE qgep_od.damage_manhole ADD COLUMN quantification1 varchar(20) ;
-COMMENT ON COLUMN qgep_od.damage_manhole.quantification1 IS 'yyy_Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantification 1 selon la SN EN 13508. Les entrées autorisées sont décrites dans le chapitre 3.1.5. Type texte.';
-
-ALTER TABLE qgep_od.damage_manhole ADD COLUMN quantification2 varchar(20) ;
-COMMENT ON COLUMN qgep_od.damage_manhole.quantification2 IS 'yyy_Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantifizierung 1 gemäss SN EN 13508. Zulässige Eingaben sind in Kapitel 3.1.5 beschrieben. Als Textattribut umgesetzt. / Quantification 1 selon la SN EN 13508. Les entrées autorisées sont décrites dans le chapitre 3.1.5. Type texte.';
-
- ALTER TABLE qgep_od.damage_manhole ADD COLUMN damage_begin  smallint ;
-COMMENT ON COLUMN qgep_od.damage_manhole.damage_begin IS 'yyy_Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Début du dommage. Valeurs et procédure sont décrites en détail dans le paragraphe 3.1.6.';
- ALTER TABLE qgep_od.damage_manhole ADD COLUMN damage_end  smallint ;
-COMMENT ON COLUMN qgep_od.damage_manhole.damage_end IS 'yyy_Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Lage am Umfang: Beginn des Schadens. Werte und Vorgehen sind unter Absatz 3.1.6 genau beschrieben. / Emplacement circonférentiel: Fin du dommage. Valeurs et procédure sont décrites en détail dans le paragraphe 3.1.6.';
-
- ALTER TABLE qgep_od.damage_manhole ADD COLUMN distance  decimal(7,2) ;
-COMMENT ON COLUMN qgep_od.damage_manhole.distance IS 'yyy_Länge von Rohranfang bis zur Feststellung bzw. Länge ab Oberkante Deckel (siehe Richtlinie Absatz 3.1.1.) in m mit zwei Nachkommastellen / Länge von Rohranfang bis zur Feststellung bzw. Länge ab Oberkante Deckel (siehe Richtlinie Absatz 3.1.1.) in m mit zwei Nachkommastellen / Longueur entre le début de la canalisation resp. longueur entre le bord supérieur du couvercle et l’observation (cf. paragraphe 3.1.1.) en m avec deux chiffres après la virgule.';
-
--- Copy data from Superclass to Subclass
-
-UPDATE qgep_od.damage_manhole dm
-SET 
-	quantification1 = dg.quantification1,
-	quantification2 = dg.quantification2,
-	damage_begin = dg.damage_begin,
-	damage_end = dg.damage_end,
-	distance = dg.distance
-	
-FROM qgep_od.damage dg
-WHERE  dm.obj_id = dg.obj_id; 
-
-
--- delete columns in qgep_od.damage
-
-ALTER TABLE qgep_od.damage
-DROP COLUMN IF EXISTS quantification1,
-DROP COLUMN IF EXISTS quantification2,
-DROP COLUMN IF EXISTS damage_begin,
-DROP COLUMN IF EXISTS damage_end,
-DROP COLUMN IF EXISTS distance;
+-- Adapting first differences between the qgep kek extension and the latest release of vsa-kek 2019 for making INTERLIS import VSA-KEK plugin work.
+-- Full changes will be done in a next release (expected to be 1.6.0)
 
 
 -- Adding further changes to attributes and values
--- 1.5.6.2_kek_update_attribute_maintenance_event_identifier
+-- 1.5.6.2_kek_update_attribute_maintenance_event_identifier - Changing from varchar (20) to varchar (41) so that longer identifiers can be imported as in testdata
 
 ALTER TABLE qgep_od.maintenance_event ALTER COLUMN  identifier TYPE varchar(41) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.identifier IS '';
 
--- 1.5.6.3_kek_update_attribute_maintenance_event_result
+-- 1.5.6.3_kek_update_attribute_maintenance_event_result - Changing from varchar (80) to varchar (255) so that longer identifiers can be imported as in testdata
 
 ALTER TABLE qgep_od.maintenance_event ALTER COLUMN  result TYPE varchar(255) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.result IS 'Result or important comments for this event / Resultat oder wichtige Bemerkungen aus Sicht des Bearbeiters / Résultat ou commentaire importante de l''événement';
 
--- 1.5.6.4_kek_add_vl_file_upddate_attribute_object
-
-ALTER TABLE qgep_od.file ALTER COLUMN  object TYPE varchar(16) ;
-COMMENT ON COLUMN qgep_od.file.object IS 'yyy_Objekt-ID (OID) des Datensatzes zu dem die Datei gehört';
 
 -- 1.5.6.5_kek_add_vl_file_kind_add_new_values
 
- INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
- INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
- 
--- correct data 
-UPDATE qgep_od.file
-SET kind = 9146
-WHERE  kind = 3771; 
-
--- set old value to false
-UPDATE qgep_vl.file_kind
-SET 	active = false
-WHERE  code = 3771; 
-
-UPDATE dictionary_od_values
-SET 	active = false
-WHERE  code = 3771; 
- 
+  
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
  INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
  
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
  INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
-
+ 
 
 -- 1.5.6.7_kek_add_vl_damage_manhole_manhole_damage_code_add_new_values
+-- adding new codes to code lists
+
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8834,8834,'BABAE','BABAE','BABAE', 'BABAE', 'BABAE', '', '', '', '', '', 'true');
  INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8834,8834,'BABAE','BABAE','BABAE', 'BABAE', 'BABAE', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8835,8835,'BABBE','BABBE','BABBE', 'BABBE', 'BABBE', '', '', '', '', '', 'true');
@@ -270,6 +180,8 @@ WHERE  code = 3771;
 
 
 -- 1.5.6.8_kek_add_vl_damage_channel_channel_damage_code_add_new_values
+-- adding new codes to code lists
+
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8834,8834,'BABAE','BABAE','BABAE', 'BABAE', 'BABAE', '', '', '', '', '', 'true');
  INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8834,8834,'BABAE','BABAE','BABAE', 'BABAE', 'BABAE', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8835,8835,'BABBE','BABBE','BABBE', 'BABBE', 'BABBE', '', '', '', '', '', 'true');
