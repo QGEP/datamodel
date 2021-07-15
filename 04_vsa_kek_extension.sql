@@ -936,4 +936,18 @@ ALTER TABLE qgep_od.file ADD CONSTRAINT rel_od_file_fk_dataprovider FOREIGN KEY 
  CREATE UNIQUE INDEX in_od_data_media_identifier ON qgep_od.data_media USING btree (identifier ASC NULLS LAST, fk_dataowner ASC NULLS LAST);
  CREATE UNIQUE INDEX in_od_file_identifier ON qgep_od.file USING btree (identifier ASC NULLS LAST, fk_dataowner ASC NULLS LAST);
 
+-- 1.5.6.2_kek_update_attribute_maintenance_event_identifier - Changing from varchar (20) to varchar (41) so that longer identifiers can be imported as in testdata
+
+ALTER TABLE qgep_od.maintenance_event ALTER COLUMN  identifier TYPE varchar(41) ;
+COMMENT ON COLUMN qgep_od.maintenance_event.identifier IS '';
+
+-- 1.5.6.3_kek_update_attribute_maintenance_event_result - Changing from varchar (80) to varchar (255) so that longer identifiers can be imported as in testdata
+
+ALTER TABLE qgep_od.maintenance_event ALTER COLUMN  result TYPE varchar(255) ;
+COMMENT ON COLUMN qgep_od.maintenance_event.result IS 'Result or important comments for this event / Resultat oder wichtige Bemerkungen aus Sicht des Bearbeiters / Résultat ou commentaire importante de l''événement';
+
+-- recommended by olivier
+ALTER TABLE qgep_od.reach_point ALTER CONSTRAINT rel_reach_point_wastewater_networkelement DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE qgep_od.structure_part ALTER CONSTRAINT rel_structure_part_wastewater_structure DEFERRABLE INITIALLY IMMEDIATE;
+
 COMMIT;
