@@ -47,15 +47,6 @@ jobs:
         run: docker exec qgep init_qgep.sh wait
         timeout-minutes: 10
 
-      - name: "create release"
-        run: |
-          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-release.py
-          ls artifacts
-        env:
-          PGHOST: localhost
-          PGPASSWORD: postgres
-          PGUSER: postgres
-
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
@@ -88,6 +79,16 @@ jobs:
         run: |
           docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:latest
           docker push opengisch/qgep_datamodel:latest
+
+      - name: "create release"
+        if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable
+        run: |
+          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-release.py
+          ls artifacts
+        env:
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          PGUSER: postgres
 
       - uses: AButler/upload-release-assets@v2.0
         if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
