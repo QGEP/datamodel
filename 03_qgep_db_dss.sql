@@ -1055,7 +1055,7 @@ ALTER TABLE qgep_od.maintenance_event ADD COLUMN data_details  varchar(50) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.data_details IS 'yyy_Ort, wo sich weitere Detailinformationen zum Ereignis finden (z.B. Nr. eines Videobandes) / Ort, wo sich weitere Detailinformationen zum Ereignis finden (z.B. Nr. eines Videobandes) / Lieu où se trouvent les données détaillées (par ex. n° d''une bande vidéo)';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN duration  smallint ;
 COMMENT ON COLUMN qgep_od.maintenance_event.duration IS 'Duration of event in days / Dauer des Ereignisses in Tagen / Durée de l''événement en jours';
-ALTER TABLE qgep_od.maintenance_event ADD COLUMN identifier  varchar(20) ;
+ALTER TABLE qgep_od.maintenance_event ADD COLUMN identifier  varchar(41) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.identifier IS '';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep_od.maintenance_event.kind IS 'Type of event / Art des Ereignisses / Genre d''événement';
@@ -1065,7 +1065,7 @@ ALTER TABLE qgep_od.maintenance_event ADD COLUMN reason  varchar(50) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.reason IS 'Reason for this event / Ursache für das Ereignis / Cause de l''événement';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
-ALTER TABLE qgep_od.maintenance_event ADD COLUMN result  varchar(50) ;
+ALTER TABLE qgep_od.maintenance_event ADD COLUMN result  varchar(255) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.result IS 'Result or important comments for this event / Resultat oder wichtige Bemerkungen aus Sicht des Bearbeiters / Résultat ou commentaire importante de l''événement';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN status  integer ;
 COMMENT ON COLUMN qgep_od.maintenance_event.status IS 'Disposition state of the maintenance event / Phase in der sich das Erhaltungsereignis befindet / Phase dans laquelle se trouve l''événement de maintenance';
@@ -4226,7 +4226,7 @@ ALTER TABLE qgep_vl.reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_p
  REFERENCES qgep_vl.reach_point_outlet_shape (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.reach_point ADD COLUMN fk_wastewater_networkelement varchar (16);
-ALTER TABLE qgep_od.reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY IMMEDIATE;
 ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.wastewater_node ADD COLUMN fk_hydr_geometry varchar (16);
 ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT rel_wastewater_node_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep_od.hydr_geometry(obj_id) ON UPDATE CASCADE ON DELETE cascade;
@@ -4395,7 +4395,7 @@ ALTER TABLE qgep_vl.structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl
  REFERENCES qgep_vl.structure_part_renovation_demand (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.structure_part ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep_od.structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+ALTER TABLE qgep_od.structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY IMMEDIATE;
 ALTER TABLE qgep_od.dryweather_downspout ADD CONSTRAINT oorel_od_dryweather_downspout_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE qgep_vl.access_aid_kind () INHERITS (qgep_sys.value_list_base);
