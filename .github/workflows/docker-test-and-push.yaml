@@ -80,10 +80,10 @@ jobs:
           docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:latest
           docker push opengisch/qgep_datamodel:latest
 
-      - name: "create release"
+      - name: "create dumps"
         if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable
         run: |
-          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-release.py
+          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-dumps.py
           ls artifacts
         env:
           PGHOST: localhost

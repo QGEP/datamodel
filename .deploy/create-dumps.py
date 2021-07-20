@@ -205,9 +205,7 @@ def create_backup_complete():
 
 def main():
     """
-    Publish the files in a release on github
-    If a release already exist, it will copy its data (title, description, etc),
-    delete it and create a new one with the same data and adding the dump files
+    Creates dumps to be attached to releases.
     """
     if 'CI_TAG' not in os.environ or not os.environ['CI_TAG']:
         print('No git tag: not deploying anything')
