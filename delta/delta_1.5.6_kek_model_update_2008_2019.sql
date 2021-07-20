@@ -250,6 +250,6 @@ COMMENT ON COLUMN qgep_od.maintenance_event.result IS 'Result or important comme
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8908,8908,'BDEEC','BDEEC','BDEEC', 'BDEEC', 'BDEEC', '', '', '', '', '', 'true');
 
 
--- recommended by olivier
+-- Allow to insert multiple rows at once despite cyclic dependencies
 ALTER TABLE qgep_od.reach_point ALTER CONSTRAINT rel_reach_point_wastewater_networkelement DEFERRABLE INITIALLY IMMEDIATE;
 ALTER TABLE qgep_od.structure_part ALTER CONSTRAINT rel_structure_part_wastewater_structure DEFERRABLE INITIALLY IMMEDIATE;
