@@ -16,13 +16,26 @@ COMMENT ON COLUMN qgep_od.maintenance_event.result IS 'Result or important comme
 
 -- 1.5.6.5_kek_add_vl_file_kind_add_new_values
 
-  
- INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
+INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
+INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
+INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
+INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
+INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
+INSERT INTO dictionary_od_values (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
 
- 
- INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
- 
- 
+-- correct data
+UPDATE qgep_od.file
+SET kind = 9146
+WHERE  kind = 3771;
+
+-- set old value to false
+UPDATE qgep_vl.file_kind
+SET active = false
+WHERE  code = 3771;
+
+UPDATE dictionary_od_values
+SET active = false
+WHERE  code = 3771;
 
 -- 1.5.6.7_kek_add_vl_damage_manhole_manhole_damage_code_add_new_values
 -- adding new codes to code lists

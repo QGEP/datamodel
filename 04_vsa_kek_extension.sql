@@ -1058,13 +1058,13 @@ ALTER TABLE qgep_vl.file_class ADD CONSTRAINT pkey_qgep_vl_file_class_code PRIMA
 CREATE TABLE qgep_vl.file_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.file_kind ADD CONSTRAINT pkey_qgep_vl_file_kind_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3770,3770,'other','andere','autre', '', '', '', 'true');
- INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3771,3771,'digital_video','digitalesVideo','video_numerique', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3772,3772,'photo','Foto','photo', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3773,3773,'panoramo_film','Panoramofilm','film_panoramique', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3774,3774,'textfile','Textdatei','fichier_texte', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3775,3775,'video','Video','video', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9147,9147,'scan','Scan','scan', 'scan', 'rrr_Scan', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.file ADD CONSTRAINT fkey_vl_file_kind FOREIGN KEY (kind)
  REFERENCES qgep_vl.file_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
