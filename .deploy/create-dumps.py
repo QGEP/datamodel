@@ -31,6 +31,18 @@ import json
 import subprocess
 
 
+def _cmd(args):
+    """
+    Runs a command in subprocess, showing output if it fails
+    """
+
+    try:
+        subprocess.check_output(args, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        raise e
+
+
 def files_description(version):
     return """
 
@@ -72,7 +84,7 @@ def create_plain_structure_only():
 
     print('Creating dump {}'.format(dump_s))
     dump_file_s = 'artifacts/{dump}'.format(dump=dump_s)
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--schema-only',
                      '--file', dump_file_s,
@@ -85,7 +97,7 @@ def create_plain_structure_only():
         version=os.environ['CI_TAG'])
     print('Creating dump {}'.format(dump_i))
     dump_file_i = 'artifacts/{dump}'.format(dump=dump_i)
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--data-only',
                      '--file', dump_file_i,
@@ -118,7 +130,7 @@ def create_plain_value_list(structure_dump_file):
     print('Creating dump {}'.format(dump))
     dump_file = 'artifacts/{dump}'.format(dump=dump)
 
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--blobs',
                      '--data-only',
@@ -153,7 +165,7 @@ def create_backup_data():
     print('::group::{}'.format(dump))
     print('Creating dump {}'.format(dump))
     dump_file = 'artifacts/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'custom',
                      '--blobs',
                      '--data-only',
@@ -178,7 +190,7 @@ def create_backup_complete():
     print('::group::{}'.format(dump))
     print('Creating dump {}'.format(dump))
     dump_file = 'artifacts/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'custom',
                      '--blobs',
                      '--compress', '5',
@@ -193,9 +205,7 @@ def create_backup_complete():
 
 def main():
     """
-    Publish the files in a release on github
-    If a release already exist, it will copy its data (title, description, etc),
-    delete it and create a new one with the same data and adding the dump files
+    Creates dumps to be attached to releases.
     """
     if 'CI_TAG' not in os.environ or not os.environ['CI_TAG']:
         print('No git tag: not deploying anything')

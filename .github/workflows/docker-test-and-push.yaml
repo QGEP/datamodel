@@ -41,18 +41,11 @@ jobs:
         run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${{ matrix.pgis }} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} .
 
       - name: "initialize qgep container"
-        run: |
-          docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
-          docker exec qgep init_qgep.sh wait
+        run: docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
 
-      - name: "create release"
-        run: |
-          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-release.py
-          ls artifacts
-        env:
-          PGHOST: localhost
-          PGPASSWORD: postgres
-          PGUSER: postgres
+      - name: "wait for qgep container"
+        run: docker exec qgep init_qgep.sh wait
+        timeout-minutes: 10
 
       - name: "run tests on qgep_build (structure)"
         run: |
@@ -87,19 +80,31 @@ jobs:
           docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:latest
           docker push opengisch/qgep_datamodel:latest
 
+      - name: "create dumps"
+        if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable
+        run: |
+          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-dumps.py
+          ls artifacts
+        env:
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          PGUSER: postgres
+
       - uses: AButler/upload-release-assets@v2.0
         if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
         with:
           files: 'artifacts/*'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup tmate session
-        if: failure()
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-
       - name: "failure logs"
         if: failure()
         run: |
           docker logs qgep
+
+      # TMATE disabled for now as it hangs process, we should do this instead :
+      # https://github.com/marketplace/actions/debugging-with-tmate#manually-triggered-debug
+      # - name: Setup tmate session
+      #   if: failure()
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
