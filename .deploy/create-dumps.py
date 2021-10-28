@@ -89,6 +89,7 @@ def create_plain_structure_only():
                      '--schema-only',
                      '--file', dump_file_s,
                      '--exclude-schema', 'public',
+                     '--no-owner',
                      'qgep_prod']
                     )
 
