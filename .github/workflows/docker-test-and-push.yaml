@@ -61,7 +61,7 @@ jobs:
       - name: "dockerhub login"
         if: github.event_name != 'pull_request'
         run: |
-          docker login --username "qgep" --password "${{ secrets.DOCKERHUB_PASSWORD }}"
+          docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password "${{ secrets.DOCKERHUB_PASSWORD }}"
 
       - name: "push to dockerhub"
         if: github.event_name != 'pull_request'
