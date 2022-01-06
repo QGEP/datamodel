@@ -6,8 +6,8 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_conduits AS
 
 SELECT
 	re.obj_id as Name,
-	coalesce(from_wn.obj_id, 'default_qgep_node') as FromNode,
-	coalesce(to_wn.obj_id, 'default_qgep_node') as ToNode,
+	coalesce(from_wn.obj_id, 'no_node_connected') as FromNode,
+	coalesce(to_wn.obj_id, 'no_node_connected') as ToNode,
 	CASE
 		--WHEN re.length_effective <= 0.01 THEN st_length(progression_geometry)
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) <= 0.01 THEN 0.01
@@ -23,7 +23,7 @@ SELECT
 	0 as MaxFlow,
 	ws.identifier::text as description,
 	cfh.value_en as tag,
-	ST_SimplifyPreserveTopology(ST_CurveToLine(progression_geometry), 0.5)::geometry(LineStringZ, %(SRID)s)  as geom,
+	ST_CurveToLine(progression_geometry)::geometry(LineStringZ, %(SRID)s)  as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
