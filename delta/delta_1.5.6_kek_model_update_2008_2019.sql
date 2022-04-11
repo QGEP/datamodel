@@ -1,6 +1,8 @@
 -- Adapting first differences between the qgep kek extension and the latest release of vsa-kek 2019 for making INTERLIS import VSA-KEK plugin work.
 -- Full changes will be done in a next release (expected to be 1.6.0)
 
+-- 11.4.2022 add drop vw_qgep_maintenance so there is not conflict in adding changes to qgep_od.maintenance_event
+DROP VIEW qgep_od.vw_qgep_maintenance;
 
 -- Adding further changes to attributes and values
 -- 1.5.6.2_kek_update_attribute_maintenance_event_identifier - Changing from varchar (20) to varchar (41) so that longer identifiers can be imported as in testdata
