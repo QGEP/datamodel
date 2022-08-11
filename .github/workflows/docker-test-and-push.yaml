@@ -22,14 +22,10 @@ jobs:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
-          - 9.6-2.5-alpine
-          - 10-2.5-alpine
-          - 11-2.5-alpine
-          - 12-2.5-alpine
-          - 9.6-3.2-alpine
-          - 10-3.2-alpine
-          - 11-3.2-alpine
-          - 12-3.2-alpine
+          - 9.6-3.2
+          - 10-3.2
+          - 11-3.2
+          - 12-3.2
       fail-fast: false
 
     env:
