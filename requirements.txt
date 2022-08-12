@@ -1,5 +1,4 @@
 pirogue==1.4.1
 psycopg2
 pyyaml
-# pum>=0.9.15 # TODO: remove override once we have a release with a73c249031ba476f27f9913677a574759847ee0d or newer
-https://github.com/opengisch/pum/archive/a73c249031ba476f27f9913677a574759847ee0d.zip#egg=pum
+pum>=0.10.0
