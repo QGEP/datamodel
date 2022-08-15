@@ -1,9 +1,9 @@
-ARG POSTGIS_VERSION=11-2.5
+ARG POSTGIS_VERSION=11-3.2
 FROM postgis/postgis:${POSTGIS_VERSION}
 
 # System deps
 RUN apt-get update && apt-get install -y python3 python3-pip libpq-dev wget && apt-get clean
-# /INSTALL SYSTEM DEPS (PYTHON-3.5 debian stretch)
+# /INSTALL SYSTEM DEPS (PYTHON-3.9 debian bullseye)
 
 # Python deps
 ADD requirements.txt .
