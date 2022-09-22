@@ -307,14 +307,9 @@ VOLATILE;
       				 
 
 
-CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(
-	_obj_id text,
-	_all boolean DEFAULT false)
-    RETURNS void
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE PARALLEL UNSAFE
-AS $BODY$
+CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id text, _all boolean default false)
+  RETURNS VOID AS
+  $BODY$
   DECLARE
   myrec record;
 
@@ -325,16 +320,15 @@ SET _label = label,
     _bottom_label = bottom_label,
     _input_label = input_label,
     _output_label = output_label
-FROM (
- SELECT   ws_obj_id,
+SELECT   ws_obj_id,
           COALESCE(ws_identifier, '') as label,
-          CASE WHEN count(co_level)<2 THEN array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY co_level DESC), '', '') ELSE
-		  array_to_string(array_agg(E'\nC' || idx || '=' || co_level ORDER BY idx DESC), '', '') END as cover_label,
+          CASE WHEN count(co_level)<2 THEN array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY idx DESC), '', '') ELSE
+		  array_to_string(array_agg(E'\nC' || idx || '=' || co_level ORDER BY idx ASC), '', '') END as cover_label,
           array_to_string(array_agg(E'\nB' || '=' || bottom_level), '', '') as bottom_label,
           CASE WHEN count(rpi_level)<2 THEN array_to_string(array_agg(E'\nI' || '=' || rpi_level ORDER BY idx DESC), '', '') ELSE
-		  array_to_string(array_agg(E'\nI' || idx || '=' || rpi_level ORDER BY idx DESC), '', '') END as input_label,
+		  array_to_string(array_agg(E'\nI' || idx || '=' || rpi_level ORDER BY idx ASC), '', '') END as input_label,
           CASE WHEN count(rpo_level)<2 THEN array_to_string(array_agg(E'\nO' || '=' || rpo_level ORDER BY idx DESC), '', '') ELSE
-		  array_to_string(array_agg(E'\nO' || idx || '=' || rpo_level ORDER BY idx DESC), '', '') END as output_label
+		  array_to_string(array_agg(E'\nO' || idx || '=' || rpo_level ORDER BY idx ASC), '', '') END as output_label
   FROM (
 		  SELECT ws.obj_id AS ws_obj_id, ws.identifier AS ws_identifier, parts.co_level AS co_level, parts.rpi_level AS rpi_level, parts.rpo_level AS rpo_level, parts.obj_id, idx, bottom_level AS bottom_level
     FROM qgep_od.wastewater_structure WS
