@@ -140,8 +140,8 @@ SELECT
 				WHEN waste_water_production_planned IS NOT NULL THEN waste_water_production_planned
 				ELSE
 					CASE 
-						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_current,0) * surface_area * 160 / (24 * 60 * 60)
-						ELSE coalesce(population_density_current,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_planned,0) * surface_area * 160 / (24 * 60 * 60)
+						ELSE coalesce(population_density_planned,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
 					END
 			END
 		WHEN fk_wastewater_networkelement_rw_current is not null
@@ -149,6 +149,32 @@ SELECT
 		WHEN fk_wastewater_networkelement_rw_planned is not null
 		THEN 0
 	END as Baseline, -- 160 Litre / inhabitant /day
+	CASE
+		WHEN fk_wastewater_networkelement_ww_current is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_current IS NOT NULL THEN 'DWF baseline is computed from waste_water_production_current' 
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN 'DWF baseline is computed from surface_area, population_density_current and a default production of 160 Litre / inhabitant /day'
+						ELSE 'DWF baseline is computed from the geometric area, population_density_current and a default production of 160 Litre / inhabitant /day'
+					END
+			END
+		WHEN fk_wastewater_networkelement_ww_planned is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_planned IS NOT NULL THEN 'DWF baseline is computed from waste_water_production_planned' 
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN 'DWF baseline is computed from surface_area, population_density_planned and a default production of 160 Litre / inhabitant /day'
+						ELSE 'DWF baseline is computed from the geometric area, population_density_planned and a default production of 160 Litre / inhabitant /day'
+					END
+			END
+		WHEN fk_wastewater_networkelement_rw_current is not null
+		THEN NULL
+		WHEN fk_wastewater_networkelement_rw_planned is not null
+		THEN NULL
+	END as message, -- 160 Litre / inhabitant /day
 	'dailyPatternDWF'::varchar as Patterns,
 	state as state
 FROM 
