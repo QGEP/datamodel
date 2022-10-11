@@ -11,6 +11,7 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_maintenance;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_damage;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_overflow;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
 -- structure_part
 DROP VIEW IF EXISTS qgep_od.vw_access_aid;
