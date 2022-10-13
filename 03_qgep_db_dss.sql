@@ -1915,7 +1915,7 @@ COMMENT ON COLUMN qgep_od.reach.slope_building_plan IS 'yyy_Auf dem alten Plan e
 ALTER TABLE qgep_od.reach ADD COLUMN wall_roughness  decimal(5,2) ;
 COMMENT ON COLUMN qgep_od.reach.wall_roughness IS 'yyy Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Coefficient de rugosité d''après Prandtl Colebrook (ks ou kb)';
 ALTER TABLE qgep_od.reach ADD COLUMN hydraulic_load decimal(7,3) ;
-COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS '';
+COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS 'Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%].';
 
 -------
 CREATE TRIGGER
