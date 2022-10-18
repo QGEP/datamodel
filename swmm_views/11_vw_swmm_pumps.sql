@@ -21,9 +21,12 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state	
+	END as state,
+	CASE 
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy	
 FROM qgep_od.pump pu
 JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = pu.obj_id::text
-WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
+WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);

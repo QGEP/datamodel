@@ -17,12 +17,15 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state
+	END as state,
+  CASE 
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy
 FROM qgep_od.discharge_point as dp
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = dp.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
 WHERE wn.obj_id IS NOT NULL
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 ;

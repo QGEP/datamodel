@@ -24,7 +24,11 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state
+	END as state,
+	CASE 
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
@@ -63,7 +67,6 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 -- 3008, --"unknown"
 -- 2745, --"vortex_manhole"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 UNION ALL
 SELECT
@@ -86,7 +89,11 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state
+	END as state,
+	CASE 
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
@@ -105,5 +112,4 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-AND ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959);

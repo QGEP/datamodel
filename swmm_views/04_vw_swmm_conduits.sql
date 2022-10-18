@@ -27,7 +27,11 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state
+	END as state,
+	CASE 
+		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
@@ -37,10 +41,8 @@ LEFT JOIN qgep_od.wastewater_node from_wn on from_wn.obj_id = rp_from.fk_wastewa
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
 LEFT JOIN qgep_vl.channel_function_hydraulic cfh on cfh.code = ch.function_hydraulic
--- select only the primary channels pwwf.*
-WHERE ch.function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
 -- select only operationals and "planned"
-AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
+WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);
 -- 6526	"other.calculation_alternative"
 -- 6529	"other.project"
 -- 7959	"other.planned"
