@@ -25,8 +25,11 @@ SELECT
 	CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy	
+	END as hierarchy,
+	wn.obj_id as obj_id	
 FROM qgep_od.pump pu
 JOIN qgep_od.overflow overflow ON pu.obj_id::text = overflow.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = pu.obj_id::text
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);

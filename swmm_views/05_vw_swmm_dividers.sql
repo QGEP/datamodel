@@ -20,11 +20,12 @@ SELECT
 	CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy
+	END as hierarchy,
+	wn.obj_id as obj_id
 FROM qgep_od.manhole ma
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ma.obj_id::text
-LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
-LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 LEFT JOIN qgep_vl.manhole_function mf on ma.function = mf.code
 WHERE function = 4798 -- separating_structure
@@ -48,11 +49,12 @@ SELECT
 	CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy
+	END as hierarchy,
+	wn.obj_id as obj_id
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
-LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
-LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 LEFT JOIN qgep_vl.special_structure_function ssf on ss.function = ssf.code
 WHERE function  = 4799 -- separating_structure

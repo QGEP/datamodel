@@ -28,7 +28,8 @@ SELECT
 	CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy
+	END as hierarchy,
+	wn.obj_id as obj_id
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
@@ -93,7 +94,8 @@ SELECT
 	CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy
+	END as hierarchy,
+	ws.obj_id as ws_obj_id
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text

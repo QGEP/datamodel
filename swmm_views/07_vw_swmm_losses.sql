@@ -21,7 +21,8 @@ SELECT DISTINCT
   CASE 
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
-	END as hierarchy
+	END as hierarchy,
+	re.obj_id as obj_id
 FROM qgep_od.reach re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
