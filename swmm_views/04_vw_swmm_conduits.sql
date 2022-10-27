@@ -16,7 +16,16 @@ SELECT
 		WHEN re.length_effective IS NULL AND st_length(progression_geometry) >= 0.01 THEN st_length(progression_geometry)
 		ELSE re.length_effective
 	END as Length,
-	coalesce(re.wall_roughness,0.01) as Roughness,
+	CASE
+		WHEN re.coefficient_of_friction IS NOT NULL THEN (1 / re.coefficient_of_friction::double precision)
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN 
+			CASE
+				WHEN re.clear_height IS NOT NULL THEN (1 / (4 * SQRT(9.81) * POWER((32 / re.clear_height::double precision / 1000),(1 / 6::double precision))*LOG(((3.71 * re.clear_height::double precision / 1000) / (re.wall_roughness / 1000)))))::numeric(7,4)
+				ELSE 0.01
+			END
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN 0.01
+		ELSE 0.01
+	END AS roughness,
 	coalesce((rp_from.level-from_wn.bottom_level),0) as InletOffset,
 	coalesce((rp_to.level-to_wn.bottom_level),0) as OutletOffset,
 	0 as InitFlow,
@@ -27,7 +36,17 @@ SELECT
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
-	END as state
+	END as state,
+   	CASE
+		WHEN re.coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': 1 / K_Strickler is used as roughness')
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
+			CASE
+				WHEN re.clear_height IS NOT NULL THEN concat('Reach ', re.obj_id,': The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness')
+				ELSE concat('Reach ', re.obj_id,': Default value is used as roughness since no approximation of 1 / K_Strickler can be computed due to missing information about the channel diameter')
+			END
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN concat('Reach ', re.obj_id,': Default value is used as roughness')
+		ELSE concat('Reach ', re.obj_id,': Default value is used as roughness')
+	END AS message
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
