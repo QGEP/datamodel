@@ -18,5 +18,7 @@ SELECT
 	minimal_groundwater_level as BottomElevation,
 	average_groundwater_level as WaterTableElevation,
 	0.3 as UnsatZoneMoisture,
-	null as UpperEvapPattern
+	null as UpperEvapPattern,
+	null as state,
+	null as hierarchy
 FROM qgep_od.aquifier as aq;
