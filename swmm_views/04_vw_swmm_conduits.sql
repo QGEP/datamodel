@@ -21,9 +21,14 @@ SELECT
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN 
 			CASE
 				WHEN re.clear_height IS NOT NULL THEN (1 / (4 * SQRT(9.81) * POWER((32 / re.clear_height::double precision / 1000),(1 / 6::double precision))*LOG(((3.71 * re.clear_height::double precision / 1000) / (re.wall_roughness / 1000)))))::numeric(7,4)
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
 				ELSE 0.01
 			END
-		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN 0.01
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
+			CASE
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
+				ELSE 0.01
+			END
 		ELSE 0.01
 	END AS roughness,
 	coalesce((rp_from.level-from_wn.bottom_level),0) as InletOffset,
@@ -41,11 +46,16 @@ SELECT
 		WHEN re.coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': 1 / K_Strickler is used as roughness')
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
 			CASE
-				WHEN re.clear_height IS NOT NULL THEN concat('Reach ', re.obj_id,': The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness')
-				ELSE concat('Reach ', re.obj_id,': Default value is used as roughness since no approximation of 1 / K_Strickler can be computed due to missing information about the channel diameter')
+				WHEN re.clear_height IS NOT NULL THEN concat('Reach ', re.obj_id,': The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness')
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
 			END
-		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN concat('Reach ', re.obj_id,': Default value is used as roughness')
-		ELSE concat('Reach ', re.obj_id,': Default value is used as roughness')
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
+			CASE
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
+			END
+		ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
 	END AS message
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
