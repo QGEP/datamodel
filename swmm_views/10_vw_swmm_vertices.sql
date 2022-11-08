@@ -10,7 +10,7 @@ SELECT
   ROUND(ST_Y((dp).geom)::numeric,2) as Y_Coord,
   state,
   hierarchy,
-  ws_obj_id
+  obj_id
 FROM (
   SELECT
     Name As Link,
@@ -18,7 +18,7 @@ FROM (
     ST_NPoints(geom) as nvert,
     state,
     hierarchy,
-    ws_obj_id
+    obj_id
   FROM qgep_swmm.vw_conduits
   ) as foo
 WHERE (dp).path[1] != 1		-- dont select first vertice
