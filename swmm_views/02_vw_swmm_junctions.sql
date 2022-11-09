@@ -100,15 +100,15 @@ UNION
 
 -- wastewater_node not linked to wastewater structures
 SELECT
-	from_wn.obj_id as Name,
-	coalesce(from_wn.bottom_level,0) as InvertElev,
+	coalesce(from_wn.obj_id, concat('from_node@',re.obj_id)) as Name,
+	coalesce(from_wn.bottom_level, 0) as InvertElev,
 	0 as MaxDepth,
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	from_wn.obj_id as description,
+	coalesce(from_wn.obj_id, concat('from_node@',re.obj_id)) as description,
 	'junction without structure' as tag,
-	from_wn.situation_geometry as geom,
+	coalesce(from_wn.situation_geometry,  ST_StartPoint(re.progression_geometry)) as geom,
 	CASE 
 		WHEN ws.status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
@@ -117,7 +117,7 @@ SELECT
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	from_wn.obj_id as obj_id
+	coalesce(from_wn.obj_id, re.obj_id)  as obj_id
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
@@ -134,15 +134,15 @@ and ws_node is null
 UNION
 
 SELECT
-	to_wn.obj_id as Name,
-	coalesce(to_wn.bottom_level,0) as InvertElev,
+	coalesce(to_wn.obj_id, concat('to_node@',re.obj_id)) as Name,
+	coalesce(to_wn.bottom_level, 0) as InvertElev,
 	0 as MaxDepth,
 	NULL::float as InitDepth,
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
-	to_wn.obj_id as description,
+	coalesce(to_wn.obj_id, concat('to_node@',re.obj_id)) as description,
 	'junction without structure' as tag,
-	to_wn.situation_geometry as geom,
+	coalesce(to_wn.situation_geometry,  ST_EndPoint(re.progression_geometry)) as geom,
 	CASE 
 		WHEN ws.status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
@@ -151,11 +151,11 @@ SELECT
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	to_wn.obj_id as obj_id
+	coalesce(to_wn.obj_id, re.obj_id) as obj_id
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
-LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_from::text
+LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to::text
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
 -- Get wastewater structure linked to the from node

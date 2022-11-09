@@ -6,8 +6,8 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_conduits AS
 
 SELECT
 	re.obj_id as Name,
-	coalesce(from_wn.obj_id, 'default_qgep_node') as FromNode,
-	coalesce(to_wn.obj_id, 'default_qgep_node') as ToNode,
+	coalesce(from_wn.obj_id, concat('from_node@',re.obj_id)) as FromNode,
+	coalesce(to_wn.obj_id, concat('to_node@',re.obj_id)) as ToNode,
 	CASE
 		--WHEN re.length_effective <= 0.01 THEN st_length(progression_geometry)
 		WHEN re.length_effective <= 0.01 AND st_length(progression_geometry) <= 0.01 THEN 0.01
@@ -32,7 +32,11 @@ SELECT
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	re.obj_id as obj_id
+	re.obj_id as obj_id,
+	CASE 
+		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destionation node must be edited in SWMM.') 
+		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.') 
+	END AS message
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
