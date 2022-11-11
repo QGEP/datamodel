@@ -1,4 +1,7 @@
+-----------------------------------------
 -- creates coverages
+-- - Depends on qgep_swmm.subcatchments
+-----------------------------------------
 CREATE OR REPLACE VIEW qgep_swmm.vw_coverages AS
 SELECT
   sub.Name  as Subcatchment,

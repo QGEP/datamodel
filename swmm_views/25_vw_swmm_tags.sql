@@ -1,5 +1,12 @@
 --------
 -- View for the swmm module class tags
+-- Depends on:
+-- - qgep_swmm.vw_junctions
+-- - qgep_swmm.vw_outfalls
+-- - qgep_swmm.vw_storages
+-- - qgep_swmm.vw_conduits
+-- - qgep_swmm.vw_pumps
+-- - qgep_swmm.vw_subcatchments
 --------
 CREATE OR REPLACE VIEW qgep_swmm.vw_tags AS
 

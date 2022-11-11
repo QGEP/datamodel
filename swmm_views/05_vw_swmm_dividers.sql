@@ -5,13 +5,14 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_dividers AS
 
 SELECT
 	ma.obj_id as Name,
-	st_x(wn.situation_geometry) as X_coordinate,
-	st_y(wn.situation_geometry) as Y_coordinate,
-	ws.identifier as description,
-	CONCAT_WS(',', 'manhole', mf.value_en) as tag,
-	wn.bottom_level as invert_elev,
-	(co.level-wn.bottom_level) as max_depth,
-	'???' as diverted_link,
+	wn.bottom_level as Elevation,
+	NULL as diverted_link,
+	'CUTOFF' as Type,
+	0 as CutoffFlow,
+	0 as MaxDepth,
+	0 as InitialDepth,
+	0 as SurchargeDepth,
+	0 as PondedArea,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
@@ -34,13 +35,15 @@ UNION ALL
 
 SELECT
 	ss.obj_id as Name,
-	st_x(wn.situation_geometry) as X_coordinate,
-	st_y(wn.situation_geometry) as Y_coordinate,
-	ws.identifier as description,
-	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
-	wn.bottom_level as invert_elev,
-	(co.level-wn.bottom_level) as max_depth,
-	'???' as diverted_link,
+	wn.bottom_level as Elevation,
+	NULL as diverted_link,
+	'CUTOFF' as Type,
+	0 as CutoffFlow,
+	0 as MaxDepth,
+	0 as InitialDepth,
+	0 as SurchargeDepth,
+	0 as PondedArea,
+	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'

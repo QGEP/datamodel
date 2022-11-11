@@ -1,6 +1,6 @@
 --------
 -- View for the swmm module class polygons
--- 20190329 qgep code sprint SB, TP
+-- - Depends on qgep_swmm.vw_subcatchments
 --------
 CREATE OR REPLACE VIEW qgep_swmm.vw_polygons AS
 

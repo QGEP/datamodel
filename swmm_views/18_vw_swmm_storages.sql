@@ -80,7 +80,9 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 -- 2745, --"vortex_manhole"
 )
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
+
 UNION ALL
+
 SELECT
 	wn.obj_id as Name,
 	coalesce(wn.bottom_level,0) as InvertElev,
@@ -112,7 +114,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	ws.obj_id as ws_obj_id,
+	wn.obj_id as obj_id,
 	NULL as message
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
@@ -137,7 +139,6 @@ WHERE ii.kind IN (
 --278	--"adsorbing_well"
 --3283	--"infiltration_pipe_sections_gallery"
 )
-
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
 
 UNION ALL
@@ -164,13 +165,17 @@ SELECT
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
+	CASE 
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy,
+	wn.obj_id as obj_id,
 	concat(wn.obj_id, ' Storage created for the prank weir: ', pw.obj_id) as message
 FROM qgep_od.prank_weir pw
 LEFT JOIN qgep_od.overflow of ON pw.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id
 LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = of.fk_wastewater_node
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.fk_main_wastewater_node = wn.obj_id
-WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
+WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959)
 AND oc.overflow_characteristic_digital = 6223  --'yes;
 AND oc.kind_overflow_characteristic = 6220; -- h/q relations (Q/Q relations are not supported by SWMM) 

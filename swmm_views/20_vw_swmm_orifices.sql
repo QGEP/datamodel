@@ -8,5 +8,8 @@ NULL::text as ToNode,
 0::text as Offset,
 0.65::text as Qcoeff,
 'NO'::text as Gated,
-0 ::text as CloseTime
+0 ::text as CloseTime,
+NULL::text as state,
+NULL::text as hierarchy,
+NULL::text as obj_id
 LIMIT 0;

@@ -8,5 +8,7 @@ SELECT
 	Name as Gage,
 	st_x(geom) as Xcoord,
 	st_y(geom) as Ycoord,
-    state as state
+    state as state,
+	hierarchy,
+	obj_id
 FROM qgep_swmm.vw_raingages
