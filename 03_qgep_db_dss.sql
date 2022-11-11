@@ -1887,6 +1887,8 @@ ALTER TABLE qgep_od.reach ADD COLUMN clear_height  integer ;
 COMMENT ON COLUMN qgep_od.reach.clear_height IS 'Maximal height (inside) of profile / Maximale Innenhöhe des Kanalprofiles / Hauteur intérieure maximale du profil';
 ALTER TABLE qgep_od.reach ADD COLUMN coefficient_of_friction  smallint ;
 COMMENT ON COLUMN qgep_od.reach.coefficient_of_friction IS 'yyy http://www.linguee.com/english-german/search?source=auto&query=reibungsbeiwert / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Manning-Strickler (K oder kstr) / Constante de rugosité selon Manning-Strickler (K ou kstr)';
+ALTER TABLE qgep_od.reach ADD COLUMN default_coefficient_of_friction  smallint ;
+COMMENT ON COLUMN qgep_od.reach.default_coefficient_of_friction IS 'yyy http://www.fsl.orst.edu/geowater/FX3/help/8_Hydraulic_Reference/Mannings_n_Tables.htm /  (1 / N_Manning) value between 0 and 999';
 ALTER TABLE qgep_od.reach ADD COLUMN elevation_determination  integer ;
 COMMENT ON COLUMN qgep_od.reach.elevation_determination IS 'yyy_Definiert die Hoehenbestimmung einer Haltung. / Definiert die Hoehenbestimmung einer Haltung. / Définition de la détermination altimétrique d''un tronçon.';
 ALTER TABLE qgep_od.reach ADD COLUMN horizontal_positioning  integer ;

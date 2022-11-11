@@ -15,24 +15,51 @@ SELECT
 		WHEN re.length_effective IS NULL AND st_length(progression_geometry) >= 0.01 THEN st_length(progression_geometry)
 		ELSE re.length_effective
 	END as Length,
-	coalesce(re.wall_roughness,0.01) as Roughness,
+	CASE
+		WHEN re.coefficient_of_friction IS NOT NULL THEN (1 / re.coefficient_of_friction::double precision)
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN 
+			CASE
+				WHEN re.clear_height IS NOT NULL THEN (1 / (4 * SQRT(9.81) * POWER((32 / re.clear_height::double precision / 1000),(1 / 6::double precision))*LOG(((3.71 * re.clear_height::double precision / 1000) / (re.wall_roughness / 1000)))))::numeric(7,4)
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
+				ELSE 0.01
+			END
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
+			CASE
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
+				ELSE 0.01
+			END
+		ELSE 0.01
+	END AS roughness,
 	coalesce((rp_from.level-from_wn.bottom_level),0) as InletOffset,
 	coalesce((rp_to.level-to_wn.bottom_level),0) as OutletOffset,
 	0 as InitFlow,
 	0 as MaxFlow,
 	ws.identifier::text as description,
 	cfh.value_en as tag,
-	ST_SimplifyPreserveTopology(ST_CurveToLine(progression_geometry), 0.5)::geometry(LineStringZ, %(SRID)s)  as geom,
+	ST_CurveToLine(st_force3d(progression_geometry))::geometry(LineStringZ, %(SRID)s) as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
-	CASE 
+  CASE 
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
 	re.obj_id as obj_id,
-	CASE 
+  CASE
+		WHEN re.coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': 1 / K_Strickler is used as roughness')
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
+			CASE
+				WHEN re.clear_height IS NOT NULL THEN concat('Reach ', re.obj_id,': The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness')
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
+			END
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
+			CASE
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
+			END
+		ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
 		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destionation node must be edited in SWMM.') 
 		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.') 
 	END AS message
