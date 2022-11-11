@@ -116,35 +116,84 @@ WHERE fk_wastewater_networkelement_ww_planned IS NOT NULL -- to avoid unconnecte
 -- Creates Dry Weather Flow related to the catchment area
 CREATE OR REPLACE VIEW qgep_swmm.vw_dwf AS
 SELECT
-  CASE 
-    WHEN state = 'current' THEN fk_wastewater_networkelement_rw_current
-    WHEN state = 'planned' THEN fk_wastewater_networkelement_rw_planned
-  END as Node, -- id of the junction
-  'FLOW'::varchar as Constituent,
-  CASE
-	  WHEN surface_area IS NOT NULL 
-    THEN 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * surface_area * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * surface_area * 160 / (24 * 60 * 60)
-      END
-    ELSE 
-      CASE 
-        WHEN state = 'current' THEN population_density_current * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-        WHEN state = 'planned' THEN population_density_planned * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
-      END
-  END as Baseline, -- 160 Litre / inhabitant /day
-  'dailyPatternDWF'::varchar as Patterns,
-  state as state
+	CASE 
+		WHEN type_ca = 'rw_current' THEN fk_wastewater_networkelement_rw_current
+		WHEN type_ca = 'rw_planned' THEN fk_wastewater_networkelement_rw_planned
+		WHEN type_ca = 'ww_current' THEN fk_wastewater_networkelement_ww_current
+		WHEN type_ca = 'ww_planned' THEN fk_wastewater_networkelement_ww_planned
+	END as Node, -- id of the junction
+	'FLOW'::varchar as Constituent,
+	CASE
+		WHEN fk_wastewater_networkelement_ww_current is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_current IS NOT NULL THEN waste_water_production_current 
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_current,0) * surface_area * 160 / (24 * 60 * 60)
+						ELSE coalesce(population_density_current,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
+					END
+			END
+		WHEN fk_wastewater_networkelement_ww_planned is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_planned IS NOT NULL THEN waste_water_production_planned
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_planned,0) * surface_area * 160 / (24 * 60 * 60)
+						ELSE coalesce(population_density_planned,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
+					END
+			END
+		WHEN fk_wastewater_networkelement_rw_current is not null
+		THEN 0
+		WHEN fk_wastewater_networkelement_rw_planned is not null
+		THEN 0
+	END as Baseline, -- 160 Litre / inhabitant /day
+	CASE
+		WHEN fk_wastewater_networkelement_ww_current is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_current IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_current')
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_current and a default production of 160 Litre / inhabitant /day')
+						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_current and a default production of 160 Litre / inhabitant /day')
+					END
+			END
+		WHEN fk_wastewater_networkelement_ww_planned is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_planned IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_planned')
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_planned and a default production of 160 Litre / inhabitant /day')
+						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_planned and a default production of 160 Litre / inhabitant /day')
+					END
+			END
+		WHEN fk_wastewater_networkelement_rw_current is not null
+		THEN ''
+		WHEN fk_wastewater_networkelement_rw_planned is not null
+		THEN ''
+	END as message,
+	'dailyPatternDWF'::varchar as Patterns,
+	state as state
 FROM 
 (
-SELECT ca.*,'current' as state
+SELECT ca.*,'current' as state, 'rw_current' as type_ca
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_current IS NOT NULL -- to avoid unconnected catchments
 UNION ALL
-SELECT ca.*,'planned' as state
+SELECT ca.*,'planned' as state, 'rw_planned' as type_ca
 FROM qgep_od.catchment_area as ca
 WHERE fk_wastewater_networkelement_rw_planned IS NOT NULL -- to avoid unconnected catchments
+UNION ALL
+SELECT ca.*,'current' as state, 'ww_current' as type_ca
+FROM qgep_od.catchment_area as ca
+WHERE fk_wastewater_networkelement_ww_current IS NOT NULL -- to avoid unconnected catchments
+UNION ALL
+SELECT ca.*,'planned' as state, 'ww_planned' as type_ca
+FROM qgep_od.catchment_area as ca
+WHERE fk_wastewater_networkelement_ww_planned IS NOT NULL -- to avoid unconnected catchments
 ) as ca;
 
 -- Creates a default raingage for each subcatchment
