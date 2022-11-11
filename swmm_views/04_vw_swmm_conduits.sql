@@ -1,6 +1,5 @@
 --------
 -- View for the swmm module class conduits
--- 20190329 qgep code sprint SB, TP
 --------
 CREATE OR REPLACE VIEW qgep_swmm.vw_conduits AS
 
@@ -59,7 +58,7 @@ SELECT
 				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
 				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
 			END
-		ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
+		-- TODO ROMA: ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
 		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destionation node must be edited in SWMM.') 
 		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.') 
 	END AS message
