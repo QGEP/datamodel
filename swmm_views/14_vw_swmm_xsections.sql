@@ -92,4 +92,31 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ne.fk_wastewater_
 LEFT JOIN qgep_od.channel ch ON ch.obj_id::text = ws.obj_id::text
 WHERE ch.function_hierarchic = ANY (ARRAY[5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074]) 
 -- select only operationals and "planned"
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
+
+UNION ALL
+
+-- For the prank weir
+SELECT
+	pw.obj_id as Name,
+  'RECT_OPEN' as Shape,
+  (level_max - level_min) as Geom1,
+  hydraulic_overflow_length as Geom2,
+  NULL as Geom3,
+  NULL as Geom4,
+  NULL as Barrels,
+  NULL as Culvert,
+  CASE 
+    WHEN status IN (7959, 6529, 6526) THEN 'planned'
+    ELSE 'current'
+  END as state
+FROM qgep_od.prank_weir pw
+LEFT JOIN qgep_od.overflow of ON pw.obj_id = of.obj_id
+LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id
+LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = of.fk_wastewater_node
+LEFT JOIN qgep_od.wastewater_structure ws ON ws.fk_main_wastewater_node = wn.obj_id
+WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
+AND status IN (6530, 6533, 8493, 6529, 6526, 7959)
+AND oc.overflow_characteristic_digital != 6223  --'NO or unknown;
+OR oc.kind_overflow_characteristic != 6220 -- Q/Q relation or unknown
 AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
