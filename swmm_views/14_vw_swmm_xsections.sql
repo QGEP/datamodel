@@ -15,13 +15,13 @@ SELECT DISTINCT
     WHEN pp.profile_type = 3354 THEN 'PARABOLIC'  -- open
     ELSE 'CIRCULAR'
   END as Shape,
-  --ROMA: Geom1 = height -> used for all the profile types
+  --Geom1 = height -> used for all the profile types
   CASE
     WHEN re.clear_height = 0 THEN 0.1
     WHEN re.clear_height IS NULL THEN 0.1
     ELSE re.clear_height/1000::float -- [mm] to [m]
   END as Geom1,
-  --ROMA: Geom2 = width -> needed for profile rect_closed,arch and parabolic
+  --Geom2 = width -> needed for profile rect_closed,arch and parabolic
   CASE
     WHEN pp.profile_type IN (3352,3353,3354) THEN CASE
       WHEN pp.height_width_ratio IS NOT NULL THEN CASE
@@ -34,7 +34,7 @@ SELECT DISTINCT
     END
     ELSE NULL
   END as Geom2,
-  --ROMA: Geom3 = code -> used only for arch profile, but this code value is nowhere to be set in the QGEP model
+  --Geom3 = code -> used only for arch profile, but this code value is nowhere to be set in the QGEP model
   0 as Geom3,
   0 as Geom4,
   1 as Barrels,
@@ -43,7 +43,7 @@ SELECT DISTINCT
     WHEN status IN (7959, 6529, 6526) THEN 'planned'
     ELSE 'current'
   END as state,
-  --ROMA: message give details about the profile type, height availability, width availability if needed and code availablitity if needed. To much details?
+  --message give details about the profile type, height availability, width availability if needed and code availablitity if needed. To much details?
   CASE
     WHEN pp.profile_type = 3350 THEN CASE
       WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': circular profile with default value of 0.1m as clear_height')
