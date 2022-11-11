@@ -5,14 +5,15 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_dividers AS
 
 SELECT
 	ma.obj_id as Name,
-	wn.bottom_level as Elevation,
-	NULL as diverted_link,
+	coalesce(wn.bottom_level,0)  as Elevation,
+	'???' as diverted_link,
 	'CUTOFF' as Type,
 	0 as CutoffFlow,
 	0 as MaxDepth,
 	0 as InitialDepth,
 	0 as SurchargeDepth,
 	0 as PondedArea,
+	wn.situation_geometry as geom,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
@@ -35,8 +36,8 @@ UNION ALL
 
 SELECT
 	ss.obj_id as Name,
-	wn.bottom_level as Elevation,
-	NULL as diverted_link,
+	coalesce(wn.bottom_level,0) as Elevation,
+	'???' as diverted_link,
 	'CUTOFF' as Type,
 	0 as CutoffFlow,
 	0 as MaxDepth,
