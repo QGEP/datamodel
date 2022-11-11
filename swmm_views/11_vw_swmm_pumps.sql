@@ -22,7 +22,12 @@ SELECT
 		ELSE 'current'
 	END as state,
 	CASE 
-		WHEN  oc.obj_id IS NULL  --'yes;
+		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		ELSE 'secondary'
+	END as hierarchy,
+	wn.obj_id as obj_id,
+  CASE
+  	WHEN  oc.obj_id IS NULL  --'yes;
 		THEN concat(pu.obj_id, ' No curve will be created for this pump, it has no overflow_characteristic')
 		WHEN  oc.overflow_characteristic_digital != 6223  --'yes;
 		THEN concat(pu.obj_id, ' No curve will be created for this pump, overflow_characteristic_digital not equal to yes')
@@ -35,5 +40,4 @@ LEFT JOIN qgep_od.overflow of ON pu.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id
 LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = of.fk_wastewater_node
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.fk_main_wastewater_node = wn.obj_id
-WHERE ws._function_hierarchic in (5066, 5068, 5069, 5070, 5064, 5071, 5062, 5072, 5074)
-AND status IN (6530, 6533, 8493, 6529, 6526, 7959);
+WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);
