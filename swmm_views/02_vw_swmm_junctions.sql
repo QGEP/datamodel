@@ -158,7 +158,7 @@ LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_struct
 LEFT JOIN qgep_od.reach_point rp_to ON rp_to.obj_id::text = re.fk_reach_point_to::text
 LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_networkelement
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
--- Get wastewater structure linked to the from node
+-- Get wastewater structure linked to the to node
 LEFT JOIN qgep_od.wastewater_networkelement we ON to_wn.obj_id = we.obj_id
 LEFT JOIN qgep_od.wastewater_structure ws_node ON we.fk_wastewater_structure::text = ws_node.obj_id::text
 -- select only operationals and "planned"
