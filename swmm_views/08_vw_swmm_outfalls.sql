@@ -10,7 +10,7 @@ SELECT
   NULL as StageData,
   'NO'::varchar as tide_gate,
   NULL::varchar as RouteTo,
-  CONCAT(ws.identifier, ', ', ws.remark) as description,
+  ws.identifier as description,
   dp.obj_id::varchar as tag,
   wn.situation_geometry as geom,
 	CASE 

@@ -46,49 +46,7 @@ SELECT DISTINCT
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-  re.obj_id as obj_id,
-  --message give details about the profile type, height availability, width availability if needed and code availablitity if needed. To much details?
-  CASE
-    WHEN pp.profile_type = 3350 THEN CASE
-      WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': circular profile with default value of 0.1m as clear_height')
-      ELSE concat('Reach', re.obj_id,': circular profile with known clear_height value')
-    END
-    WHEN pp.profile_type = 3351 THEN CASE
-      WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': egg profile with default value of 0.1m as clear_height')
-      ELSE concat('Reach', re.obj_id,': egg profile with known clear_height value')
-    END
-    WHEN pp.profile_type = 3352 THEN CASE
-      WHEN pp.height_width_ratio IS NOT NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': arch profile with known height_width_ratio value and with default value of 0.1m as clear_height')
-        ELSE concat('Reach', re.obj_id,': arch profile with known height_width_ratio value and with known clear_height value')
-      END
-      WHEN pp.height_width_ratio IS NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': arch profile with default value of 1 as height_width_ratio and with default value of 0.1m as clear_height')
-        ELSE concat('Reach', re.obj_id,': arch profile with default value of 1 as height_width_ratio and with known clear_height value')
-      END
-    END
-    WHEN pp.profile_type = 3353 THEN CASE
-      WHEN pp.height_width_ratio IS NOT NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': rectangular profile with known height_width_ratio value and with default value of 0.1m as clear_height')
-        ELSE concat('Reach', re.obj_id,': rectangular profile with known height_width_ratio value and with known clear_height value')
-      END
-      WHEN pp.height_width_ratio IS NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': rectangular profile with default value of 1 as height_width_ratio and with default value of 0.1m as clear_height')
-        ELSE concat('Reach', re.obj_id,': rectangular profile with default value of 1 as height_width_ratio and with known clear_height value')
-      END
-    END
-    WHEN pp.profile_type = 3354 THEN CASE
-      WHEN pp.height_width_ratio IS NOT NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': parabolic profile with known height_width_ratio value, default value of 0.1m as clear_height and no code value')
-        ELSE concat('Reach', re.obj_id,': parabolic profile with known height_width_ratio value, with known clear_height value and no code value')
-      END
-      WHEN pp.height_width_ratio IS NULL THEN CASE
-        WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': parabolic profile with default value of 1 as height_width_ratio, with default value of 0.1m as clear_height and no code value')
-        ELSE concat('Reach', re.obj_id,': parabolic profile with default value of 1 as height_width_ratio, with known clear_height value and no code value')
-      END
-    END
-    WHEN pp.profile_type = 3355 THEN concat('Reach', re.obj_id,': custom profile to be defined in SWMM')
-  END as message
+  re.obj_id as obj_id
 FROM qgep_od.reach re
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
@@ -117,8 +75,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	wn.obj_id as obj_id,
-  NULL as message
+	wn.obj_id as obj_id
 FROM qgep_od.prank_weir pw
 LEFT JOIN qgep_od.overflow of ON pw.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id

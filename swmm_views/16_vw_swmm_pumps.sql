@@ -15,7 +15,18 @@ SELECT
 	'ON'::varchar as Status,
 	pu.start_level as StartupDepth,
 	pu.stop_level as ShutoffDepth,
-	of.identifier as description,
+	concat_ws(';',
+		of.identifier,
+		CASE
+  		WHEN  oc.obj_id IS NULL  --'yes;
+		THEN 'No curve will be created for this pump, it has no overflow_characteristic'
+		WHEN  oc.overflow_characteristic_digital != 6223  --'yes;
+		THEN 'No curve will be created for this pump, overflow_characteristic_digital not equal to yes'
+		WHEN  oc.kind_overflow_characteristic != 6220 --'hq;
+		THEN concat(pu.obj_id, 'No curve will be created for this pump, kind_overflow_characteristic is not equal to H/Q, Q/Q relations are not supported by SWMM')
+		ELSE NULL
+		END
+	) as description,
 	pu.obj_id::varchar as tag,
 	CASE 
 		WHEN status IN (7959, 6529, 6526) THEN 'planned'
@@ -25,16 +36,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	wn.obj_id as obj_id,
-  CASE
-  	WHEN  oc.obj_id IS NULL  --'yes;
-		THEN concat(pu.obj_id, ' No curve will be created for this pump, it has no overflow_characteristic')
-		WHEN  oc.overflow_characteristic_digital != 6223  --'yes;
-		THEN concat(pu.obj_id, ' No curve will be created for this pump, overflow_characteristic_digital not equal to yes')
-		WHEN  oc.kind_overflow_characteristic != 6220 --'hq;
-		THEN concat(pu.obj_id, ' No curve will be created for this pump, kind_overflow_characteristic is not equal to H/Q, Q/Q relations are not supported by SWMM')
-		ELSE NULL
-	END AS message
+	wn.obj_id as obj_id
 FROM qgep_od.pump pu
 LEFT JOIN qgep_od.overflow of ON pu.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id

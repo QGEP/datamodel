@@ -33,7 +33,76 @@ SELECT
 	coalesce((rp_to.level-to_wn.bottom_level),0) as OutletOffset,
 	0 as InitFlow,
 	0 as MaxFlow,
-	ws.identifier::text as description,
+	concat_ws(';',
+	ws.identifier,
+	CASE
+		WHEN re.coefficient_of_friction IS NOT NULL THEN '1 / K_Strickler is used as roughness'
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
+			CASE
+				WHEN re.clear_height IS NOT NULL THEN 'The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness'
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN 'The default value stored in qgep_swmm.reach_coefficient_of_friction is used'
+				ELSE 'Default value 0.01 is used as roughness'
+			END
+		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
+			CASE
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				ELSE 'Default value 0.01 is used as roughness'
+			END
+		ELSE 'Default value 0.01 is used as roughness'
+	END,
+	CASE
+		WHEN pp.profile_type = 3350 THEN 
+			CASE
+				WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': circular profile with default value of 0.1m as clear_height')
+				ELSE NULL
+			END
+		WHEN pp.profile_type = 3351 THEN 
+			CASE
+				WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': egg profile with default value of 0.1m as clear_height')
+				ELSE NULL
+			END
+		WHEN pp.profile_type = 3352 THEN 
+			CASE
+				WHEN pp.height_width_ratio IS NOT NULL THEN 
+					CASE
+						WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': arch profile with known height_width_ratio value and with default value of 0.1m as clear_height')
+						ELSE NULL
+					END
+				WHEN pp.height_width_ratio IS NULL THEN 
+					CASE
+						WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': arch profile with default value of 1 as height_width_ratio and with default value of 0.1m as clear_height')
+						ELSE concat('Reach', re.obj_id,': arch profile with default value of 1 as height_width_ratio and with known clear_height value')
+					END
+			END
+		WHEN pp.profile_type = 3353 THEN 
+			CASE
+				WHEN pp.height_width_ratio IS NOT NULL THEN 
+					CASE
+						WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': rectangular profile with known height_width_ratio value and with default value of 0.1m as clear_height')
+						ELSE NULL
+					END
+				WHEN pp.height_width_ratio IS NULL THEN 
+				CASE
+					WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': rectangular profile with default value of 1 as height_width_ratio and with default value of 0.1m as clear_height')
+					ELSE concat('Reach', re.obj_id,': rectangular profile with default value of 1 as height_width_ratio and with known clear_height value')
+				END
+			END
+		WHEN pp.profile_type = 3354 THEN 
+			CASE
+				WHEN pp.height_width_ratio IS NOT NULL THEN 
+					CASE
+						WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': parabolic profile with known height_width_ratio value, default value of 0.1m as clear_height and no code value')
+						ELSE NULL
+					END
+				WHEN pp.height_width_ratio IS NULL THEN 
+					CASE
+						WHEN re.clear_height = 0 OR re.clear_height IS NULL THEN concat('Reach', re.obj_id,': parabolic profile with default value of 1 as height_width_ratio, with default value of 0.1m as clear_height and no code value')
+						ELSE concat('Reach', re.obj_id,': parabolic profile with default value of 1 as height_width_ratio, with known clear_height value and no code value')
+					END
+			END
+		WHEN pp.profile_type = 3355 THEN concat('Reach', re.obj_id,': custom profile to be defined in SWMM')
+	END
+	) as description,
 	cfh.value_en as tag,
 	ST_CurveToLine(st_force3d(progression_geometry))::geometry(LineStringZ, %(SRID)s) as geom,
 	CASE 
@@ -45,24 +114,13 @@ SELECT
 		ELSE 'secondary'
 	END as hierarchy,
 	re.obj_id as obj_id,
-  CASE
-		WHEN re.coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': 1 / K_Strickler is used as roughness')
-		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
-			CASE
-				WHEN re.clear_height IS NOT NULL THEN concat('Reach ', re.obj_id,': The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness')
-				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
-				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
-			END
-		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
-			CASE
-				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('Reach ', re.obj_id,': The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
-				ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
-			END
-		-- TODO ROMA: ELSE concat('Reach ', re.obj_id,': Default value 0.01 is used as roughness')
-		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destionation node must be edited in SWMM.') 
-		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.') 
+	CASE
+		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destination node must be edited in SWMM.') 
+		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.')
+		ELSE NULL
 	END AS message
 FROM qgep_od.reach as re
+LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
 LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id::text = re.fk_reach_point_from::text

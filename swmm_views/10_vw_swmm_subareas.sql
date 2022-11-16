@@ -15,7 +15,7 @@ SELECT
   25 as PctZero,-- default value, Percent of the impervious area with no depression storage.
   'OUTLET'::varchar as RouteTo,
   NULL::float as PctRouted,
-  ca.identifier || ', ' || ca.remark as description,
+  ca.identifier as description,
   ca.obj_id::varchar as tag,
   state as state,
   CASE 

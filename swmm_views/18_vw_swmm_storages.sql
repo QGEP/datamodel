@@ -34,8 +34,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	wn.obj_id as obj_id,
-	NULL as message
+	wn.obj_id as obj_id
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
@@ -114,8 +113,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	wn.obj_id as obj_id,
-	NULL as message
+	wn.obj_id as obj_id
 FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
@@ -158,7 +156,10 @@ SELECT
 	NULL as Psi,
 	NULL as Ksat, 
 	NULL as IMD,
-	ws.identifier::text as description,
+	concat_ws(';',
+		ws.identifier::text,
+		concat('Storage created for the prank weir: ', pw.obj_id)
+	) as description,
 	'Prank weir' as tag,
 	wn.situation_geometry as geom,
 	CASE 
@@ -169,8 +170,7 @@ SELECT
 		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	wn.obj_id as obj_id,
-	concat(wn.obj_id, ' Storage created for the prank weir: ', pw.obj_id) as message
+	wn.obj_id as obj_id
 FROM qgep_od.prank_weir pw
 LEFT JOIN qgep_od.overflow of ON pw.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id

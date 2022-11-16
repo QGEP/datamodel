@@ -42,7 +42,32 @@ SELECT
   0.5 as percSlope, -- default value
   0 as CurbLen, -- default value
   NULL::varchar as SnowPack, -- default value
-  CONCAT(ca.identifier, ', ', ca.remark) as description,
+  CASE
+		WHEN fk_wastewater_networkelement_ww_current is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_current IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_current')
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_current and a default production of 160 Litre / inhabitant /day')
+						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_current and a default production of 160 Litre / inhabitant /day')
+					END
+			END
+		WHEN fk_wastewater_networkelement_ww_planned is not null
+		THEN 
+			CASE 
+				WHEN waste_water_production_planned IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_planned')
+				ELSE
+					CASE 
+						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_planned and a default production of 160 Litre / inhabitant /day')
+						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_planned and a default production of 160 Litre / inhabitant /day')
+					END
+			END
+		WHEN fk_wastewater_networkelement_rw_current is not null
+		THEN NULL
+		WHEN fk_wastewater_networkelement_rw_planned is not null
+		THEN NULL
+	END as description,
   ca.obj_id as tag,
   ST_SimplifyPreserveTopology(ST_CurveToLine(perimeter_geometry), 0.5)::geometry(Polygon, %(SRID)s) as geom,
   CASE
