@@ -16,7 +16,7 @@ SELECT
 				ELSE
 					CASE 
 						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_current,0) * surface_area * 160 / (24 * 60 * 60)
-						ELSE coalesce(population_density_current,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
+						ELSE coalesce(population_density_current,0) * ST_Area(perimeter_geometry) / 10000 * 160 / (24 * 60 * 60)
 					END
 			END
 		WHEN fk_wastewater_networkelement_ww_planned is not null
@@ -26,7 +26,7 @@ SELECT
 				ELSE
 					CASE 
 						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN coalesce(population_density_planned,0) * surface_area * 160 / (24 * 60 * 60)
-						ELSE coalesce(population_density_planned,0) * ST_Area(perimeter_geometry) * 160 / (24 * 60 * 60)
+						ELSE coalesce(population_density_planned,0) * ST_Area(perimeter_geometry) / 10000 * 160 / (24 * 60 * 60)
 					END
 			END
 		WHEN fk_wastewater_networkelement_rw_current is not null

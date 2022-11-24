@@ -40,12 +40,12 @@ SELECT
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
 			CASE
 				WHEN re.clear_height IS NOT NULL THEN 'The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness'
-				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN 'The default value stored in qgep_swmm.reach_coefficient_of_friction is used'
+				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN 'The default value stored in reach.default_coefficient_of_friction is used'
 				ELSE 'Default value 0.01 is used as roughness'
 			END
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
 			CASE
-				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('The default value stored in qgep_swmm.reach_coefficient_of_friction is used')
+				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('The default value stored in reach.default_coefficient_of_friction is used')
 				ELSE 'Default value 0.01 is used as roughness'
 			END
 		ELSE 'Default value 0.01 is used as roughness'
@@ -101,6 +101,11 @@ SELECT
 					END
 			END
 		WHEN pp.profile_type = 3355 THEN concat('Reach', re.obj_id,': custom profile to be defined in SWMM')
+	END,
+	CASE
+		WHEN to_wn.obj_id IS NULL THEN 'Blind connection, the destination node must be edited'
+		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN 'No from node, a junction was automatically created for the export.'
+		ELSE NULL
 	END
 	) as description,
 	cfh.value_en as tag,
@@ -113,12 +118,7 @@ SELECT
 		WHEN ch.function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
-	re.obj_id as obj_id,
-	CASE
-		WHEN to_wn.obj_id IS NULL THEN concat(re.obj_id, ' is a blind connection, the destination node must be edited in SWMM.') 
-		WHEN from_wn.obj_id IS NULL AND to_wn.obj_id IS NOT NULL THEN concat(re.obj_id, ' has no from node, a junction is automatically created for the export.')
-		ELSE NULL
-	END AS message
+	re.obj_id as obj_id
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
