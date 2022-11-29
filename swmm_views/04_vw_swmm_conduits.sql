@@ -14,17 +14,18 @@ SELECT
 		WHEN re.length_effective IS NULL AND st_length(progression_geometry) >= 0.01 THEN st_length(progression_geometry)
 		ELSE re.length_effective
 	END as Length,
+	-- Roughness export prioriy: 1. coefficient_of_friction, 2. wall_roughness, 3. swmm_default_coefficient_of_friction, 4. 0.01
 	CASE
 		WHEN re.coefficient_of_friction IS NOT NULL THEN (1 / re.coefficient_of_friction::double precision)
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN 
 			CASE
 				WHEN re.clear_height IS NOT NULL THEN (1 / (4 * SQRT(9.81) * POWER((32 / re.clear_height::double precision / 1000),(1 / 6::double precision))*LOG(((3.71 * re.clear_height::double precision / 1000) / (re.wall_roughness / 1000)))))::numeric(7,4)
-				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
+				WHEN re.clear_height IS NULL AND re.swmm_default_coefficient_of_friction IS NOT NULL THEN (1 / re.swmm_default_coefficient_of_friction::double precision)
 				ELSE 0.01
 			END
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
 			CASE
-				WHEN re.default_coefficient_of_friction IS NOT NULL THEN (1 / re.default_coefficient_of_friction::double precision)
+				WHEN re.swmm_default_coefficient_of_friction IS NOT NULL THEN (1 / re.swmm_default_coefficient_of_friction::double precision)
 				ELSE 0.01
 			END
 		ELSE 0.01
@@ -40,12 +41,12 @@ SELECT
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NOT NULL THEN
 			CASE
 				WHEN re.clear_height IS NOT NULL THEN 'The approximation of 1 / K_Strickler is computed using K_Colebrook to determined the roughness as roughness'
-				WHEN re.clear_height IS NULL AND re.default_coefficient_of_friction IS NOT NULL THEN 'The default value stored in reach.default_coefficient_of_friction is used'
+				WHEN re.clear_height IS NULL AND re.swmm_default_coefficient_of_friction IS NOT NULL THEN 'The default value stored in reach.swmm_default_coefficient_of_friction is used'
 				ELSE 'Default value 0.01 is used as roughness'
 			END
 		WHEN re.coefficient_of_friction IS NULL AND re.wall_roughness IS NULL THEN
 			CASE
-				WHEN re.default_coefficient_of_friction IS NOT NULL THEN concat('The default value stored in reach.default_coefficient_of_friction is used')
+				WHEN re.swmm_default_coefficient_of_friction IS NOT NULL THEN concat('The default value stored in reach.swmm_default_coefficient_of_friction is used')
 				ELSE 'Default value 0.01 is used as roughness'
 			END
 		ELSE 'Default value 0.01 is used as roughness'
