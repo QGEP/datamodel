@@ -46,6 +46,12 @@ DROP FUNCTION IF EXISTS qgep_od.vw_discharge_point_insert();
 DROP VIEW IF EXISTS qgep_od.vw_special_structure;
 DROP FUNCTION IF EXISTS qgep_od.vw_special_structure_insert();
 
+DROP VIEW IF EXISTS qgep_od.vw_infiltration_installation;
+DROP FUNCTION IF EXISTS qgep_od.vw_infiltration_installation_insert();
+
+DROP VIEW IF EXISTS qgep_od.vw_wwtp_structure;
+DROP FUNCTION IF EXISTS qgep_od.vw_wwtp_structure_insert();
+
 
 -- wastewater_networkelement
 DROP VIEW IF EXISTS qgep_od.vw_reach;
