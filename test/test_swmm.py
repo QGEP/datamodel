@@ -57,7 +57,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_outfalls", "qgep_swmm", 54)
 
     def test_count_vw_polygons(self):
-        self.assert_count("vw_polygons", "qgep_swmm", 16007)
+        self.assert_count("vw_polygons", "qgep_swmm", 27405)
 
     def test_count_vw_pumps(self):
         self.assert_count("vw_pumps", "qgep_swmm", 0)
@@ -78,7 +78,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_tags", "qgep_swmm", 11782)
 
     def test_count_vw_vertices(self):
-        self.assert_count("vw_vertices", "qgep_swmm", 643)
+        self.assert_count("vw_vertices", "qgep_swmm", 2854)
 
     def test_count_vw_xsections(self):
         self.assert_count("vw_xsections", "qgep_swmm", 5095)

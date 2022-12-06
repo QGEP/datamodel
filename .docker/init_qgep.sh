@@ -47,7 +47,7 @@ if [ "$1" == "release" ]; then
   FILE="/downloads/${2}.backup"
 
   if [ ! -f "$FILE" ]; then
-    wget -nv https://github.com/QGEP/datamodel/releases/download/${2}/qgep_v${2}_structure_and_demo_data.backup -O $FILE
+    wget -nv https://github.com/QGEP/datamodel/releases/download/${2}/qgep_${2}_structure_and_demo_data.backup -O $FILE
   fi
 
   recreate_db "qgep_release"
@@ -70,7 +70,7 @@ if [ "$1" == "release_struct" ]; then
   FILE="/downloads/${2}.sql"
 
   if [ ! -f "$FILE" ]; then
-    wget -nv https://github.com/QGEP/datamodel/releases/download/${2}/qgep_v${2}_structure_with_value_lists.sql -O $FILE
+    wget -nv https://github.com/QGEP/datamodel/releases/download/${2}/qgep_${2}_structure_with_value_lists.sql -O $FILE
   fi
 
   recreate_db "qgep_release_struct"

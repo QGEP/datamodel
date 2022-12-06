@@ -15,10 +15,10 @@ SELECT
     ELSE replace(ca.obj_id, ' ', '_')
   END as Outlet,
   CASE
-    when surface_area is null then st_area(perimeter_geometry)
-    when surface_area < 0.01 then st_area(perimeter_geometry)
-    else surface_area * 10000 -- conversion for ha to m2
-  END as Area,
+            WHEN ca.surface_area IS NULL THEN st_area(ca.perimeter_geometry)/10000
+            WHEN ca.surface_area < 0.01 THEN st_area(ca.perimeter_geometry)/10000
+            ELSE (ca.surface_area::numeric)::double precision
+  END AS Area,
   CASE
     WHEN state = 'rw_current' then discharge_coefficient_rw_current
     WHEN state = 'rw_planned'  then discharge_coefficient_rw_planned

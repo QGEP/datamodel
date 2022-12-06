@@ -10,6 +10,9 @@ on:
     branches:
       - master
 
+  release:
+    types: ['prereleased', 'released']
+
 jobs:
   docker-tests:
     name: Docker
@@ -18,7 +21,11 @@ jobs:
     strategy:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
-        pgis: ["9.6-2.5", "10-2.5", "11-2.5", "12-2.5", "9.6-3.0", "10-3.0", "11-3.0", "12-3.0"]
+        pgis:
+          - 9.6-3.2
+          - 10-3.2
+          - 11-3.2
+          - 12-3.2
       fail-fast: false
 
     env:
@@ -35,64 +42,73 @@ jobs:
           [[ "${LAST_VERSION}" == "${CUR_VERSION}" ]] || (echo "Version mismatch ${LAST_VERSION} != ${CUR_VERSION}" && exit 1)
 
       - name: "build dockerfile"
-        run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${PGIS} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS} .
-        env:
-          PGIS: ${{ matrix.pgis }}
+        run: docker build -f .docker/Dockerfile --build-arg POSTGIS_VERSION=${{ matrix.pgis }} --tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} .
 
       - name: "initialize qgep container"
-        run: |
-          docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS}
-          docker exec qgep init_qgep.sh wait
-        env:
-          PGIS: ${{ matrix.pgis }}
+        run: docker run -d -p 5432:5432 --name qgep opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
+
+      - name: "wait for qgep container"
+        run: docker exec qgep init_qgep.sh wait
+        timeout-minutes: 10
 
       - name: "run tests on qgep_build (structure)"
         run: |
           docker start qgep
           # Run tests that depend on data model. Tests that require demo data are ignored and run below in qgep_prod
           docker exec -e PGSERVICE=qgep_build qgep pytest --ignore test/test_import.py --ignore test/test_swmm.py
-        env:
-          PGIS: ${{ matrix.pgis }}
 
       - name: "run tests on qgep_prod (production)"
         run: |
           docker start qgep
           docker exec -e PGSERVICE=qgep_prod qgep pytest
-        env:
-          PGIS: ${{ matrix.pgis }}
 
       - name: "dockerhub login"
         if: github.event_name != 'pull_request'
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_PASSWORD"
+          docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password "${{ secrets.DOCKERHUB_PASSWORD }}"
 
       - name: "push to dockerhub"
         if: github.event_name != 'pull_request'
-        env:
-          PGIS: ${{ matrix.pgis }}
         run: |
-          docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS}
+          docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }}
 
       - name: "push to dockerhub (:tag)"
         if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable && github.ref != 'refs/heads/master'
-        env:
-          PGIS: ${{ matrix.pgis }}
         run: |
-          docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS} opengisch/qgep_datamodel:${GITHUB_REF##*/}
+          docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:${GITHUB_REF##*/}
           docker push opengisch/qgep_datamodel:${GITHUB_REF##*/}
 
       - name: "push to dockerhub (:latest)"
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
-        env:
-          PGIS: ${{ matrix.pgis }}
         run: |
-          docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${PGIS} opengisch/qgep_datamodel:latest
+          docker tag opengisch/qgep_datamodel:${GITHUB_REF##*/}-${{ matrix.pgis }} opengisch/qgep_datamodel:latest
           docker push opengisch/qgep_datamodel:latest
+
+      - name: "create dumps"
+        if: github.event_name != 'pull_request' && matrix.pgis == env.pgis_stable
+        run: |
+          CI_TAG=${GITHUB_REF#refs/*/} .deploy/create-dumps.py
+          ls artifacts
+        env:
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          PGUSER: postgres
+
+      - uses: AButler/upload-release-assets@v2.0
+        if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
+        with:
+          files: 'artifacts/*'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "failure logs"
         if: failure()
         run: |
           docker logs qgep
+
+      # TMATE disabled for now as it hangs process, we should do this instead :
+      # https://github.com/marketplace/actions/debugging-with-tmate#manually-triggered-debug
+      # - name: Setup tmate session
+      #   if: failure()
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true

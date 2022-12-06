@@ -31,6 +31,18 @@ import json
 import subprocess
 
 
+def _cmd(args):
+    """
+    Runs a command in subprocess, showing output if it fails
+    """
+
+    try:
+        subprocess.check_output(args, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        raise e
+
+
 def files_description(version):
     return """
 
@@ -64,28 +76,29 @@ def create_plain_structure_only():
     Create a plain SQL dump of data structure of all schemas and the content of pum_sys.inf
     :return: the file name of the dump
     """
-    print('travis_fold:start:plain SQL structure only')
+    print('::group::plain SQL structure only')
 
     # structure
     dump_s = 'qgep_{version}_structure.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
+        version=os.environ['CI_TAG'])
 
     print('Creating dump {}'.format(dump_s))
-    dump_file_s = '/tmp/{dump}'.format(dump=dump_s)
-    subprocess.call(['pg_dump',
+    dump_file_s = 'artifacts/{dump}'.format(dump=dump_s)
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--schema-only',
                      '--file', dump_file_s,
                      '--exclude-schema', 'public',
+                     '--no-owner',
                      'qgep_prod']
                     )
 
     # dump all from qgep_sys except logged_actions
     dump_i = 'qgep_{version}_pum_info.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
+        version=os.environ['CI_TAG'])
     print('Creating dump {}'.format(dump_i))
-    dump_file_i = '/tmp/{dump}'.format(dump=dump_i)
-    subprocess.call(['pg_dump',
+    dump_file_i = 'artifacts/{dump}'.format(dump=dump_i)
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--data-only',
                      '--file', dump_file_i,
@@ -99,7 +112,7 @@ def create_plain_structure_only():
     with open(dump_file_s, "a") as f:
         f.write(dump_data)
 
-    print('travis_fold:end:plain SQL structure only')
+    print('::endgroup::')
 
     return dump_file_s
 
@@ -110,15 +123,15 @@ def create_plain_value_list(structure_dump_file):
     with value list content
     :return: the file name of the dump
     """
-    print('travis_fold:start:value lists dump')
+    print('::group::value lists dump')
 
     dump = 'qgep_{version}_structure_with_value_lists.sql'.format(
-        version=os.environ['TRAVIS_TAG'])
+        version=os.environ['CI_TAG'])
 
     print('Creating dump {}'.format(dump))
-    dump_file = '/tmp/{dump}'.format(dump=dump)
+    dump_file = 'artifacts/{dump}'.format(dump=dump)
 
-    subprocess.call(['pg_dump',
+    _cmd(['pg_dump',
                      '--format', 'plain',
                      '--blobs',
                      '--data-only',
@@ -137,7 +150,7 @@ def create_plain_value_list(structure_dump_file):
         f.write('\n\n\n-- Value lists dump --\n\n')
         f.write(dump_data)
 
-    print('travis_fold:end:value lists dump')
+    print('::endgroup::')
     
     return dump_file
 
@@ -149,11 +162,11 @@ def create_backup_data():
     """
     # Create data-only dumps (with sample data)
     dump = 'qgep_{version}_demo_data.backup'.format(
-        version = os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
+        version = os.environ['CI_TAG'])
+    print('::group::{}'.format(dump))
     print('Creating dump {}'.format(dump))
-    dump_file = '/tmp/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
+    dump_file = 'artifacts/{dump}'.format(dump=dump)
+    _cmd(['pg_dump',
                      '--format', 'custom',
                      '--blobs',
                      '--data-only',
@@ -163,7 +176,7 @@ def create_backup_data():
                      '--table', 'qgep_sys.logged_actions',
                      'qgep_prod']
                     )
-    print('travis_fold:end:{}'.format(dump))
+    print('::endgroup::')
     return dump_file
 
 
@@ -174,11 +187,11 @@ def create_backup_complete():
     """
     # Create data + structure dumps (with sample data)
     dump = 'qgep_{version}_structure_and_demo_data.backup'.format(
-        version = os.environ['TRAVIS_TAG'])
-    print('travis_fold:start:{}'.format(dump))
+        version = os.environ['CI_TAG'])
+    print('::group::{}'.format(dump))
     print('Creating dump {}'.format(dump))
-    dump_file = '/tmp/{dump}'.format(dump=dump)
-    subprocess.call(['pg_dump',
+    dump_file = 'artifacts/{dump}'.format(dump=dump)
+    _cmd(['pg_dump',
                      '--format', 'custom',
                      '--blobs',
                      '--compress', '5',
@@ -186,102 +199,24 @@ def create_backup_complete():
                      '-N', 'public',
                      'qgep_prod']
                     )
-    print('travis_fold:end:{}'.format(dump))
+    print('::endgroup::')
 
     return dump_file
 
 
 def main():
     """
-    Publish the files in a release on github
-    If a release already exist, it will copy its data (title, description, etc),
-    delete it and create a new one with the same data and adding the dump files
+    Creates dumps to be attached to releases.
     """
-    if 'TRAVIS_TAG' not in os.environ or not os.environ['TRAVIS_TAG']:
+    if 'CI_TAG' not in os.environ or not os.environ['CI_TAG']:
         print('No git tag: not deploying anything')
         return
-    elif os.environ['TRAVIS_SECURE_ENV_VARS'] != 'true':
-        print('No secure environment variables: not deploying anything')
-        return
     else:
-        print('Creating release from tag {}'.format(os.environ['TRAVIS_TAG']))
+        print('Creating release from tag {}'.format(os.environ['CI_TAG']))
 
-    release_files = create_dumps()
-
-    headers = {
-        'User-Agent': 'Deploy-Script',
-        'Authorization': 'token {}'.format(os.environ['GH_TOKEN'])
-    }
-
-    create_raw_data = {
-        "tag_name": os.environ['TRAVIS_TAG'],
-        "body": ""
-    }
-
-    # if a release exist with this tag_name delete it first
-    # this allows to create the release from github website
-    url = '/repos/{repo_slug}/releases/latest'.format(
-        repo_slug=os.environ['TRAVIS_REPO_SLUG'])
-    conn = http.client.HTTPSConnection('api.github.com')
-    conn.request('GET', url, headers=headers)
-    response = conn.getresponse()
-    release = json.loads(response.read().decode())
-    if 'tag_name' in release and release['tag_name'] == os.environ['TRAVIS_TAG']:
-        print("Deleting release {}".format(release['tag_name']))
-        url = '/repos/{repo_slug}/releases/{id}'.format(
-            repo_slug=os.environ['TRAVIS_REPO_SLUG'],
-            id=release['id'])
-        conn = http.client.HTTPSConnection('api.github.com')
-        conn.request('DELETE', url, headers=headers)
-        response = conn.getresponse()
-        if response.status == 204:
-            print('Existing release deleted!')
-            create_raw_data["target_commitish"] = release['target_commitish']
-            create_raw_data["name"] = release['name']
-            create_raw_data["body"] = release['body']
-        else:
-            print('Failed to delete release!')
-            print('Github API replied:')
-            print('{} {}'.format(response.status, response.reason))
-
-    create_raw_data["body"] += files_description(os.environ['TRAVIS_TAG'])
-
-    data = json.dumps(create_raw_data)
-    url = '/repos/{repo_slug}/releases'.format(
-        repo_slug=os.environ['TRAVIS_REPO_SLUG'])
-    conn = http.client.HTTPSConnection('api.github.com')
-    conn.request('POST', url, body=data, headers=headers)
-    response = conn.getresponse()
-    release = json.loads(response.read().decode())
-
-    if 'upload_url' not in release:
-        print('Failed to create release!')
-        print('Github API replied:')
-        print('{} {}'.format(response.status, response.reason))
-        print(repr(release))
-        exit(-1)
-
-    conn = http.client.HTTPSConnection('uploads.github.com')
-    for release_file in release_files:
-        _, filename = os.path.split(release_file)
-        headers['Content-Type'] = 'text/plain'
-#        headers['Transfer-Encoding'] = 'gzip'
-        url = '{release_url}?name={filename}'.format(release_url=release['upload_url'][:-13],
-                                                     filename=filename)
-        print('Upload to {}'.format(url))
-
-        with open(release_file, 'rb') as f:
-            data = f.read()
-            conn.request('POST', url, data, headers)
-
-        response = conn.getresponse()
-        result = response.read()
-        if response.status != 201:
-            print('Failed to upload filename {filename}'.format(filename=filename))
-            print('Github API replied:')
-            print('{} {}'.format(response.status, response.reason))
-            print(repr(json.loads(result.decode())))
-
+    os.mkdir('artifacts')
+    files = create_dumps()
+    print('Dumps created: {}'.format(', '.join(files)))
 
 if __name__ == "__main__":
     main()

@@ -39,7 +39,7 @@ def vw_qgep_reach(pg_service: str = None,
         ws.fk_owner AS ws_fk_owner,
         ch.function_hydraulic AS ch_function_hydraulic,
         CASE 
-          WHEN pp.height_width_ratio IS NOT NULL THEN round(re.clear_height::numeric * pp.height_width_ratio)::smallint 
+          WHEN pp.height_width_ratio IS NOT NULL THEN round(re.clear_height::numeric / pp.height_width_ratio)::smallint 
           ELSE clear_height 
         END AS width,
         CASE 
