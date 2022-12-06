@@ -1,2 +1,2 @@
 ALTER TABLE qgep_od.reach ADD COLUMN hydraulic_load decimal(7,3) ;
-COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS 'Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%].';
+COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS 'Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%%].';
