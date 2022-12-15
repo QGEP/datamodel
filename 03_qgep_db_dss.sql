@@ -1887,8 +1887,6 @@ ALTER TABLE qgep_od.reach ADD COLUMN clear_height  integer ;
 COMMENT ON COLUMN qgep_od.reach.clear_height IS 'Maximal height (inside) of profile / Maximale Innenhöhe des Kanalprofiles / Hauteur intérieure maximale du profil';
 ALTER TABLE qgep_od.reach ADD COLUMN coefficient_of_friction  smallint ;
 COMMENT ON COLUMN qgep_od.reach.coefficient_of_friction IS 'yyy http://www.linguee.com/english-german/search?source=auto&query=reibungsbeiwert / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Manning-Strickler (K oder kstr) / Constante de rugosité selon Manning-Strickler (K ou kstr)';
-ALTER TABLE qgep_od.reach ADD COLUMN swmm_default_coefficient_of_friction  smallint ;
-COMMENT ON COLUMN qgep_od.reach.swmm_default_coefficient_of_friction IS '1 / N_Manning, value between 0 and 999. Value exported in SWMM if coefficient_of_friction and wall_roughness are not set. ';
 ALTER TABLE qgep_od.reach ADD COLUMN elevation_determination  integer ;
 COMMENT ON COLUMN qgep_od.reach.elevation_determination IS 'yyy_Definiert die Hoehenbestimmung einer Haltung. / Definiert die Hoehenbestimmung einer Haltung. / Définition de la détermination altimétrique d''un tronçon.';
 ALTER TABLE qgep_od.reach ADD COLUMN horizontal_positioning  integer ;
@@ -1916,8 +1914,6 @@ ALTER TABLE qgep_od.reach ADD COLUMN slope_building_plan  smallint ;
 COMMENT ON COLUMN qgep_od.reach.slope_building_plan IS 'yyy_Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Pente indiquée sur d''anciens plans non contrôlée [%o]. Ne peut pas être reprise pour des calculs hydrauliques. Indication pour des canalisations de biens-fonds ou d''amélioration foncière. Représentation sur de plan: 3.5‰ p';
 ALTER TABLE qgep_od.reach ADD COLUMN wall_roughness  decimal(5,2) ;
 COMMENT ON COLUMN qgep_od.reach.wall_roughness IS 'yyy Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Coefficient de rugosité d''après Prandtl Colebrook (ks ou kb)';
-ALTER TABLE qgep_od.reach ADD COLUMN hydraulic_load decimal(7,3) ;
-COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS 'Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%].';
 
 -------
 CREATE TRIGGER
