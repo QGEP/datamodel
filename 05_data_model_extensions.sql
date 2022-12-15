@@ -78,3 +78,10 @@ ALTER TABLE qgep_od.wastewater_node ADD COLUMN _function_hierarchic integer;
 COMMENT ON COLUMN qgep_od.wastewater_node._function_hierarchic IS 'not part of the VSA-DSS data model
 added solely for QGEP
 has to be updated by triggers';
+
+
+-- Modifications done for link with SWMM
+ALTER TABLE qgep_od.reach ADD COLUMN swmm_default_coefficient_of_friction  smallint ;
+COMMENT ON COLUMN qgep_od.reach.swmm_default_coefficient_of_friction IS '1 / N_Manning, value between 0 and 999. Value exported in SWMM if coefficient_of_friction and wall_roughness are not set. ';
+ALTER TABLE qgep_od.reach ADD COLUMN dss2020_hydraulic_load_current smallint ;
+COMMENT ON COLUMN qgep_od.reach.hydraulic_load IS 'Dimensioning of the discharge divided by the normal discharge capacity of the reach [%]. / Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%].';
