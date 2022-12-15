@@ -81,11 +81,16 @@ has to be updated by triggers';
 
 
 -- Modifications applied for link with SWMM
+-------------------------------------------
+
+-- Add attributes
 ALTER TABLE qgep_od.reach ADD COLUMN swmm_default_coefficient_of_friction  smallint ;
 COMMENT ON COLUMN qgep_od.reach.swmm_default_coefficient_of_friction IS '1 / N_Manning, value between 0 and 999. Value exported in SWMM if coefficient_of_friction and wall_roughness are not set. ';
 ALTER TABLE qgep_od.reach ADD COLUMN dss2020_hydraulic_load_current smallint ;
 COMMENT ON COLUMN qgep_od.reach.dss2020_hydraulic_load_current IS 'Dimensioning of the discharge divided by the normal discharge capacity of the reach [%]. / Dimensionierungsabfluss geteilt durch Normalabflusskapazität der Leitung [%]. / Débit de dimensionnement divisé par la capacité d''écoulement normale de la conduite [%].';
 
+-- Add table for defaults coefficients of friction
+CREATE SCHEMA IF NOT EXISTS qgep_swmm;
 CREATE TABLE qgep_swmm.reach_coefficient_of_friction (fk_material integer, coefficient_of_friction smallint);
 ALTER TABLE qgep_swmm.reach_coefficient_of_friction ADD CONSTRAINT pkey_qgep_vl_reach_coefficient_of_friction_id PRIMARY KEY (fk_material);
 INSERT INTO qgep_swmm.reach_coefficient_of_friction(fk_material) SELECT vsacode FROM qgep_vl.reach_material;
