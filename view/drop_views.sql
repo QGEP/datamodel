@@ -48,13 +48,13 @@ DROP FUNCTION IF EXISTS qgep_od.vw_special_structure_insert();
 
 
 -- property_drainage
-DROP VIEW IF EXISTS qgep_od.vw_vw_building;
+DROP VIEW IF EXISTS qgep_od.vw_building;
 DROP FUNCTION IF EXISTS qgep_od.vw_building_insert();
 
-DROP VIEW IF EXISTS qgep_od.vw_vw_reservoir;
+DROP VIEW IF EXISTS qgep_od.vw_reservoir;
 DROP FUNCTION IF EXISTS qgep_od.vw_reservoir_insert();
 
-DROP VIEW IF EXISTS qgep_od.vw_vw_fountain;
+DROP VIEW IF EXISTS qgep_od.vw_fountain;
 DROP FUNCTION IF EXISTS qgep_od.vw_fountain_insert();
 
 
