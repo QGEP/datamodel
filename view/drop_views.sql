@@ -53,6 +53,18 @@ DROP VIEW IF EXISTS qgep_od.vw_wwtp_structure;
 DROP FUNCTION IF EXISTS qgep_od.vw_wwtp_structure_insert();
 
 
+-- property_drainage
+DROP VIEW IF EXISTS qgep_od.vw_building;
+DROP FUNCTION IF EXISTS qgep_od.vw_building_insert();
+
+DROP VIEW IF EXISTS qgep_od.vw_reservoir;
+DROP FUNCTION IF EXISTS qgep_od.vw_reservoir_insert();
+
+DROP VIEW IF EXISTS qgep_od.vw_fountain;
+DROP FUNCTION IF EXISTS qgep_od.vw_fountain_insert();
+
+
+
 -- wastewater_networkelement
 DROP VIEW IF EXISTS qgep_od.vw_reach;
 DROP FUNCTION IF EXISTS qgep_od.vw_reach_insert();
