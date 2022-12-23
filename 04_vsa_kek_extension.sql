@@ -959,7 +959,7 @@ ALTER TABLE qgep_vl.data_media_kind ADD CONSTRAINT pkey_qgep_vl_data_media_kind_
  REFERENCES qgep_vl.data_media_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.file ADD COLUMN fk_data_media varchar(16);
-ALTER TABLE qgep_od.file ADD CONSTRAINT rel_file_data_media FOREIGN KEY (fk_data_media) REFERENCES qgep_od.data_media(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.file ADD CONSTRAINT rel_od_file_fk_data_media FOREIGN KEY (fk_data_media) REFERENCES qgep_od.data_media(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep_vl.file_class () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.file_class ADD CONSTRAINT pkey_qgep_vl_file_class_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3800,3800,'throttle_shut_off_unit','Absperr_Drosselorgan','LIMITEUR_DEBIT', '', '', '', 'true');
