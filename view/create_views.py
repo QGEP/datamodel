@@ -52,20 +52,25 @@ def create_views(srid: int,
     SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.manhole', view_name='vw_manhole', pg_service=pg_service).create()
     SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.discharge_point', view_name='vw_discharge_point', pg_service=pg_service).create()
     SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.special_structure', view_name='vw_special_structure', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.infiltration_installation', view_name='vw_infiltration_installation', pg_service=pg_service).create()
+    SingleInheritance('qgep_od.wastewater_structure', 'qgep_od.wwtp_structure', view_name='vw_wwtp_structure', pg_service=pg_service).create()
 
     SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.reach', view_name='vw_reach', pg_service=pg_service).create()
     SingleInheritance('qgep_od.wastewater_networkelement', 'qgep_od.wastewater_node', view_name='vw_wastewater_node', pkey_default_value=True, pg_service=pg_service).create()
 
     SingleInheritance('qgep_od.connection_object', 'qgep_od.individual_surface', view_name='vw_individual_surface', pkey_default_value=True, pg_service=pg_service).create()
-
+    SingleInheritance('qgep_od.connection_object', 'qgep_od.building', view_name='vw_building', pkey_default_value=True, pg_service=pg_service).create()
+    SingleInheritance('qgep_od.connection_object', 'qgep_od.reservoir', view_name='vw_reservoir', pkey_default_value=True, pg_service=pg_service).create()
+    SingleInheritance('qgep_od.connection_object', 'qgep_od.fountain', view_name='vw_fountain', pkey_default_value=True, pg_service=pg_service).create()
+    
     MultipleInheritance(safe_load(open("view/vw_maintenance_examination.yaml")), drop=True, pg_service=pg_service).create()
     MultipleInheritance(safe_load(open("view/vw_damage.yaml")), drop=True, pg_service=pg_service).create()
 
     vw_qgep_wastewater_structure(srid, pg_service=pg_service, extra_definition=qgep_wastewater_structure_extra)
     vw_qgep_reach(pg_service=pg_service, extra_definition=qgep_reach_extra)
-    
+
     run_sql('view/vw_file.sql', pg_service, variables)
-    
+
     MultipleInheritance(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service, drop=True).create()
     MultipleInheritance(safe_load(open("view/vw_oo_organisation.yaml")), drop=True, pg_service=pg_service).create()
 
