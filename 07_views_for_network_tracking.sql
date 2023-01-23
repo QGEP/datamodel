@@ -22,7 +22,7 @@ CREATE TABLE qgep_network.segment (
   geom geometry('LINESTRING', :SRID)
 );
 
-CREATE OR REPLACE FUNCTION qgep_network.refresh_network_simple() RETURNS void AS $body$
+CREATE OR REPLACE FUNCTION qgep_network.refresh_network_simple() RETURNS void SECURITY DEFINER AS $body$
 BEGIN
 
   TRUNCATE qgep_network.segment CASCADE;
@@ -222,3 +222,6 @@ LEFT JOIN qgep_od.reach r ON r.obj_id = s.ne_id
 LEFT JOIN qgep_vl.reach_material mat ON r.material = mat.code
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = s.ne_id
 LEFT JOIN qgep_od.channel ch ON ch.obj_id = ne.fk_wastewater_structure;
+
+CREATE INDEX in_qgep_od_vw_network_segment_progression_geometry ON qgep_od.vw_network_segment USING gist (progression_geometry);
+CREATE INDEX in_qgep_od_vw_network_node_situation_geometry ON qgep_od.vw_network_node USING gist (situation_geometry);

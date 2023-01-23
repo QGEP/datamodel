@@ -22,7 +22,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_file AS
     f.object,
     f.class,
     -- dm.path,
-    dm.path::text || f.path_relative::text AS _url,
+    COALESCE(dm.path::text || f.path_relative::text, f.path_relative::text) AS _url,
     f.fk_dataowner as dataowner,
     f.fk_provider as provider,
     f.remark
