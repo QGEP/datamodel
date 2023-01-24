@@ -3026,8 +3026,8 @@ WITH (
 CREATE SEQUENCE qgep_od.seq_pump_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep_od.pump ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','pump');
 COMMENT ON COLUMN qgep_od.pump.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep_od.pump ADD COLUMN contruction_type  integer ;
-COMMENT ON COLUMN qgep_od.pump.contruction_type IS 'Types of pumps / Pumpenarten / Types de pompe';
+ALTER TABLE qgep_od.pump ADD COLUMN construction_type  integer ;
+COMMENT ON COLUMN qgep_od.pump.construction_type IS 'Types of pumps / Pumpenarten / Types de pompe';
 ALTER TABLE qgep_od.pump ADD COLUMN operating_point  decimal(9,2) ;
 COMMENT ON COLUMN qgep_od.pump.operating_point IS 'Flow for pumps with fixed operating point / Fördermenge für Pumpen mit fixem Arbeitspunkt / Débit refoulé par la pompe avec point de travail fixe';
 ALTER TABLE qgep_od.pump ADD COLUMN placement_of_actuation  integer ;
@@ -4857,7 +4857,7 @@ ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_cons
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (310,310,'screw_pump','Schneckenpumpe','pompe_a_vis', 'pompa_a_vite', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3082,3082,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2661,2661,'vacuum_system','Vakuumanlage','systeme_a_vide_d_air', 'impinato_a_vuoto_aria', '', '', '', '', '', '', 'true');
- ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_construction_type FOREIGN KEY (contruction_type)
+ ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_construction_type FOREIGN KEY (construction_type)
  REFERENCES qgep_vl.pump_construction_type (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.pump_placement_of_actuation () INHERITS (qgep_sys.value_list_base);
