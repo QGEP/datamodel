@@ -58,12 +58,6 @@ ALTER TABLE qgep_od.vw_qgep_overflow
     OWNER TO postgres;
     
     
-CREATE TRIGGER audit_trigger_row
-    INSTEAD OF INSERT OR DELETE OR UPDATE 
-    ON qgep_od.vw_qgep_overflow
-    FOR EACH ROW
-    EXECUTE FUNCTION qgep_sys.if_modified_func('true');
-
 
 CREATE TRIGGER tr_vw_qgep_overflow_on_delete
     INSTEAD OF DELETE
