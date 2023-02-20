@@ -61,3 +61,4 @@ $BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
+SELECT qgep_od.update_wastewater_node_symbology(NULL, true);
