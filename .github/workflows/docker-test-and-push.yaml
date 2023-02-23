@@ -16,21 +16,21 @@ on:
 jobs:
   docker-tests:
     name: Docker
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
-          - 9.6-3.2
-          - 10-3.2
+          - 10-2.6
           - 11-3.2
-          - 12-3.2
+          - 14-3.2
+          - 15-3.3
       fail-fast: false
 
     env:
       # which pgis version to use for :tag images (must be in the matrix above)
-      pgis_stable: "11-2.5"
+      pgis_stable: "14-3.2"
 
     steps:
       - uses: actions/checkout@v2
