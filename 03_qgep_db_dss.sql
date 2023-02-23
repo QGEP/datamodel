@@ -4849,7 +4849,7 @@ ALTER TABLE qgep_vl.prank_weir_weir_kind ADD CONSTRAINT pkey_qgep_vl_prank_weir_
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.pump ADD CONSTRAINT oorel_od_pump_overflow FOREIGN KEY (obj_id) REFERENCES qgep_od.overflow(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE qgep_vl.pump_construction_type () INHERITS (qgep_sys.value_list_base);
-ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_construction_type_code PRIMARY KEY (code);
+ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_contruction_type_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2983,2983,'other','andere','autres', 'altri', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2662,2662,'compressed_air_system','Druckluftanlage','systeme_a_air_comprime', 'impianto_aria_compressa', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (314,314,'piston_pump','Kolbenpumpe','pompe_a_piston', 'pompa_pistoni', '', '', '', '', '', '', 'true');
