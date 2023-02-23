@@ -22,7 +22,7 @@ jobs:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
-          - 10-2.6
+          - 10-2.5
           - 11-3.2
           - 14-3.2
           - 15-3.3
