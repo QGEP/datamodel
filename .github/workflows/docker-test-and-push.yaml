@@ -22,7 +22,7 @@ jobs:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
-          - 10-2.5
+          - 10-3.2
           - 11-3.2
           - 14-3.2
           - 15-3.3
@@ -33,7 +33,7 @@ jobs:
       pgis_stable: "14-3.2"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "assert version is up to date"
         run: |
