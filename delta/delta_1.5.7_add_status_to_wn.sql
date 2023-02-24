@@ -6,54 +6,6 @@ COMMENT ON COLUMN qgep_od.wastewater_node._status IS 'not part of the VSA-DSS da
 added solely for QGEP
 has to be updated by triggers';
 
-----UPDATE vw_wastewater_node----
-DROP VIEW qgep_od.vw_wastewater_node;
-
-CREATE OR REPLACE VIEW qgep_od.vw_wastewater_node
- AS
- SELECT wastewater_node.obj_id,
-    wastewater_node._function_hierarchic,
-    wastewater_node._usage_current,
-    wastewater_node._status,
-    wastewater_node.backflow_level,
-    wastewater_node.bottom_level,
-    wastewater_node.fk_hydr_geometry,
-    wastewater_node.situation_geometry,
-    wastewater_networkelement.fk_dataowner,
-    wastewater_networkelement.fk_provider,
-    wastewater_networkelement.fk_wastewater_structure,
-    wastewater_networkelement.identifier,
-    wastewater_networkelement.last_modification,
-    wastewater_networkelement.remark
-   FROM qgep_od.wastewater_node
-     LEFT JOIN qgep_od.wastewater_networkelement ON wastewater_networkelement.obj_id::text = wastewater_node.obj_id::text;
-
-ALTER TABLE qgep_od.vw_wastewater_node
-    OWNER TO postgres;
-
-CREATE TRIGGER tr_vw_wastewater_node_on_delete
-    INSTEAD OF DELETE
-    ON qgep_od.vw_wastewater_node
-    FOR EACH ROW
-    EXECUTE FUNCTION qgep_od.ft_vw_wastewater_node_delete();
-
-
-CREATE TRIGGER tr_vw_wastewater_node_on_insert
-    INSTEAD OF INSERT
-    ON qgep_od.vw_wastewater_node
-    FOR EACH ROW
-    EXECUTE FUNCTION qgep_od.ft_vw_wastewater_node_insert();
-
-
-CREATE TRIGGER tr_vw_wastewater_node_on_update
-    INSTEAD OF UPDATE 
-    ON qgep_od.vw_wastewater_node
-    FOR EACH ROW
-    EXECUTE FUNCTION qgep_od.ft_vw_wastewater_node_update();
-
-ALTER VIEW qgep_od.vw_wastewater_node
-    ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od'::text, 'wastewater_node'::text);
-
 
 ----UPDATE SYMBOLOGY----
 
