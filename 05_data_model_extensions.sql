@@ -78,7 +78,3 @@ ALTER TABLE qgep_od.wastewater_node ADD COLUMN _function_hierarchic integer;
 COMMENT ON COLUMN qgep_od.wastewater_node._function_hierarchic IS 'not part of the VSA-DSS data model
 added solely for QGEP
 has to be updated by triggers';
-ALTER TABLE qgep_od.wastewater_node ADD COLUMN _status integer;
-COMMENT ON COLUMN qgep_od.wastewater_node._status IS 'not part of the VSA-DSS data model
-added solely for QGEP
-has to be updated by triggers';
