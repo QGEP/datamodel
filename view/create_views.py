@@ -21,6 +21,10 @@ def run_sql(file_path: str, pg_service: str, variables: dict = {}):
     conn.close()
 
 
+def drop_views(pg_service):
+    run_sql('view/drop_views.sql', pg_service)
+
+
 def create_views(srid: int,
                  pg_service: str,
                  qgep_reach_extra: str = None,
@@ -40,7 +44,7 @@ def create_views(srid: int,
     if qgep_wastewater_structure_extra:
         qgep_wastewater_structure_extra = safe_load(open(qgep_wastewater_structure_extra))
 
-    run_sql('view/drop_views.sql', pg_service, variables)
+    drop_views(pg_service)
 
     SingleInheritance('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service, pkey_default_value=True, inner_defaults={'identifier': 'obj_id'}).create()
     SingleInheritance('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service, pkey_default_value=True, inner_defaults={'identifier': 'obj_id'}).create()
