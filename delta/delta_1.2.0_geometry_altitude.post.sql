@@ -887,9 +887,6 @@ SELECT
 
 ALTER TABLE qgep_od.vw_wastewater_node ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od'::text, 'wastewater_node'::text);
 
--- Comment: only trigger - function is still existing
-CREATE TRIGGER vw_wastewater_node_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_wastewater_node
-  FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_wastewater_node_insert();
 
 -- Rule: vw_wastewater_node_ON_UPDATE()
 CREATE OR REPLACE RULE vw_wastewater_node_ON_UPDATE AS ON UPDATE TO qgep_od.vw_wastewater_node DO INSTEAD (
@@ -1249,13 +1246,6 @@ BEGIN
     RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql;
-
-CREATE TRIGGER on_mutation_make_insert_or_delete
-  INSTEAD OF INSERT OR UPDATE
-  ON qgep_import.vw_manhole
-  FOR EACH ROW
-  EXECUTE PROCEDURE qgep_import.vw_manhole_insert_into_quarantine_or_delete();
-
 
 
 -----------------------------------------------
