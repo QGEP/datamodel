@@ -320,6 +320,7 @@ SET _label = label,
     _bottom_label = bottom_label,
     _input_label = input_label,
     _output_label = output_label
+    FROM(
 SELECT   ws_obj_id,
           COALESCE(ws_identifier, '') as label,
           CASE WHEN count(co_level)<2 THEN array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY idx DESC), '', '') ELSE
