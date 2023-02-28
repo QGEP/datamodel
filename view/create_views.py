@@ -82,6 +82,10 @@ def create_views(srid: int,
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
 
+    # Recreate network views
+    run_sql('view/network/vw_network_node.sql', pg_service, variables)
+    run_sql('view/network/vw_network_segment.sql', pg_service, variables)
+
     # Recreate swmm views
     run_sql('swmm_views/01_vw_swmm_create_schema.sql', pg_service, variables)
     run_sql('swmm_views/02_vw_swmm_junctions.sql', pg_service, variables)

@@ -106,6 +106,10 @@ DROP VIEW IF EXISTS qgep_od.vw_file;
 DROP VIEW IF EXISTS qgep_od.vw_change_points;
 DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
 
+-- network views
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_segment;
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node;
+
 -- qgep_swmm views
 DROP VIEW IF EXISTS qgep_swmm.vw_aquifers CASCADE;
 DROP VIEW IF EXISTS qgep_swmm.vw_conduits CASCADE;
