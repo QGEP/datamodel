@@ -21,6 +21,10 @@ def run_sql(file_path: str, pg_service: str, variables: dict = {}):
     conn.close()
 
 
+def drop_views(pg_service):
+    run_sql('view/drop_views.sql', pg_service)
+
+
 def create_views(srid: int,
                  pg_service: str,
                  qgep_reach_extra: str = None,
@@ -40,7 +44,7 @@ def create_views(srid: int,
     if qgep_wastewater_structure_extra:
         qgep_wastewater_structure_extra = safe_load(open(qgep_wastewater_structure_extra))
 
-    run_sql('view/drop_views.sql', pg_service, variables)
+    drop_views(pg_service)
 
     SingleInheritance('qgep_od.structure_part', 'qgep_od.access_aid', view_name='vw_access_aid', pg_service=pg_service, pkey_default_value=True, inner_defaults={'identifier': 'obj_id'}).create()
     SingleInheritance('qgep_od.structure_part', 'qgep_od.benching', view_name='vw_benching', pg_service=pg_service, pkey_default_value=True, inner_defaults={'identifier': 'obj_id'}).create()
@@ -77,6 +81,10 @@ def create_views(srid: int,
     run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
+
+    # Recreate network views
+    run_sql('view/network/vw_network_node.sql', pg_service, variables)
+    run_sql('view/network/vw_network_segment.sql', pg_service, variables)
 
     # Recreate swmm views
     run_sql('swmm_views/01_vw_swmm_create_schema.sql', pg_service, variables)
