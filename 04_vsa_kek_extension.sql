@@ -190,7 +190,6 @@ CREATE SEQUENCE qgep_od.seq_file_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 STAR
  ALTER TABLE qgep_od.file ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','file');
 COMMENT ON COLUMN qgep_od.file.obj_id IS 'INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
  ALTER TABLE qgep_od.file ADD COLUMN class  integer ;
- ALTER TABLE qgep_od.file ADD COLUMN fk_data_media character varying(16);
 COMMENT ON COLUMN qgep_od.file.class IS 'yyy_Gibt an, zu welcher Klasse des VSA-DSS-Datenmodells die Datei gehört. Grundsätzlich alle Klassen möglich. Im Rahmen der Kanalfernsehaufnahmen hauptsächlich Kanal, Normschachtschaden, Kanalschaden und Untersuchung. / Gibt an, zu welcher Klasse des VSA-DSS-Datenmodells die Datei gehört. Grundsätzlich alle Klassen möglich. Im Rahmen der Kanalfernsehaufnahmen hauptsächlich Kanal, Normschachtschaden, Kanalschaden und Untersuchung. / Indique à quelle classe du modèle de données de VSA-SDEE appartient le fichier. Toutes les classes sont possible. Surtout CANALISATION, DOMMAGE_CHAMBRE_STANDARD, DOMMAGE_CANALISATION, INSPECTION.';
  ALTER TABLE qgep_od.file ADD COLUMN identifier  varchar(40) ;
 COMMENT ON COLUMN qgep_od.file.identifier IS 'yyy_Name der Datei mit Dateiendung. Z.B video_01.mpg oder haltung_01.ipf / Name der Datei mit Dateiendung. Z.B video_01.mpg oder haltung_01.ipf / Nom du fichier avec terminaison du fichier. P. ex. video_01.mpg ou canalisation_01.ipf';
@@ -959,6 +958,8 @@ ALTER TABLE qgep_vl.data_media_kind ADD CONSTRAINT pkey_qgep_vl_data_media_kind_
  ALTER TABLE qgep_od.data_media ADD CONSTRAINT fkey_vl_data_media_kind FOREIGN KEY (kind)
  REFERENCES qgep_vl.data_media_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE qgep_od.file ADD COLUMN fk_data_media varchar(16);
+ALTER TABLE qgep_od.file ADD CONSTRAINT rel_file_data_media FOREIGN KEY (fk_data_media) REFERENCES qgep_od.data_media(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep_vl.file_class () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.file_class ADD CONSTRAINT pkey_qgep_vl_file_class_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3800,3800,'throttle_shut_off_unit','Absperr_Drosselorgan','LIMITEUR_DEBIT', '', '', '', 'true');
