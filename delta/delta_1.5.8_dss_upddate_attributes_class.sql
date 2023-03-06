@@ -46,7 +46,7 @@ RETURNING *;
 
 -- 7. rename attribute in table qgep_od.txt_symbol
 
-ALTER TABLE qgep_od.txt_text 
+ALTER TABLE qgep_od.txt_symbol 
 RENAME COLUMN class TO classname;
 
 -- 8. rename wrong value in qgep_sys.dictionary_od_field
