@@ -135,7 +135,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         reach_a_id = self.insert('vw_qgep_reach', row_reach_a)
         
         expected.update({
-            '_input_label': '\nI1=95.00',
+            '_input_label': '\nI=95.00',
         })
         check_values(expected)
 
