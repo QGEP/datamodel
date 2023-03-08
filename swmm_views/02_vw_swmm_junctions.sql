@@ -45,7 +45,7 @@ SELECT
 	NULL::float as SurchargeDepth,
 	NULL::float as PondedArea,
 	ws.identifier::text as description,
-	CONCAT_WS(',','special_structure', ssf.value_en) as tag,
+	CONCAT_WS(',','special_structure', ss_fu.value_en) as tag,
 	wn.situation_geometry as geom,
 	CASE 
 		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
