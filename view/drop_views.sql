@@ -5,6 +5,17 @@ DROP VIEW IF EXISTS qgep_od.vw_export_wastewater_structure;
 
 -- import
 DROP VIEW IF EXISTS qgep_import.vw_manhole;
+DROP TRIGGER IF EXISTS after_update_try_structure_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_insert_try_structure_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_update_try_inlet_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_insert_try_inlet_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_update_try_outlet_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_insert_try_outlet_update ON qgep_import.manhole_quarantine;
+DROP TRIGGER IF EXISTS after_mutation_delete_when_okay ON qgep_import.manhole_quarantine;
+DROP FUNCTION IF EXISTS qgep_import.manhole_quarantine_try_structure_update();
+DROP FUNCTION IF EXISTS qgep_import.manhole_quarantine_try_let_update();
+DROP FUNCTION IF EXISTS qgep_import.manhole_quarantine_delete_entry();
+
 
 -- big views
 DROP VIEW IF EXISTS qgep_od.vw_qgep_wastewater_structure;
@@ -94,6 +105,10 @@ DROP VIEW IF EXISTS qgep_od.vw_individual_surface;
 DROP VIEW IF EXISTS qgep_od.vw_file;
 DROP VIEW IF EXISTS qgep_od.vw_change_points;
 DROP VIEW IF EXISTS qgep_od.vw_catchment_area_connections;
+
+-- network views
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_segment;
+DROP MATERIALIZED VIEW IF EXISTS qgep_od.vw_network_node;
 
 -- qgep_swmm views
 DROP VIEW IF EXISTS qgep_swmm.vw_aquifers CASCADE;

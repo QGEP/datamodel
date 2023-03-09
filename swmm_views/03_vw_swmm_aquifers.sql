@@ -1,6 +1,5 @@
 --------
 -- View for the swmm module class aquifiers
--- 20190329 qgep code sprint SB, TP
 --------
 CREATE OR REPLACE VIEW qgep_swmm.vw_aquifers AS
 
