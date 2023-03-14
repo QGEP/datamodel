@@ -31,7 +31,7 @@ LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::te
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.cover co on ws.fk_main_cover = co.obj_id
 LEFT JOIN qgep_vl.manhole_function mf on ma.function = mf.code
-WHERE mf.vsacode = 4798 -- separating_structure
+WHERE ssf.vsacode = 4798 -- separating_structure
 AND ws_st.vsacode IN (6530, 6533, 8493, 6529, 6526, 7959)
 
 UNION ALL
