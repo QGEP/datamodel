@@ -39,7 +39,6 @@ FROM qgep_od.catchment_area as ca
 LEFT JOIN qgep_od.surface_runoff_parameters sr ON ca.obj_id = sr.fk_catchment_area
 LEFT JOIN qgep_od.wastewater_networkelement ne on ne.obj_id = fk_wastewater_networkelement_ww_current
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
-LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
 LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
 WHERE fk_wastewater_networkelement_ww_current IS NOT NULL -- to avoid unconnected catchments
