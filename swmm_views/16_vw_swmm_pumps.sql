@@ -29,17 +29,21 @@ SELECT
 	) as description,
 	pu.obj_id::varchar as tag,
 	CASE 
-		WHEN status IN (7959, 6529, 6526) THEN 'planned'
+		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
 	CASE 
-		WHEN ws._function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
+		WHEN cfhi.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
 	wn.obj_id as obj_id
 FROM qgep_od.pump pu
 LEFT JOIN qgep_od.overflow of ON pu.obj_id = of.obj_id
 LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id
+LEFT JOIN qgep_vl.overflow_char_overflow_characteristic_digital vL_oc_dig ON oc.overflow_characteristic_digital = vL_oc_dig.code
+LEFT JOIN qgep_vl.overflow_char_kind_overflow_characteristic vL_oc_ki ON oc.kind_overflow_characteristic = vL_oc_ki.code
 LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = of.fk_wastewater_node
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.fk_main_wastewater_node = wn.obj_id
-WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);
+LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws.status = ws_st.code
+LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
+WHERE ws_st.vsacode IN (6530, 6533, 8493, 6529, 6526, 7959);
