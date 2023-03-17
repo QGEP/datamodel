@@ -95,11 +95,12 @@ jobs:
           PGPASSWORD: postgres
           PGUSER: postgres
 
-      - uses: AButler/upload-release-assets@v2.0
+      - uses: svenstaro/upload-release-action@v2
         if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
         with:
-          files: 'artifacts/*'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          file: artifacts/*
+          file_glob: true
+          overwrite: true
 
       - name: "failure logs"
         if: failure()
