@@ -22,6 +22,7 @@ jobs:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
+          # WARNING: if changing this, make sure tu update `pgis_stable` below 
           - 9.6-3.2
           - 10-3.2
           - 11-3.2
@@ -29,8 +30,8 @@ jobs:
       fail-fast: false
 
     env:
-      # which pgis version to use for :tag images (must be in the matrix above)
-      pgis_stable: "11-2.5"
+      # which pgis version to use for :tag images and to generate the dumps attached to the release (must be in the matrix above)
+      pgis_stable: "11-3.2"
 
     steps:
       - uses: actions/checkout@v2
@@ -94,11 +95,12 @@ jobs:
           PGPASSWORD: postgres
           PGUSER: postgres
 
-      - uses: AButler/upload-release-assets@v2.0
+      - uses: svenstaro/upload-release-action@v2
         if: github.event_name == 'release' && matrix.pgis == env.pgis_stable
         with:
-          files: 'artifacts/*'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          file: artifacts/*
+          file_glob: true
+          overwrite: true
 
       - name: "failure logs"
         if: failure()
