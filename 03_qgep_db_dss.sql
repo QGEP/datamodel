@@ -3538,8 +3538,8 @@ ALTER TABLE qgep_vl.water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catch
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_aquifier varchar (16);
 ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep_od.aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep_vl.river_bank_control_grade_of_river () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bank_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (341,341,'none','keine','nul', 'nessuno', 'inexistent', '', '', '', '', '', 'true');
@@ -3646,8 +3646,8 @@ ALTER TABLE qgep_vl.sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_wa
  ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT fkey_vl_sector_water_body_kind FOREIGN KEY (kind)
  REFERENCES qgep_vl.sector_water_body_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep_od.sector_water_body ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT rel_sector_water_body_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+ALTER TABLE qgep_od.sector_water_body ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT rel_sector_water_body_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep_od.cooperative ADD CONSTRAINT oorel_od_cooperative_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.canton ADD CONSTRAINT oorel_od_canton_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.waste_water_association ADD CONSTRAINT oorel_od_waste_water_association_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -4202,8 +4202,8 @@ ALTER TABLE qgep_vl.rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ram
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.fish_pass ADD COLUMN fk_water_control_structure varchar (16);
 ALTER TABLE qgep_od.fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep_od.water_control_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep_od.bathing_area ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.bathing_area ADD CONSTRAINT rel_bathing_area_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.bathing_area ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.bathing_area ADD CONSTRAINT rel_bathing_area_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep_od.wastewater_networkelement ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.wastewater_networkelement ADD CONSTRAINT rel_wastewater_networkelement_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep_vl.reach_point_elevation_accuracy () INHERITS (qgep_sys.value_list_base);
