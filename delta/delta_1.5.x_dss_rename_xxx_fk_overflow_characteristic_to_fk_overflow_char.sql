@@ -1,9 +1,4 @@
--- drop connected views
-DROP VIEW IF EXISTS qgep_od.vw_leapingweir;
-DROP VIEW IF EXISTS qgep_od.vw_prank_weir;
-DROP VIEW IF EXISTS qgep_od.vw_pump;
-DROP VIEW IF EXISTS qgep_od.vw_qgep_overflow;
-
+-- drop connected views not needed as already listed in https://github.com/QGEP/datamodel/blob/master/view/drop_views.sql
 
 -- class overflow
 --1. add correct fk_overflow_char
