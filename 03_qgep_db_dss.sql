@@ -1055,7 +1055,7 @@ ALTER TABLE qgep_od.maintenance_event ADD COLUMN data_details  varchar(50) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.data_details IS 'yyy_Ort, wo sich weitere Detailinformationen zum Ereignis finden (z.B. Nr. eines Videobandes) / Ort, wo sich weitere Detailinformationen zum Ereignis finden (z.B. Nr. eines Videobandes) / Lieu où se trouvent les données détaillées (par ex. n° d''une bande vidéo)';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN duration  smallint ;
 COMMENT ON COLUMN qgep_od.maintenance_event.duration IS 'Duration of event in days / Dauer des Ereignisses in Tagen / Durée de l''événement en jours';
-ALTER TABLE qgep_od.maintenance_event ADD COLUMN identifier  varchar(41) ;
+ALTER TABLE qgep_od.maintenance_event ADD COLUMN identifier  varchar(20) ;
 COMMENT ON COLUMN qgep_od.maintenance_event.identifier IS '';
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN kind  integer ;
 COMMENT ON COLUMN qgep_od.maintenance_event.kind IS 'Type of event / Art des Ereignisses / Genre d''événement';
