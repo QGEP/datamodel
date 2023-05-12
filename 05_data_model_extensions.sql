@@ -33,7 +33,7 @@ ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _bottom_label text;
 COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'stores the bottom altitude to be used for labelling, not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
 ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._label IS 'not part of the VSA-DSS data model
+COMMENT ON COLUMN qgep_od.reach_point._label IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
 
 -- this column is an extension to the VSA data model and puts the _function_hierarchic in order
