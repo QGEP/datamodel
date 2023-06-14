@@ -135,7 +135,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         reach_a_id = self.insert('vw_qgep_reach', row_reach_a)
         
         expected.update({
-            '_input_label': '\nI1=95.00',
+            '_input_label': '\nI=95.00',
         })
         check_values(expected)
 
@@ -149,7 +149,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         reach_b_id = self.insert('vw_qgep_reach', row_reach_b)
         
         expected.update({
-            '_output_label': '\nO1=92.00',
+            '_output_label': '\nO=92.00',
         })
         check_values(expected)
 
@@ -175,7 +175,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         self.update('vw_qgep_reach', row_reach_a, reach_a_id)
         
         expected.update({
-            '_input_label': '\nI1=94.00',
+            '_input_label': '\nI=94.00',
         })
         check_values(expected)
 

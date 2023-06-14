@@ -1,3 +1,2 @@
 
-CREATE INDEX in_qgep_od_vw_network_segment_progression_geometry ON qgep_od.vw_network_segment USING gist (progression_geometry);
-CREATE INDEX in_qgep_od_vw_network_node_situation_geometry ON qgep_od.vw_network_node USING gist (situation_geometry);
+SELECT 1;

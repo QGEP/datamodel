@@ -30,28 +30,28 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_conduits", "qgep_swmm", 5095)
 
     def test_count_vw_coordinates(self):
-        self.assert_count("vw_coordinates", "qgep_swmm", 6686)
+        self.assert_count("vw_coordinates", "qgep_swmm", 8044)
 
     def test_count_vw_coverages(self):
         self.assert_count("vw_coverages", "qgep_swmm", 0)
 
     def test_count_vw_dividers(self):
-        self.assert_count("vw_dividers", "qgep_swmm", 41)
+        self.assert_count("vw_dividers", "qgep_swmm", 45)
 
     def test_count_vw_dwf(self):
-        self.assert_count("vw_dwf", "qgep_swmm", 1352)
+        self.assert_count("vw_dwf", "qgep_swmm", 2035)
 
     def test_count_vw_infiltration(self):
         self.assert_count("vw_infiltration", "qgep_swmm", 1352)
 
     def test_count_vw_junctions(self):
-        self.assert_count("vw_junctions", "qgep_swmm", 4575)
+        self.assert_count("vw_junctions", "qgep_swmm", 5864)
 
     def test_count_vw_landuses(self):
         self.assert_count("vw_landuses", "qgep_swmm", 6)
 
     def test_count_vw_losses(self):
-        self.assert_count("vw_losses", "qgep_swmm", 1053)
+        self.assert_count("vw_losses", "qgep_swmm", 5095)
 
     def test_count_vw_outfalls(self):
         self.assert_count("vw_outfalls", "qgep_swmm", 54)
@@ -66,7 +66,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_raingages", "qgep_swmm", 2035)
 
     def test_count_vw_storages(self):
-        self.assert_count("vw_storages", "qgep_swmm", 23)
+        self.assert_count("vw_storages", "qgep_swmm", 46)
 
     def test_count_vw_subareas(self):
         self.assert_count("vw_subareas", "qgep_swmm", 2035)
@@ -75,7 +75,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_subcatchments", "qgep_swmm", 2035)
 
     def test_count_vw_tags(self):
-        self.assert_count("vw_tags", "qgep_swmm", 11782)
+        self.assert_count("vw_tags", "qgep_swmm", 13094)
 
     def test_count_vw_vertices(self):
         self.assert_count("vw_vertices", "qgep_swmm", 2854)

@@ -59,28 +59,34 @@ IF _all THEN
   PERFORM qgep_sys.drop_symbology_triggers();
 END IF;
 
+
 UPDATE qgep_od.wastewater_node n
 SET
   _function_hierarchic = function_hierarchic,
-  _usage_current = usage_current
+  _usage_current = usage_current,
+  _status = status
 FROM(
   SELECT DISTINCT ON (ne.obj_id) ne.obj_id AS ne_obj_id,
       COALESCE(first_value(CH_from.function_hierarchic) OVER w, first_value(CH_to.function_hierarchic) OVER w) AS function_hierarchic,
       COALESCE(first_value(CH_from.usage_current) OVER w, first_value(CH_to.usage_current) OVER w) AS usage_current,
+      COALESCE(first_value(ws_from.status) OVER w, first_value(ws_to.status) OVER w) AS status,
       rank() OVER w AS hierarchy_rank
     FROM
       qgep_od.wastewater_networkelement ne
       LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
-      LEFT JOIN qgep_od.reach                       re_from           ON re_from.fk_reach_point_from = rp.obj_id
-      LEFT JOIN qgep_od.wastewater_networkelement   ne_from           ON ne_from.obj_id = re_from.obj_id
-      LEFT JOIN qgep_od.channel                     CH_from           ON CH_from.obj_id = ne_from.fk_wastewater_structure
-      LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_from  ON CH_from.function_hierarchic = vl_fct_hier_from.code
-      LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_from  ON CH_from.usage_current = vl_usg_curr_from.code
-      LEFT JOIN qgep_od.reach                       re_to          ON re_to.fk_reach_point_to = rp.obj_id
-      LEFT JOIN qgep_od.wastewater_networkelement   ne_to          ON ne_to.obj_id = re_to.obj_id
-      LEFT JOIN qgep_od.channel                     CH_to          ON CH_to.obj_id = ne_to.fk_wastewater_structure
-      LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_to ON CH_to.function_hierarchic = vl_fct_hier_to.code
-      LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_to ON CH_to.usage_current = vl_usg_curr_to.code
+      LEFT JOIN qgep_od.reach                       re_from           	ON re_from.fk_reach_point_from = rp.obj_id
+      LEFT JOIN qgep_od.wastewater_networkelement   ne_from           	ON ne_from.obj_id = re_from.obj_id
+      LEFT JOIN qgep_od.channel                     CH_from           	ON CH_from.obj_id = ne_from.fk_wastewater_structure
+      LEFT JOIN qgep_od.wastewater_structure        ws_from           	ON ws_from.obj_id = ne_from.fk_wastewater_structure
+      LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_from	ON CH_from.function_hierarchic = vl_fct_hier_from.code
+      LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_from	ON CH_from.usage_current = vl_usg_curr_from.code
+
+      LEFT JOIN qgep_od.reach                       re_to          	ON re_to.fk_reach_point_to = rp.obj_id
+      LEFT JOIN qgep_od.wastewater_networkelement   ne_to          	ON ne_to.obj_id = re_to.obj_id
+      LEFT JOIN qgep_od.channel                     CH_to          	ON CH_to.obj_id = ne_to.fk_wastewater_structure
+      LEFT JOIN qgep_od.wastewater_structure        ws_to           	ON ws_to.obj_id = ne_to.fk_wastewater_structure
+      LEFT JOIN qgep_vl.channel_function_hierarchic vl_fct_hier_to 	ON CH_to.function_hierarchic = vl_fct_hier_to.code
+      LEFT JOIN qgep_vl.channel_usage_current       vl_usg_curr_to 	ON CH_to.usage_current = vl_usg_curr_to.code
     WHERE _all OR ne.obj_id = _obj_id
       WINDOW w AS ( PARTITION BY ne.obj_id ORDER BY vl_fct_hier_from.order_fct_hierarchic ASC NULLS LAST, vl_fct_hier_to.order_fct_hierarchic ASC NULLS LAST,
                                 vl_usg_curr_from.order_usage_current ASC NULLS LAST, vl_usg_curr_to.order_usage_current ASC NULLS LAST ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
@@ -300,6 +306,8 @@ VOLATILE;
 --  * obj_id of wastewater structure or NULL to update all
 --------------------------------------------------------
 
+------ 14.9.2022 index labels by wastewater structure for VSA-DSS compliance /cymed
+------ 14.9.2022 use idx only when more than one entry /cymed
 ------ 15.8.2018 uk adapted label display only for primary wastwater system
 ------ WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
 
@@ -316,26 +324,28 @@ SET _label = label,
     _bottom_label = bottom_label,
     _input_label = input_label,
     _output_label = output_label
-FROM (
-  SELECT  ws_obj_id,
+    FROM(
+SELECT   ws_obj_id,
           COALESCE(ws_identifier, '') as label,
-          array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY co_level DESC), '', '') as cover_label,
+          CASE WHEN count(co_level)<2 THEN array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY idx DESC), '', '') ELSE
+		  array_to_string(array_agg(E'\nC' || idx || '=' || co_level ORDER BY idx ASC), '', '') END as cover_label,
           array_to_string(array_agg(E'\nB' || '=' || bottom_level), '', '') as bottom_label,
-          array_to_string(array_agg(E'\nI' || idx || '=' || rpi_level ORDER BY idx), '', '') as input_label,
-          array_to_string(array_agg(E'\nO' || idx || '=' || rpo_level ORDER BY idx), '', '') as output_label
+          CASE WHEN count(rpi_level)<2 THEN array_to_string(array_agg(E'\nI' || '=' || rpi_level ORDER BY idx DESC), '', '') ELSE
+		  array_to_string(array_agg(E'\nI' || idx || '=' || rpi_level ORDER BY idx ASC), '', '') END as input_label,
+          CASE WHEN count(rpo_level)<2 THEN array_to_string(array_agg(E'\nO' || '=' || rpo_level ORDER BY idx DESC), '', '') ELSE
+		  array_to_string(array_agg(E'\nO' || idx || '=' || rpo_level ORDER BY idx ASC), '', '') END as output_label
   FROM (
-    SELECT ws.obj_id AS ws_obj_id, ws.identifier AS ws_identifier, parts.co_level AS co_level, parts.rpi_level AS rpi_level, parts.rpo_level AS rpo_level, parts.obj_id, idx, bottom_level AS bottom_level
+		  SELECT ws.obj_id AS ws_obj_id, ws.identifier AS ws_identifier, parts.co_level AS co_level, parts.rpi_level AS rpi_level, parts.rpo_level AS rpo_level, parts.obj_id, idx, bottom_level AS bottom_level
     FROM qgep_od.wastewater_structure WS
 
-    LEFT JOIN (
-      -- Cover
+    LEFT JOIN (      
       SELECT coalesce(round(CO.level, 2)::text, '?') AS co_level, NULL::text AS rpi_level, NULL::text AS rpo_level, SP.fk_wastewater_structure ws, SP.obj_id, row_number() OVER(PARTITION BY SP.fk_wastewater_structure) AS idx, NULL::text AS bottom_level
       FROM qgep_od.structure_part SP
       RIGHT JOIN qgep_od.cover CO ON CO.obj_id = SP.obj_id
       WHERE _all OR SP.fk_wastewater_structure = _obj_id
       -- Inputs
       UNION
-      SELECT NULL AS co_level, coalesce(round(RP.level, 2)::text, '?') AS rpi_level, NULL::text AS rpo_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_PointN(RE_to.progression_geometry,-2))/pi()*180 ASC), NULL::text AS bottom_level
+      SELECT NULL AS co_level, coalesce(round(RP.level, 2)::text, '?') AS rpi_level, NULL::text AS rpo_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY NE.fk_wastewater_structure ORDER BY ST_Azimuth(RP.situation_geometry,ST_PointN(RE_to.progression_geometry,-2))/pi()*180 ASC), NULL::text AS bottom_level
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       INNER JOIN qgep_od.reach RE_to ON RP.obj_id = RE_to.fk_reach_point_to
@@ -344,10 +354,19 @@ FROM (
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) --and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
       -- Outputs
       UNION
-      SELECT NULL AS co_level, NULL::text AS rpi_level, coalesce(round(RP.level, 2)::text, '?') AS rpo_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_PointN(RE_from.progression_geometry,2))/pi()*180 ASC), NULL::text AS bottom_level
+      SELECT NULL AS co_level, NULL::text AS rpi_level, 
+		coalesce(round(RP.level, 2)::text, '?') AS rpo_level, 
+		NE.fk_wastewater_structure ws, RP.obj_id, 
+		row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
+						  ORDER BY array_position(ARRAY[4522,4526,4524,4516,4514,4518,520,4571,5322], ch.usage_current),
+						  ST_Azimuth(RP.situation_geometry,ST_PointN(RE_from.progression_geometry,2))/pi()*180 ASC), 
+		NULL::text AS bottom_level
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       INNER JOIN qgep_od.reach RE_from ON RP.obj_id = RE_from.fk_reach_point_from
+	  LEFT JOIN qgep_od.wastewater_networkelement NE_RE ON NE_RE.obj_id::text = RE_from.obj_id::text
+	  LEFT JOIN qgep_od.wastewater_structure ws ON NE_RE.fk_wastewater_structure::text = ws.obj_id::text
+      LEFT JOIN qgep_od.channel ch ON ch.obj_id::text = ws.obj_id::text
       WHERE CASE WHEN _obj_id IS NULL THEN TRUE ELSE NE.fk_wastewater_structure = _obj_id END
       -- Bottom
       UNION
@@ -355,9 +374,9 @@ FROM (
       FROM qgep_od.wastewater_structure ws1
       LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws1.fk_main_wastewater_node
       WHERE _all OR ws1.obj_id = _obj_id
-    ) AS parts ON ws = ws.obj_id
+	)AS parts ON ws = ws.obj_id
     WHERE _all OR ws.obj_id = _obj_id
-  ) parts
+	  ) parts
   GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
 ) labeled_ws
 WHERE ws.obj_id = labeled_ws.ws_obj_id;
