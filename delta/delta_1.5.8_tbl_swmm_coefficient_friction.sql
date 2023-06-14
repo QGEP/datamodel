@@ -4,7 +4,7 @@ ALTER TABLE qgep_swmm.reach_coefficient_of_friction
     ADD CONSTRAINT pkey_qgep_vl_reach_coefficient_of_friction_id PRIMARY KEY (fk_material);
 
 INSERT INTO qgep_swmm.reach_coefficient_of_friction(fk_material) 
-    SELECT vsacode 
+    SELECT DISTINCT vsacode 
     FROM qgep_vl.reach_material;
 
 UPDATE qgep_swmm.reach_coefficient_of_friction 
