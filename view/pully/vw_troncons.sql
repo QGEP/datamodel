@@ -15,6 +15,7 @@ CREATE OR REPLACE VIEW qgep_sigip.vw_troncons AS
     ch.pipe_length AS longueur_mesuree,
     ROUND(ST_Length(re.progression_geometry)::numeric,2) AS longueur_calculee,
     status.value_fr AS statut,
+    structure_condition.value_fr AS etat,
     horizontal_positioning.value_fr AS precplan,
     owner.identifier AS proprietaire,
     ws.year_of_construction AS annee_construction,
