@@ -16,12 +16,14 @@ CREATE OR REPLACE VIEW qgep_sigip.vw_ouvrages AS
     status.value_fr AS statut,
     positional_accuracy.value_fr AS precplan,
 	  main_co.level AS altitude_couvercle,
+    cover_fastening.value_fr AS fixation_couvercle,
     wn.bottom_level AS altitude_radier,
 	  owner.identifier AS proprietaire,
     ws._depth AS profondeur,
+    accessibility.value_fr AS accessibilite,
     ws.year_of_construction AS annee_construction,
-    usage.value_fr AS genre_utilisation,
-    fonction_hierarchique.value_fr AS fonction_hierarchique,
+    usage_current.value_fr AS genre_utilisation,
+    function_hierarchic.value_fr AS fonction_hierarchique,
     ws.pully_validation AS validation,
     ws.remark AS remarque,
     concat(ws._label, ws._cover_label, ws._bottom_label, ws._input_label, ws._output_label) AS label,
@@ -43,10 +45,12 @@ CREATE OR REPLACE VIEW qgep_sigip.vw_ouvrages AS
     LEFT JOIN qgep_vl.special_structure_function special_structure_function ON special_structure_function.code = ss.function
     LEFT JOIN qgep_vl.manhole_material material ON material.code = ma.material
     LEFT JOIN qgep_vl.wastewater_structure_status status ON status.code = ws.status
+    LEFT JOIN qgep_vl.wastewater_structure_accessibility accessibility ON accessibility.code = ws.accessibility
     LEFT JOIN qgep_vl.cover_positional_accuracy positional_accuracy ON positional_accuracy.code = main_co.positional_accuracy
+    LEFT JOIN qgep_vl.cover_fastening cover_fastening ON cover_fastening.code = main_co.fastening
     LEFT JOIN qgep_od.organisation owner ON owner.obj_id::text = ws.fk_owner::text
-    LEFT JOIN qgep_vl.channel_usage_current usage ON usage.code = ws._usage_current
-    LEFT JOIN qgep_vl.channel_function_hierarchic fonction_hierarchique ON fonction_hierarchique.code = ws._function_hierarchic
+    LEFT JOIN qgep_vl.channel_usage_current usage_current ON usage_current.code = ws._usage_current
+    LEFT JOIN qgep_vl.channel_function_hierarchic function_hierarchic ON function_hierarchic.code = ws._function_hierarchic
 
     /*
     LEFT JOIN qgep_vl.cover_cover_shape cover_shape ON cover_shape.code = ws.co_shape
