@@ -73,8 +73,8 @@ WITH (
 CREATE SEQUENCE qgep_od.seq_txt_symbol_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep_od.txt_symbol ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','txt_symbol');
 COMMENT ON COLUMN qgep_od.txt_symbol.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep_od.txt_symbol ADD COLUMN class  varchar(50) ;
-COMMENT ON COLUMN qgep_od.txt_symbol.class IS 'Name of class that textclass is related to / Name der Klasse zu der die Textklasse gehört / xxx_Name der Klasse zu der die Textklasse gehört';
+ALTER TABLE qgep_od.txt_symbol ADD COLUMN classname  varchar(50) ;
+COMMENT ON COLUMN qgep_od.txt_symbol.classname IS 'Name of class that textclass is related to / Name der Klasse zu der die Textklasse gehört / xxx_Name der Klasse zu der die Textklasse gehört';
 ALTER TABLE qgep_od.txt_symbol ADD COLUMN plantype  integer ;
 COMMENT ON COLUMN qgep_od.txt_symbol.plantype IS '';
 ALTER TABLE qgep_od.txt_symbol ADD COLUMN symbol_scaling_heigth  decimal(2,1) ;
@@ -113,8 +113,8 @@ WITH (
 CREATE SEQUENCE qgep_od.seq_txt_text_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 START 0;
  ALTER TABLE qgep_od.txt_text ALTER COLUMN obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','txt_text');
 COMMENT ON COLUMN qgep_od.txt_text.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
-ALTER TABLE qgep_od.txt_text ADD COLUMN class  varchar(50) ;
-COMMENT ON COLUMN qgep_od.txt_text.class IS 'Name of class that textclass is related to / Name der Klasse zu der die Textklasse gehört / xxx_Name der Klasse zu der die Textklasse gehört';
+ALTER TABLE qgep_od.txt_text ADD COLUMN classname  varchar(50) ;
+COMMENT ON COLUMN qgep_od.txt_text.classname IS 'Name of class that textclass is related to / Name der Klasse zu der die Textklasse gehört / xxx_Name der Klasse zu der die Textklasse gehört';
 ALTER TABLE qgep_od.txt_text ADD COLUMN plantype  integer ;
 COMMENT ON COLUMN qgep_od.txt_text.plantype IS '';
 ALTER TABLE qgep_od.txt_text ADD COLUMN remark  varchar(80) ;
@@ -155,8 +155,8 @@ CREATE SEQUENCE qgep_od.seq_mutation_oid INCREMENT 1 MINVALUE 0 MAXVALUE 999999 
 COMMENT ON COLUMN qgep_od.mutation.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 ALTER TABLE qgep_od.mutation ADD COLUMN attribute  varchar(50) ;
 COMMENT ON COLUMN qgep_od.mutation.attribute IS 'Attribute name of chosen object / Attributname des gewählten Objektes / Nom de l''attribut de l''objet à sélectionner';
-ALTER TABLE qgep_od.mutation ADD COLUMN class  varchar(50) ;
-COMMENT ON COLUMN qgep_od.mutation.class IS 'Class name of chosen object / Klassenname des gewählten Objektes / Nom de classe de l''objet à sélectionner';
+ALTER TABLE qgep_od.mutation ADD COLUMN classname  varchar(50) ;
+COMMENT ON COLUMN qgep_od.mutation.classname IS 'Class name of chosen object / Klassenname des gewählten Objektes / Nom de classe de l''objet à sélectionner';
 ALTER TABLE qgep_od.mutation ADD COLUMN date_mutation  timestamp without time zone ;
 COMMENT ON COLUMN qgep_od.mutation.date_mutation IS 'if changed: Date/Time of changement. If deleted date/time of deleting / Bei geaendert Datum/Zeit der Änderung. Bei gelöscht Datum/Zeit der Löschung / changée: Date/Temps du changement. effacée: Date/Temps de la suppression';
 ALTER TABLE qgep_od.mutation ADD COLUMN date_time  timestamp without time zone ;
@@ -1914,6 +1914,7 @@ ALTER TABLE qgep_od.reach ADD COLUMN slope_building_plan  smallint ;
 COMMENT ON COLUMN qgep_od.reach.slope_building_plan IS 'yyy_Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Auf dem alten Plan eingezeichnetes Plangefälle [%o]. Nicht kontrolliert im Feld. Kann nicht für die hydraulische Berechnungen übernommen werden. Für Liegenschaftsentwässerung und Meliorationsleitungen. Darstellung als z.B. 3.5%oP auf Plänen. / Pente indiquée sur d''anciens plans non contrôlée [%o]. Ne peut pas être reprise pour des calculs hydrauliques. Indication pour des canalisations de biens-fonds ou d''amélioration foncière. Représentation sur de plan: 3.5‰ p';
 ALTER TABLE qgep_od.reach ADD COLUMN wall_roughness  decimal(5,2) ;
 COMMENT ON COLUMN qgep_od.reach.wall_roughness IS 'yyy Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Hydraulische Kenngrösse zur Beschreibung der Beschaffenheit der Kanalwandung. Beiwert für die Formeln nach Prandtl-Colebrook (ks oder kb) / Coefficient de rugosité d''après Prandtl Colebrook (ks ou kb)';
+
 -------
 CREATE TRIGGER
 update_last_modified_reach
@@ -4849,7 +4850,7 @@ ALTER TABLE qgep_vl.prank_weir_weir_kind ADD CONSTRAINT pkey_qgep_vl_prank_weir_
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.pump ADD CONSTRAINT oorel_od_pump_overflow FOREIGN KEY (obj_id) REFERENCES qgep_od.overflow(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE qgep_vl.pump_construction_type () INHERITS (qgep_sys.value_list_base);
-ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_construction_type_code PRIMARY KEY (code);
+ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_contruction_type_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2983,2983,'other','andere','autres', 'altri', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2662,2662,'compressed_air_system','Druckluftanlage','systeme_a_air_comprime', 'impianto_aria_compressa', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (314,314,'piston_pump','Kolbenpumpe','pompe_a_piston', 'pompa_pistoni', '', '', '', '', '', '', 'true');
