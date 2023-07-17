@@ -25,7 +25,8 @@ jobs:
           # WARNING: if changing this, make sure tu update `pgis_stable` below 
           - 13-3.2
           - 14-3.2
-          - 15-3.2
+          #- 15-3.3 # Postgis 3.3 requires QGEP datamodel adaptations
+          # See https://github.com/QGEP/QGEP/issues/825
       fail-fast: false
 
     env:
