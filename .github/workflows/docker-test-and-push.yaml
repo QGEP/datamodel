@@ -27,10 +27,12 @@ jobs:
           - 14-3.2
           - 14-3.3
           - 15-3.4
+          #- 15-3.3 # Postgis 3.3 requires QGEP datamodel adaptations
+          # See https://github.com/QGEP/QGEP/issues/825
       fail-fast: false
 
     env:
-      # which pgis version to use for :tag images (must be in the matrix above)
+      # which pgis version to use for :tag images and to generate the dumps attached to the release (must be in the matrix above)
       pgis_stable: "14-3.2"
 
     steps:
