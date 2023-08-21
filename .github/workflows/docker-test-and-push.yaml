@@ -25,7 +25,8 @@ jobs:
           # WARNING: if changing this, make sure tu update `pgis_stable` below 
           - 13-3.2
           - 14-3.2
-          - 15-3.3
+          - 14-3.3
+          - 15-3.4
       fail-fast: false
 
     env:
