@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
 	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_ch_fh ON vl_ch_fh.code = ch.function_hierarchic
 	  LEFT JOIN qgep_vl.wastewater_structure_status vl_ws_st ON vl_ws_st.code = ws.status
-	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%'),
+	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%%'), -- double percent for sqlalchemy, otherwise we get the error 'dict is not a sequence'
   outp as( SELECT
     ne.fk_wastewater_structure
     , rp.obj_id
@@ -44,7 +44,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
 	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_ch_fh ON vl_ch_fh.code = ch.function_hierarchic
 	  LEFT JOIN qgep_vl.wastewater_structure_status vl_ws_st ON vl_ws_st.code = ws.status
-	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%')
+	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%%') -- double percent for sqlalchemy, otherwise we get the error 'dict is not a sequence'
   SELECT 'I'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
   , obj_id
   FROM inp
