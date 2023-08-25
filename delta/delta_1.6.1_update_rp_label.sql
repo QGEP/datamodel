@@ -1,3 +1,8 @@
+
+ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
+COMMENT ON COLUMN qgep_od.reach_point._label IS 'stores the input/output prefix and number to be used for labelling, not part of the VSA-DSS data model
+added solely for QGEP';
+
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
   $BODY$
