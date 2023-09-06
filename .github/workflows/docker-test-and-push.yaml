@@ -16,25 +16,25 @@ on:
 jobs:
   docker-tests:
     name: Docker
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
           # WARNING: if changing this, make sure tu update `pgis_stable` below 
-          - 9.6-3.2
-          - 10-3.2
-          - 11-3.2
-          - 12-3.2
+          - 13-3.2
+          - 14-3.2
+          #- 15-3.3 # Postgis 3.3 requires QGEP datamodel adaptations
+          # See https://github.com/QGEP/QGEP/issues/825
       fail-fast: false
 
     env:
       # which pgis version to use for :tag images and to generate the dumps attached to the release (must be in the matrix above)
-      pgis_stable: "11-3.2"
+      pgis_stable: "14-3.2"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "assert version is up to date"
         run: |
