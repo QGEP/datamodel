@@ -113,9 +113,6 @@ BEGIN
 END; 
 $BODY$;
 
-ALTER FUNCTION qgep_od.on_reach_point_update()
-    OWNER TO postgres;
-
 
 CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
