@@ -265,3 +265,17 @@ REFRESH MATERIALIZED VIEW qgep_od.vw_network_segment with data;
 -- Add Grants for construction sequences
 GRANT ALL ON SEQUENCE qgep_dr.constructionpoint_id_seq TO qgep_user;
 GRANT ALL ON SEQUENCE qgep_dr.constructionline_id_seq TO qgep_user;
+
+/* add expected usage for unconnected nodes */
+
+ALTER TABLE qgep_od.wastewater_node
+ADD COLUMN pully_fk_usage_expected integer;
+
+CREATE TABLE qgep_vl.pully_node_usage_expected () INHERITS (qgep_sys.value_list_base);
+ALTER TABLE qgep_vl.pully_node_usage_expected ADD CONSTRAINT pkey_qgep_vl_pully_node_usage_expected_code PRIMARY KEY (code);
+INSERT INTO qgep_vl.pully_node_usage_expected (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (14514,4514,'clean_wastewater','Reinabwasser','eaux_claires', 'acque_chiare', 'ape_conventional_curate', '', 'KW', 'EUR', '', '', 'true');
+INSERT INTO qgep_vl.pully_node_usage_expected (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (14526,4526,'wastewater','Schmutzabwasser','eaux_usees', 'acque_luride', 'ape_uzate', '', 'SW', 'EU', '', '', 'true');
+INSERT INTO qgep_vl.pully_node_usage_expected (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (14571,4571,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
+ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT fkey_vl_pully_node_usage_expected FOREIGN KEY (pully_fk_usage_expected)
+  REFERENCES qgep_vl.pully_node_usage_expected (code) MATCH SIMPLE 
+  ON UPDATE RESTRICT ON DELETE RESTRICT;
