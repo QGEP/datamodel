@@ -45,18 +45,6 @@ has to be updated by triggers';
 -- Reach point label
 ------------
 
---------------------------------------------------------
--- UPDATE reach point structure label
--- Argument:
---  * obj_id of wastewater structure or NULL to update all
---  _all: optional boolean to update all reach points
--- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
--- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
---------------------------------------------------------
-
------- 3.10.2023 prevent a re-throw of on_reach_point_update /cymed
------- 8.9.2023 first draft /cymed
-
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, 
 	_all boolean default false,
 	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
@@ -78,32 +66,16 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
     PERFORM qgep_sys.drop_symbology_triggers();
   END IF;
   
- --Update reach_point label
+ --Update reach_point label for those who should be labeled
   UPDATE qgep_od.reach_point rp
   SET _label = rp_label.new_label
   FROM (
-  with inp as( SELECT
+  with  outp as( SELECT
     ne.fk_wastewater_structure
     , rp.obj_id
+	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
-					ORDER BY ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,-2))/pi()*180 ASC) 
-					as idx
-    , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
-      FROM qgep_od.reach_point rp
-      LEFT JOIN qgep_od.wastewater_networkelement ne ON rp.fk_wastewater_networkelement = ne.obj_id
-      INNER JOIN qgep_od.reach re ON rp.obj_id = re.fk_reach_point_to
-      LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
-      LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
-	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
-	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
-			AND ws.status = ANY(_labeled_ws_status) 
-		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
-			  OR ne.fk_wastewater_structure= _obj_id)), 
-  outp as( SELECT
-    ne.fk_wastewater_structure
-    , rp.obj_id
-    , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
-					ORDER BY ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,-2))/pi()*180 ASC) 
+					ORDER BY vl_fh.order_fct_hierarchic,ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2))/pi()*180 ASC) 
 					as idx
     , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
       FROM qgep_od.reach_point rp
@@ -112,10 +84,36 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
       LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
       LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
+	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_fh ON vl_fh.code = ch.function_hierarchic
 	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
-			  OR ne.fk_wastewater_structure= _obj_id)) 
+			  OR ne.fk_wastewater_structure= _obj_id)) ,
+	  inp as( SELECT
+    ne.fk_wastewater_structure
+    , rp.obj_id
+    , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
+					ORDER BY (mod((((ST_Azimuth(rp.situation_geometry
+												,ST_PointN(re.progression_geometry,-2)
+											   )
+									 - coalesce(o.azimuth,0))/pi()*180)+360)::numeric
+								  ,360::numeric)
+							 ) ASC
+					   ) 
+					as idx
+    , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
+      FROM qgep_od.reach_point rp
+      LEFT JOIN qgep_od.wastewater_networkelement ne ON rp.fk_wastewater_networkelement = ne.obj_id
+      INNER JOIN qgep_od.reach re ON rp.obj_id = re.fk_reach_point_to
+      LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
+      LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
+	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
+	  LEFT JOIN outp o on o.fk_wastewater_structure=ne.fk_wastewater_structure AND o.idx=1
+	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
+			AND ws.status = ANY(_labeled_ws_status) 
+		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
+			  OR ne.fk_wastewater_structure= _obj_id))
+ 
   SELECT 'I'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
   , obj_id
   FROM inp
@@ -125,7 +123,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
   , obj_id
   FROM outp) rp_label
   WHERE rp_label.obj_id=rp.obj_id;
-
+  
   -- Set reach_point _label to NULL for those who should not be labeled
   UPDATE qgep_od.reach_point rp
   SET _label = NULL
@@ -145,7 +143,6 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
 			  OR ne.fk_wastewater_structure= _obj_id)) null_label
   WHERE null_label.obj_id=rp.obj_id;
 
-
   -- See above
   IF _all THEN
     RAISE INFO 'Reenabling symbology triggers';
@@ -155,6 +152,7 @@ END;
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
+
 
 --------------------------------------------------
 -- ON REACH POINT CHANGE
