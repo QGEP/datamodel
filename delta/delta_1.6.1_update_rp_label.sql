@@ -3,7 +3,10 @@ ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
 COMMENT ON COLUMN qgep_od.reach_point._label IS 'stores the input/output prefix and number to be used for labelling, not part of the VSA-DSS data model
 added solely for TEKSI Wastewater';
 
-CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all boolean default false)
+CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text
+	, _all boolean default false,
+	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
+	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5089,5070,5071,5072,5074}')
   RETURNS VOID AS
 AS $BODY$
   DECLARE
