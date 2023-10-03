@@ -1,7 +1,7 @@
 
 ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
 COMMENT ON COLUMN qgep_od.reach_point._label IS 'stores the input/output prefix and number to be used for labelling, not part of the VSA-DSS data model
-added solely for QGEP';
+added solely for TEKSI Wastewater';
 
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
@@ -12,7 +12,12 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
   -- Updates the reach_point labels of the wastewater_structure 
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
-  
+
+-- to prevent a re-throw of on_reach_point_update
+  IF _all THEN
+    RAISE INFO 'Temporarily disabling symbology triggers';
+    PERFORM qgep_sys.drop_symbology_triggers();
+  END IF;
   
  --Update reach_point label
   UPDATE qgep_od.reach_point rp
@@ -60,8 +65,14 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
   FROM outp
   WHERE (_all AND outp.fk_wastewater_structure IS NOT NULL) OR outp.fk_wastewater_structure= _obj_id) rp_label
   WHERE rp_label.obj_id=rp.obj_id;
-END
 
+
+  -- See above
+  IF _all THEN
+    RAISE INFO 'Reenabling symbology triggers';
+    PERFORM qgep_sys.create_symbology_triggers();
+  END IF;
+END
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
