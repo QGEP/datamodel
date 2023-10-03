@@ -220,7 +220,7 @@ SELECT   ws_obj_id,
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='O'
 	) AS parts ON parts.ws = ws.obj_id
-    WHERE TRUE OR ws.obj_id =_obj_id
+    WHERE _all OR ws.obj_id =_obj_id
 		  ) parts
 		  GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
 ) labeled_ws
