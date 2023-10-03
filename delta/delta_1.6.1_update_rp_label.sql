@@ -308,5 +308,44 @@ $BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
+--------------------------------------------------
+-- ON REACH CHANGE
+--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.on_reach_change()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  rp_obj_ids TEXT[];
+  _ws_obj_id TEXT;
+  rps RECORD;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      rp_obj_ids = ARRAY[OLD.fk_reach_point_from, OLD.fk_reach_point_to];
+    WHEN TG_OP = 'INSERT' THEN
+      rp_obj_ids = ARRAY[NEW.fk_reach_point_from, NEW.fk_reach_point_to];
+    WHEN TG_OP = 'DELETE' THEN
+      rp_obj_ids = ARRAY[OLD.fk_reach_point_from, OLD.fk_reach_point_to];
+  END CASE;
+
+  FOR _ws_obj_id IN
+    SELECT ws.obj_id
+      FROM qgep_od.wastewater_structure ws
+      LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+      WHERE rp.obj_id = ANY ( rp_obj_ids )
+  LOOP
+   
+    EXECUTE qgep_od.update_reach_point_label(_ws_obj_id); 
+    EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
+    EXECUTE qgep_od.update_depth(_ws_obj_id);
+  END LOOP;
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
+
+
 
 SELECT qgep_od.update_reach_point_label(NULL,true);
