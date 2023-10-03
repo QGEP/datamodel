@@ -435,7 +435,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
 	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
 	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5089,5070,5071,5072,5074}')
   RETURNS VOID AS
-AS $BODY$
+ $BODY$
   DECLARE
   myrec record;
   BEGIN
