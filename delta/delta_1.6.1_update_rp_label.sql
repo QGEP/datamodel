@@ -5,13 +5,15 @@ added solely for TEKSI Wastewater';
 
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all boolean default false)
   RETURNS VOID AS
-  $BODY$
+AS $BODY$
   DECLARE
   myrec record;
   BEGIN
   -- Updates the reach_point labels of the wastewater_structure 
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
+  -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.%
+  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.%
 
 -- to prevent a re-throw of on_reach_point_update
   IF _all THEN
@@ -36,9 +38,10 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
       LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
       LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
-	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_ch_fh ON vl_ch_fh.code = ch.function_hierarchic
-	  LEFT JOIN qgep_vl.wastewater_structure_status vl_ws_st ON vl_ws_st.code = ws.status
-	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%%'), -- double percent for sqlalchemy, otherwise we get the error 'dict is not a sequence'
+	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
+			AND ws.status = ANY(_labeled_ws_status) 
+		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
+			  OR ne.fk_wastewater_structure= _obj_id)), 
   outp as( SELECT
     ne.fk_wastewater_structure
     , rp.obj_id
@@ -52,20 +55,19 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
       LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
       LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
-	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_ch_fh ON vl_ch_fh.code = ch.function_hierarchic
-	  LEFT JOIN qgep_vl.wastewater_structure_status vl_ws_st ON vl_ws_st.code = ws.status
-	  WHERE left(vl_ch_fh.value_en,4)='pwwf' AND vl_ws_st.value_en ILIKE 'operational%%') -- double percent for sqlalchemy, otherwise we get the error 'dict is not a sequence'
+	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
+			AND ws.status = ANY(_labeled_ws_status) 
+		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
+			  OR ne.fk_wastewater_structure= _obj_id)) 
   SELECT 'I'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
   , obj_id
   FROM inp
-    WHERE (_all AND inp.fk_wastewater_structure IS NOT NULL) OR inp.fk_wastewater_structure= _obj_id
+ 
   UNION
   SELECT 'O'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
   , obj_id
-  FROM outp
-  WHERE (_all AND outp.fk_wastewater_structure IS NOT NULL) OR outp.fk_wastewater_structure= _obj_id) rp_label
+  FROM outp) rp_label
   WHERE rp_label.obj_id=rp.obj_id;
-
 
   -- See above
   IF _all THEN
@@ -73,7 +75,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
     PERFORM qgep_sys.create_symbology_triggers();
   END IF;
 END
-$BODY$
+$BODY$;
 LANGUAGE plpgsql
 VOLATILE;
 
@@ -113,7 +115,7 @@ BEGIN
       SELECT ws.obj_id INTO _ws_obj_id
       FROM qgep_od.wastewater_structure ws
       LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = ne_obj_id;
+      WHERE ne.obj_id = ne_obj_id;
       
       EXECUTE qgep_od.update_reach_point_label(_ws_obj_id);
       EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
