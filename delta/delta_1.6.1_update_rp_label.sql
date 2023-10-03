@@ -1,7 +1,33 @@
 
-ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
-COMMENT ON COLUMN qgep_od.reach_point._label IS 'stores the input/output prefix and number to be used for labelling, not part of the VSA-DSS data model
-added solely for TEKSI Wastewater';
+ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _usage_current integer;
+COMMENT ON COLUMN qgep_od.wastewater_structure._usage_current IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
+
+COMMENT ON COLUMN qgep_od.wastewater_structure._function_hierarchic IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
+
+COMMENT ON COLUMN qgep_od.manhole._orientation IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+
+COMMENT ON COLUMN qgep_od.wastewater_structure._label IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+;
+COMMENT ON COLUMN qgep_od.wastewater_structure._cover_label IS 'stores the cover altitude to be used for labelling, not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+
+COMMENT ON COLUMN qgep_od.wastewater_structure._input_label IS 'stores the list of input altitudes to be used for labelling, not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+
+COMMENT ON COLUMN qgep_od.wastewater_structure._output_label IS 'stores the list of output altitudes to be used for labelling, not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+
+COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'stores the bottom altitude to be used for labelling, not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
+
+COMMENT ON COLUMN qgep_od.reach_point._label IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater';
 
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text
 	, _all boolean default false,
