@@ -409,7 +409,7 @@ SELECT   ws_obj_id,
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='O'
 	) AS parts ON parts.ws = ws.obj_id
-    WHERE TRUE OR ws.obj_id =_obj_id
+    WHERE _all OR ws.obj_id =_obj_id
 		  ) parts
 		  GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
 ) labeled_ws
@@ -741,7 +741,7 @@ BEGIN
       SELECT ws.obj_id INTO _ws_obj_id
       FROM qgep_od.wastewater_structure ws
       LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = ne_obj_id;
+      WHERE ne.obj_id = ne_obj_id;
 
       EXECUTE qgep_od.update_reach_point_label(_ws_obj_id);
       EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
