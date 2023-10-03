@@ -1,6 +1,3 @@
-ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
-
-
 COMMENT ON COLUMN qgep_od.wastewater_structure._usage_current IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater
 has to be updated by triggers';
@@ -14,7 +11,7 @@ added solely for TEKSI wastewater';
 
 COMMENT ON COLUMN qgep_od.wastewater_structure._label IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
-;
+
 COMMENT ON COLUMN qgep_od.wastewater_structure._cover_label IS 'stores the cover altitude to be used for labelling, not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
 
@@ -26,12 +23,42 @@ added solely for TEKSI wastewater';
 
 COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'stores the bottom altitude to be used for labelling, not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
-
+ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
 COMMENT ON COLUMN qgep_od.reach_point._label IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
 
-CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text
-	, _all boolean default false,
+-- TABLE wastewater_node
+
+COMMENT ON COLUMN qgep_od.wastewater_node._usage_current IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
+
+COMMENT ON COLUMN qgep_od.wastewater_node._function_hierarchic IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
+
+COMMENT ON COLUMN qgep_od.wastewater_node._status IS 'not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
+
+-------------
+-- Reach point label
+------------
+
+--------------------------------------------------------
+-- UPDATE reach point structure label
+-- Argument:
+--  * obj_id of wastewater structure or NULL to update all
+--  _all: optional boolean to update all reach points
+-- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
+-- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
+--------------------------------------------------------
+
+------ 3.10.2023 prevent a re-throw of on_reach_point_update /cymed
+------ 8.9.2023 first draft /cymed
+
+CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, 
+	_all boolean default false,
 	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
 	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5089,5070,5071,5072,5074}')
   RETURNS VOID AS
@@ -42,8 +69,8 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text
   -- Updates the reach_point labels of the wastewater_structure 
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
-  -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.%%
-  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.%%
+  -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
+  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
 
 -- to prevent a re-throw of on_reach_point_update
   IF _all THEN
@@ -109,12 +136,15 @@ $BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
+--------------------------------------------------
+-- ON REACH POINT CHANGE
+--------------------------------------------------
+
+-- 8.9.2023 ADD "EXECUTE qgep_od.update_reach_point_label(_ws_obj_id);" / cymed
+
 CREATE OR REPLACE FUNCTION qgep_od.on_reach_point_update()
-    RETURNS trigger
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE NOT LEAKPROOF
-AS $BODY$
+  RETURNS trigger AS
+$BODY$
 DECLARE
   rp_obj_id text;
   _ws_obj_id text;
@@ -136,6 +166,7 @@ BEGIN
       ne_obj_ids := ARRAY[OLD.fk_wastewater_networkelement];
   END CASE;
 
+
   UPDATE qgep_od.reach
     SET progression_geometry = progression_geometry
     WHERE fk_reach_point_from = rp_obj_id OR fk_reach_point_to = rp_obj_id; --To retrigger the calculate_length trigger on reach update
@@ -145,16 +176,29 @@ BEGIN
       SELECT ws.obj_id INTO _ws_obj_id
       FROM qgep_od.wastewater_structure ws
       LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
-      WHERE ne.obj_id = ne_obj_id;
-      
+      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = ne_obj_id;
+
       EXECUTE qgep_od.update_reach_point_label(_ws_obj_id);
       EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
       EXECUTE qgep_od.update_depth(_ws_obj_id);
   END LOOP;
 
   RETURN NEW;
-END; 
-$BODY$;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
+
+--------------------------------------------------------
+-- UPDATE wastewater structure label
+-- Argument:
+--  * obj_id of wastewater structure or NULL to update all
+--------------------------------------------------------
+
+------ 8.9.2023 use reach_point's _label /cymed
+------ 14.9.2022 index labels by wastewater structure for VSA-DSS compliance /cymed
+------ 14.9.2022 use idx only when more than one entry /cymed
+------ 15.8.2018 uk adapted label display only for primary wastwater system
+------ WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
+      				 
 
 
 CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id text, _all boolean default false)
@@ -252,7 +296,7 @@ SELECT   ws_obj_id,
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='O'
 	) AS parts ON parts.ws = ws.obj_id
-    WHERE _all OR ws.obj_id =_obj_id
+    WHERE TRUE OR ws.obj_id =_obj_id
 		  ) parts
 		  GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
 ) labeled_ws
@@ -263,5 +307,6 @@ END
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
+
 
 SELECT qgep_od.update_reach_point_label(NULL,true);
