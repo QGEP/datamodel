@@ -427,6 +427,7 @@ VOLATILE;
 --  * obj_id of wastewater structure or NULL to update all
 --------------------------------------------------------
 
+------ 3.10.2023 prevent a re-throw of on_reach_point_update /cymed
 ------ 8.9.2023 first draft /cymed
 
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all boolean default false)
@@ -438,7 +439,12 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
   -- Updates the reach_point labels of the wastewater_structure 
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
-  
+
+-- to prevent a re-throw of on_reach_point_update
+  IF _all THEN
+    RAISE INFO 'Temporarily disabling symbology triggers';
+    PERFORM qgep_sys.drop_symbology_triggers();
+  END IF;
   
  --Update reach_point label
   UPDATE qgep_od.reach_point rp
@@ -486,12 +492,17 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, _all b
   FROM outp
   WHERE (_all AND outp.fk_wastewater_structure IS NOT NULL) OR outp.fk_wastewater_structure= _obj_id) rp_label
   WHERE rp_label.obj_id=rp.obj_id;
-END
 
+
+  -- See above
+  IF _all THEN
+    RAISE INFO 'Reenabling symbology triggers';
+    PERFORM qgep_sys.create_symbology_triggers();
+  END IF;
+END
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
-
 
 --------------------------------------------------
 -- ON COVER CHANGE
