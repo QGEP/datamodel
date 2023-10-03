@@ -607,6 +607,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON REACH CHANGE
 --------------------------------------------------
 
+
 CREATE OR REPLACE FUNCTION qgep_od.on_reach_change()
   RETURNS trigger AS
 $BODY$
@@ -631,6 +632,8 @@ BEGIN
       LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
       WHERE rp.obj_id = ANY ( rp_obj_ids )
   LOOP
+   
+    EXECUTE qgep_od.update_reach_point_label(_ws_obj_id); 
     EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
     EXECUTE qgep_od.update_depth(_ws_obj_id);
   END LOOP;
@@ -638,6 +641,7 @@ BEGIN
   RETURN NEW;
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
+
 
 
 --------------------------------------------------
