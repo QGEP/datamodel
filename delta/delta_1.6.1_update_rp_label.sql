@@ -1,5 +1,6 @@
+ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
 
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _usage_current integer;
+
 COMMENT ON COLUMN qgep_od.wastewater_structure._usage_current IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater
 has to be updated by triggers';
