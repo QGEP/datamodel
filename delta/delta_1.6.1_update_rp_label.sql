@@ -77,8 +77,8 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text
     RAISE INFO 'Reenabling symbology triggers';
     PERFORM qgep_sys.create_symbology_triggers();
   END IF;
-END
-$BODY$;
+END;
+$BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
