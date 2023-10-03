@@ -502,6 +502,26 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
   FROM outp) rp_label
   WHERE rp_label.obj_id=rp.obj_id;
 
+  -- Set reach_point _label to NULL for those who should not be labeled
+  UPDATE qgep_od.reach_point rp
+  SET _label = NULL
+  FROM (
+     SELECT
+    ne.fk_wastewater_structure
+    , rp.obj_id		
+      FROM qgep_od.reach_point rp
+      LEFT JOIN qgep_od.wastewater_networkelement ne ON rp.fk_wastewater_networkelement = ne.obj_id
+      INNER JOIN qgep_od.reach re ON rp.obj_id IN(re.fk_reach_point_to,re.fk_reach_point_from)
+      LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
+      LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
+	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
+	  WHERE NOT(ch.function_hierarchic = ANY(_labeled_ch_func_hier) 
+			AND ws.status = ANY(_labeled_ws_status))
+		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
+			  OR ne.fk_wastewater_structure= _obj_id)) null_label
+  WHERE null_label.obj_id=rp.obj_id;
+
+
   -- See above
   IF _all THEN
     RAISE INFO 'Reenabling symbology triggers';
