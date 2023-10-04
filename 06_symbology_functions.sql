@@ -371,7 +371,7 @@ SELECT   ws_obj_id,
 		, ws1.obj_id ws
 		, NULL as obj_id
 		, NULL as idx
-		, round(wn.bottom_level, 2)::text AS wn_bottom_level
+		, coalesce(round(wn.bottom_level, 2)::text, '?') AS wn_bottom_level
 		, NULL::text AS rpi_level
 		, NULL::text  AS rpo_level
 		, NULL::text as rpi_label
@@ -421,10 +421,14 @@ $BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
+-------------
+-- Reach point label
+------------
+
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, 
 	_all boolean default false,
 	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
-	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5089,5070,5071,5072,5074}')
+	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5069,5070,5071,5072,5074}')
   RETURNS VOID AS
  $BODY$
   DECLARE
@@ -451,7 +455,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
-					ORDER BY vl_fh.order_fct_hierarchic,ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2))/pi()*180 ASC) 
+					ORDER BY vl_fh.order_fct_hierarchic,ST_Azimuth(rp.situation_geometry,ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
 					as idx
     , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
       FROM qgep_od.reach_point rp
@@ -470,7 +474,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
     , rp.obj_id
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
 					ORDER BY (mod((((ST_Azimuth(rp.situation_geometry
-												,ST_PointN(re.progression_geometry,-2)
+												,ST_PointN(ST_CurveToLine(re.progression_geometry),-2)
 											   )
 									 - coalesce(o.azimuth,0))/pi()*180)+360)::numeric
 								  ,360::numeric)
@@ -528,40 +532,6 @@ END;
 $BODY$
 LANGUAGE plpgsql
 VOLATILE;
-
-
---------------------------------------------------
--- ON COVER CHANGE
---------------------------------------------------
-
-CREATE OR REPLACE FUNCTION qgep_od.on_cover_change()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-  co_obj_id TEXT;
-  affected_sp RECORD;
-BEGIN
-  CASE
-    WHEN TG_OP = 'UPDATE' THEN
-      co_obj_id = OLD.obj_id;
-    WHEN TG_OP = 'INSERT' THEN
-      co_obj_id = NEW.obj_id;
-    WHEN TG_OP = 'DELETE' THEN
-      co_obj_id = OLD.obj_id;
-  END CASE;
-
-  SELECT SP.fk_wastewater_structure INTO affected_sp
-  FROM qgep_od.structure_part SP
-  WHERE obj_id = co_obj_id;
-
-  EXECUTE qgep_od.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
-  EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
-
-  RETURN NEW;
-END; $BODY$
-LANGUAGE plpgsql VOLATILE;
-
-
 
 
 --------------------------------------------------
