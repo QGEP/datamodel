@@ -419,3 +419,4 @@ END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
 SELECT qgep_od.update_reach_point_label(NULL,true);
+ SELECT qgep_od.update_wastewater_structure_label(NULL,TRUE); 
