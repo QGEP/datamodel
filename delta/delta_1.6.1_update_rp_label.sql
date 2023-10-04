@@ -419,5 +419,48 @@ BEGIN
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
+  -------------------- SYMBOLOGY UPDATE ON REACH POINT TABLE CHANGES ----------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.ws_symbology_update_by_reach_point()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  _ws_id TEXT;
+  _ne_id TEXT;
+  rp_obj_id TEXT;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+	-- Prevent recursion
+      IF OLD.fk_wastewater_networkelement=NEW.fk_wastewater_networkelement THEN
+      RETURN NEW;
+      END IF;
+      rp_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      rp_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      rp_obj_id = OLD.obj_id;
+  END CASE;
+
+  BEGIN
+    SELECT ws.obj_id, ne.obj_id INTO STRICT _ws_id, _ne_id
+      FROM qgep_od.wastewater_structure ws
+      LEFT JOIN qgep_od.wastewater_networkelement ne ON ws.obj_id = ne.fk_wastewater_structure
+      LEFT JOIN qgep_od.reach_point rp ON ne.obj_id = rp.fk_wastewater_networkelement
+      WHERE rp.obj_id = rp_obj_id;
+
+    EXECUTE qgep_od.update_wastewater_structure_symbology(_ws_id);
+    EXECUTE qgep_od.update_wastewater_node_symbology(_ne_id);
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      -- DO NOTHING, THIS CAN HAPPEN
+    WHEN TOO_MANY_ROWS THEN
+        RAISE EXCEPTION 'TRIGGER ERROR ws_symbology_update_by_reach_point. Subquery shoud return exactly one row. This is not supposed to happen and indicates an isue with the trigger. The issue must be fixed in QGEP.';
+  END;
+
+  RETURN NEW;
+END; $BODY$
+  LANGUAGE plpgsql VOLATILE;
+
 SELECT qgep_od.update_reach_point_label(NULL,true);
  SELECT qgep_od.update_wastewater_structure_label(NULL,TRUE); 

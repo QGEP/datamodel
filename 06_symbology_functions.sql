@@ -177,6 +177,10 @@ DECLARE
 BEGIN
   CASE
     WHEN TG_OP = 'UPDATE' THEN
+	-- Prevent recursion
+      IF OLD.fk_wastewater_networkelement=NEW.fk_wastewater_networkelement THEN
+      RETURN NEW;
+      END IF;
       rp_obj_id = OLD.obj_id;
     WHEN TG_OP = 'INSERT' THEN
       rp_obj_id = NEW.obj_id;
