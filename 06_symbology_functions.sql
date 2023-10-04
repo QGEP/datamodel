@@ -421,6 +421,39 @@ $BODY$
 LANGUAGE plpgsql
 VOLATILE;
 
+--------------------------------------------------
+-- ON COVER CHANGE
+--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.on_cover_change()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  co_obj_id TEXT;
+  affected_sp RECORD;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      co_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      co_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      co_obj_id = OLD.obj_id;
+  END CASE;
+
+  SELECT SP.fk_wastewater_structure INTO affected_sp
+  FROM qgep_od.structure_part SP
+  WHERE obj_id = co_obj_id;
+
+  EXECUTE qgep_od.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
+  EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
+
+
+
 -------------
 -- Reach point label
 ------------
