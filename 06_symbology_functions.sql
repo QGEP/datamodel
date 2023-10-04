@@ -497,7 +497,7 @@ WHERE include_in_ws_labels;
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
-					ORDER BY vl_fh.order_fct_hierarchic,ST_Azimuth(rp.situation_geometry,ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
+					ORDER BY vl_fh.order_fct_hierarchic,vl_uc.order_usage_current,ST_Azimuth(rp.situation_geometry,ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
 					as idx
     , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
       FROM qgep_od.reach_point rp
@@ -507,6 +507,7 @@ WHERE include_in_ws_labels;
       LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
 	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
 	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_fh ON vl_fh.code = ch.function_hierarchic
+	  LEFT JOIN qgep_vl.channel_usage_current vl_uc ON vl_uc.code = ch.usage_current
 	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
