@@ -55,12 +55,12 @@ UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=14 WHERE cod
 
 -- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
 ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=TRUE WHERE code=ANY('{5062,5064,5066,5068,5069,5070,5071,5072,5074}');
+UPDATE qgep_vl.channel_function_hierarchic SET include_in_ws_labels=TRUE WHERE code=ANY('{5062,5064,5066,5068,5069,5070,5071,5072,5074}');
 
 
 -- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
 ALTER TABLE qgep_vl.wastewater_structure_status ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
-UPDATE qgep_vl.wastewater_structure_status SET order_fct_hierarchic=TRUE WHERE code=ANY('{8493,6530,6533}');
+UPDATE qgep_vl.wastewater_structure_status SET include_in_ws_labels=TRUE WHERE code=ANY('{8493,6530,6533}');
 
 -- this column is an extension to the VSA data model and puts the _usage_current in order
 ALTER TABLE qgep_vl.channel_usage_current ADD COLUMN order_usage_current smallint;
