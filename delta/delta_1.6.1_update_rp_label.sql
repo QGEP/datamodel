@@ -386,6 +386,36 @@ BEGIN
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
+--------------------------------------------------
+-- ON WASTEWATER NODE CHANGE
+--------------------------------------------------
 
+CREATE OR REPLACE FUNCTION qgep_od.on_wasterwaternode_change()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  co_obj_id TEXT;
+  affected_sp RECORD;
+BEGIN
+  CASE
+    WHEN TG_OP = 'UPDATE' THEN
+      co_obj_id = OLD.obj_id;
+    WHEN TG_OP = 'INSERT' THEN
+      co_obj_id = NEW.obj_id;
+    WHEN TG_OP = 'DELETE' THEN
+      co_obj_id = OLD.obj_id;
+  END CASE;
+
+  SELECT ne.fk_wastewater_structure INTO affected_sp
+  FROM qgep_od.wastewater_networkelement ne
+  WHERE obj_id = co_obj_id;
+
+  EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
+  EXECUTE qgep_od.update_reach_point_label(affected_sp.fk_wastewater_structure); 
+  EXECUTE qgep_od.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
 
 SELECT qgep_od.update_reach_point_label(NULL,true);
