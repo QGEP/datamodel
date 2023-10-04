@@ -732,6 +732,7 @@ BEGIN
   WHERE obj_id = co_obj_id;
 
   EXECUTE qgep_od.update_depth(affected_sp.fk_wastewater_structure);
+  EXECUTE qgep_od.update_reach_point_label(affected_sp.fk_wastewater_structure);
   EXECUTE qgep_od.update_wastewater_structure_label(affected_sp.fk_wastewater_structure);
 
   RETURN NEW;
