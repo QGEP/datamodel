@@ -42,17 +42,30 @@ added solely for TEKSI wastewater
 has to be updated by triggers';
 
 -------------
+-- Reach point label config
+------------
+
+-- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
+ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
+UPDATE qgep_vl.channel_function_hierarchic SET include_in_ws_labels=TRUE WHERE code=ANY('{5062,5064,5066,5068,5069,5070,5071,5072,5074}');
+
+
+-- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
+ALTER TABLE qgep_vl.wastewater_structure_status ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
+UPDATE qgep_vl.wastewater_structure_status SET include_in_ws_labels=TRUE WHERE code=ANY('{8493,6530,6533}');
+
+-------------
 -- Reach point label
 ------------
 
 CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text, 
-	_all boolean default false,
-	_labeled_ws_status bigint[] DEFAULT '{8493,6530,6533}',
-	_labeled_ch_func_hier bigint[] DEFAULT '{5062,5064,5066,5068,5069,5070,5071,5072,5074}')
+	_all boolean default false
+	)
   RETURNS VOID AS
  $BODY$
   DECLARE
-  myrec record;
+  _labeled_ws_status bigint[] ;
+  _labeled_ch_func_hier bigint[]; 
   BEGIN
   -- Updates the reach_point labels of the wastewater_structure 
   -- _obj_id: obj_id of the associatied wastewater structure
@@ -60,6 +73,15 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
   -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
   -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
 
+-- check value lists for label inclusion
+SELECT array_agg(code) INTO _labeled_ws_status
+FROM qgep_vl.wastewater_structure_status
+WHERE include_in_ws_labels;
+	  
+SELECT array_agg(code) INTO _labeled_ch_func_hier
+FROM qgep_vl.channel_function_hierarchic
+WHERE include_in_ws_labels; 
+	  
 -- to prevent a re-throw of on_reach_point_update
   IF _all THEN
     RAISE INFO 'Temporarily disabling symbology triggers';
