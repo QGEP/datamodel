@@ -53,7 +53,7 @@ SET order_fct_hierarchic=
 		 ,5065 --swwf.residential_drainage
 		 ,5073 --swwf.road_drainage
 		 ,5067 --swwf.other
-		 ,5075 --swwf.other
+		 ,5075 --swwf.unknown
 		 ]
 	 ,code) ;
 
