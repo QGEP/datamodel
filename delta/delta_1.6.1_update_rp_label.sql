@@ -96,7 +96,7 @@ WHERE include_in_ws_labels;
     ne.fk_wastewater_structure
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
-        , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
+    , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
 					ORDER BY vl_fh.order_fct_hierarchic,vl_uc.order_usage_current,ST_Azimuth(rp.situation_geometry,ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
 					as idx
     , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
