@@ -55,7 +55,7 @@ SET order_fct_hierarchic=
 		 ,5067 --swwf.other
 		 ,5075 --swwf.other
 		 ]
-	 ,code) 
+	 ,code) ;
 
 -- this column is an extension to the VSA data model and puts the _usage_current in order
 ALTER TABLE qgep_vl.channel_usage_current ADD COLUMN order_usage_current smallint;
