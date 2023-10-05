@@ -129,6 +129,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
             'identifier': 'R1',
             'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000001, 1500001, 100), ST_MakePoint(3000000, 1500000, 100)), 2056))'),
             'ch_function_hierarchic': 5062,
+            'ws_status': 8493,
             'rp_to_fk_wastewater_networkelement': strct_row['wn_obj_id'],
             'rp_to_level': 95
         }
@@ -143,6 +144,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
             'identifier': 'R2',
             'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 92), ST_MakePoint(3000000, 1500001, 90)), 2056))'),
             'ch_function_hierarchic': 5062,
+            'ws_status': 8493,
             'rp_from_fk_wastewater_networkelement': strct_row['wn_obj_id'],
             'rp_from_level': 92
         }
@@ -157,6 +159,7 @@ class TestTriggers(unittest.TestCase, DbTestBase):
             'identifier': 'R3',
             'progression_geometry': self.execute('ST_ForceCurve(ST_SetSrid(ST_MakeLine(ST_MakePoint(3000000, 1500000, 93), ST_MakePoint(3000001, 1500000, 90)), 2056))'),
             'ch_function_hierarchic': 5062,
+            'ws_status': 8493,
             'rp_from_fk_wastewater_networkelement': strct_row['wn_obj_id'],
             'rp_from_level': 93
         }
