@@ -58,6 +58,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                     'coefficient_of_friction': 10,
                     'ws_identifier': reach['mh_id'],
                     'ch_function_hierarchic': 5062,
+                    'ws_status': 8493,
                     'rp_from_level': reach.get('rp_from_level', 1020.0),
                     'rp_to_level': reach.get('rp_to_level', 1000.0),
                     'ch_usage_current': 4514,
