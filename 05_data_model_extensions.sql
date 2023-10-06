@@ -36,20 +36,26 @@ added solely for QGEP';
 
 -- this column is an extension to the VSA data model and puts the _function_hierarchic in order
 ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN order_fct_hierarchic smallint;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=5 WHERE code=5062;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=7 WHERE code=5063;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=6 WHERE code=5064;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=8 WHERE code=5065;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=10 WHERE code=5066;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=13 WHERE code=5067;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=1 WHERE code=5068;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=3 WHERE code=5069;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=2 WHERE code=5070;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=4 WHERE code=5071;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=9 WHERE code=5072;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=12 WHERE code=5073;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=11 WHERE code=5074;
-UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=14 WHERE code=5075;
+UPDATE qgep_vl.channel_function_hierarchic 
+SET order_fct_hierarchic=
+ array_position(
+	 ARRAY[
+		 5068 --pwwf.water_bodies
+  	 ,5070 --pwwf.main_drain_regional
+		 ,5069 --pwwf.main_drain
+		 ,5071 --pwwf.collector_sewer
+		 ,5062 --pwwf.renovation_conduction
+		 ,5064 --pwwf.residential_drainage		 
+		 ,5072 --pwwf.road_drainage
+		 ,5066 --pwwf.other
+		 ,5074 --pwwf.unknown
+		 ,5063 --swwf.renovation_conduction
+		 ,5065 --swwf.residential_drainage
+		 ,5073 --swwf.road_drainage
+		 ,5067 --swwf.other
+		 ,5075 --swwf.unknown
+		 ]
+	 ,code) ;
 
 -- this column is an extension to the VSA data model and puts the _usage_current in order
 ALTER TABLE qgep_vl.channel_usage_current ADD COLUMN order_usage_current smallint;
