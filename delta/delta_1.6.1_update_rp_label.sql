@@ -461,6 +461,123 @@ BEGIN
   RETURN NEW;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
+  
 
-SELECT qgep_od.update_reach_point_label(NULL,true);
+DROP TRIGGER IF EXISTS on_wasterwaternode_change ON qgep_od.wastewater_node; -- name has been altered
+
+-----------------------------------------------------------------------
+-- Drop Symbology Triggers
+-- To temporarily disable these cache refreshes for batch jobs like migrations
+-----------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_sys.drop_symbology_triggers() RETURNS VOID AS $$
+BEGIN
+  DROP TRIGGER IF EXISTS on_reach_point_update ON qgep_od.reach_point;
+  DROP TRIGGER IF EXISTS on_reach_2_change ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS on_reach_1_delete ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS on_wastewater_structure_update ON qgep_od.wastewater_structure;
+  DROP TRIGGER IF EXISTS ws_label_update_by_wastewater_networkelement ON qgep_od.wastewater_networkelement;
+  DROP TRIGGER IF EXISTS on_structure_part_change ON qgep_od.structure_part;
+  DROP TRIGGER IF EXISTS on_cover_change ON qgep_od.cover;
+  DROP TRIGGER IF EXISTS on_wastewater_node_change ON qgep_od.wastewater_node;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach ON qgep_od.reach;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_channel ON qgep_od.channel;
+  DROP TRIGGER IF EXISTS ws_symbology_update_by_reach_point ON qgep_od.reach_point;
+  DROP TRIGGER IF EXISTS calculate_reach_length ON qgep_od.reach;
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------------------------------------------------------
+-- Create Symbology Triggers
+-----------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_sys.create_symbology_triggers() RETURNS VOID AS $$
+BEGIN
+  -- only update -> insert and delete are handled by reach trigger
+  CREATE TRIGGER on_reach_point_update
+  AFTER UPDATE
+    ON qgep_od.reach_point
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_point_update();
+
+  CREATE TRIGGER on_reach_2_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_change();
+
+  CREATE TRIGGER on_reach_1_delete
+  AFTER DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_reach_delete();
+
+  CREATE TRIGGER calculate_reach_length
+  BEFORE INSERT OR UPDATE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.calculate_reach_length();
+
+  CREATE TRIGGER ws_symbology_update_by_reach
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.reach
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_reach();
+
+  CREATE TRIGGER on_wastewater_structure_update
+  AFTER UPDATE
+    ON qgep_od.wastewater_structure
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_wastewater_structure_update();
+
+  CREATE TRIGGER ws_label_update_by_wastewater_networkelement
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.wastewater_networkelement
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_structure_part_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.structure_part
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_structure_part_change_networkelement();
+
+  CREATE TRIGGER on_cover_change
+  AFTER INSERT OR UPDATE OR DELETE
+    ON qgep_od.cover
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_cover_change();
+
+  CREATE TRIGGER on_wastewater_node_change
+  AFTER INSERT OR UPDATE
+    ON qgep_od.wastewater_node
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.on_wastewater_node_change();
+
+  CREATE TRIGGER ws_symbology_update_by_channel
+  AFTER INSERT OR UPDATE OR DELETE
+  ON qgep_od.channel
+  FOR EACH ROW
+  EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_channel();
+
+  -- only update -> insert and delete are handled by reach trigger
+  CREATE TRIGGER ws_symbology_update_by_reach_point
+  AFTER UPDATE
+    ON qgep_od.reach_point
+  FOR EACH ROW
+    EXECUTE PROCEDURE qgep_od.ws_symbology_update_by_reach_point();
+
+
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+-- re-create triggers 
+SELECT qgep_sys.drop_symbology_triggers()
+SELECT qgep_sys.create_symbology_triggers();
+
+
+--update all reach points and wastewater_structure labels
+ SELECT qgep_od.update_reach_point_label(NULL,true);
  SELECT qgep_od.update_wastewater_structure_label(NULL,TRUE); 
