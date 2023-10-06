@@ -145,3 +145,6 @@ UPDATE qgep_sys.dictionary_od_values
 SET field_name = 'overflow_char_digital'
 WHERE (table_name = 'overflow_char' AND field_name = 'overflow_characteristic_digital')
 RETURNING *;
+
+
+ --INSERT INTO qgep_sys.dictionary_od_values (class_id, attribute_id, value_id, table_name, field_name, value_name, value_name_en, shortcut_en, value_name_de, shortcut_de, value_name_fr, shortcut_fr, value_name_it, shortcut_it, value_name_ro, shortcut_ro, value_description_en, value_description_de, value_description_fr, value_description_it, value_description_ro) VALUES (3754,3764,3883,'file','class','overflow_char','overflow_char','','Ueberlaufcharakteristik','','CARACTERISTIQUES_DEVERSOIR','','zzz_Ueberlaufcharakteristik','','','',' ','','','','');
