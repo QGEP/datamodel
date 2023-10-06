@@ -174,8 +174,8 @@ BEGIN
           AND sequence_name = '%1$I'
       $$, _sequence_name ) INTO _sequence_exists;
       IF _sequence_exists = 0 THEN
-        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_hydraulic_char_data_oid','qgep.seq_od_hydraulic_characteristic_data_oid');
-        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_overflow_char_oid','qgep.seq_od_overflow_characteristic_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_hydraulic_characteristic_data_oid','qgep.seq_od_hydraulic_char_data_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_overflow_characteristic_oid','qgep.seq_od_overflow_char_oid');
       END IF;
       -- update sequence
       SELECT nextval(_sequence_name_fully_qualified) INTO _sequence_value;
