@@ -86,7 +86,7 @@ RENAME COLUMN overflow_characteristic_digital TO overflow_char_digital;
 
 
 -- 2. delete primary constraint of vl_list tables neu 5.10.2023
-ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic DROP CONSTRAINT pkey_qgep_vl_overflow_characteristic_kind_overflow_characteristic_code;
+ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic DROP CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_characteristic_code;
 
 ALTER TABLE IF EXISTS qgep_vl.overflow_char_overflow_characteristic_digital DROP CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code;
 
