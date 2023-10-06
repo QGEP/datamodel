@@ -464,6 +464,7 @@ END; $BODY$
   
 
 DROP TRIGGER IF EXISTS on_wasterwaternode_change ON qgep_od.wastewater_node; -- name has been altered
+DROP FUNCTION IF EXISTS qgep_od.on_wasterwaternode_change(); -- name has been altered
 
 -----------------------------------------------------------------------
 -- Drop Symbology Triggers
