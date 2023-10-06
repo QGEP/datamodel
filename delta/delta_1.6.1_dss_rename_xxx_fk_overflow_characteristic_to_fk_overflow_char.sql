@@ -85,20 +85,28 @@ ALTER TABLE qgep_od.overflow_char
 RENAME COLUMN overflow_characteristic_digital TO overflow_char_digital;
 
 
--- 2. delete primary constraint of vl_list tables neu 5.10.2023
-ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic DROP CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_characteristic_code;
 
-ALTER TABLE IF EXISTS qgep_vl.overflow_char_overflow_characteristic_digital DROP CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code;
 
--- 3. rename qgep_vl.overflow_char_kind_overflow_characteristic to overflow_char_kind_overflow_char
+-- 2. rename qgep_vl.overflow_char_kind_overflow_characteristic to overflow_char_kind_overflow_char
 --and qgep_vl.overflow_char_overflow_characteristic_digital to overflow_char_overflow_char_digital
 ALTER TABLE qgep_vl.overflow_char_kind_overflow_characteristic RENAME TO overflow_char_kind_overflow_char;
 
 ALTER TABLE qgep_vl.overflow_char_overflow_characteristic_digital RENAME TO overflow_char_overflow_char_digital;
 
+-- 3. delete primary constraint of vl_list tables neu 5.10.2023 - geht nicht wegen dependencies 
+-- use rename instead ALTER TABLE name RENAME CONSTRAINT constraint_name TO new_constraint_name;
+--ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic DROP CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_characteristic_code;
+
+ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic RENAME CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_characteristic_code TO pkey_qgep_vl_overflow_char_kind_overflow_char_code;
+
+--ALTER TABLE IF EXISTS qgep_vl.overflow_char_overflow_characteristic_digital DROP CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code;
+
+ALTER TABLE IF EXISTS qgep_vl.overflow_char_overflow_characteristic_digital RENAME CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code TO pkey_qgep_vl_overflow_char_overflow_char_digital_code;
+
 -- 4. re-add primary key constraint neu 5.10.2023
-ALTER TABLE qgep_vl.overflow_char_kind_overflow_char ADD CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_char_code PRIMARY KEY (code);
-ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_char_digital_code PRIMARY KEY (code);
+-- not needed anymore
+--ALTER TABLE qgep_vl.overflow_char_kind_overflow_char ADD CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_char_code PRIMARY KEY (code);
+--ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_char_digital_code PRIMARY KEY (code);
 
 
 
