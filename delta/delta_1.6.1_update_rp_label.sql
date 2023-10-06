@@ -391,7 +391,7 @@ LANGUAGE plpgsql VOLATILE;
 -- ON WASTEWATER NODE CHANGE
 --------------------------------------------------
 
-CREATE OR REPLACE FUNCTION qgep_od.on_wasterwaternode_change()
+CREATE OR REPLACE FUNCTION qgep_od.on_wastewater_node_change()
   RETURNS trigger AS
 $BODY$
 DECLARE
