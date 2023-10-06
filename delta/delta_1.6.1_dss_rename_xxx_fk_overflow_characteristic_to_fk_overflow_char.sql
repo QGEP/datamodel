@@ -84,14 +84,25 @@ RENAME COLUMN kind_overflow_characteristic TO kind_overflow_char;
 ALTER TABLE qgep_od.overflow_char 
 RENAME COLUMN overflow_characteristic_digital TO overflow_char_digital;
 
--- 2. rename qgep_vl.overflow_char_kind_overflow_characteristic to overflow_char_kind_overflow_char
---and qgep_vl.overflow_char_overflow_characteristic_digital to overflow_char_overflow_char_digital
 
+-- 2. delete primary constraint of vl_list tables neu 5.10.2023
+ALTER TABLE IF EXISTS qgep_vl.overflow_char_kind_overflow_characteristic DROP CONSTRAINT pkey_qgep_vl_overflow_characteristic_kind_overflow_characteristic_code;
+
+ALTER TABLE IF EXISTS qgep_vl.overflow_char_overflow_characteristic_digital DROP CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code;
+
+-- 3. rename qgep_vl.overflow_char_kind_overflow_characteristic to overflow_char_kind_overflow_char
+--and qgep_vl.overflow_char_overflow_characteristic_digital to overflow_char_overflow_char_digital
 ALTER TABLE qgep_vl.overflow_char_kind_overflow_characteristic RENAME TO overflow_char_kind_overflow_char;
 
 ALTER TABLE qgep_vl.overflow_char_overflow_characteristic_digital RENAME TO overflow_char_overflow_char_digital;
 
--- 3. rename wrong value in qgep_sys.dictionary_od_field
+-- 4. re-add primary key constraint neu 5.10.2023
+ALTER TABLE qgep_vl.overflow_char_kind_overflow_char ADD CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_char_code PRIMARY KEY (code);
+ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_char_digital_code PRIMARY KEY (code);
+
+
+
+-- 6. rename wrong value in qgep_sys.dictionary_od_field
 
 -- adjust value list in dictionary_od_field
 -- INSERT INTO qgep_sys.dictionary_od_field (class_id, attribute_id, table_name, field_name, field_name_en, field_name_de, field_name_fr, field_name_it, field_name_ro, field_description_en, field_description_de, field_description_fr, field_description_it, field_description_ro, field_mandatory, field_visible, field_datatype, field_unit_en, field_unit_description_en, field_unit_de, field_unit_description_de, field_unit_fr, field_unit_description_fr, field_unit_it, field_unit_description_it, field_unit_ro, field_unit_description_ro, field_max, field_min) VALUES (64,6219,'overflow_char','kind_overflow_characteristic','kind_overflow_characteristic','Kennlinie_Typ','GENRE_COURBE_DE_FONCTIONNEMENT','curva_caratteristica_tipo','tipul_curbei_de_func?ionare','yyy_Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben.','Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben.','La courbe est à documenter sous forme de rapport Q/Q (Leaping weir) ou H/Q (déversoir latéral). Les conditions d’écoulement dans la chambre d’accumulation sont à fournir en annexe.','NULL','[CHF]',ARRAY['GEP_Verband','PAA']::qgep_od.plantype[],'true','integer','','','','','','','','','','',NULL,NULL);
