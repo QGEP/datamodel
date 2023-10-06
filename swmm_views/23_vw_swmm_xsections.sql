@@ -81,13 +81,13 @@ SELECT
 	wn.obj_id as obj_id
 FROM qgep_od.prank_weir pw
 LEFT JOIN qgep_od.overflow of ON pw.obj_id = of.obj_id
-LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_characteristic = oc.obj_id
+LEFT JOIN qgep_od.overflow_char oc ON of.fk_overflow_char = oc.obj_id
 LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = of.fk_wastewater_node
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.fk_main_wastewater_node = wn.obj_id
 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws.status = ws_st.code
 LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
 WHERE ws_st.vsacode IN (6530, 6533, 8493, 6529, 6526, 7959)
-AND oc.overflow_characteristic_digital != 6223  --'NO or unknown;
-OR oc.kind_overflow_characteristic != 6220 -- Q/Q relation or unknown
+AND oc.overflow_char_digital != 6223  --'NO or unknown;
+OR oc.kind_overflow_char != 6220 -- Q/Q relation or unknown
 AND ws_st.vsacode IN (6530, 6533, 8493, 6529, 6526, 7959);
 
