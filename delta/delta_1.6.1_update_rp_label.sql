@@ -574,7 +574,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- re-create triggers 
-SELECT qgep_sys.drop_symbology_triggers()
+SELECT qgep_sys.drop_symbology_triggers();
 SELECT qgep_sys.create_symbology_triggers();
 
 
