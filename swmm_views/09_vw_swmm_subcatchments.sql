@@ -81,27 +81,69 @@ SELECT
 	END as hierarchy,
 	wn_obj_id as obj_id
 FROM (
-  SELECT ca.*, wn.situation_geometry as wn_geom, 'rw_current' as state, wn.obj_id as wn_obj_id, ws._function_hierarchic 
-  FROM qgep_od.catchment_area as ca
-  INNER JOIN qgep_od.wastewater_networkelement ne on ne.obj_id = ca.fk_wastewater_networkelement_rw_current
-  LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
-  LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
-  UNION ALL
-  SELECT ca.*, wn.situation_geometry as wn_geom, 'rw_planned' as state, wn.obj_id as wn_obj_id, ws._function_hierarchic 
-  FROM qgep_od.catchment_area as ca
-  INNER JOIN qgep_od.wastewater_networkelement ne on ne.obj_id = ca.fk_wastewater_networkelement_rw_planned
-  LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
-  LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
-  UNION ALL
-  SELECT ca.*, wn.situation_geometry as wn_geom, 'ww_current' as state, wn.obj_id as wn_obj_id, ws._function_hierarchic 
-  FROM qgep_od.catchment_area as ca
-  INNER JOIN qgep_od.wastewater_networkelement ne on ne.obj_id = ca.fk_wastewater_networkelement_ww_current
-  LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
-  LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
-  UNION ALL
-  SELECT ca.*, wn.situation_geometry as wn_geom,'ww_planned' as state, wn.obj_id as wn_obj_id, ws._function_hierarchic 
-  FROM qgep_od.catchment_area as ca
-  INNER JOIN qgep_od.wastewater_networkelement ne on ne.obj_id = ca.fk_wastewater_networkelement_ww_planned
-  LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
-  LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
+  SELECT ca_1.obj_id,
+            ddc.vsacode as direct_discharge_current,
+            ddp.vsacode as direct_discharge_planned,
+            ca_1.discharge_coefficient_rw_current,
+            ca_1.discharge_coefficient_rw_planned,
+            ca_1.discharge_coefficient_ww_current,
+            ca_1.discharge_coefficient_ww_planned,
+            dsc.vsacode as drainage_system_current,
+            dsp.vsacode as drainage_system_planned,
+            ca_1.identifier,
+            ic.vsacode as infiltration_current,
+            ip.vsacode as infiltration_planned,
+            ca_1.perimeter_geometry,
+            ca_1.population_density_current,
+            ca_1.population_density_planned,
+            ca_1.remark,
+            rc.vsacode as retention_current,
+            rp.vsacode as retention_planned,
+            ca_1.runoff_limit_current,
+            ca_1.runoff_limit_planned,
+            ca_1.seal_factor_rw_current,
+            ca_1.seal_factor_rw_planned,
+            ca_1.seal_factor_ww_current,
+            ca_1.seal_factor_ww_planned,
+            ca_1.sewer_infiltration_water_production_current,
+            ca_1.sewer_infiltration_water_production_planned,
+            ca_1.surface_area,
+            ca_1.waste_water_production_current,
+            ca_1.waste_water_production_planned,
+            ca_1.last_modification,
+            ca_1.fk_dataowner,
+            ca_1.fk_provider,
+            ca_1.fk_wastewater_networkelement_rw_current,
+            ca_1.fk_wastewater_networkelement_rw_planned,
+            ca_1.fk_wastewater_networkelement_ww_planned,
+            ca_1.fk_wastewater_networkelement_ww_current,
+            wn.situation_geometry AS wn_geom,
+            CASE WHEN ca_1.fk_wastewater_networkelement_rw_current =wn.obj_id
+			THEN 'rw_current'::text
+			WHEN ca_1.fk_wastewater_networkelement_ww_current =wn.obj_id
+			THEN 'ww_current'::text
+			WHEN ca_1.fk_wastewater_networkelement_rw_planned =wn.obj_id
+			THEN 'rw_planned'::text
+			WHEN ca_1.fk_wastewater_networkelement_ww_planned =wn.obj_id
+			THEN 'ww_planned'::text
+			ELSE 'ERROR'
+			END AS state,
+            wn.obj_id AS wn_obj_id,
+            fhy.vsacode as _function_hierarchic
+           FROM qgep_od.catchment_area ca_1
+             JOIN qgep_od.wastewater_networkelement ne 
+			 	ON ne.obj_id::text IN (ca_1.fk_wastewater_networkelement_rw_current::text,
+						       ca_1.fk_wastewater_networkelement_ww_current::text,
+						       ca_1.fk_wastewater_networkelement_rw_planned::text,
+						       ca_1.fk_wastewater_networkelement_ww_planned::text)
+             LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id::text = ne.obj_id::text
+	     LEFT JOIN qgep_vl.catchment_area_direct_discharge_current ddc ON ddc.code=ca_1.direct_discharge_current
+	     LEFT JOIN qgep_vl.catchment_area_direct_discharge_planned ddp ON ddp.code=ca_1.direct_discharge_planned
+	     LEFT JOIN qgep_vl.catchment_area_drainage_system_current dsc ON dsc.code=ca_1.drainage_system_current
+	     LEFT JOIN qgep_vl.catchment_area_drainage_system_planned dsp ON dsp.code=ca_1.drainage_system_planned
+	     LEFT JOIN qgep_vl.catchment_area_infiltration_current ic ON ic.code=ca_1.infiltration_current
+	     LEFT JOIN qgep_vl.catchment_area_infiltration_planned ip ON ip.code=ca_1.infiltration_planned
+	     LEFT JOIN qgep_vl.catchment_area_retention_current rc ON rc.code=ca_1.retention_current
+	     LEFT JOIN qgep_vl.catchment_area_retention_planned rp ON rp.code=ca_1.retention_planned	
+	     LEFT JOIN qgep_vl.channel_function_hierarchic fhy ON fhy.code=wn._function_hierarchic
 ) as ca;
