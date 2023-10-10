@@ -16,7 +16,6 @@ ALTER TABLE qgep_od.wastewater_structure DROP COLUMN IF EXISTS _cover_label ;
 ALTER TABLE qgep_od.wastewater_structure DROP COLUMN IF EXISTS _input_label ;
 ALTER TABLE qgep_od.wastewater_structure DROP COLUMN IF EXISTS _output_label ;
 ALTER TABLE qgep_od.wastewater_structure DROP COLUMN IF EXISTS _bottom_label ;
-ALTER TABLE qgep_od.rach_point DROP COLUMN IF EXISTS _label; --for cleanup of dev environment
 
 -- TABLE wastewater_node
 
