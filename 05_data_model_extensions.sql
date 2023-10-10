@@ -88,7 +88,7 @@ obj_id character varying(16) COLLATE pg_catalog."default" NOT NULL,
 	CONSTRAINT pkey_qgep_od_labels_obj_id PRIMARY KEY (obj_id)
 )
 
-COMMENT ON COLUMN qgep_od.labels IS 'stores all labels. not part of the VSA-DSS data model
+COMMENT ON TABLE qgep_od.labels IS 'stores all labels. not part of the VSA-DSS data model
 added solely for TEKSI wastewater
 has to be updated by triggers';
 
