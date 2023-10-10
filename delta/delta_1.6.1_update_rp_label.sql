@@ -397,6 +397,32 @@ BEGIN
 END; $BODY$
 LANGUAGE plpgsql VOLATILE;
 
+
+--------------------------------------------------
+-- ON WASTEWATER STRUCTURE CHANGE
+--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION qgep_od.on_wastewater_structure_update()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+  _ws_obj_id TEXT;
+BEGIN
+  -- Prevent recursion
+  IF COALESCE(OLD.identifier, '') = COALESCE(NEW.identifier, '') THEN
+    RETURN NEW;
+  END IF;
+  _ws_obj_id = OLD.obj_id;
+  EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
+
+  IF OLD.fk_main_cover != NEW.fk_main_cover THEN
+    EXECUTE qgep_od.update_depth(_ws_obj_id);
+  END IF;
+
+
+  RETURN NEW;
+END; $BODY$
+LANGUAGE plpgsql VOLATILE;
 --------------------------------------------------
 -- ON WASTEWATER NODE CHANGE
 --------------------------------------------------
