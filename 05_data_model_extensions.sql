@@ -94,6 +94,21 @@ COMMENT ON COLUMN qgep_od.wastewater_node._status IS 'not part of the VSA-DSS da
 added solely for TEKSI wastewater
 has to be updated by triggers';
 
+-- label extensions
+CREATE TABLE IF NOT EXISTS qgep_od.labels
+(
+obj_id character varying(16) COLLATE pg_catalog."default" NOT NULL,
+    _label text COLLATE pg_catalog."default",
+    _cover_label text COLLATE pg_catalog."default",
+    _input_label text COLLATE pg_catalog."default",
+    _output_label text COLLATE pg_catalog."default",
+    _bottom_label text COLLATE pg_catalog."default",
+	CONSTRAINT pkey_qgep_od_labels_obj_id PRIMARY KEY (obj_id)
+)
+
+COMMENT ON COLUMN qgep_od.labels IS 'stores all labels. not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
 
 -- Modifications applied for link with SWMM
 -------------------------------------------
