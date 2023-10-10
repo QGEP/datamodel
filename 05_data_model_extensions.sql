@@ -17,24 +17,6 @@ has to be updated by triggers';
 ALTER TABLE qgep_od.manhole ADD COLUMN _orientation numeric;
 COMMENT ON COLUMN qgep_od.manhole._orientation IS 'not part of the VSA-DSS data model
 added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._label IS 'not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _cover_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._cover_label IS 'stores the cover altitude to be used for labelling, not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _input_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._input_label IS 'stores the list of input altitudes to be used for labelling, not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _output_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._output_label IS 'stores the list of output altitudes to be used for labelling, not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.wastewater_structure ADD COLUMN _bottom_label text;
-COMMENT ON COLUMN qgep_od.wastewater_structure._bottom_label IS 'stores the bottom altitude to be used for labelling, not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
-ALTER TABLE qgep_od.reach_point ADD COLUMN _label text;
-COMMENT ON COLUMN qgep_od.reach_point._label IS 'not part of the VSA-DSS data model
-added solely for TEKSI wastewater';
 
 -- this column is an extension to the VSA data model and puts the _function_hierarchic in order
 ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN order_fct_hierarchic smallint;
@@ -94,6 +76,21 @@ COMMENT ON COLUMN qgep_od.wastewater_node._status IS 'not part of the VSA-DSS da
 added solely for TEKSI wastewater
 has to be updated by triggers';
 
+-- label extensions
+CREATE TABLE IF NOT EXISTS qgep_od.labels
+(
+obj_id character varying(16) COLLATE pg_catalog."default" NOT NULL,
+    _label text COLLATE pg_catalog."default",
+    _cover_label text COLLATE pg_catalog."default",
+    _input_label text COLLATE pg_catalog."default",
+    _output_label text COLLATE pg_catalog."default",
+    _bottom_label text COLLATE pg_catalog."default",
+	CONSTRAINT pkey_qgep_od_labels_obj_id PRIMARY KEY (obj_id)
+)
+
+COMMENT ON COLUMN qgep_od.labels IS 'stores all labels. not part of the VSA-DSS data model
+added solely for TEKSI wastewater
+has to be updated by triggers';
 
 -- Modifications applied for link with SWMM
 -------------------------------------------

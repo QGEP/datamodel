@@ -52,7 +52,9 @@ def vw_qgep_reach(pg_service: str = None,
         , {ch_cols}
         , {ws_cols}
         , {rp_from_cols}
+        , rp_from_label._label as rp_from_label 
         , {rp_to_cols}
+        , rp_to_label._label as rp_to_label
       FROM qgep_od.reach re
          LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = re.obj_id
          LEFT JOIN qgep_od.reach_point rp_from ON rp_from.obj_id = re.fk_reach_point_from
@@ -60,7 +62,9 @@ def vw_qgep_reach(pg_service: str = None,
          LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
          LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
          LEFT JOIN qgep_od.pipe_profile pp ON re.fk_pipe_profile = pp.obj_id
-         {extra_joins};
+         {extra_joins}
+         LEFT JOIN qgep_od.labels rp_from_label ON rp_from_label.obj_id = rp_from.obj_id
+         LEFT JOIN qgep_od.labels rp_to_label ON rp_to_label.obj_id = rp_to.obj_id;
     """.format(extra_cols='\n    , '.join([select_columns(pg_cur=cursor,
                                                           table_schema=table_parts(table_def['table'])[0],
                                                           table_name=table_parts(table_def['table'])[1],

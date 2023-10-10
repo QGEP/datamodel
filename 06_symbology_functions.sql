@@ -326,15 +326,11 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
   BEGIN
   
   --Update wastewater structure label
-  -- 2023_05_12: use reach point labels
-  UPDATE qgep_od.wastewater_structure ws
-SET _label = label,
-    _cover_label = cover_label,
-    _bottom_label = bottom_label,
-    _input_label = input_label,
-    _output_label = output_label
-    FROM(
-SELECT   ws_obj_id,
+  -- 2023_10_10: use labels table
+ with labeled_ws as
+(
+	
+    SELECT   ws_obj_id as obj_id,
           COALESCE(ws_identifier, '') as label,
           CASE WHEN count(co_level)<2 THEN array_to_string(array_agg(E'\nC' || '=' || co_level ORDER BY idx DESC), '', '') ELSE
 		  array_to_string(array_agg(E'\nC' || idx || '=' || co_level ORDER BY idx ASC), '', '') END as cover_label,
@@ -393,10 +389,11 @@ SELECT   ws_obj_id,
 		, NULL::text AS bottom_level
 		, coalesce(round(RP.level, 2)::text, '?') AS rpi_level
 		, NULL::text AS rpo_level
-		, rp._label as rpi_label
+		, lb._label as rpi_label
 		,  NULL::text AS rpo_label
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
+	  LEFT JOIN qgep_od.labels lb on RP.obj_id=lb.obj_id
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='I'
       -- output
       UNION
@@ -408,17 +405,27 @@ SELECT   ws_obj_id,
 		, NULL::text AS rpi_level
 		, coalesce(round(RP.level, 2)::text, '?') AS rpo_level
 		, NULL::text as rpi_label
-		, rp._label AS rpo_label
+		, lb._label AS rpo_label
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
-      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='O'
-	) AS parts ON parts.ws = ws.obj_id
+      LEFT JOIN qgep_od.labels lb on RP.obj_id=lb.obj_id
+	  WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(RP._label,1)='O' 
+	) parts ON parts.ws = ws.obj_id
     WHERE _all OR ws.obj_id =_obj_id
-		  ) parts
-		  GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
-) labeled_ws
-WHERE ws.obj_id = labeled_ws.ws_obj_id;
-
+    ) all_parts
+	GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
+)
+  
+INSERT INTO qgep_od.labels (obj_id,_label,_cover_label,_bottom_label,_input_label,_output_label) 
+  SELECT  obj_id,label,cover_label,bottom_label,input_label,output_label
+  FROM labeled_ws
+  ON CONFLICT (obj_id) DO UPDATE
+SET _label = EXCLUDED._label,
+    _cover_label = EXCLUDED._cover_label,
+    _bottom_label = EXCLUDED._bottom_label,
+    _input_label = EXCLUDED._input_label,
+    _output_label = EXCLUDED._output_label
+;
 END
 
 $BODY$
@@ -485,18 +492,10 @@ WHERE include_in_ws_labels;
 SELECT array_agg(code) INTO _labeled_ch_func_hier
 FROM qgep_vl.channel_function_hierarchic
 WHERE include_in_ws_labels; 
-	  
--- to prevent a re-throw of on_reach_point_update
-  IF _all THEN
-    RAISE INFO 'Temporarily disabling symbology triggers';
-    PERFORM qgep_sys.drop_symbology_triggers();
-  END IF;
-  
- --Update reach_point label for those who should be labeled
-  UPDATE qgep_od.reach_point rp
-  SET _label = rp_label.new_label
-  FROM (
-  with  outp as( SELECT
+	
+    with  
+	--outputs
+	outp as( SELECT
     ne.fk_wastewater_structure
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
@@ -516,7 +515,9 @@ WHERE include_in_ws_labels;
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
 			  OR ne.fk_wastewater_structure= _obj_id)) ,
-	  inp as( SELECT
+	
+	--inputs
+	inp as( SELECT
     ne.fk_wastewater_structure
     , rp.obj_id
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
@@ -539,22 +540,10 @@ WHERE include_in_ws_labels;
 	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
-			  OR ne.fk_wastewater_structure= _obj_id))
- 
-  SELECT 'I'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
-  , obj_id
-  FROM inp
- 
-  UNION
-  SELECT 'O'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
-  , obj_id
-  FROM outp) rp_label
-  WHERE rp_label.obj_id=rp.obj_id;
+			  OR ne.fk_wastewater_structure= _obj_id)),	
   
-  -- Set reach_point _label to NULL for those who should not be labeled
-  UPDATE qgep_od.reach_point rp
-  SET _label = NULL
-  FROM (
+  -- non-labeled rp
+  null_label as(
      SELECT
     ne.fk_wastewater_structure
     , rp.obj_id		
@@ -567,14 +556,29 @@ WHERE include_in_ws_labels;
 	  WHERE NOT(ch.function_hierarchic = ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status))
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
-			  OR ne.fk_wastewater_structure= _obj_id)) null_label
-  WHERE null_label.obj_id=rp.obj_id;
-
-  -- See above
-  IF _all THEN
-    RAISE INFO 'Reenabling symbology triggers';
-    PERFORM qgep_sys.create_symbology_triggers();
-  END IF;
+			  OR ne.fk_wastewater_structure= _obj_id)),
+  
+  -- actual labels  
+  rp_label as 
+  (
+  SELECT 'I'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
+  , obj_id
+  FROM inp
+  UNION
+  SELECT 'O'||CASE WHEN max_idx=1 THEN '' ELSE idx::text END as new_label
+  , obj_id
+  FROM outp 
+  UNION
+  SELECT NULL as new_label
+  , obj_id
+  FROM null_label)
+ --Upsert reach_point labels 
+  INSERT INTO qgep_od.labels (obj_id,_label) 
+  SELECT  rp_label.obj_id,rp_label.new_label
+  FROM rp_label
+  ON CONFLICT (obj_id) DO 
+  UPDATE SET _label = EXCLUDED._label ;
+  
 END;
 $BODY$
 LANGUAGE plpgsql
