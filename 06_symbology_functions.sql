@@ -631,7 +631,7 @@ BEGIN
     RETURN NEW;
   END IF;
   _ws_obj_id = OLD.obj_id;
-  SELECT qgep_od.update_wastewater_structure_label(_ws_obj_id) INTO NEW._label;
+  EXECUTE qgep_od.update_wastewater_structure_label(_ws_obj_id);
 
   IF OLD.fk_main_cover != NEW.fk_main_cover THEN
     EXECUTE qgep_od.update_depth(_ws_obj_id);
