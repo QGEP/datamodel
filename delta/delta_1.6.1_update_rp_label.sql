@@ -90,7 +90,9 @@ WHERE include_in_ws_labels;
 	
     with  
 	--outputs
-	outp as(     ne.fk_wastewater_structure
+	outp as( 
+	    SELECT
+	    ne.fk_wastewater_structure
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
