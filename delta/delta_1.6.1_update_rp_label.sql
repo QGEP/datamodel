@@ -74,10 +74,14 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
   _labeled_ch_func_hier bigint[]; 
   BEGIN
   -- Updates the reach_point labels of the wastewater_structure 
+  -- Function inputs
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
-  -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
-  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
+  
+  -- Function Variables 
+  -- _labeled_ws_status: codes of the ws_status to be labeled. 
+  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. 
+  -- 
 
 -- check value lists for label inclusion
 SELECT array_agg(code) INTO _labeled_ws_status
