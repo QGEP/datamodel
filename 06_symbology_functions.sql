@@ -476,13 +476,18 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
  $BODY$
   DECLARE
   _labeled_ws_status bigint[] ;
-  _labeled_ch_func_hier bigint[]; 
+  _labeled_ch_func_hier bigint[];
+
   BEGIN
   -- Updates the reach_point labels of the wastewater_structure 
+  -- Function inputs
   -- _obj_id: obj_id of the associatied wastewater structure
   -- _all: optional boolean to update all reach points
-  -- _labeled_ws_status: codes of the ws_status to be labeled. Default: Array of operational.xxx
-  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. Default: Array of pwwf.xxx
+  
+  -- Function Variables 
+  -- _labeled_ws_status: codes of the ws_status to be labeled. 
+  -- _labeled_ch_func_hier: codes of the ch_function_hierarchic to be labeled. 
+  -- 
 
 -- check value lists for label inclusion
 SELECT array_agg(code) INTO _labeled_ws_status
@@ -500,18 +505,28 @@ WHERE include_in_ws_labels;
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
-					ORDER BY vl_fh.order_fct_hierarchic,vl_uc.order_usage_current,ST_Azimuth(rp.situation_geometry,ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
+			ORDER BY (rp.fk_wastewater_networkelement=ws_nd.fk_main_wastewater_node)::int*-1 -- prioritise main wastewater node, invert due to asc order
+	    			, vl_fh.order_fct_hierarchic 
+				, vl_uc.order_usage_current
+	    			, ST_Azimuth(rp.situation_geometry
+	    				, ST_PointN(ST_CurveToLine(re.progression_geometry),2))/pi()*180 ASC) 
 					as idx
     , count	(*) OVER(PARTITION BY NE.fk_wastewater_structure ) as max_idx				
       FROM qgep_od.reach_point rp
+	  -- node
       LEFT JOIN qgep_od.wastewater_networkelement ne ON rp.fk_wastewater_networkelement = ne.obj_id
+	  LEFT JOIN qgep_od.wastewater_node wn ON ne.obj_id = wn.obj_id  
+	  LEFT JOIN qgep_od.wastewater_structure ws_nd ON ne.fk_wastewater_structure = ws_nd.obj_id
+	  LEFT JOIN qgep_od.channel ch_nd ON ne.fk_wastewater_structure = ch_nd.obj_id
+	  -- network element from
       INNER JOIN qgep_od.reach re ON rp.obj_id = re.fk_reach_point_from
-      LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id
+      LEFT JOIN qgep_od.wastewater_networkelement ne_re ON ne_re.obj_id = re.obj_id 
       LEFT JOIN qgep_od.channel ch ON ne_re.fk_wastewater_structure = ch.obj_id
-	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id
+	  LEFT JOIN qgep_od.wastewater_structure ws ON ne_re.fk_wastewater_structure = ws.obj_id 
 	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_fh ON vl_fh.code = ch.function_hierarchic
 	  LEFT JOIN qgep_vl.channel_usage_current vl_uc ON vl_uc.code = ch.usage_current
-	  WHERE ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
+	    WHERE ch_nd.obj_id is null -- do not label channels 
+	  AND ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
 			  OR ne.fk_wastewater_structure= _obj_id)) ,
