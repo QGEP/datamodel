@@ -95,9 +95,8 @@ WHERE include_in_ws_labels;
 	
     with  
 	--outputs
-	outp as( 
-	    SELECT
-	    ne.fk_wastewater_structure
+	outp as( SELECT
+    ne.fk_wastewater_structure
     , rp.obj_id
 	, ST_Azimuth(rp.situation_geometry,ST_PointN(re.progression_geometry,2)) as azimuth			
     , row_number() OVER(PARTITION BY NE.fk_wastewater_structure 
@@ -122,7 +121,7 @@ WHERE include_in_ws_labels;
 	  LEFT JOIN qgep_vl.channel_function_hierarchic vl_fh ON vl_fh.code = ch.function_hierarchic
 	  LEFT JOIN qgep_vl.channel_usage_current vl_uc ON vl_uc.code = ch.usage_current
 	    WHERE ch_nd.obj_id is null -- do not label channels 
-	    AND ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
+	  AND ch.function_hierarchic= ANY(_labeled_ch_func_hier) 
 			AND ws.status = ANY(_labeled_ws_status) 
 		    AND ((_all AND ne.fk_wastewater_structure IS NOT NULL) 
 			  OR ne.fk_wastewater_structure= _obj_id)) ,
