@@ -71,7 +71,8 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
  $BODY$
   DECLARE
   _labeled_ws_status bigint[] ;
-  _labeled_ch_func_hier bigint[]; 
+  _labeled_ch_func_hier bigint[];
+
   BEGIN
   -- Updates the reach_point labels of the wastewater_structure 
   -- Function inputs
