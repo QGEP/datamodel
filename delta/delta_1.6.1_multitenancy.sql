@@ -52,3 +52,6 @@ END;
 $BODY$
   LANGUAGE plpgsql STABLE
   COST 100;
+
+
+DROP FUNCTION IF EXISTS qgep_sys.generate_oid(text, text);
