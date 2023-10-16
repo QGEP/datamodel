@@ -38,9 +38,21 @@ CREATE UNIQUE INDEX in_qgep_is_oid_prefixes_id
   USING btree
   (id );
 
+
+-- Modifications applied for link between object and basket
+-------------------------------------------
+CREATE TABLE qgep_sys.basket(obj_id varchar(16)
+	, prefix_id bigint NOT NULL
+	, CONSTRAINT pkey_qgep_sys_basket_obj_id PRIMARY KEY (obj_id));
+COMMENT ON COLUMN qgep_sys.basket IS 'Table linking ordinary data with corresponding oid-prefix. Not part of the VSA-DSS data model
+added solely for TEKSI';
+COMMENT ON COLUMN qgep_sys.basket.obj_id IS 'object id of ordinary data';
+COMMENT ON COLUMN qgep_sys.basket.obj_id IS 'id qgep_sys.oid_prefixes, links to the prefix';
+
+
 -- function for generating StandardOIDs
 
-CREATE OR REPLACE FUNCTION qgep_sys.generate_oid(schema_name text, table_name text)
+CREATE OR REPLACE FUNCTION qgep_sys.generate_oid(schema_name text, table_name text, basket integer default NULL)
   RETURNS text AS
 $BODY$
 DECLARE
@@ -50,7 +62,7 @@ DECLARE
 BEGIN
   -- first we have to get the OID prefix
   BEGIN
-    SELECT prefix::text INTO myrec_prefix FROM qgep_sys.oid_prefixes WHERE active = TRUE;
+    SELECT prefix::text INTO myrec_prefix FROM qgep_sys.oid_prefixes WHERE coalesce(id=basket,active = TRUE);
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
            RAISE EXCEPTION 'no active record found in table qgep_sys.oid_prefixes';
