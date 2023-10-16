@@ -47,7 +47,7 @@ CREATE TABLE qgep_sys.basket(obj_id varchar(16)
 COMMENT ON COLUMN qgep_sys.basket IS 'Table linking ordinary data with corresponding oid-prefix. Not part of the VSA-DSS data model
 added solely for TEKSI';
 COMMENT ON COLUMN qgep_sys.basket.obj_id IS 'object id of ordinary data';
-COMMENT ON COLUMN qgep_sys.basket.obj_id IS 'id qgep_sys.oid_prefixes, links to the prefix';
+COMMENT ON COLUMN qgep_sys.basket.prefix_id IS 'id qgep_sys.oid_prefixes, links to the prefix';
 
 
 -- function for generating StandardOIDs
@@ -62,7 +62,7 @@ DECLARE
 BEGIN
   -- first we have to get the OID prefix
   BEGIN
-    SELECT prefix::text INTO myrec_prefix FROM qgep_sys.oid_prefixes WHERE coalesce(id=basket,active = TRUE);
+    SELECT id,prefix::text INTO myrec_prefix FROM qgep_sys.oid_prefixes WHERE coalesce(id=basket,active = TRUE);
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
            RAISE EXCEPTION 'no active record found in table qgep_sys.oid_prefixes';
@@ -87,6 +87,7 @@ BEGIN
   IF NOT FOUND THEN
     RAISE EXCEPTION 'sequence for table % not found', table_name;
   END IF;
+  INSERT INTO qgep_sys.basket(obj_id,prefix_id) VALUES(myrec_prefix.id,myrec_prefix.prefix || myrec_shortcut.shortcut_en || to_char(myrec_seq.seqval,'FM000000'));
   RETURN myrec_prefix.prefix || myrec_shortcut.shortcut_en || to_char(myrec_seq.seqval,'FM000000');
 END;
 $BODY$
