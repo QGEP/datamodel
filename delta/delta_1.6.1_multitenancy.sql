@@ -3,7 +3,7 @@
 CREATE TABLE qgep_sys.basket(obj_id varchar(16)
 	, prefix_id bigint NOT NULL
 	, CONSTRAINT pkey_qgep_sys_basket_obj_id PRIMARY KEY (obj_id));
-COMMENT ON COLUMN qgep_sys.basket IS 'Table linking ordinary data with corresponding oid-prefix. Not part of the VSA-DSS data model
+COMMENT ON TABLE qgep_sys.basket IS 'Table linking ordinary data with corresponding oid-prefix. Not part of the VSA-DSS data model
 added solely for TEKSI';
 COMMENT ON COLUMN qgep_sys.basket.obj_id IS 'object id of ordinary data';
 COMMENT ON COLUMN qgep_sys.basket.prefix_id IS 'id qgep_sys.oid_prefixes, links to the prefix';
