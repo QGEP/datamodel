@@ -420,7 +420,7 @@ INSERT INTO qgep_od.x_labels (obj_id,x_label,x_cover_label,x_bottom_label,x_inpu
   SELECT  obj_id,label,cover_label,bottom_label,input_label,output_label
   FROM labeled_ws
   ON CONFLICT (obj_id) DO UPDATE
-SET x_label = EXCLUDED._label,
+SET x_label = EXCLUDED.x_label,
     x_cover_label = EXCLUDED.x_cover_label,
     x_bottom_label = EXCLUDED.x_bottom_label,
     x_input_label = EXCLUDED.x_input_label,
