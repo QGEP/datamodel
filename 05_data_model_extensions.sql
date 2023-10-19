@@ -36,13 +36,13 @@ UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=11 WHERE cod
 UPDATE qgep_vl.channel_function_hierarchic SET order_fct_hierarchic=14 WHERE code=5075;
 
 -- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
-ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
-UPDATE qgep_vl.channel_function_hierarchic SET include_in_ws_labels=TRUE WHERE code=ANY('{5062,5064,5066,5068,5069,5070,5071,5072,5074}');
+ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN cfg_include_in_ws_labels boolean DEFAULT FALSE;
+UPDATE qgep_vl.channel_function_hierarchic SET cfg_include_in_ws_labels=TRUE WHERE code=ANY('{5062,5064,5066,5068,5069,5070,5071,5072,5074}');
 
 
 -- this column is an extension to the VSA data model and defines whether connected channels are included in inflow/outflow labeling based on function_hierarchic
-ALTER TABLE qgep_vl.wastewater_structure_status ADD COLUMN include_in_ws_labels boolean DEFAULT FALSE;
-UPDATE qgep_vl.wastewater_structure_status SET include_in_ws_labels=TRUE WHERE code=ANY('{8493,6530,6533}');
+ALTER TABLE qgep_vl.wastewater_structure_status ADD COLUMN cfg_include_in_ws_labels boolean DEFAULT FALSE;
+UPDATE qgep_vl.wastewater_structure_status SET cfg_include_in_ws_labels=TRUE WHERE code=ANY('{8493,6530,6533}');
 
 -- this column is an extension to the VSA data model and puts the _usage_current in order
 ALTER TABLE qgep_vl.channel_usage_current ADD COLUMN order_usage_current smallint;
@@ -77,18 +77,18 @@ added solely for TEKSI wastewater
 has to be updated by triggers';
 
 -- label extensions
-CREATE TABLE IF NOT EXISTS qgep_od.labels
+CREATE TABLE IF NOT EXISTS qgep_od.x_labels
 (
 obj_id character varying(16) COLLATE pg_catalog."default" NOT NULL,
-    _label text COLLATE pg_catalog."default",
-    _cover_label text COLLATE pg_catalog."default",
-    _input_label text COLLATE pg_catalog."default",
-    _output_label text COLLATE pg_catalog."default",
-    _bottom_label text COLLATE pg_catalog."default",
+    x_label text COLLATE pg_catalog."default",
+    x_cover_label text COLLATE pg_catalog."default",
+    x_input_label text COLLATE pg_catalog."default",
+    x_output_label text COLLATE pg_catalog."default",
+    x_bottom_label text COLLATE pg_catalog."default",
 	CONSTRAINT pkey_qgep_od_labels_obj_id PRIMARY KEY (obj_id)
 );
 
-COMMENT ON TABLE qgep_od.labels IS 'stores all labels. not part of the VSA-DSS data model
+COMMENT ON TABLE qgep_od.x_labels IS 'stores all labels. not part of the VSA-DSS data model
 added solely for TEKSI wastewater
 has to be updated by triggers';
 

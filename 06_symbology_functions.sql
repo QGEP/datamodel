@@ -389,11 +389,11 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
 		, NULL::text AS bottom_level
 		, coalesce(round(RP.level, 2)::text, '?') AS rpi_level
 		, NULL::text AS rpo_level
-		, lb._label as rpi_label
+		, lb.x_label as rpi_label
 		,  NULL::text AS rpo_label
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
-	  LEFT JOIN qgep_od.labels lb on RP.obj_id=lb.obj_id
+	  LEFT JOIN qgep_od.x_labels lb on RP.obj_id=lb.obj_id
       WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb._label,1)='I'
       -- output
       UNION
@@ -405,10 +405,10 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
 		, NULL::text AS rpi_level
 		, coalesce(round(RP.level, 2)::text, '?') AS rpo_level
 		, NULL::text as rpi_label
-		, lb._label AS rpo_label
+		, lb.x_label AS rpo_label
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
-      LEFT JOIN qgep_od.labels lb on RP.obj_id=lb.obj_id
+      LEFT JOIN qgep_od.x_labels lb on RP.obj_id=lb.obj_id
 	  WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb._label,1)='O' 
 	) parts ON parts.ws = ws.obj_id
     WHERE _all OR ws.obj_id =_obj_id
@@ -416,15 +416,15 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
 	GROUP BY ws_obj_id, COALESCE(ws_identifier, '')
 )
   
-INSERT INTO qgep_od.labels (obj_id,_label,_cover_label,_bottom_label,_input_label,_output_label) 
+INSERT INTO qgep_od.x_labels (obj_id,x_label,x_cover_label,x_bottom_label,x_input_label,x_output_label) 
   SELECT  obj_id,label,cover_label,bottom_label,input_label,output_label
   FROM labeled_ws
   ON CONFLICT (obj_id) DO UPDATE
-SET _label = EXCLUDED._label,
-    _cover_label = EXCLUDED._cover_label,
-    _bottom_label = EXCLUDED._bottom_label,
-    _input_label = EXCLUDED._input_label,
-    _output_label = EXCLUDED._output_label
+SET x_label = EXCLUDED._label,
+    x_cover_label = EXCLUDED.x_cover_label,
+    x_bottom_label = EXCLUDED.x_bottom_label,
+    x_input_label = EXCLUDED.x_input_label,
+    x_output_label = EXCLUDED.x_output_label
 ;
 END
 
@@ -492,11 +492,11 @@ CREATE OR REPLACE FUNCTION qgep_od.update_reach_point_label(_obj_id text,
 -- check value lists for label inclusion
 SELECT array_agg(code) INTO _labeled_ws_status
 FROM qgep_vl.wastewater_structure_status
-WHERE include_in_ws_labels;
+WHERE cfg_include_in_ws_labels;
 	  
 SELECT array_agg(code) INTO _labeled_ch_func_hier
 FROM qgep_vl.channel_function_hierarchic
-WHERE include_in_ws_labels; 
+WHERE cfg_include_in_ws_labels; 
 	
     with  
 	--outputs
@@ -588,11 +588,11 @@ WHERE include_in_ws_labels;
   , obj_id
   FROM null_label)
  --Upsert reach_point labels 
-  INSERT INTO qgep_od.labels (obj_id,_label) 
+  INSERT INTO qgep_od.x_labels (obj_id,x_label) 
   SELECT  rp_label.obj_id,rp_label.new_label
   FROM rp_label
   ON CONFLICT (obj_id) DO 
-  UPDATE SET _label = EXCLUDED._label ;
+  UPDATE SET x_label = EXCLUDED.x_label ;
   
 END;
 $BODY$
