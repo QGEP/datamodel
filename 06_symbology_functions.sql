@@ -394,7 +394,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
 	  LEFT JOIN qgep_od.x_labels lb on RP.obj_id=lb.obj_id
-      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb._label,1)='I'
+      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb.x_label,1)='I'
       -- output
       UNION
       SELECT  NULL AS co_level
@@ -409,7 +409,7 @@ CREATE OR REPLACE FUNCTION qgep_od.update_wastewater_structure_label(_obj_id tex
       FROM qgep_od.reach_point RP
       LEFT JOIN qgep_od.wastewater_networkelement NE ON RP.fk_wastewater_networkelement = NE.obj_id
       LEFT JOIN qgep_od.x_labels lb on RP.obj_id=lb.obj_id
-	  WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb._label,1)='O' 
+	  WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and left(lb.x_label,1)='O' 
 	) parts ON parts.ws = ws.obj_id
     WHERE _all OR ws.obj_id =_obj_id
     ) all_parts
