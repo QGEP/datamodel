@@ -70,11 +70,11 @@ def vw_qgep_wastewater_structure(srid: int,
         , {wn_cols}
         , {ne_cols}
 
-        , labl._label
-        , labl._cover_label
-        , labl._bottom_label
-        , labl._input_label
-        , labl._output_label
+        , labl.x_label as _label
+        , labl.x_cover_label as _cover_label
+        , labl.x_bottom_label as _bottom_label
+        , labl.x_input_label as _input_label
+        , labl.x_output_label as _output_label
         , ws._usage_current AS _channel_usage_current
         , ws._function_hierarchic AS _channel_function_hierarchic
 
@@ -88,7 +88,7 @@ def vw_qgep_wastewater_structure(srid: int,
         LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = ws.fk_main_wastewater_node
         LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws.fk_main_wastewater_node
         LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
-        LEFT JOIN qgep_od.labels labl ON labl.obj_id = ws.obj_id
+        LEFT JOIN qgep_od.x_labels labl ON labl.obj_id = ws.obj_id
         {extra_joins}
         WHERE ch.obj_id IS NULL;
 
