@@ -1,3 +1,9 @@
+--------
+-- View for the swmm module class junctions
+--------
+CREATE OR REPLACE VIEW qgep_swmm.vw_junctions AS
+
+
 WITH outs AS (
   SELECT 
     wn_1.obj_id, 
@@ -9,14 +15,16 @@ WITH outs AS (
     LEFT JOIN qgep_od.wastewater_networkelement ne_1 ON ne_1.obj_id :: text = re.obj_id :: text 
     LEFT JOIN qgep_od.wastewater_structure ws_1 ON ws_1.obj_id :: text = ne_1.fk_wastewater_structure :: text 
     LEFT JOIN qgep_vl.wastewater_structure_status ws_st_1 ON ws_1.status = ws_st_1.code 
+	LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws_1.obj_id::text
+	LEFT JOIN qgep_vl.channel_function_hydraulic ch_fhyd on ch_fhyd.code = ch.function_hydraulic
   WHERE 
     (
       ws_st_1.vsacode = ANY (
         ARRAY[6530, 6533, 8493, 6529, 6526, 
         7959]
       )
-    ) 
-    OR ws_st_1.vsacode IS NULL 
+    OR ws_st_1.vsacode IS NULL )
+	AND ch_fhyd.vsacode!=23 -- pump pipes do not need a divider beforehand
   GROUP BY 
     wn_1.obj_id
 ) 
@@ -81,12 +89,41 @@ WHERE
     ssf.vsacode IS NULL 
     OR (
       ssf.vsacode <> ANY (
-        ARRAY[6397, 6398, 3348, 336, 6478, 3673, 
-        3674, 3675, 3676, 3677, 5575, 5576] --see storage
+        ARRAY[6397, --"pit_without_drain"
+-- 245, --"drop_structure"
+6398, --"hydrolizing_tank"
+-- 5371, --"other"
+-- 386, --"venting"
+-- 3234, --"inverse_syphon_chamber"
+-- 5091, --"syphon_head"
+-- 6399, --"septic_tank_two_chambers"
+3348, --"terrain_depression"
+336, --"bolders_bedload_catchement_dam"
+-- 5494, --"cesspit"
+6478, --"septic_tank"
+-- 2998, --"manhole"
+-- 2768, --"oil_separator"
+246, --"pump_station"
+3673, --"stormwater_tank_with_overflow"
+3674, --"stormwater_tank_retaining_first_flush"
+5574, --"stormwater_retaining_channel"
+3675, --"stormwater_sedimentation_tank"
+3676, --"stormwater_retention_tank"
+-- 5575, --"stormwater_retention_channel"
+-- 5576, --"stormwater_storage_channel"
+3677 --"stormwater_composite_tank"
+-- 5372 --"stormwater_overflow"
+-- 5373, --"floating_material_separator"
+-- 383	, --"side_access"
+-- 227, --"jetting_manhole"
+-- 4799, --"separating_structure"
+-- 3008, --"unknown"
+-- 2745, --"vortex_manhole"
+] --see storage
       )
     )
   ) 
   AND stor.obj_id IS NULL 
   AND ii.obj_id IS NULL 
   AND dp.obj_id IS NULL 
-  AND outs.amount < 2;
+  AND (outs.amount < 2 OR outs.amount IS NULL);
