@@ -88,7 +88,7 @@ WHERE
   AND (
     ssf.vsacode IS NULL 
     OR (
-      ssf.vsacode <> ANY (
+      ssf.vsacode <> ALL (
         ARRAY[6397, --"pit_without_drain"
 -- 245, --"drop_structure"
 6398, --"hydrolizing_tank"
