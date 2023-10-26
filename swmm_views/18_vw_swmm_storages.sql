@@ -37,8 +37,8 @@ SELECT
 	wn.obj_id as obj_id
 FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
-LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
-LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.hydr_geometry hg on hg.obj_id = wn.fk_hydr_geometry
 LEFT JOIN (
 	SELECT distinct fk_hydr_geometry
@@ -61,14 +61,14 @@ WHERE ss.function IN ( -- must be the same list in vw_swmm_junctions
 6478, --"septic_tank"
 -- 2998, --"manhole"
 -- 2768, --"oil_separator"
--- 246, --"pump_station"
+246, --"pump_station"
 3673, --"stormwater_tank_with_overflow"
 3674, --"stormwater_tank_retaining_first_flush"
 5574, --"stormwater_retaining_channel"
 3675, --"stormwater_sedimentation_tank"
 3676, --"stormwater_retention_tank"
-5575, --"stormwater_retention_channel"
-5576, --"stormwater_storage_channel"
+-- 5575, --"stormwater_retention_channel"
+-- 5576, --"stormwater_storage_channel"
 3677 --"stormwater_composite_tank"
 -- 5372 --"stormwater_overflow"
 -- 5373, --"floating_material_separator"
