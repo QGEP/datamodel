@@ -131,7 +131,7 @@ LEFT JOIN qgep_od.wastewater_node to_wn on to_wn.obj_id = rp_to.fk_wastewater_ne
 LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws.obj_id::text
 LEFT JOIN qgep_vl.channel_function_hydraulic cfh on cfh.code = ch.function_hydraulic
 -- select only operationals and "planned"
-WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);
+WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959)
 -- 6526	"other.calculation_alternative"
 -- 6529	"other.project"
 -- 7959	"other.planned"
@@ -144,3 +144,5 @@ WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959);
 -- 3633	"inoperative"
 -- 6523	"abanndoned.suspended_not_filled"
 -- 6524	"abanndoned.suspended_unknown"
+AND cfh.vsacode!=23 -- pump pipes do not need a divider beforehand
+;
