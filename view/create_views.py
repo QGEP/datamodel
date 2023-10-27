@@ -91,9 +91,12 @@ def create_views(srid: int,
     # Recreate swmm views
     dirs = ['swmm_views']
     for directory in dirs:
-        for file in os.listdir(directory).sort():
+        files = os.listdir(directory)
+        files.sort()
+        for file in files:
             filename = os.fsdecode(file)
             if filename.endswith(".sql"): 
+                
                 run_sql(os.path.join(directory, filename), pg_service, variables) 
 
     SimpleJoins(safe_load(open('view/export/vw_export_reach.yaml')), pg_service).create()
