@@ -82,7 +82,7 @@ SELECT
 FROM 
   qgep_od.wastewater_node wn 
   LEFT JOIN qgep_od.wastewater_networkelement ne ON wn.obj_id :: text = ne.obj_id :: text 
-  LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure :: text = ws.obj_id :: text 
+  LEFT JOIN qgep_od.wastewater_structure ws ON ne.obj_id :: text = ws.fk_main_wastewater_node :: text
   LEFT JOIN qgep_od.cover co ON ws.fk_main_cover :: text = co.obj_id :: text 
   LEFT JOIN qgep_od.manhole ma ON ma.obj_id :: text = ws.obj_id :: text 
   LEFT JOIN qgep_vl.manhole_function mf ON ma.function = mf.code 

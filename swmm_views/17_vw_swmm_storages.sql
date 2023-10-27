@@ -39,7 +39,7 @@ FROM qgep_od.special_structure ss
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ss.obj_id::text
 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws.status = ws_st.code
 LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
-LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id :: text = ws.fk_main_wastewater_node :: text
 LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.hydr_geometry hg on hg.obj_id = wn.fk_hydr_geometry
 LEFT JOIN (
@@ -121,8 +121,8 @@ FROM qgep_od.infiltration_installation as ii
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ii.obj_id::text
 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws.status = ws_st.code
 LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code=ws._function_hierarchic
-LEFT JOIN qgep_od.wastewater_networkelement we ON we.fk_wastewater_structure::text = ws.obj_id::text
-LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = we.obj_id
+LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id :: text = ws.fk_main_wastewater_node :: text
+LEFT JOIN qgep_od.wastewater_node wn on wn.obj_id = ne.obj_id
 LEFT JOIN qgep_od.hydr_geometry hg on hg.obj_id = wn.fk_hydr_geometry
 LEFT JOIN (
 	SELECT distinct fk_hydr_geometry
