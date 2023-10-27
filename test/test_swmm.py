@@ -27,16 +27,16 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_aquifers", "qgep_swmm", 0)
 
     def test_count_vw_conduits(self):
-        self.assert_count("vw_conduits", "qgep_swmm", 5095)
+        self.assert_count("vw_conduits", "qgep_swmm", 5022)
 
     def test_count_vw_coordinates(self):
-        self.assert_count("vw_coordinates", "qgep_swmm", 8044)
+        self.assert_count("vw_coordinates", "qgep_swmm", 4536)
 
     def test_count_vw_coverages(self):
         self.assert_count("vw_coverages", "qgep_swmm", 0)
 
     def test_count_vw_dividers(self):
-        self.assert_count("vw_dividers", "qgep_swmm", 45)
+        self.assert_count("vw_dividers", "qgep_swmm", 95)
 
     def test_count_vw_dwf(self):
         self.assert_count("vw_dwf", "qgep_swmm", 2035)
@@ -45,7 +45,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_infiltration", "qgep_swmm", 1352)
 
     def test_count_vw_junctions(self):
-        self.assert_count("vw_junctions", "qgep_swmm", 5864)
+        self.assert_count("vw_junctions", "qgep_swmm", 4294)
 
     def test_count_vw_landuses(self):
         self.assert_count("vw_landuses", "qgep_swmm", 6)
@@ -57,16 +57,16 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_outfalls", "qgep_swmm", 54)
 
     def test_count_vw_polygons(self):
-        self.assert_count("vw_polygons", "qgep_swmm", 27405)
+        self.assert_count("vw_polygons", "qgep_swmm", 28635)
 
     def test_count_vw_pumps(self):
         self.assert_count("vw_pumps", "qgep_swmm", 0)
 
     def test_count_vw_raingages(self):
-        self.assert_count("vw_raingages", "qgep_swmm", 2035)
+        self.assert_count("vw_raingages", "qgep_swmm", 2)
 
     def test_count_vw_storages(self):
-        self.assert_count("vw_storages", "qgep_swmm", 46)
+        self.assert_count("vw_storages", "qgep_swmm", 99)
 
     def test_count_vw_subareas(self):
         self.assert_count("vw_subareas", "qgep_swmm", 2035)
@@ -75,10 +75,10 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_subcatchments", "qgep_swmm", 2035)
 
     def test_count_vw_tags(self):
-        self.assert_count("vw_tags", "qgep_swmm", 13094)
+        self.assert_count("vw_tags", "qgep_swmm", 11504)
 
     def test_count_vw_vertices(self):
-        self.assert_count("vw_vertices", "qgep_swmm", 2854)
+        self.assert_count("vw_vertices", "qgep_swmm", 2099)
 
     def test_count_vw_xsections(self):
         self.assert_count("vw_xsections", "qgep_swmm", 5095)
