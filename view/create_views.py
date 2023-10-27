@@ -80,7 +80,7 @@ def create_views(srid: int,
     MultipleInheritance(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service, drop=True).create()
     MultipleInheritance(safe_load(open("view/vw_oo_organisation.yaml")), drop=True, pg_service=pg_service).create()
 
-    run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
+    # run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
 
@@ -89,10 +89,12 @@ def create_views(srid: int,
     run_sql('view/network/vw_network_segment.sql', pg_service, variables)
 
     # Recreate swmm views
-    for file in os.listdir('swmm_views/'):
-        filename = os.fsdecode(file)
-        if filename.endswith(".sql"): 
-            run_sql(os.path.join(directory, filename), pg_service, variables) 
+    dirs = ['swmm_views']
+    for directory in dirs                 
+        for file in os.listdir(directory):
+            filename = os.fsdecode(file)
+            if filename.endswith(".sql"): 
+                run_sql(os.path.join(directory, filename), pg_service, variables) 
 
     SimpleJoins(safe_load(open('view/export/vw_export_reach.yaml')), pg_service).create()
     SimpleJoins(safe_load(open('view/export/vw_export_wastewater_structure.yaml')), pg_service).create()
