@@ -27,7 +27,32 @@ WITH outs AS (
 	AND ch_fhyd.vsacode!=23 -- pump pipes do not need a divider beforehand
   GROUP BY 
     wn_1.obj_id
-) 
+),
+ins AS(
+  SELECT 
+    wn_1.obj_id, 
+    count(re.obj_id) AS amount 
+  FROM 
+    qgep_od.wastewater_node wn_1 
+    LEFT JOIN qgep_od.reach_point rp ON rp.fk_wastewater_networkelement :: text = wn_1.obj_id :: text 
+    LEFT JOIN qgep_od.reach re ON re.fk_reach_point_to :: text = rp.obj_id :: text 
+    LEFT JOIN qgep_od.wastewater_networkelement ne_1 ON ne_1.obj_id :: text = re.obj_id :: text 
+    LEFT JOIN qgep_od.wastewater_structure ws_1 ON ws_1.obj_id :: text = ne_1.fk_wastewater_structure :: text 
+    LEFT JOIN qgep_vl.wastewater_structure_status ws_st_1 ON ws_1.status = ws_st_1.code 
+	LEFT JOIN qgep_od.channel ch on ch.obj_id::text = ws_1.obj_id::text
+	LEFT JOIN qgep_vl.channel_function_hydraulic ch_fhyd on ch_fhyd.code = ch.function_hydraulic
+  WHERE 
+    (
+      ws_st_1.vsacode = ANY (
+        ARRAY[6530, 6533, 8493, 6529, 6526, 
+        7959]
+      )
+    OR ws_st_1.vsacode IS NULL )
+	AND ch_fhyd.vsacode!=23 -- pump pipes do not need a divider beforehand
+  GROUP BY 
+    wn_1.obj_id
+),
+ 
 SELECT 
   wn.obj_id :: character varying AS name, 
   COALESCE(wn.bottom_level, 0 :: numeric) AS invertelev, 
@@ -126,4 +151,5 @@ WHERE
   AND stor.obj_id IS NULL 
   AND ii.obj_id IS NULL 
   AND dp.obj_id IS NULL 
-  AND (outs.amount < 2 OR outs.amount IS NULL);
+  AND coalesce(outs.amount,0) < 2
+  AND coalesce(outs.amount,0)+coalesce(ins.amount,0)>0;
