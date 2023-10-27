@@ -75,7 +75,7 @@ class TestSwmm(unittest.TestCase, DbTestBase):
         self.assert_count("vw_subcatchments", "qgep_swmm", 2035)
 
     def test_count_vw_tags(self):
-        self.assert_count("vw_tags", "qgep_swmm", 11504)
+        self.assert_count("vw_tags", "qgep_swmm", 11507)
 
     def test_count_vw_vertices(self):
         self.assert_count("vw_vertices", "qgep_swmm", 2099)
