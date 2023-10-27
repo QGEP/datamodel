@@ -7,9 +7,11 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_junctions AS
 WITH outs AS (
   SELECT 
     wn_1.obj_id, 
-    count(re.obj_id) AS amount 
+    coalesce(count(re.obj_id),0) AS amount,
+	coalesce(count(re.obj_id),0)+coalesce(count(ov.obj_id),0) AS amount_2
   FROM 
     qgep_od.wastewater_node wn_1 
+	LEFT JOIN qgep_od.overflow ov ON ov.fk_wastewater_node=wn_1.obj_id
     LEFT JOIN qgep_od.reach_point rp ON rp.fk_wastewater_networkelement :: text = wn_1.obj_id :: text 
     LEFT JOIN qgep_od.reach re ON re.fk_reach_point_from :: text = rp.obj_id :: text 
     LEFT JOIN qgep_od.wastewater_networkelement ne_1 ON ne_1.obj_id :: text = re.obj_id :: text 
@@ -31,9 +33,11 @@ WITH outs AS (
 ins AS(
   SELECT 
     wn_1.obj_id, 
-    count(re.obj_id) AS amount 
+    coalesce(count(re.obj_id),0) AS amount ,
+	coalesce(count(re.obj_id),0)+coalesce(count(ov.obj_id),0) AS amount_2
   FROM 
     qgep_od.wastewater_node wn_1 
+	LEFT JOIN qgep_od.overflow ov ON ov.fk_overflow_to=wn_1.obj_id
     LEFT JOIN qgep_od.reach_point rp ON rp.fk_wastewater_networkelement :: text = wn_1.obj_id :: text 
     LEFT JOIN qgep_od.reach re ON re.fk_reach_point_to :: text = rp.obj_id :: text 
     LEFT JOIN qgep_od.wastewater_networkelement ne_1 ON ne_1.obj_id :: text = re.obj_id :: text 
@@ -48,10 +52,10 @@ ins AS(
         7959]
       )
     OR ws_st_1.vsacode IS NULL )
-	AND ch_fhyd.vsacode!=23 -- pump pipes do not need a divider beforehand
+	AND ch_fhyd.vsacode!=23 
   GROUP BY 
     wn_1.obj_id
-),
+)
  
 SELECT 
   wn.obj_id :: character varying AS name, 
@@ -101,6 +105,7 @@ FROM
       AND vl_oc_ki.vsacode = 6220 --see storage
   ) stor ON stor.obj_id :: text = wn.obj_id :: text 
   LEFT JOIN outs ON outs.obj_id :: text = wn.obj_id :: text 
+  LEFT JOIN ins ON ins.obj_id :: text = wn.obj_id :: text 
   LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws_st.code = wn._status 
   LEFT JOIN qgep_vl.channel_function_hierarchic ch_fh ON ch_fh.code = wn._function_hierarchic 
 WHERE 
@@ -151,5 +156,5 @@ WHERE
   AND stor.obj_id IS NULL 
   AND ii.obj_id IS NULL 
   AND dp.obj_id IS NULL 
-  AND coalesce(outs.amount,0) < 2
-  AND coalesce(outs.amount,0)+coalesce(ins.amount,0)>0;
+  AND coalesce(outs.amount,0) < 2 --dividers
+  AND coalesce(outs.amount_2,0)+coalesce(ins.amount_2,0)>0;-- disconnected nodes
