@@ -80,7 +80,7 @@ def create_views(srid: int,
     MultipleInheritance(safe_load(open("view/vw_oo_overflow.yaml")), create_joins=True, variables=variables, pg_service=pg_service, drop=True).create()
     MultipleInheritance(safe_load(open("view/vw_oo_organisation.yaml")), drop=True, pg_service=pg_service).create()
 
-    # run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
+    run_sql('view/vw_catchment_area_connections.sql', pg_service, variables)
     run_sql('view/vw_change_points.sql', pg_service, variables)
     run_sql('view/vw_qgep_import.sql', pg_service, variables)
 
