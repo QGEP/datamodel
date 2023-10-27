@@ -90,7 +90,7 @@ def create_views(srid: int,
 
     # Recreate swmm views
     dirs = ['swmm_views']
-    for directory in dirs                 
+    for directory in dirs:                 
         for file in os.listdir(directory):
             filename = os.fsdecode(file)
             if filename.endswith(".sql"): 
