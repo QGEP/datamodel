@@ -122,7 +122,7 @@ SELECT
 	re.obj_id as obj_id
 FROM qgep_od.reach as re
 LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
-LEFT JOIN qgep_od.pipe_profile_profile_type pppt ON pppt.code= pp.profile_type
+LEFT JOIN qgep_vl.pipe_profile_profile_type pppt ON pppt.code= pp.profile_type
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id = ne.fk_wastewater_structure
 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws_st.code=ws.status
