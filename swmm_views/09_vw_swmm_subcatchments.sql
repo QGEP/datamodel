@@ -6,7 +6,7 @@
 CREATE OR REPLACE VIEW qgep_swmm.vw_subcatchments
  AS
  SELECT concat(replace(ca.obj_id::text, ' '::text, '_'::text), '_', ca.state) AS name,
-    concat('raingage_'::text || ca.state)::character varying AS raingage,
+    concat('raingage_'::text || substr(ca.state,4))::character varying AS raingage,
         CASE
             WHEN ca.state = 'rw_current'::text THEN ca.fk_wastewater_networkelement_rw_current::text
             WHEN ca.state = 'rw_planned'::text THEN ca.fk_wastewater_networkelement_rw_planned::text
