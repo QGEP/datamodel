@@ -21,7 +21,7 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_dividers
         )
  SELECT wn.obj_id AS name,
     COALESCE(wn.bottom_level, 0::numeric) AS elevation,
-    '???'::text AS diverted_link,
+    '???'::text AS diverted_link,  -- tbd: once the _label for reach point is introduced, the order can be used to define the diverted link
     'CUTOFF'::text AS type,
     0 AS cutoffflow,
     0 AS maxdepth,
@@ -37,7 +37,7 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_dividers
             WHEN cfhi.vsacode = ANY (ARRAY[5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074]) THEN 'primary'::text
             ELSE 'secondary'::text
         END AS hierarchy,
-    wn.obj_id
+    ws.obj_id
    FROM qgep_od.wastewater_node wn
      LEFT JOIN outs ON outs.obj_id::text = wn.obj_id::text
      LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON wn._status = ws_st.code

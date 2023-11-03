@@ -78,11 +78,12 @@ SELECT
     ARRAY[5062, 5064, 5066, 5068, 5069, 
     5070, 5071, 5072, 5074]
   ) THEN 'primary' :: text ELSE 'secondary' :: text END AS hierarchy, 
-  wn.obj_id 
+  ws_2.obj_id 
 FROM 
   qgep_od.wastewater_node wn 
   LEFT JOIN qgep_od.wastewater_networkelement ne ON wn.obj_id :: text = ne.obj_id :: text 
-  LEFT JOIN qgep_od.wastewater_structure ws ON ne.obj_id :: text = ws.fk_main_wastewater_node :: text
+  LEFT JOIN qgep_od.wastewater_structure ws ON ne.obj_id :: text = ws.fk_main_wastewater_node :: text -- for disambiguation whether node is manhole, special structure etc
+  LEFT JOIN qgep_od.wastewater_structure ws_2 ON ne.fk_wastewater_structure :: text = ws_2.obj_id :: text --for linking to selected items in export
   LEFT JOIN qgep_od.cover co ON ws.fk_main_cover :: text = co.obj_id :: text 
   LEFT JOIN qgep_od.manhole ma ON ma.obj_id :: text = ws.obj_id :: text 
   LEFT JOIN qgep_vl.manhole_function mf ON ma.function = mf.code 

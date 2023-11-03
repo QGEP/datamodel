@@ -15,10 +15,11 @@ NULL::text as ToNode,
     ARRAY[5062, 5064, 5066, 5068, 5069, 
     5070, 5071, 5072, 5074]
   ) THEN 'primary' :: text ELSE 'secondary' :: text END AS hierarchy, 
-NULL::text as obj_id
+ws.obj_id as obj_id
 FROM qgep_od.throttle_shut_off_unit tsu
 LEFT JOIN qgep_vl.throttle_shut_off_unit_kind tsu_ki ON tsu_ki.code = tsu.kind
 LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = tsu.fk_wastewater_node
+LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure :: text = ws.obj_id :: text --for linking to selected items in export
 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON ws_st.code = wn._status 
 LEFT JOIN qgep_vl.channel_function_hierarchic ch_fh ON ch_fh.code = wn._function_hierarchic 
 WHERE tsu_ki.vsacode = ANY(ARRAY[13,134,135,252,2746]);
