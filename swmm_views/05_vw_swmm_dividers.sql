@@ -41,5 +41,8 @@ CREATE OR REPLACE VIEW qgep_swmm.vw_dividers
    FROM qgep_od.wastewater_node wn
      LEFT JOIN outs ON outs.obj_id::text = wn.obj_id::text
      LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON wn._status = ws_st.code
+	 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = wn.obj_id
+	 LEFT JOIN qgep_od.wastewater_structure ws ON ne.fk_wastewater_structure = ws.obj_id
+	 LEFT JOIN qgep_vl.wastewater_structure_status ws_st ON wn._status = ws_st.code
      LEFT JOIN qgep_vl.channel_function_hierarchic cfhi ON cfhi.code = wn._function_hierarchic
   WHERE outs.amount = 2 AND (ws_st.vsacode = ANY (ARRAY[6530, 6533, 8493, 6529, 6526, 7959]));
