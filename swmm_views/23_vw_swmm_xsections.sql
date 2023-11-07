@@ -52,7 +52,9 @@ LEFT JOIN qgep_od.pipe_profile pp on pp.obj_id = re.fk_pipe_profile
 LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id::text = re.obj_id::text
 LEFT JOIN qgep_od.wastewater_structure ws ON ws.obj_id::text = ne.fk_wastewater_structure::text
 LEFT JOIN qgep_od.channel ch ON ch.obj_id::text = ws.obj_id::text
+LEFT JOIN qgep_vl.channel_function_hydraulic ch_fhyd ON ch.function_hydraulic = ch_fhyd.code
 WHERE status IN (6530, 6533, 8493, 6529, 6526, 7959)
+and ch_fhyd.vsacode !=23 -- pump pipes are not exported
 
 
 UNION ALL
