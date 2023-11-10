@@ -26,17 +26,16 @@ def vw_qgep_ws_symbol_plantype(srid: int,
     extra_definition = extra_definition or {}
 
     variables = {'SRID': int(srid),
-                'TYPEDEF': plantype_row[2].replace(".", "_"), # value_en
-                'TYPECODE':plantype_row[0]  # code
+                'TYPECODE':int(plantype_row[0])  # code
                 }
 
     conn = psycopg2.connect("service={0}".format(pg_service))
     cursor = conn.cursor()
 
     view_sql = """
-    DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s;
+    DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_{typedef};
 
-    CREATE OR REPLACE VIEW qgep_od.qgep_ws_symbol_%(TYPEDEF)s AS
+    CREATE OR REPLACE VIEW qgep_od.qgep_ws_symbol_{typedef} AS
      SELECT
         ws.identifier as identifier,
 
@@ -192,13 +191,14 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                extra_joins='\n    '.join(['LEFT JOIN {tbl} {alias} ON {jon}'.format(tbl=table_def['table'],
                                                                                     alias=table_def.get('alias', ''),
                                                                                     jon=table_def['join_on'])
-                                          for table_def in extra_definition.get('joins', {}).values()])
+                                          for table_def in extra_definition.get('joins', {}).values()]),
+                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))
                )
 
     cursor.execute(view_sql, variables)
 
     trigger_insert_sql="""
-    CREATE OR REPLACE FUNCTION qgep_od.ft_qgep_ws_symbol_%(TYPEDEF)s_INSERT()
+    CREATE OR REPLACE FUNCTION qgep_od.ft_qgep_ws_symbol_{typedef}_INSERT()
       RETURNS trigger AS
     $BODY$
     BEGIN
@@ -245,10 +245,10 @@ def vw_qgep_ws_symbol_plantype(srid: int,
       RETURN NEW;
     END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_%(TYPEDEF)s_INSERT ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s;
+    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_{typedef}_INSERT ON qgep_od.vw_qgep_ws_symbol_{typedef};
 
-    CREATE TRIGGER vw_qgep_ws_symbol_%(TYPEDEF)s_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s
-      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_ws_symbol_%(TYPEDEF)s_INSERT();
+    CREATE TRIGGER vw_qgep_ws_symbol_{typedef}_INSERT INSTEAD OF INSERT ON qgep_od.vw_qgep_ws_symbol_{typedef}
+      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_ws_symbol_{typedef}_INSERT();
     """.format(insert_ws=insert_command(pg_cur=cursor,
                                         table_schema='qgep_od',
                                         table_name='wastewater_structure',
@@ -334,13 +334,14 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                                        'last_modification': 'NOW()',
                                                        'fk_provider': 'NEW.fk_provider',
                                                        'fk_dataowner': 'NEW.fk_dataowner',
-                                                       'fk_wastewater_structure': 'NEW.obj_id'})
+                                                       'fk_wastewater_structure': 'NEW.obj_id'}),
+                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))
                )
 
     cursor.execute(trigger_insert_sql)
 
     update_trigger_sql = """
-    CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_ws_symbol_%(TYPEDEF)s_UPDATE()
+    CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_ws_symbol_{typedef}_UPDATE()
       RETURNS trigger AS
     $BODY$
     BEGIN
@@ -413,10 +414,10 @@ def vw_qgep_ws_symbol_plantype(srid: int,
 
 
 
-    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_%(TYPEDEF)s_UPDATE ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s;
+    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_{typedef}_UPDATE ON qgep_od.vw_qgep_ws_symbol_{typedef};
 
-    CREATE TRIGGER vw_qgep_ws_symbol_%(TYPEDEF)s_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s
-      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_ws_symbol_%(TYPEDEF)s_UPDATE();
+    CREATE TRIGGER vw_qgep_ws_symbol_{typedef}_UPDATE INSTEAD OF UPDATE ON qgep_od.vw_qgep_ws_symbol_{typedef}
+      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_ws_symbol_{typedef}_UPDATE();
     """.format(
                update_co=update_command(pg_cur=cursor,
                                         table_schema='qgep_od',
@@ -502,13 +503,14 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                                        'last_modification': 'NOW()',
                                                        'fk_provider': 'NEW.fk_provider',
                                                        'fk_dataowner': 'NEW.fk_dataowner',
-                                                       'fk_wastewater_structure': 'NEW.obj_id'})                         
+                                                       'fk_wastewater_structure': 'NEW.obj_id'}),
+                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))                         
                )
 
     cursor.execute(update_trigger_sql, variables)
 
     trigger_delete_sql = """
-    CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_ws_symbol_%(TYPEDEF)s_DELETE()
+    CREATE OR REPLACE FUNCTION qgep_od.ft_vw_qgep_ws_symbol_{typedef}_DELETE()
       RETURNS trigger AS
     $BODY$
     DECLARE
@@ -517,20 +519,20 @@ def vw_qgep_ws_symbol_plantype(srid: int,
     RETURN OLD;
     END; $BODY$ LANGUAGE plpgsql VOLATILE;
 
-    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_%(TYPEDEF)s_DELETE ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s;
+    DROP TRIGGER IF EXISTS vw_qgep_ws_symbol_{typedef}_DELETE ON qgep_od.vw_qgep_ws_symbol_{typedef};
 
-    CREATE TRIGGER vw_qgep_ws_symbol_%(TYPEDEF)s_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_ws_symbol_%(TYPEDEF)s
-      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_qgep_ws_symbol_%(TYPEDEF)s_DELETE();
-    """
+    CREATE TRIGGER vw_qgep_ws_symbol_{typedef}_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_ws_symbol_{typedef}
+      FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_qgep_ws_symbol_{typedef}_DELETE();
+    """.format(typedef=sql.Identifier(plantype_row[2].replace(".", "_")))
     cursor.execute(trigger_delete_sql, variables)
 
     extras = """
-    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_%(TYPEDEF)s ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
-    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_%(TYPEDEF)s ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','cover');
-    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_%(TYPEDEF)s ALTER wn_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_node');
-    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_%(TYPEDEF)s ALTER ws_sym_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure_symbol');
-    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_%(TYPEDEF)s ALTER ws_sym_plantype SET DEFAULT %(TYPECODE)s;
-    """
+    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure');
+    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER co_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','cover');
+    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER wn_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_node');
+    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER ws_sym_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure_symbol');
+    ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER ws_sym_plantype SET DEFAULT %(TYPECODE)s;
+    """.format(typedef=sql.Identifier(plantype_row[2].replace(".", "_")))
     cursor.execute(extras)
 
     conn.commit()
