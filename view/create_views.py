@@ -9,6 +9,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
+from vw_qgep_ws_plantype import vw_qgep_ws_symbol_plantype
 from vw_qgep_reach import vw_qgep_reach
 
 
@@ -80,6 +81,16 @@ def create_views(srid: int,
 
     vw_qgep_wastewater_structure(srid, pg_service=pg_service, extra_definition=qgep_wastewater_structure_extra)
     vw_qgep_reach(pg_service=pg_service, extra_definition=qgep_reach_extra)
+    
+    # symbol views
+    connctn = psycopg2.connect("service={0}".format(pg_service))
+    cursr = connctn.cursor()
+    plantype_row_sql= "SELECT * from qgep_vl.wastewater_structure_symbol_plantype"
+    cursr.execute(plantype_row_sql)
+    for plantype_row in cursr.fetchall()
+        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
+    cursr.close()
+    connctn.close()
 
     run_sql('view/vw_file.sql', pg_service, variables)
 

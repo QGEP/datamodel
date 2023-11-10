@@ -52,6 +52,13 @@ DROP VIEW IF EXISTS qgep_od.vw_qgep_damage;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_overflow;
 DROP VIEW IF EXISTS qgep_od.vw_qgep_reach;
 
+-- symbol views
+DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_pipeline_registry;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_network_plan;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_overviewmap_om10;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_overviewmap_om5;
+DROP VIEW IF EXISTS qgep_od.vw_qgep_ws_symbol_overviewmap_om2;
+
 -- structure_part
 DROP VIEW IF EXISTS qgep_od.vw_access_aid;
 DROP FUNCTION IF EXISTS qgep_od.vw_access_aid_insert();

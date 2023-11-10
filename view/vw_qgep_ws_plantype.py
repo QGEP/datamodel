@@ -9,7 +9,7 @@ from yaml import safe_load
 from pirogue.utils import select_columns, insert_command, update_command, table_parts
 
 
-def vw_qgep_wastewater_structure(srid: int,
+def vw_qgep_ws_symbol_plantype(srid: int,
                                  pg_service: str = None,
                                  extra_definition: dict = None
                                  plantype_row: record):
@@ -26,7 +26,7 @@ def vw_qgep_wastewater_structure(srid: int,
     extra_definition = extra_definition or {}
 
     variables = {'SRID': int(srid),
-                'TYPEDEF': plantype_row[2], # value_en
+                'TYPEDEF': plantype_row[2]replace(".", "_"), # value_en
                 'TYPECODE':plantype_row[0]  # code
                 }
 
@@ -550,8 +550,8 @@ if __name__ == "__main__":
     connctn = psycopg2.connect("service={0}".format(pg_service))
     cursr = connctn.cursor()
     plantype_row_sql= "SELECT * from qgep_vl.wastewater_structure_symbol_plantype"
-    cursr.execute(trigger_insert_sql)
+    cursr.execute(plantype_row_sql)
     for plantype_row in cursr.fetchall()
-        vw_qgep_wastewater_structure(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
+        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
     cursr.close()
     connctn.close()
