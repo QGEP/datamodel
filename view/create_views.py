@@ -87,10 +87,11 @@ def create_views(srid: int,
     cursr = connctn.cursor()
     plantype_row_sql= "SELECT * from qgep_vl.wastewater_structure_symbol_plantype"
     cursr.execute(plantype_row_sql)
-    for plantype_row in cursr.fetchall()
-        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
-    cursr.close()
+    rows = cursr.fetchall();
+     cursr.close()
     connctn.close()
+    for plantype_row in rows:
+        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
 
     run_sql('view/vw_file.sql', pg_service, variables)
 

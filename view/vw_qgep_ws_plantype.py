@@ -547,11 +547,13 @@ if __name__ == "__main__":
     srid = args.srid or os.getenv('SRID')
     pg_service = args.pg_service or os.getenv('PGSERVICE')
     extra_definition = safe_load(open(args.extra_definition)) if args.extra_definition else {}
+    # symbol views
     connctn = psycopg2.connect("service={0}".format(pg_service))
     cursr = connctn.cursor()
     plantype_row_sql= "SELECT * from qgep_vl.wastewater_structure_symbol_plantype"
     cursr.execute(plantype_row_sql)
-    for plantype_row in cursr.fetchall()
-        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
-    cursr.close()
+    rows = cursr.fetchall();
+     cursr.close()
     connctn.close()
+    for plantype_row in rows:
+        vw_qgep_ws_symbol_plantype(srid=srid, pg_service=pg_service, extra_definition=extra_definition, plantype_row=plantype_row)
