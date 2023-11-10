@@ -12,7 +12,7 @@ from pirogue.utils import select_columns, insert_command, update_command, table_
 def vw_qgep_ws_symbol_plantype(srid: int,
                                  pg_service: str = None,
                                  extra_definition: dict = None,
-                                 plantype_row: list):
+                                 plantype_row: list = None):
     """
     Creates qgep_ws_symbol_xx views
     :param srid: EPSG code for geometries
