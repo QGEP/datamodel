@@ -26,7 +26,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
     extra_definition = extra_definition or {}
 
     variables = {'SRID': int(srid),
-                'TYPEDEF': plantype_row[2]replace(".", "_"), # value_en
+                'TYPEDEF': plantype_row[2].replace(".", "_"), # value_en
                 'TYPECODE':plantype_row[0]  # code
                 }
 
