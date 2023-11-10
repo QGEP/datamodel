@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# -- View: vw_qgep_wastewater_structure
+# -- View: vw_qgep_ws_symbol_xxxxxxx
 
 import argparse
 import os
@@ -11,10 +11,10 @@ from pirogue.utils import select_columns, insert_command, update_command, table_
 
 def vw_qgep_ws_symbol_plantype(srid: int,
                                  pg_service: str = None,
-                                 extra_definition: dict = None
+                                 extra_definition: dict = None,
                                  plantype_row: record):
     """
-    Creates qgep_wastewater_structure view
+    Creates qgep_ws_symbol_xx views
     :param srid: EPSG code for geometries
     :param pg_service: the PostgreSQL service name
     :param extra_definition: a dictionary for additional read-only columns
