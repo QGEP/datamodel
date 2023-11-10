@@ -178,7 +178,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                            indent=4,
                                            skip_columns=[],
                                            prefix='wn_',
-                                           remap_columns={})
+                                           remap_columns={}),
                ws_sym_cols=select_columns(pg_cur=cursor,
                                            table_schema='qgep_od',
                                            table_name='wastewater_structure_symbol',
