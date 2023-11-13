@@ -192,7 +192,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                                                                     alias=table_def.get('alias', ''),
                                                                                     jon=table_def['join_on'])
                                           for table_def in extra_definition.get('joins', {}).values()]),
-                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))
+                typedef=Identifier(plantype_row[2].replace(".", "_"))
                )
 
     cursor.execute(view_sql, variables)
@@ -335,7 +335,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                                        'fk_provider': 'NEW.fk_provider',
                                                        'fk_dataowner': 'NEW.fk_dataowner',
                                                        'fk_wastewater_structure': 'NEW.obj_id'}),
-                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))
+                typedef=Identifier(plantype_row[2].replace(".", "_"))
                )
 
     cursor.execute(trigger_insert_sql)
@@ -504,7 +504,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
                                                        'fk_provider': 'NEW.fk_provider',
                                                        'fk_dataowner': 'NEW.fk_dataowner',
                                                        'fk_wastewater_structure': 'NEW.obj_id'}),
-                typedef=sql.Identifier(plantype_row[2].replace(".", "_"))                         
+                typedef=Identifier(plantype_row[2].replace(".", "_"))                         
                )
 
     cursor.execute(update_trigger_sql, variables)
@@ -523,7 +523,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
 
     CREATE TRIGGER vw_qgep_ws_symbol_{typedef}_DELETE INSTEAD OF DELETE ON qgep_od.vw_qgep_ws_symbol_{typedef}
       FOR EACH ROW EXECUTE PROCEDURE qgep_od.ft_vw_qgep_qgep_ws_symbol_{typedef}_DELETE();
-    """.format(typedef=sql.Identifier(plantype_row[2].replace(".", "_")))
+    """.format(typedef=Identifier(plantype_row[2].replace(".", "_")))
     cursor.execute(trigger_delete_sql, variables)
 
     extras = """
@@ -532,7 +532,7 @@ def vw_qgep_ws_symbol_plantype(srid: int,
     ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER wn_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_node');
     ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER ws_sym_obj_id SET DEFAULT qgep_sys.generate_oid('qgep_od','wastewater_structure_symbol');
     ALTER VIEW qgep_od.vw_qgep_qgep_ws_symbol_{typedef} ALTER ws_sym_plantype SET DEFAULT %(TYPECODE)s;
-    """.format(typedef=sql.Identifier(plantype_row[2].replace(".", "_")))
+    """.format(typedef=Identifier(plantype_row[2].replace(".", "_")))
     cursor.execute(extras)
 
     conn.commit()
