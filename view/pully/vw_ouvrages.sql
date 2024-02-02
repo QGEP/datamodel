@@ -1,3 +1,5 @@
+--DROP VIEW IF EXISTS qgep_sigip.vw_ouvrages;
+
 CREATE OR REPLACE VIEW qgep_sigip.vw_ouvrages AS
 
   SELECT ws.obj_id,
@@ -23,6 +25,7 @@ CREATE OR REPLACE VIEW qgep_sigip.vw_ouvrages AS
     accessibility.value_fr AS accessibilite,
     ws.year_of_construction AS annee_construction,
     usage_current.value_fr AS genre_utilisation,
+    usage_expected.value_fr as usage_attendu,
     function_hierarchic.value_fr AS fonction_hierarchique,
     ws.pully_validation AS validation,
     ws.remark AS remarque,
@@ -50,6 +53,7 @@ CREATE OR REPLACE VIEW qgep_sigip.vw_ouvrages AS
     LEFT JOIN qgep_vl.cover_fastening cover_fastening ON cover_fastening.code = main_co.fastening
     LEFT JOIN qgep_od.organisation owner ON owner.obj_id::text = ws.fk_owner::text
     LEFT JOIN qgep_vl.channel_usage_current usage_current ON usage_current.code = ws._usage_current
+    LEFT JOIN qgep_vl.pully_node_usage_expected usage_expected ON usage_expected.code = wn.pully_fk_usage_expected
     LEFT JOIN qgep_vl.channel_function_hierarchic function_hierarchic ON function_hierarchic.code = ws._function_hierarchic
 
     /*
