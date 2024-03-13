@@ -36,11 +36,11 @@ To perform the migration:
 ## Technical details
 * table renames
   * hydraulic_characteristic_data to hydraulic_char_data
-  * overflow_characteristic_kind_overflow_characteristic to overflow_char_kind_overflow_characteristic
-  * overflow_characteristic_overflow_characteristic_digital to overflow_char_overflow_characteristic_digital
+  * overflow_characteristic_kind_overflow_characteristic to overflow_char_kind_overflow_char
+  * overflow_characteristic_overflow_characteristic_digital to overflow_char_overflow_char_digital
 * column renames
   * in table catchment_area_text, fk_catchment to fk_catchment_area
-  * in tables hq_relation, hydraulic_char_data and overflow: fk_overflow_char to fk_overflow_characteristic
+  * in tables hq_relation, hydraulic_char_data and overflow: fk_overflow_characteristic to fk_overflow_char
 * columns addition (missing in former models)
   * in table txt_symbol, skip fk_wastewater_structure
   * in table txt_text, skip fk_wastewater_structure, fk_catchment_area, fk_reach
