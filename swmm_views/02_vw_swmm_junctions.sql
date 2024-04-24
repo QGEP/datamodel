@@ -8,9 +8,9 @@ SELECT
 	wn.obj_id as Name,
 	coalesce(wn.bottom_level,0) as InvertElev,
 	(co.level-wn.bottom_level) as MaxDepth,
-	0.0::float as InitDepth,
-	0.0::float as SurchargeDepth,
-	0.0::float as PondedArea,
+	0.0::float as InitDepth,  -- default set to 0 instead of NULL
+	0.0::float as SurchargeDepth,  -- default set to 0 instead of NULL
+	0.0::float as PondedArea,  -- default set to 0 instead of NULL
 	ws.identifier::text as description,
 	CONCAT_WS(',', 'manhole', mf.value_en) as tag,
 	wn.situation_geometry as geom,
