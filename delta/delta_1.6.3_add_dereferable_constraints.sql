@@ -219,7 +219,6 @@ ALTER TABLE qgep_od.backflow_prevention ALTER CONSTRAINT oorel_od_backflow_preve
 
 ALTER TABLE qgep_od.backflow_prevention ALTER CONSTRAINT rel_backflow_prevention_throttle_shut_off_unit DEFERRABLE INITIALLY DEFERRED;
 
-16);
 ALTER TABLE qgep_od.backflow_prevention ALTER CONSTRAINT rel_backflow_prevention_pump DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE qgep_od.solids_retention ALTER CONSTRAINT oorel_od_solids_retention_structure_part DEFERRABLE INITIALLY DEFERRED;
