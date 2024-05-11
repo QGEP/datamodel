@@ -1,6 +1,7 @@
 ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 03.07.2017 21:26:28 / updated 29.3.2023
+------ version 03.07.2017 21:26:28 / updated 29.3.2023 / added DEFERRABLE INITIALLY DEFERRED 10.5.2024
+
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -3324,9 +3325,9 @@ FOR EACH ROW EXECUTE PROCEDURE
 -------
 ------------ Relationships and Value Tables ----------- ;
 ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
-ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep_od.maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_maintenance_event FOREIGN KEY (fk_maintenance_event) REFERENCES qgep_od.maintenance_event(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
 --ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD COLUMN fk_wastewater_structure varchar (16);
 --ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD CONSTRAINT rel_maintenance_event_wastewater_structure_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 --ALTER TABLE qgep_od.re_maintenance_event_wastewater_structure ADD COLUMN fk_maintenance_event varchar (16);
@@ -3342,7 +3343,7 @@ ALTER TABLE qgep_vl.symbol_plantype ADD CONSTRAINT pkey_qgep_vl_symbol_plantype_
  REFERENCES qgep_vl.symbol_plantype (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.txt_symbol ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep_od.txt_symbol ADD CONSTRAINT rel_symbol_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE cascade  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.txt_symbol ADD CONSTRAINT rel_symbol_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.text_plantype () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.text_plantype ADD CONSTRAINT pkey_qgep_vl_text_plantype_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7844,7844,'pipeline_registry','Leitungskataster','cadastre_des_conduites_souterraines', 'catasto_delle_canalizzazioni', '', '', '', '', '', '', 'true');
@@ -3385,7 +3386,7 @@ ALTER TABLE qgep_vl.mutation_kind ADD CONSTRAINT pkey_qgep_vl_mutation_kind_code
  ALTER TABLE qgep_od.mutation ADD CONSTRAINT fkey_vl_mutation_kind FOREIGN KEY (kind)
  REFERENCES qgep_vl.mutation_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep_od.river ADD CONSTRAINT oorel_od_river_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep_od.surface_water_bodies(obj_id) ON DELETE CASCADE ON UPDATE CASCADE  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.river ADD CONSTRAINT oorel_od_river_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep_od.surface_water_bodies(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.river_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_kind ADD CONSTRAINT pkey_qgep_vl_river_kind_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.river_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3397,3397,'englacial_river','Gletscherbach','ruisseau_de_glacier', 'zzz_Gletscherbach', '', '', '', '', '', '', 'true');
@@ -4227,8 +4228,8 @@ ALTER TABLE qgep_vl.reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_p
  REFERENCES qgep_vl.reach_point_outlet_shape (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.reach_point ADD COLUMN fk_wastewater_networkelement varchar (16);
-ALTER TABLE qgep_od.reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null  DEFERRABLE INITIALLY DEFERRED;
-ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE ON UPDATE CASCADE  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.wastewater_node ADD COLUMN fk_hydr_geometry varchar (16);
 ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT rel_wastewater_node_hydr_geometry FOREIGN KEY (fk_hydr_geometry) REFERENCES qgep_od.hydr_geometry(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.reach ADD CONSTRAINT oorel_od_reach_wastewater_networkelement FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
@@ -4353,7 +4354,7 @@ ALTER TABLE qgep_vl.mechanical_pretreatment_kind ADD CONSTRAINT pkey_qgep_vl_mec
  REFERENCES qgep_vl.mechanical_pretreatment_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.mechanical_pretreatment ADD COLUMN fk_infiltration_installation varchar (16);
-ALTER TABLE qgep_od.mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep_od.infiltration_installation(obj_id) ON UPDATE CASCADE ON DELETE set null  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep_od.infiltration_installation(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.mechanical_pretreatment ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.retention_body_kind () INHERITS (qgep_sys.value_list_base);
@@ -4396,9 +4397,9 @@ ALTER TABLE qgep_vl.structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl
  REFERENCES qgep_vl.structure_part_renovation_demand (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.structure_part ADD COLUMN fk_wastewater_structure varchar (16);
-ALTER TABLE qgep_od.structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade  DEFERRABLE INITIALLY DEFERRED;
-ALTER TABLE qgep_od.dryweather_downspout ADD CONSTRAINT oorel_od_dryweather_downspout_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE  DEFERRABLE INITIALLY DEFERRED;
-ALTER TABLE qgep_od.access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE  DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.dryweather_downspout ADD CONSTRAINT oorel_od_dryweather_downspout_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE qgep_od.access_aid ADD CONSTRAINT oorel_od_access_aid_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.access_aid_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.access_aid_kind ADD CONSTRAINT pkey_qgep_vl_access_aid_kind_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.access_aid_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5357,5357,'other','andere','autre', 'altro', 'altul', 'O', 'A', 'AU', '', '', 'true');
