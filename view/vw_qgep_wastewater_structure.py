@@ -40,6 +40,7 @@ def vw_qgep_wastewater_structure(srid: int,
           WHEN ss.obj_id IS NOT NULL THEN 'special_structure'
           WHEN dp.obj_id IS NOT NULL THEN 'discharge_point'
           WHEN ii.obj_id IS NOT NULL THEN 'infiltration_installation'
+          WHEN wt.obj_id IS NOT NULL THEN 'wwtp_structure'
           ELSE 'unknown'
         END AS ws_type
 
@@ -85,6 +86,7 @@ def vw_qgep_wastewater_structure(srid: int,
         LEFT JOIN qgep_od.special_structure ss ON ss.obj_id = ws.obj_id
         LEFT JOIN qgep_od.discharge_point dp ON dp.obj_id = ws.obj_id
         LEFT JOIN qgep_od.infiltration_installation ii ON ii.obj_id = ws.obj_id
+        LEFT JOIN qgep_od.wwtp_structure wt ON wt.obj_id = ws.obj_id
         LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.obj_id = ws.fk_main_wastewater_node
         LEFT JOIN qgep_od.wastewater_node wn ON wn.obj_id = ws.fk_main_wastewater_node
         LEFT JOIN qgep_od.channel ch ON ch.obj_id = ws.obj_id
@@ -157,6 +159,15 @@ def vw_qgep_wastewater_structure(srid: int,
                                          skip_columns=[],
                                          prefix='dp_',
                                          remap_columns={}),
+               wt_columns=select_columns(pg_cur=cursor,
+                                         table_schema='qgep_od',
+                                         table_name='wwtp_structure',
+                                         table_alias='wt',
+                                         remove_pkey=True,
+                                         indent=4,
+                                         skip_columns=[],
+                                         prefix='wt_',
+                                         remap_columns={}),
                wn_cols=select_columns(pg_cur=cursor,
                                            table_schema='qgep_od',
                                            table_name='wastewater_node',
@@ -210,6 +221,10 @@ def vw_qgep_wastewater_structure(srid: int,
         -- Infiltration Installation
         WHEN NEW.ws_type = 'infiltration_installation' THEN
     {insert_ii}
+
+        -- Wastewater treatment plant structure (wwtp structure)
+        WHEN NEW.ws_type = 'wwtp_structure' THEN
+    {insert_wt}
 
         ELSE
          RAISE NOTICE 'Wastewater structure type not known (%)', NEW.ws_type; -- ERROR
@@ -275,6 +290,14 @@ def vw_qgep_wastewater_structure(srid: int,
                                         remove_pkey=False,
                                         indent=6,
                                         remap_columns={'obj_id': 'obj_id'}),
+               insert_wt=insert_command(pg_cur=cursor,
+                                        table_schema='qgep_od',
+                                        table_name='wwtp_structure',
+                                        table_alias='wt',
+                                        prefix='wt_',
+                                        remove_pkey=False,
+                                        indent=6,
+                                        remap_columns={'obj_id': 'obj_id'}),
                insert_wn=insert_command(pg_cur=cursor,
                                         table_schema='qgep_od',
                                         table_name='vw_wastewater_node',
@@ -329,6 +352,7 @@ def vw_qgep_wastewater_structure(srid: int,
           WHEN OLD.ws_type = 'special_structure' THEN DELETE FROM qgep_od.special_structure WHERE obj_id = OLD.obj_id;
           WHEN OLD.ws_type = 'discharge_point' THEN DELETE FROM qgep_od.discharge_point WHERE obj_id = OLD.obj_id;
           WHEN OLD.ws_type = 'infiltration_installation' THEN DELETE FROM qgep_od.infiltration_installation WHERE obj_id = OLD.obj_id;
+          WHEN OLD.ws_type = 'wwtp_structure' THEN DELETE FROM qgep_od.wwtp_structure WHERE obj_id = OLD.obj_id;
           ELSE -- do nothing
         END CASE;
 
@@ -337,6 +361,7 @@ def vw_qgep_wastewater_structure(srid: int,
           WHEN NEW.ws_type = 'special_structure' THEN INSERT INTO qgep_od.special_structure (obj_id) VALUES(OLD.obj_id);
           WHEN NEW.ws_type = 'discharge_point' THEN INSERT INTO qgep_od.discharge_point (obj_id) VALUES(OLD.obj_id);
           WHEN NEW.ws_type = 'infiltration_installation' THEN INSERT INTO qgep_od.infiltration_installation (obj_id) VALUES(OLD.obj_id);
+          WHEN NEW.ws_type = 'wwtp_structure' THEN INSERT INTO qgep_od.wwtp_structure (obj_id) VALUES(OLD.obj_id);
           ELSE -- do nothing
         END CASE;
       END IF;
@@ -353,6 +378,9 @@ def vw_qgep_wastewater_structure(srid: int,
 
         WHEN NEW.ws_type = 'infiltration_installation' THEN
           {update_ii}
+
+        WHEN NEW.ws_type = 'wwtp_structure' THEN
+          {update_wt}
 
         ELSE -- do nothing
       END CASE;
@@ -495,6 +523,15 @@ def vw_qgep_wastewater_structure(srid: int,
                                         table_name='infiltration_installation',
                                         table_alias='ii',
                                         prefix='ii_',
+                                        remove_pkey=True,
+                                        indent=6,
+                                        skip_columns=[],
+                                        remap_columns={'obj_id': 'obj_id'}),
+               update_wt=update_command(pg_cur=cursor,
+                                        table_schema='qgep_od',
+                                        table_name='wwtp_structure',
+                                        table_alias='wt',
+                                        prefix='wt_',
                                         remove_pkey=True,
                                         indent=6,
                                         skip_columns=[],
