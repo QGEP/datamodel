@@ -1,6 +1,6 @@
 ------ This file generates the VSA-DSS database (Modul VSA-DSS) in en on QQIS
 ------ For questions etc. please contact Stefan Burckhardt stefan.burckhardt@sjib.ch
------- version 03.07.2017 21:26:28
+------ version 03.07.2017 21:26:28 / updated 29.3.2023
 BEGIN;
 ------ CREATE SCHEMA qgep;
 
@@ -33,11 +33,11 @@ CREATE TABLE qgep_sys.value_list_base
 (
 code integer NOT NULL,
 vsacode integer NOT NULL,
-value_en character varying(50),
-value_de character varying(50),
-value_fr character varying(50),
-value_it character varying(60),
-value_ro character varying(50),
+value_en character varying(100),
+value_de character varying(100),
+value_fr character varying(100),
+value_it character varying(100),
+value_ro character varying(100),
 abbr_en character varying(3),
 abbr_de character varying(3),
 abbr_fr character varying(3),
@@ -2072,10 +2072,10 @@ CREATE SEQUENCE qgep_od.seq_overflow_char_oid INCREMENT 1 MINVALUE 0 MAXVALUE 99
 COMMENT ON COLUMN qgep_od.overflow_char.obj_id IS '[primary_key] INTERLIS STANDARD OID (with Postfix/Präfix) or UUOID, see www.interlis.ch';
 ALTER TABLE qgep_od.overflow_char ADD COLUMN identifier  varchar(20) ;
 COMMENT ON COLUMN qgep_od.overflow_char.identifier IS '';
-ALTER TABLE qgep_od.overflow_char ADD COLUMN kind_overflow_characteristic  integer ;
-COMMENT ON COLUMN qgep_od.overflow_char.kind_overflow_characteristic IS 'yyy_Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben. / Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben. / La courbe est à documenter sous forme de rapport Q/Q (Leaping weir) ou H/Q (déversoir latéral). Les conditions d’écoulement dans la chambre d’accumulation sont à fournir en annexe.';
-ALTER TABLE qgep_od.overflow_char ADD COLUMN overflow_characteristic_digital  integer ;
-COMMENT ON COLUMN qgep_od.overflow_char.overflow_characteristic_digital IS 'yyy_Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung  in Ueberlaufcharakteristik ausgefüllt sein in HQ_Relation. / Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung in HQ_Relation ausgefüllt sein. / Si courbe de fonctionnement numérique = oui, les attributs pour les relations Q-Q et H-Q doivent être saisis dans la classe RELATION_HQ.';
+ALTER TABLE qgep_od.overflow_char ADD COLUMN kind_overflow_char  integer ;
+COMMENT ON COLUMN qgep_od.overflow_char.kind_overflow_char IS 'yyy_Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben. / Die Kennlinie ist als Q /Q- (bei Bodenöffnungen) oder als H/Q-Tabelle (bei Streichwehren) zu dokumentieren. Bei einer freien Aufteilung muss die Kennlinie nicht dokumentiert werden. Bei Abflussverhältnissen in Einstaubereichen ist die Funktion separat in einer Beilage zu beschreiben. / La courbe est à documenter sous forme de rapport Q/Q (Leaping weir) ou H/Q (déversoir latéral). Les conditions d’écoulement dans la chambre d’accumulation sont à fournir en annexe.';
+ALTER TABLE qgep_od.overflow_char ADD COLUMN overflow_char_digital  integer ;
+COMMENT ON COLUMN qgep_od.overflow_char.overflow_char_digital IS 'yyy_Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung  in Ueberlaufcharakteristik ausgefüllt sein in HQ_Relation. / Falls Kennlinie_digital = ja müssen die Attribute für die Q-Q oder H-Q Beziehung in HQ_Relation ausgefüllt sein. / Si courbe de fonctionnement numérique = oui, les attributs pour les relations Q-Q et H-Q doivent être saisis dans la classe RELATION_HQ.';
 ALTER TABLE qgep_od.overflow_char ADD COLUMN remark  varchar(80) ;
 COMMENT ON COLUMN qgep_od.overflow_char.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
 ALTER TABLE qgep_od.overflow_char ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
@@ -3538,8 +3538,8 @@ ALTER TABLE qgep_vl.water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catch
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_aquifier varchar (16);
 ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep_od.aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep_vl.river_bank_control_grade_of_river () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl_river_bank_control_grade_of_river_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (341,341,'none','keine','nul', 'nessuno', 'inexistent', '', '', '', '', '', 'true');
@@ -3646,8 +3646,8 @@ ALTER TABLE qgep_vl.sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_wa
  ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT fkey_vl_sector_water_body_kind FOREIGN KEY (kind)
  REFERENCES qgep_vl.sector_water_body_kind (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep_od.sector_water_body ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT rel_sector_water_body_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+ALTER TABLE qgep_od.sector_water_body ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT rel_sector_water_body_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep_od.cooperative ADD CONSTRAINT oorel_od_cooperative_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.canton ADD CONSTRAINT oorel_od_canton_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.waste_water_association ADD CONSTRAINT oorel_od_waste_water_association_organisation FOREIGN KEY (obj_id) REFERENCES qgep_od.organisation(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -4202,8 +4202,8 @@ ALTER TABLE qgep_vl.rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ram
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.fish_pass ADD COLUMN fk_water_control_structure varchar (16);
 ALTER TABLE qgep_od.fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep_od.water_control_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-ALTER TABLE qgep_od.bathing_area ADD COLUMN fk_chute varchar (16);
-ALTER TABLE qgep_od.bathing_area ADD CONSTRAINT rel_bathing_area_chute FOREIGN KEY (fk_chute) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.bathing_area ADD COLUMN fk_surface_water_bodies varchar (16);
+ALTER TABLE qgep_od.bathing_area ADD CONSTRAINT rel_bathing_area_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep_od.wastewater_networkelement ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.wastewater_networkelement ADD CONSTRAINT rel_wastewater_networkelement_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep_vl.reach_point_elevation_accuracy () INHERITS (qgep_sys.value_list_base);
@@ -4369,24 +4369,24 @@ ALTER TABLE qgep_vl.retention_body_kind ADD CONSTRAINT pkey_qgep_vl_retention_bo
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.retention_body ADD COLUMN fk_infiltration_installation varchar (16);
 ALTER TABLE qgep_od.retention_body ADD CONSTRAINT rel_retention_body_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep_od.infiltration_installation(obj_id) ON UPDATE CASCADE ON DELETE cascade;
-CREATE TABLE qgep_vl.overflow_char_kind_overflow_characteristic () INHERITS (qgep_sys.value_list_base);
-ALTER TABLE qgep_vl.overflow_char_kind_overflow_characteristic ADD CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_characteristic_code PRIMARY KEY (code);
- INSERT INTO qgep_vl.overflow_char_kind_overflow_characteristic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6220,6220,'hq','HQ','HQ', 'HQ', '', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.overflow_char_kind_overflow_characteristic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6221,6221,'qq','QQ','QQ', 'QQ', '', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.overflow_char_kind_overflow_characteristic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6228,6228,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
- ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_kind_overflow_characteristic FOREIGN KEY (kind_overflow_characteristic)
- REFERENCES qgep_vl.overflow_char_kind_overflow_characteristic (code) MATCH SIMPLE 
+CREATE TABLE qgep_vl.overflow_char_kind_overflow_char () INHERITS (qgep_sys.value_list_base);
+ALTER TABLE qgep_vl.overflow_char_kind_overflow_char ADD CONSTRAINT pkey_qgep_vl_overflow_char_kind_overflow_char_code PRIMARY KEY (code);
+ INSERT INTO qgep_vl.overflow_char_kind_overflow_char (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6220,6220,'hq','HQ','HQ', 'HQ', '', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.overflow_char_kind_overflow_char (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6221,6221,'qq','QQ','QQ', 'QQ', '', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.overflow_char_kind_overflow_char (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6228,6228,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
+ ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_kind_overflow_char FOREIGN KEY (kind_overflow_char)
+ REFERENCES qgep_vl.overflow_char_kind_overflow_char (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-CREATE TABLE qgep_vl.overflow_char_overflow_characteristic_digital () INHERITS (qgep_sys.value_list_base);
-ALTER TABLE qgep_vl.overflow_char_overflow_characteristic_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_characteristic_digital_code PRIMARY KEY (code);
- INSERT INTO qgep_vl.overflow_char_overflow_characteristic_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6223,6223,'yes','ja','oui', 'si', '', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.overflow_char_overflow_characteristic_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6224,6224,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.overflow_char_overflow_characteristic_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6225,6225,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
- ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_overflow_characteristic_digital FOREIGN KEY (overflow_characteristic_digital)
- REFERENCES qgep_vl.overflow_char_overflow_characteristic_digital (code) MATCH SIMPLE 
+CREATE TABLE qgep_vl.overflow_char_overflow_char_digital () INHERITS (qgep_sys.value_list_base);
+ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_char_digital_code PRIMARY KEY (code);
+ INSERT INTO qgep_vl.overflow_char_overflow_char_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6223,6223,'yes','ja','oui', 'si', '', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.overflow_char_overflow_char_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6224,6224,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.overflow_char_overflow_char_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6225,6225,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
+ ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_overflow_char_digital FOREIGN KEY (overflow_char_digital)
+ REFERENCES qgep_vl.overflow_char_overflow_char_digital (code) MATCH SIMPLE 
  ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE qgep_od.hq_relation ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep_od.hq_relation ADD CONSTRAINT rel_hq_relation_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE cascade;
+ALTER TABLE qgep_od.hq_relation ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep_od.hq_relation ADD CONSTRAINT rel_hq_relation_overflow_char FOREIGN KEY (fk_overflow_char) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 CREATE TABLE qgep_vl.structure_part_renovation_demand () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl_structure_part_renovation_demand_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (138,138,'not_necessary','nicht_notwendig','pas_necessaire', 'zzz_nicht_notwendig', 'nenecesare', 'NN', 'NN', 'PN', '', '', 'true');
@@ -4760,8 +4760,8 @@ ALTER TABLE qgep_od.overflow ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade;
 ALTER TABLE qgep_od.overflow ADD COLUMN fk_overflow_to varchar (16);
 ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_overflow_to FOREIGN KEY (fk_overflow_to) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep_od.overflow ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.overflow ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_overflow_char FOREIGN KEY (fk_overflow_char) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep_od.overflow ADD COLUMN fk_control_center varchar (16);
 ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_control_center FOREIGN KEY (fk_control_center) REFERENCES qgep_od.control_center(obj_id) ON UPDATE CASCADE ON DELETE set null;
 CREATE TABLE qgep_vl.throttle_shut_off_unit_actuation () INHERITS (qgep_sys.value_list_base);
@@ -4952,8 +4952,8 @@ ALTER TABLE qgep_vl.hydraulic_char_data_status ADD CONSTRAINT pkey_qgep_vl_hydra
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.hydraulic_char_data ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null;
-ALTER TABLE qgep_od.hydraulic_char_data ADD COLUMN fk_overflow_characteristic varchar (16);
-ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_overflow_characteristic FOREIGN KEY (fk_overflow_characteristic) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
+ALTER TABLE qgep_od.hydraulic_char_data ADD COLUMN fk_overflow_char varchar (16);
+ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_overflow_char FOREIGN KEY (fk_overflow_char) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE set null;
 ALTER TABLE qgep_od.backflow_prevention ADD CONSTRAINT oorel_od_backflow_prevention_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE qgep_vl.backflow_prevention_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflow_prevention_kind_code PRIMARY KEY (code);

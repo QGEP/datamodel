@@ -86,8 +86,8 @@ BEGIN
         IF _loop_count = 0 THEN
           -- Missing renames
           _destination_table_name := regexp_replace(_destination_table_name,'^hydraulic_characteristic_data','hydraulic_char_data');
-          _destination_table_name := regexp_replace(_destination_table_name,'^overflow_characteristic_kind_overflow_characteristic','overflow_char_kind_overflow_characteristic');
-          _destination_table_name := regexp_replace(_destination_table_name,'^overflow_characteristic_overflow_characteristic_digital','overflow_char_overflow_characteristic_digital');
+          _destination_table_name := regexp_replace(_destination_table_name,'^overflow_characteristic_kind_overflow_characteristic','overflow_char_kind_overflow_char');
+          _destination_table_name := regexp_replace(_destination_table_name,'^overflow_characteristic_overflow_characteristic_digital','overflow_char_overflow_char_digital');
           _loop_count = 1;
           CONTINUE;
         END IF;
@@ -174,8 +174,8 @@ BEGIN
           AND sequence_name = '%1$I'
       $$, _sequence_name ) INTO _sequence_exists;
       IF _sequence_exists = 0 THEN
-        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_hydraulic_char_data_oid','qgep.seq_od_hydraulic_characteristic_data_oid');
-        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_overflow_char_oid','qgep.seq_od_overflow_characteristic_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_hydraulic_characteristic_data_oid','qgep.seq_od_hydraulic_char_data_oid');
+        _sequence_name_fully_qualified := replace(_sequence_name_fully_qualified,'qgep.seq_od_overflow_characteristic_oid','qgep.seq_od_overflow_char_oid');
       END IF;
       -- update sequence
       SELECT nextval(_sequence_name_fully_qualified) INTO _sequence_value;
