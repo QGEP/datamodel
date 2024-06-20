@@ -27,6 +27,7 @@ INSERT INTO qgep_sys.oid_prefixes (prefix,organization,active) VALUES ('ch17nq5g
 INSERT INTO qgep_sys.oid_prefixes (prefix,organization,active) VALUES ('ch2003p6','Vevey',FALSE);
 INSERT INTO qgep_sys.oid_prefixes (prefix,organization,active) VALUES ('ch238z74','La Tour-de-Peilz',FALSE);
 INSERT INTO qgep_sys.oid_prefixes (prefix,organization,active) VALUES ('ch234hqx','BTI',FALSE);
+INSERT INTO qgep_sys.oid_prefixes (prefix,organization,active) VALUES ('ch2421zz','Noville',FALSE);
 
 CREATE INDEX in_qgep_is_oid_prefixes_active
   ON qgep_sys.oid_prefixes
