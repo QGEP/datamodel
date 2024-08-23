@@ -2,10 +2,10 @@
 ALTER TABLE qgep_od.mutation 
 RENAME COLUMN system_user to user_system;
 
-UPDATE TABLE qgep_sys.dictionary_od_field
+UPDATE qgep_sys.dictionary_od_field
 SET field_name = 'user_system'
 WHERE attribute_id = 5532;
 
-UPDATE TABLE qgep_sys.dictionary_od_field
+UPDATE qgep_sys.dictionary_od_field
 SET field_name_en = 'user_system'
 WHERE attribute_id = 5532;
