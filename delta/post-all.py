@@ -5,12 +5,11 @@ import sys
 
 import psycopg2
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
 from pum.core.deltapy import DeltaPy
 
 from view.create_views import create_views
 
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 class CreateViews(DeltaPy):
 

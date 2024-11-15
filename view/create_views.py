@@ -5,14 +5,15 @@ import os
 import sys
 
 import psycopg2
-from pirogue import MultipleInheritance, SimpleJoins, SingleInheritance
-from yaml import safe_load
 
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+from pirogue import MultipleInheritance, SimpleJoins, SingleInheritance
+
+from yaml import safe_load
 
 from vw_qgep_reach import vw_qgep_reach
 from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
 
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 def run_sql(file_path: str, pg_service: str, variables: dict = {}):
     sql = open(file_path).read()
