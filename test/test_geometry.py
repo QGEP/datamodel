@@ -33,9 +33,9 @@ class TestViews(unittest.TestCase, DbTestBase):
             "01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C400000000000002040000000000000F87F"
         )
         # rp_from_level is NULL
-        expected_row["rp_from_level"] is None
+        expected_row["rp_from_level"] = None
         # rp_to_level is NULL
-        expected_row["rp_to_level"] is None
+        expected_row["rp_to_level"] = None
         self.insert_check("vw_qgep_reach", row, expected_row)
         # reach_point has on rp_to as Z NaN: SELECT ST_SetSRID( ST_MakePoint(1,2,'NaN'), 2056)
         row = self.select("reach_point", "BBB 1337_0001")
@@ -64,7 +64,7 @@ class TestViews(unittest.TestCase, DbTestBase):
             "01090000A00808000001000000010200008003000000000000000000F03F0000000000000040000000000000F87F0000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000805040"
         )
         # rp_from_level is NULL
-        expected_row["rp_from_level"] is None
+        expected_row["rp_from_level"] = None
         # rp_to_level is 66.000
         expected_row["rp_to_level"] = "66.000"
         self.insert_check("vw_qgep_reach", row, expected_row)
@@ -98,7 +98,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         # rp_from_level is 77.000
         expected_row["rp_from_level"] = "77.000"
         # rp_to_level is NULL
-        expected_row["rp_to_level"] is None
+        expected_row["rp_to_level"] = None
         self.insert_check("vw_qgep_reach", row, expected_row)
         # reach_point has on rp_from as Z 77.000: SELECT ST_SetSRID( ST_MakePoint(1,2,77.000), 2056)
         row = self.select("reach_point", "BBB 1337_0003")
@@ -231,9 +231,9 @@ class TestViews(unittest.TestCase, DbTestBase):
         # ws_qgep_wastewaterstructure has the geometry but NaN as Z because of no co_level (geometry of cover): ST_SetSRID(ST_Collect(ST_MakePoint(2600000, 1200000, 'NaN')), 2056)
         expected_row["situation_geometry"] = "0101000020080800000000000020D6434100000000804F3241"
         # co_level is NULL
-        expected_row["co_level"] is None
+        expected_row["co_level"] = None
         # wn_bottom_level NULL
-        expected_row["wn_bottom_level"] is None
+        expected_row["wn_bottom_level"] = None
         self.insert_check("vw_qgep_wastewater_structure", row, expected_row)
         # cover geometry has the geometry but NaN as Z: ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)
         row = self.select("cover", "1337_1001")
@@ -260,7 +260,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         # ws_qgep_wastewaterstructure has the 2D geometry: ST_SetSRID(ST_MakePoint(2600000, 1200000), 2056)
         expected_row["situation_geometry"] = "0101000020080800000000000020D6434100000000804F3241"
         # co_level is NULL
-        expected_row["co_level"] is None
+        expected_row["co_level"] = None
         # wn_bottom_level is new wn_bottom_level
         expected_row["wn_bottom_level"] = "200.000"
         self.insert_check("vw_qgep_wastewater_structure", row, expected_row)
@@ -434,7 +434,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         }
         expected_row = copy.deepcopy(row)
         # bottom_level NULL overwrites Z (555) (to NaN) results in: ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)
-        expected_row["bottom_level"] is None
+        expected_row["bottom_level"] = None
         expected_row["situation_geometry"] = (
             "01010000A0080800000000000020D6434100000000804F3241000000000000F87F"
         )
@@ -447,7 +447,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         }
         expected_row = copy.deepcopy(row)
         # no bottom_level overwrites Z (555) (to NaN) results in: ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)
-        expected_row["bottom_level"] is None
+        expected_row["bottom_level"] = None
         expected_row["situation_geometry"] = (
             "01010000A0080800000000000020D6434100000000804F3241000000000000F87F"
         )
@@ -554,7 +554,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         }
         expected_row = copy.deepcopy(row)
         # level NULL overwrites Z (555) (to NaN) results in: ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)
-        expected_row["level"] is None
+        expected_row["level"] = None
         expected_row["situation_geometry"] = (
             "01010000A0080800000000000020D6434100000000804F3241000000000000F87F"
         )
@@ -567,7 +567,7 @@ class TestViews(unittest.TestCase, DbTestBase):
         }
         expected_row = copy.deepcopy(row)
         # no level overwrites Z (555) (to NaN) results in: ST_SetSRID(ST_MakePoint(2600000, 1200000, 'NaN'), 2056)
-        expected_row["level"] is None
+        expected_row["level"] = None
         expected_row["situation_geometry"] = (
             "01010000A0080800000000000020D6434100000000804F3241000000000000F87F"
         )
