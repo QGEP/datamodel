@@ -1045,7 +1045,7 @@ ALTER TABLE qgep_vl.file_class ADD CONSTRAINT pkey_qgep_vl_file_class_code PRIMA
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3880,3880,'dryweather_downspout','Trockenwetterfallrohr','TUYAU_CHUTE', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3881,3881,'dryweather_flume','Trockenwetterrinne','CUNETTE_DEBIT_TEMPS_SEC', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3882,3882,'overflow','Ueberlauf','DEVERSOIR', '', '', '', 'true');
- INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3883,3883,'overflow_characteristic','Ueberlaufcharakteristik','CARACTERISTIQUES_DEVERSOIR', '', '', '', 'true');
+ INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3883,3883,'overflow_char','Ueberlaufcharakteristik','CARACTERISTIQUES_DEVERSOIR', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3884,3884,'shore','Ufer','RIVE', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3885,3885,'accident','Unfall','ACCIDENT', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3886,3886,'inspection','Untersuchung','EXAMEN', '', '', '', 'true');
