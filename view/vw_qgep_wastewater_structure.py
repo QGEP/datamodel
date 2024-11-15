@@ -66,7 +66,7 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None, extra_defini
         , {ii_columns}
 
         , {dp_columns}
-        
+
         , {wt_columns}
 
         , {wn_cols}
