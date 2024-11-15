@@ -105,4 +105,3 @@ CREATE OR REPLACE RULE vw_rock_ramp_ON_DELETE AS ON DELETE TO qgep_od.vw_rock_ra
   DELETE FROM qgep_od.rock_ramp WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
-

@@ -1,10 +1,8 @@
-import unittest
 import os
+import unittest
 
 import psycopg2
 import psycopg2.extras
-import decimal
-import copy
 
 from .utils import DbTestBase
 
@@ -20,8 +18,8 @@ class TestSwmm(unittest.TestCase, DbTestBase):
 
     @classmethod
     def setUp(cls):
-        pgservice=os.environ.get('PGSERVICE') or 'pg_qgep'
-        cls.conn = psycopg2.connect("service={service}".format(service=pgservice))
+        pgservice = os.environ.get("PGSERVICE") or "pg_qgep"
+        cls.conn = psycopg2.connect(f"service={pgservice}")
 
     def test_count_vw_aquifers(self):
         self.assert_count("vw_aquifers", "qgep_swmm", 0)
@@ -83,5 +81,6 @@ class TestSwmm(unittest.TestCase, DbTestBase):
     def test_count_vw_xsections(self):
         self.assert_count("vw_xsections", "qgep_swmm", 5095)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

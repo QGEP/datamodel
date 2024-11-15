@@ -66,4 +66,3 @@ ALTER TABLE IF EXISTS qgep_od.sector_water_body DROP COLUMN fk_chute;
 
 -- 6. rename wrong value in qgep_sys.dictionary_od_field
 -- not needed as fk_attributes are not in qgep_sys tables
-

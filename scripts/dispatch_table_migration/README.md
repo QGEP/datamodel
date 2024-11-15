@@ -8,12 +8,12 @@ The logic behind the migration is:
 1. Make a copy of the original DB containing QGEP schema (`CREATE DATABASE new WITH TEMPLATE old`)
 2. Init QGEP with its new schema within the new DB (hence former `qgep` schema will be along with new `qgep_sys`, `qgep_vl`, `qgep_od` schemas)
 3. Copy data from `qgep`schema to the new ones.
- 
+
 To perform the migration:
 
 1. Adapt the script `migrate_dispatch.sh` and define source and destination PG services and databases.
 2. Run the script.
-  
+
 ## Things which are handled
 
 * Every table in qgep schema has its content copied to new schemas, except:
@@ -27,12 +27,12 @@ To perform the migration:
   * these changes are performed wisely: they are only applied after checking if the latest version cannot be found
 * If a table present in former schema doesn't have its correspondance in new schemas, a WARNING is thrown for value list and an ERROR for any other type of tables.
 * Sequences are updated from former schema.
-  
+
 ## Things which are **NOT** handled or should be considered
 * If some fields are too long (varchar columns were extended in former schema).
 * Former `qgep` schema is kept in the new DB, it would need to be removed afterwards.
 * This migration will break history in logged_actions, this would require patching data in the logged actions.
- 
+
 ## Technical details
 * table renames
   * hydraulic_characteristic_data to hydraulic_char_data

@@ -6,4 +6,3 @@ UPDATE qgep_sys.dictionary_od_table SET tablename = 'damage_channel' WHERE table
 UPDATE qgep_sys.dictionary_od_table SET tablename = 'damage_manhole' WHERE tablename = 'od_damage_manhole';
 UPDATE qgep_sys.dictionary_od_table SET tablename = 'file' WHERE tablename = 'od_file';
 UPDATE qgep_sys.dictionary_od_table SET tablename = 'data_media' WHERE tablename = 'od_data_media';
-

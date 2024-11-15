@@ -15,4 +15,3 @@ BEGIN
   RETURN;
 END;
 $$ LANGUAGE plpgsql;
-

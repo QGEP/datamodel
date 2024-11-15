@@ -17,7 +17,3 @@ joins:
 
   pump:
     table: qgep_od.pump
-
-
-
-

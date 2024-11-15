@@ -129,4 +129,3 @@ CREATE OR REPLACE RULE vw_param_ca_general_ON_DELETE AS ON DELETE TO qgep_od.vw_
   DELETE FROM qgep_od.param_ca_general WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.surface_runoff_parameters WHERE obj_id = OLD.obj_id;
 );
-

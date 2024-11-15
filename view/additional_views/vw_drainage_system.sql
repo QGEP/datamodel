@@ -97,4 +97,3 @@ CREATE OR REPLACE RULE vw_drainage_system_ON_DELETE AS ON DELETE TO qgep_od.vw_d
   DELETE FROM qgep_od.drainage_system WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.zone WHERE obj_id = OLD.obj_id;
 );
-

@@ -209,4 +209,3 @@ CREATE OR REPLACE RULE vw_qgep_catchment_area_ON_DELETE AS ON DELETE TO qgep_od.
 INSTEAD (
   DELETE FROM qgep_od.catchment_area WHERE obj_id = OLD.obj_id;
 );
-

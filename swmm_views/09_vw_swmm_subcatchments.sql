@@ -28,7 +28,7 @@ SELECT
   END as percImperv, -- take from catchment_area instead of default value
   CASE
     WHEN wn_geom IS NOT NULL
-    THEN 	
+    THEN
     (
     st_maxdistance(wn_geom, ST_ExteriorRing(perimeter_geometry))
     + st_distance(wn_geom, ST_ExteriorRing(perimeter_geometry))
@@ -44,21 +44,21 @@ SELECT
   NULL::varchar as SnowPack, -- default value
   CASE
 		WHEN fk_wastewater_networkelement_ww_current is not null
-		THEN 
-			CASE 
+		THEN
+			CASE
 				WHEN waste_water_production_current IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_current')
 				ELSE
-					CASE 
+					CASE
 						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_current and a default production of 160 Litre / inhabitant /day')
 						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_current and a default production of 160 Litre / inhabitant /day')
 					END
 			END
 		WHEN fk_wastewater_networkelement_ww_planned is not null
-		THEN 
-			CASE 
+		THEN
+			CASE
 				WHEN waste_water_production_planned IS NOT NULL THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from waste_water_production_planned')
 				ELSE
-					CASE 
+					CASE
 						WHEN (surface_area IS NOT NULL AND surface_area != 0) THEN concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from surface_area, population_density_planned and a default production of 160 Litre / inhabitant /day')
 						ELSE concat('catchment_area: ', ca.obj_id,': DWF baseline is computed from the geometric area, population_density_planned and a default production of 160 Litre / inhabitant /day')
 					END
@@ -75,7 +75,7 @@ SELECT
     WHEN state = 'rw_planned' OR state = 'ww_planned' THEN 'planned'
     ELSE 'planned'
   END as state,
-  CASE 
+  CASE
 		WHEN _function_hierarchic in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
@@ -131,7 +131,7 @@ FROM (
             wn.obj_id AS wn_obj_id,
             fhy.vsacode as _function_hierarchic
            FROM qgep_od.catchment_area ca_1
-             JOIN qgep_od.wastewater_networkelement ne 
+             JOIN qgep_od.wastewater_networkelement ne
 			 	ON ne.obj_id::text IN (ca_1.fk_wastewater_networkelement_rw_current::text,
 						       ca_1.fk_wastewater_networkelement_ww_current::text,
 						       ca_1.fk_wastewater_networkelement_rw_planned::text,
@@ -144,6 +144,6 @@ FROM (
 	     LEFT JOIN qgep_vl.catchment_area_infiltration_current ic ON ic.code=ca_1.infiltration_current
 	     LEFT JOIN qgep_vl.catchment_area_infiltration_planned ip ON ip.code=ca_1.infiltration_planned
 	     LEFT JOIN qgep_vl.catchment_area_retention_current rc ON rc.code=ca_1.retention_current
-	     LEFT JOIN qgep_vl.catchment_area_retention_planned rp ON rp.code=ca_1.retention_planned	
+	     LEFT JOIN qgep_vl.catchment_area_retention_planned rp ON rp.code=ca_1.retention_planned
 	     LEFT JOIN qgep_vl.channel_function_hierarchic fhy ON fhy.code=wn._function_hierarchic
 ) as ca;

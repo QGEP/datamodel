@@ -109,4 +109,3 @@ CREATE OR REPLACE RULE vw_electromechanical_equipment_ON_DELETE AS ON DELETE TO 
   DELETE FROM qgep_od.electromechanical_equipment WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
-

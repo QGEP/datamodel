@@ -9,5 +9,3 @@ pkey_default_value: True
 joins:
   examination:
     table: qgep_od.examination
-
-

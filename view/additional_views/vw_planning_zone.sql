@@ -97,4 +97,3 @@ CREATE OR REPLACE RULE vw_planning_zone_ON_DELETE AS ON DELETE TO qgep_od.vw_pla
   DELETE FROM qgep_od.planning_zone WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.zone WHERE obj_id = OLD.obj_id;
 );
-

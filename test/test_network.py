@@ -1,10 +1,8 @@
-import unittest
 import os
+import unittest
 
 import psycopg2
 import psycopg2.extras
-import decimal
-import copy
 
 from .utils import DbTestBase
 
@@ -27,31 +25,28 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         self.conn.rollback()
 
     def setUp(self):
-        pgservice=os.environ.get('PGSERVICE') or 'pg_qgep'
-        self.conn = psycopg2.connect("service={service}".format(service=pgservice))
+        pgservice = os.environ.get("PGSERVICE") or "pg_qgep"
+        self.conn = psycopg2.connect(f"service={pgservice}")
 
     def make_reach(self, identifier, x1, y1, x2, y2):
         """
         Helper function that makes a reach, returns obj_id, reachpoint_start_id, reachpoint_end_id
         """
         reach = {
-            'identifier': identifier,
-            'progression_geometry': self.make_line(x1, y1, 100, x2, y2, 100),
+            "identifier": identifier,
+            "progression_geometry": self.make_line(x1, y1, 100, x2, y2, 100),
         }
-        reach_id = self.insert('vw_qgep_reach', reach)
-        reach = self.select('reach', reach_id)
-        return reach_id, reach['fk_reach_point_from'], reach['fk_reach_point_to']
+        reach_id = self.insert("vw_qgep_reach", reach)
+        reach = self.select("reach", reach_id)
+        return reach_id, reach["fk_reach_point_from"], reach["fk_reach_point_to"]
 
     def make_manhole(self, identifier, x, y):
         """
         Helper function that makes a manhole, returns (obj_id, wn_obj_id)
         """
-        manhole = {
-            'identifier': identifier,
-            'situation_geometry': self.make_point_2d(x, y)
-        }
-        manhole_id = self.insert('vw_qgep_wastewater_structure', manhole)
-        manhole_wn_id = self.select('vw_qgep_wastewater_structure', manhole_id)['wn_obj_id']
+        manhole = {"identifier": identifier, "situation_geometry": self.make_point_2d(x, y)}
+        manhole_id = self.insert("vw_qgep_wastewater_structure", manhole)
+        manhole_wn_id = self.select("vw_qgep_wastewater_structure", manhole_id)["wn_obj_id"]
         return manhole_id, manhole_wn_id
 
     def connect_reach(self, reach_id, from_id=None, to_id=None):
@@ -60,10 +55,10 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         """
         data = {}
         if from_id is not None:
-            data['rp_from_fk_wastewater_networkelement'] = from_id
+            data["rp_from_fk_wastewater_networkelement"] = from_id
         if to_id is not None:
-            data['rp_to_fk_wastewater_networkelement'] = to_id
-        self.update('vw_qgep_reach', data, reach_id)
+            data["rp_to_fk_wastewater_networkelement"] = to_id
+        self.update("vw_qgep_reach", data, reach_id)
 
     def refresh_graph(self):
         cur = self.cursor()
@@ -94,8 +89,8 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         FROM downstream;
         """
         cur = self.cursor()
-        cur.execute(query, (node_id, ))
-        return {row['obj_id'] : row['depth'] for row in cur.fetchall()}
+        cur.execute(query, (node_id,))
+        return {row["obj_id"]: row["depth"] for row in cur.fetchall()}
 
     def upstream_nodes_depths(self, node_id):
         """returns a dict with all upstream nodes depths by id
@@ -121,8 +116,8 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         FROM upstream
         """
         cur = self.cursor()
-        cur.execute(query, (node_id, ))
-        return {row['obj_id'] : row['depth'] for row in cur.fetchall()}
+        cur.execute(query, (node_id,))
+        return {row["obj_id"]: row["depth"] for row in cur.fetchall()}
 
     def test_network_basic(self):
         """
@@ -139,9 +134,9 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         first is connected FROM the manhole, second is connected TO manhole
         """
 
-        manhole_id, manhole_wn_id = self.make_manhole('manhole', 0, 0)
-        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach('first', 0, 0, 10, 0)
-        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach('second', 0, 10, 0, 0)
+        manhole_id, manhole_wn_id = self.make_manhole("manhole", 0, 0)
+        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach("first", 0, 0, 10, 0)
+        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach("second", 0, 10, 0, 0)
 
         self.connect_reach(reach_1_id, from_id=manhole_wn_id)
         self.connect_reach(reach_2_id, to_id=manhole_wn_id)
@@ -152,34 +147,34 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         down_depths = self.downstream_nodes_depths(manhole_wn_id)
         up_depths = self.upstream_nodes_depths(manhole_wn_id)
 
-        self.assertEqual( len(up_depths), 3)
-        self.assertEqual( up_depths[rp_2a_id], -2 )
-        self.assertEqual( up_depths[rp_2b_id], -1 )
-        self.assertEqual( len(down_depths), 3)
-        self.assertEqual( down_depths[rp_1a_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 2 )
+        self.assertEqual(len(up_depths), 3)
+        self.assertEqual(up_depths[rp_2a_id], -2)
+        self.assertEqual(up_depths[rp_2b_id], -1)
+        self.assertEqual(len(down_depths), 3)
+        self.assertEqual(down_depths[rp_1a_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 2)
 
         # test network from reach 2 start
         down_depths = self.downstream_nodes_depths(rp_2a_id)
         up_depths = self.upstream_nodes_depths(rp_2a_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 5)
-        self.assertEqual( down_depths[rp_2b_id], 1 )
-        self.assertEqual( down_depths[manhole_wn_id], 2 )
-        self.assertEqual( down_depths[rp_1a_id], 3 )
-        self.assertEqual( down_depths[rp_1b_id], 4 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 5)
+        self.assertEqual(down_depths[rp_2b_id], 1)
+        self.assertEqual(down_depths[manhole_wn_id], 2)
+        self.assertEqual(down_depths[rp_1a_id], 3)
+        self.assertEqual(down_depths[rp_1b_id], 4)
 
         # test network from reach 1 end
         down_depths = self.downstream_nodes_depths(rp_1b_id)
         up_depths = self.upstream_nodes_depths(rp_1b_id)
 
-        self.assertEqual( len(up_depths), 5)
-        self.assertEqual( up_depths[rp_1a_id], -1 )
-        self.assertEqual( up_depths[manhole_wn_id], -2 )
-        self.assertEqual( up_depths[rp_2b_id], -3 )
-        self.assertEqual( up_depths[rp_2a_id], -4 )
-        self.assertEqual( len(down_depths), 1)
+        self.assertEqual(len(up_depths), 5)
+        self.assertEqual(up_depths[rp_1a_id], -1)
+        self.assertEqual(up_depths[manhole_wn_id], -2)
+        self.assertEqual(up_depths[rp_2b_id], -3)
+        self.assertEqual(up_depths[rp_2a_id], -4)
+        self.assertEqual(len(down_depths), 1)
 
     def test_network_blind_connection(self):
         """
@@ -195,9 +190,9 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         first is connected FROM manhole, second is connected TO first directly (blind connection)
         """
 
-        manhole_id, manhole_wn_id = self.make_manhole('manhole', 0, 0)
-        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach('first', 0, 0, 10, 0)
-        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach('second', 5, 10, 5, 0)
+        manhole_id, manhole_wn_id = self.make_manhole("manhole", 0, 0)
+        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach("first", 0, 0, 10, 0)
+        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach("second", 5, 10, 5, 0)
 
         self.connect_reach(reach_1_id, from_id=manhole_wn_id)
         self.connect_reach(reach_2_id, to_id=reach_1_id)
@@ -208,30 +203,30 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         down_depths = self.downstream_nodes_depths(manhole_wn_id)
         up_depths = self.upstream_nodes_depths(manhole_wn_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 4)
-        self.assertEqual( down_depths[rp_1a_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 3 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 4)
+        self.assertEqual(down_depths[rp_1a_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 3)
 
         # test network from reach 2 start
         down_depths = self.downstream_nodes_depths(rp_2a_id)
         up_depths = self.upstream_nodes_depths(rp_2a_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 4)
-        self.assertEqual( down_depths[rp_2b_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 3 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 4)
+        self.assertEqual(down_depths[rp_2b_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 3)
 
         # test network from reach 1 end
         down_depths = self.downstream_nodes_depths(rp_1b_id)
         up_depths = self.upstream_nodes_depths(rp_1b_id)
 
-        self.assertEqual( len(up_depths), 6)
-        self.assertEqual( up_depths[rp_1a_id], -2 )
-        self.assertEqual( up_depths[manhole_wn_id], -3 )
-        self.assertEqual( up_depths[rp_2b_id], -2 )
-        self.assertEqual( up_depths[rp_2a_id], -3 )
-        self.assertEqual( len(down_depths), 1)
+        self.assertEqual(len(up_depths), 6)
+        self.assertEqual(up_depths[rp_1a_id], -2)
+        self.assertEqual(up_depths[manhole_wn_id], -3)
+        self.assertEqual(up_depths[rp_2b_id], -2)
+        self.assertEqual(up_depths[rp_2a_id], -3)
+        self.assertEqual(len(down_depths), 1)
 
     def test_network_blind_connection_overlaid(self):
         """
@@ -247,9 +242,9 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         but at the same position than the node
         """
 
-        manhole_id, manhole_wn_id = self.make_manhole('manhole', 0, 0)
-        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach('first', 0, 0, 10, 0)
-        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach('second', 0, 10, 0, 0)
+        manhole_id, manhole_wn_id = self.make_manhole("manhole", 0, 0)
+        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach("first", 0, 0, 10, 0)
+        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach("second", 0, 10, 0, 0)
 
         self.connect_reach(reach_1_id, from_id=manhole_wn_id)
         self.connect_reach(reach_2_id, to_id=reach_1_id)
@@ -260,30 +255,30 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         down_depths = self.downstream_nodes_depths(manhole_wn_id)
         up_depths = self.upstream_nodes_depths(manhole_wn_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 3)
-        self.assertEqual( down_depths[rp_1a_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 2 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 3)
+        self.assertEqual(down_depths[rp_1a_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 2)
 
         # test network from reach 2 start
         down_depths = self.downstream_nodes_depths(rp_2a_id)
         up_depths = self.upstream_nodes_depths(rp_2a_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 4)
-        self.assertEqual( down_depths[rp_2b_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 3 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 4)
+        self.assertEqual(down_depths[rp_2b_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 3)
 
         # test network from reach 1 end
         down_depths = self.downstream_nodes_depths(rp_1b_id)
         up_depths = self.upstream_nodes_depths(rp_1b_id)
 
-        self.assertEqual( len(up_depths), 5)
-        self.assertEqual( up_depths[rp_1a_id], -1 )
-        self.assertEqual( up_depths[manhole_wn_id], -2 )
-        self.assertEqual( up_depths[rp_2b_id], -2 )
-        self.assertEqual( up_depths[rp_2a_id], -3 )
-        self.assertEqual( len(down_depths), 1)
+        self.assertEqual(len(up_depths), 5)
+        self.assertEqual(up_depths[rp_1a_id], -1)
+        self.assertEqual(up_depths[manhole_wn_id], -2)
+        self.assertEqual(up_depths[rp_2b_id], -2)
+        self.assertEqual(up_depths[rp_2a_id], -3)
+        self.assertEqual(len(down_depths), 1)
 
     def test_network_two_blind_connection(self):
         """
@@ -299,10 +294,10 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         first is connected FROM manhole, second and third are connected TO first directly (blind connection)
         """
 
-        manhole_id, manhole_wn_id = self.make_manhole('manhole', 0, 0)
-        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach('first', 0, 0, 10, 0)
-        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach('second', 3, 10, 3, 0)
-        reach_3_id, rp_3a_id, rp_3b_id = self.make_reach('third', 6, 10, 6, 0)
+        manhole_id, manhole_wn_id = self.make_manhole("manhole", 0, 0)
+        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach("first", 0, 0, 10, 0)
+        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach("second", 3, 10, 3, 0)
+        reach_3_id, rp_3a_id, rp_3b_id = self.make_reach("third", 6, 10, 6, 0)
 
         self.connect_reach(reach_1_id, from_id=manhole_wn_id)
         self.connect_reach(reach_2_id, to_id=reach_1_id)
@@ -314,30 +309,30 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         down_depths = self.downstream_nodes_depths(manhole_wn_id)
         up_depths = self.upstream_nodes_depths(manhole_wn_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 5)
-        self.assertEqual( down_depths[rp_1a_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 4 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 5)
+        self.assertEqual(down_depths[rp_1a_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 4)
 
         # test network from reach 2 start
         down_depths = self.downstream_nodes_depths(rp_2a_id)
         up_depths = self.upstream_nodes_depths(rp_2a_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 5)
-        self.assertEqual( down_depths[rp_2b_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 4 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 5)
+        self.assertEqual(down_depths[rp_2b_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 4)
 
         # test network from reach 1 end
         down_depths = self.downstream_nodes_depths(rp_1b_id)
         up_depths = self.upstream_nodes_depths(rp_1b_id)
 
-        self.assertEqual( len(up_depths), 9)
-        self.assertEqual( up_depths[rp_1a_id], -3 )
-        self.assertEqual( up_depths[manhole_wn_id], -4 )
-        self.assertEqual( up_depths[rp_2b_id], -3 )
-        self.assertEqual( up_depths[rp_2a_id], -4 )
-        self.assertEqual( len(down_depths), 1)
+        self.assertEqual(len(up_depths), 9)
+        self.assertEqual(up_depths[rp_1a_id], -3)
+        self.assertEqual(up_depths[manhole_wn_id], -4)
+        self.assertEqual(up_depths[rp_2b_id], -3)
+        self.assertEqual(up_depths[rp_2a_id], -4)
+        self.assertEqual(len(down_depths), 1)
 
     def test_network_two_opposing_blind_connection(self):
         """
@@ -359,10 +354,10 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         but arrive at the exact same point
         """
 
-        manhole_id, manhole_wn_id = self.make_manhole('manhole', 0, 0)
-        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach('first', 0, 0, 10, 0)
-        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach('second', 5, 10, 5, 0)
-        reach_3_id, rp_3a_id, rp_3b_id = self.make_reach('third', 5, -10, 5, 0)
+        manhole_id, manhole_wn_id = self.make_manhole("manhole", 0, 0)
+        reach_1_id, rp_1a_id, rp_1b_id = self.make_reach("first", 0, 0, 10, 0)
+        reach_2_id, rp_2a_id, rp_2b_id = self.make_reach("second", 5, 10, 5, 0)
+        reach_3_id, rp_3a_id, rp_3b_id = self.make_reach("third", 5, -10, 5, 0)
 
         self.connect_reach(reach_1_id, from_id=manhole_wn_id)
         self.connect_reach(reach_2_id, to_id=reach_1_id)
@@ -374,31 +369,31 @@ class TestNetwork(unittest.TestCase, DbTestBase):
         down_depths = self.downstream_nodes_depths(manhole_wn_id)
         up_depths = self.upstream_nodes_depths(manhole_wn_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 4)
-        self.assertEqual( down_depths[rp_1a_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 3 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 4)
+        self.assertEqual(down_depths[rp_1a_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 3)
 
         # test network from reach 2 start
         down_depths = self.downstream_nodes_depths(rp_2a_id)
         up_depths = self.upstream_nodes_depths(rp_2a_id)
 
-        self.assertEqual( len(up_depths), 1)
-        self.assertEqual( len(down_depths), 4)
-        self.assertEqual( down_depths[rp_2b_id], 1 )
-        self.assertEqual( down_depths[rp_1b_id], 3 )
+        self.assertEqual(len(up_depths), 1)
+        self.assertEqual(len(down_depths), 4)
+        self.assertEqual(down_depths[rp_2b_id], 1)
+        self.assertEqual(down_depths[rp_1b_id], 3)
 
         # test network from reach 1 end
         down_depths = self.downstream_nodes_depths(rp_1b_id)
         up_depths = self.upstream_nodes_depths(rp_1b_id)
 
-        self.assertEqual( len(up_depths), 8)
-        self.assertEqual( up_depths[rp_1a_id], -2 )
-        self.assertEqual( up_depths[manhole_wn_id], -3 )
-        self.assertEqual( up_depths[rp_2b_id], -2 )
-        self.assertEqual( up_depths[rp_2a_id], -3 )
-        self.assertEqual( len(down_depths), 1)
+        self.assertEqual(len(up_depths), 8)
+        self.assertEqual(up_depths[rp_1a_id], -2)
+        self.assertEqual(up_depths[manhole_wn_id], -3)
+        self.assertEqual(up_depths[rp_2b_id], -2)
+        self.assertEqual(up_depths[rp_2a_id], -3)
+        self.assertEqual(len(down_depths), 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

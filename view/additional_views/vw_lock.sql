@@ -101,4 +101,3 @@ CREATE OR REPLACE RULE vw_lock_ON_DELETE AS ON DELETE TO qgep_od.vw_lock DO INST
   DELETE FROM qgep_od.lock WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
-
