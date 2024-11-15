@@ -6,9 +6,9 @@ import sys
 from pkg_resources import DistributionNotFound, get_distribution, parse_version
 from pum.core.deltapy import DeltaPy
 
-from datamodel.view.create_views import drop_views
-
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from datamodel.view.create_views import drop_views
 
 # Older verisons of pum and pirogue can create issues such as reapplying deltas whose checksum have changed,
 # or create columuns in views in a non-deterministic order. To avoid causing trouble in user's database,
