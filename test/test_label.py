@@ -53,10 +53,7 @@ class TestViews(unittest.TestCase, DbTestBase):
                 geom = self.execute(
                     "ST_ForceCurve(ST_SetSrid(ST_MakeLine(ARRAY[{points}]), 2056))".format(
                         points=", ".join(
-                            [
-                                f"ST_MakePoint({pt[0]}, {pt[1]}, 'NaN')"
-                                for pt in points
-                            ]
+                            [f"ST_MakePoint({pt[0]}, {pt[1]}, 'NaN')" for pt in points]
                         )
                     )
                 )
