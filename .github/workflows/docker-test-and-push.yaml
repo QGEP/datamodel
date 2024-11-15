@@ -23,18 +23,18 @@ jobs:
         # postgres-postgis version, see available tags https://hub.docker.com/r/postgis/postgis/tags
         pgis:
           # WARNING: if changing this, make sure tu update `pgis_stable` below
-          - 13-3.2
-          - 14-3.2
+          - 13-3.4
+          - 14-3.4
           #- 15-3.3 # Postgis 3.3 requires QGEP datamodel adaptations
           # See https://github.com/QGEP/QGEP/issues/825
       fail-fast: false
 
     env:
       # which pgis version to use for :tag images and to generate the dumps attached to the release (must be in the matrix above)
-      pgis_stable: "14-3.2"
+      pgis_stable: "14-3.4"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: "assert version is up to date"
         run: |
