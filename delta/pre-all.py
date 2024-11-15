@@ -4,7 +4,6 @@ import os
 import sys
 
 from pkg_resources import DistributionNotFound, get_distribution, parse_version
-
 from pum.core.deltapy import DeltaPy
 
 from view.create_views import drop_views
