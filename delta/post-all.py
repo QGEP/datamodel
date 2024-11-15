@@ -6,7 +6,7 @@ import sys
 import psycopg2
 from pum.core.deltapy import DeltaPy
 
-from ..view.create_views import create_views
+from datamodel.view.create_views import create_views
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
