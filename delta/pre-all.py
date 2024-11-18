@@ -6,7 +6,7 @@ import sys
 from pkg_resources import DistributionNotFound, get_distribution, parse_version
 from pum.core.deltapy import DeltaPy
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))  # noqa: E402
 
 from view.create_views import drop_views
 
