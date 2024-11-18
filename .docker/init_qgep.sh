@@ -40,7 +40,7 @@ if [ "$1" == "release" ]; then
     echo 'you must provide the release version as second argument'
     exit 1
   fi
-  
+
   echo '----------------------------------------'
   echo "Installing demo data from release"
 

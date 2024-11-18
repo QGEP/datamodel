@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-import sys, os
-import psycopg2
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+import os
+import sys
 
+from pkg_resources import DistributionNotFound, get_distribution, parse_version
 from pum.core.deltapy import DeltaPy
-from view.create_views import drop_views
-from pkg_resources import get_distribution, parse_version, DistributionNotFound
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from view.create_views import drop_views  # noqa: E402
 
 # Older verisons of pum and pirogue can create issues such as reapplying deltas whose checksum have changed,
 # or create columuns in views in a non-deterministic order. To avoid causing trouble in user's database,
@@ -22,14 +24,18 @@ class CheckLibraryVersions(DeltaPy):
             if get_distribution("pum").parsed_version < parse_version(MIN_PUM):
                 raise RuntimeError
         except (RuntimeError, DistributionNotFound):
-            raise RuntimeError(f"You need pum {MIN_PUM} or newer to proceed. Run `pip install pum --upgrade` before continuing")
+            raise RuntimeError(
+                f"You need pum {MIN_PUM} or newer to proceed. Run `pip install pum --upgrade` before continuing"
+            )
 
         # check pirogue
         try:
             if get_distribution("pirogue").parsed_version < parse_version(MIN_PIROGUE):
                 raise RuntimeError
         except (RuntimeError, DistributionNotFound):
-            raise RuntimeError(f"You need pirogue {MIN_PIROGUE} or newer to proceed. Run `pip install pirogue --upgrade` before continuing")
+            raise RuntimeError(
+                f"You need pirogue {MIN_PIROGUE} or newer to proceed. Run `pip install pirogue --upgrade` before continuing"
+            )
 
 
 class DropViews(DeltaPy):

@@ -105,4 +105,3 @@ CREATE OR REPLACE RULE vw_dam_ON_DELETE AS ON DELETE TO qgep_od.vw_dam DO INSTEA
   DELETE FROM qgep_od.dam WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
-

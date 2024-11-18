@@ -24,7 +24,7 @@ Reinitialization
 ```bash
 # later on, to reinitialize all databases
 docker exec qgep init_qgep.sh
-# optionally, you can specify which database to reinitialize like this 
+# optionally, you can specify which database to reinitialize like this
 # docker exec qgep init_qgep.sh structure
 ```
 

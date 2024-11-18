@@ -117,4 +117,3 @@ CREATE OR REPLACE RULE vw_solids_retention_ON_DELETE AS ON DELETE TO qgep_od.vw_
   DELETE FROM qgep_od.solids_retention WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
-
