@@ -8,10 +8,10 @@ import psycopg2
 from pirogue import MultipleInheritance, SimpleJoins, SingleInheritance
 from yaml import safe_load
 
-sys.path.append(os.path.join(os.path.dirname(__file__)))  # noqa: E402
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
-from vw_qgep_reach import vw_qgep_reach
-from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
+from vw_qgep_reach import vw_qgep_reach  # noqa: E402
+from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure  # noqa: E402
 
 
 def run_sql(file_path: str, pg_service: str, variables: dict = {}):

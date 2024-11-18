@@ -6,9 +6,9 @@ import sys
 import psycopg2
 from pum.core.deltapy import DeltaPy
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))  # noqa: E402
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from view.create_views import create_views
+from view.create_views import create_views  # noqa: E402
 
 
 class CreateViews(DeltaPy):
