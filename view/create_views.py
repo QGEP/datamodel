@@ -8,7 +8,7 @@ import psycopg2
 from pirogue import MultipleInheritance, SimpleJoins, SingleInheritance
 from yaml import safe_load
 
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+sys.path.append(os.path.join(os.path.dirname(__file__)))  # noqa: E402
 
 from vw_qgep_reach import vw_qgep_reach
 from vw_qgep_wastewater_structure import vw_qgep_wastewater_structure
