@@ -2,7 +2,7 @@
 
 -- DROP VIEW qgep_od.vw_qgep_maintenance_on_wws;
 
-CREATE OR REPLACE VIEW qgep_od.vw_qgep_maintenance_on_wws AS 
+CREATE OR REPLACE VIEW qgep_od.vw_qgep_maintenance_on_wws AS
  SELECT re_m_w.obj_id AS re_m_w_id,
     maintenance.obj_id,
     maintenance.identifier,
@@ -29,7 +29,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_qgep_maintenance_on_wws AS
      LEFT JOIN qgep_od.wastewater_networkelement ne ON ne.fk_wastewater_structure::text = ws.obj_id::text
      LEFT JOIN qgep_od.wastewater_node node ON node.obj_id::text = ne.obj_id::text
    WHERE node.obj_id is not null;
-        
+
 
 ALTER TABLE qgep_od.vw_qgep_maintenance_on_wws
   OWNER TO postgres;

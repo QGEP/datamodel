@@ -121,4 +121,3 @@ CREATE OR REPLACE RULE vw_building_ON_DELETE AS ON DELETE TO qgep_od.vw_building
   DELETE FROM qgep_od.building WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.connection_object WHERE obj_id = OLD.obj_id;
 );
-

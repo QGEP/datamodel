@@ -97,4 +97,3 @@ CREATE OR REPLACE RULE vw_infiltration_zone_ON_DELETE AS ON DELETE TO qgep_od.vw
   DELETE FROM qgep_od.infiltration_zone WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.zone WHERE obj_id = OLD.obj_id;
 );
-

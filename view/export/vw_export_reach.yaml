@@ -92,4 +92,3 @@ joins:
     table: qgep_od.organisation
     fkey: ws_fk_operator
     prefix: operator_
-

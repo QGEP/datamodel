@@ -36,7 +36,7 @@ added solely for QGEP';
 
 -- this column is an extension to the VSA data model and puts the _function_hierarchic in order
 ALTER TABLE qgep_vl.channel_function_hierarchic ADD COLUMN order_fct_hierarchic smallint;
-UPDATE qgep_vl.channel_function_hierarchic 
+UPDATE qgep_vl.channel_function_hierarchic
 SET order_fct_hierarchic=
  array_position(
 	 ARRAY[
@@ -45,7 +45,7 @@ SET order_fct_hierarchic=
 		 ,5069 --pwwf.main_drain
 		 ,5071 --pwwf.collector_sewer
 		 ,5062 --pwwf.renovation_conduction
-		 ,5064 --pwwf.residential_drainage		 
+		 ,5064 --pwwf.residential_drainage
 		 ,5072 --pwwf.road_drainage
 		 ,5066 --pwwf.other
 		 ,5074 --pwwf.unknown

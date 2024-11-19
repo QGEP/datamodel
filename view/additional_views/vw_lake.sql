@@ -93,4 +93,3 @@ CREATE OR REPLACE RULE vw_lake_ON_DELETE AS ON DELETE TO qgep_od.vw_lake DO INST
   DELETE FROM qgep_od.lake WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.surface_water_bodies WHERE obj_id = OLD.obj_id;
 );
-

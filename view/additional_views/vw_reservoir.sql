@@ -113,4 +113,3 @@ CREATE OR REPLACE RULE vw_reservoir_ON_DELETE AS ON DELETE TO qgep_od.vw_reservo
   DELETE FROM qgep_od.reservoir WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.connection_object WHERE obj_id = OLD.obj_id;
 );
-

@@ -168,4 +168,3 @@ CREATE OR REPLACE RULE vw_wwtp_structure_ON_DELETE AS ON DELETE TO qgep_od.vw_ww
   DELETE FROM qgep_od.wwtp_structure WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.wastewater_structure WHERE obj_id = OLD.obj_id;
 );
-

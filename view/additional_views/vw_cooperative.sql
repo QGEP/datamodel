@@ -95,4 +95,3 @@ CREATE OR REPLACE RULE vw_cooperative_ON_DELETE AS ON DELETE TO qgep_od.vw_coope
   DELETE FROM qgep_od.cooperative WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.organisation WHERE obj_id = OLD.obj_id;
 );
-

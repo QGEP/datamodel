@@ -113,4 +113,3 @@ CREATE OR REPLACE RULE vw_tank_emptying_ON_DELETE AS ON DELETE TO qgep_od.vw_tan
   DELETE FROM qgep_od.tank_emptying WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.structure_part WHERE obj_id = OLD.obj_id;
 );
-

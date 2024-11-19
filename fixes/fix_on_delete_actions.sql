@@ -17,7 +17,7 @@ ALTER TABLE qgep_od.manhole DROP CONSTRAINT oorel_od_manhole_wastewater_structur
 ALTER TABLE qgep_od.manhole ADD CONSTRAINT oorel_od_manhole_wastewater_structure FOREIGN KEY (obj_id)
       REFERENCES qgep_od.wastewater_structure(obj_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE;
-      
+
 ALTER TABLE qgep_od.wastewater_node DROP CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement;
 ALTER TABLE qgep_od.wastewater_node ADD CONSTRAINT oorel_od_wastewater_node_wastewater_networkelement FOREIGN KEY (obj_id)
       REFERENCES qgep_od.wastewater_networkelement(obj_id) MATCH SIMPLE

@@ -93,7 +93,7 @@ BEGIN
     WHEN TG_OP = 'DELETE' THEN
       ch_obj_id = OLD.obj_id;
   END CASE;
-  
+
   BEGIN
     SELECT ws.obj_id, ne.obj_id INTO _ws_from_id, _ne_from_id
       FROM qgep_od.wastewater_networkelement ch_ne
@@ -110,7 +110,7 @@ BEGIN
     WHEN TOO_MANY_ROWS THEN
         RAISE EXCEPTION 'TRIGGER ERROR ws_symbology_update_by_channel. Subquery shoud return exactly one row. This is not supposed to happen and indicates an isue with the trigger. The issue must be fixed in QGEP.';
   END;
-  
+
   BEGIN
     SELECT ws.obj_id, ne.obj_id INTO _ws_to_id, _ne_to_id
       FROM qgep_od.wastewater_networkelement ch_ne

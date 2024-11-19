@@ -12,4 +12,3 @@ joins:
 
   manhole:
     table: qgep_od.damage_manhole
-

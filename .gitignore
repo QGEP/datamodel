@@ -5,4 +5,3 @@ nosetests.xml
 .DS_Store
 .idea
 temp/
-

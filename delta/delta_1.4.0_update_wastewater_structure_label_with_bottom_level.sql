@@ -12,7 +12,7 @@ UPDATE qgep_od.wastewater_structure ws
 SET _label = label
 FROM (
   SELECT ws_obj_id,
-       COALESCE(ws_identifier, '') || E'\n' || 
+       COALESCE(ws_identifier, '') || E'\n' ||
         array_to_string(
          array_append(array_agg('C' || '=' || co_level::text ORDER BY co_level DESC), ''),
          E'\n'
@@ -93,6 +93,5 @@ BEGIN
 
   RETURN NEW;
 END; $BODY$
-LANGUAGE plpgsql 
+LANGUAGE plpgsql
 VOLATILE;
-

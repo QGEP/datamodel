@@ -63,12 +63,12 @@ BEGIN
         END IF;
   INSERT INTO qgep_sys.logged_actions VALUES (audit_row.*);
   RETURN NEW;
-        
+
     ELSIF (TG_OP = 'DELETE' AND TG_LEVEL = 'ROW') THEN
         audit_row.row_data = hstore(OLD.*) - excluded_cols;
   INSERT INTO qgep_sys.logged_actions VALUES (audit_row.*);
         RETURN OLD;
-        
+
     ELSIF (TG_OP = 'INSERT' AND TG_LEVEL = 'ROW') THEN
         audit_row.row_data = hstore(NEW.*) - excluded_cols;
   INSERT INTO qgep_sys.logged_actions VALUES (audit_row.*);
@@ -99,13 +99,13 @@ DECLARE
 BEGIN
     EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_row ON ' || target_table::text;
     EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_stm ON ' || target_table::text;
- 
+
     IF audit_rows THEN
         IF array_length(ignored_cols,1) > 0 THEN
             _ignored_cols_snip = ', ' || quote_literal(ignored_cols);
         END IF;
-        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER INSERT OR UPDATE OR DELETE ON ' || 
-                 target_table::text || 
+        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER INSERT OR UPDATE OR DELETE ON ' ||
+                 target_table::text ||
                  ' FOR EACH ROW EXECUTE PROCEDURE qgep_sys.if_modified_func(' ||
                  quote_literal(audit_query_text) || _ignored_cols_snip || ');';
         RAISE NOTICE '%%',_q_txt;
@@ -113,7 +113,7 @@ BEGIN
         stm_targets = 'TRUNCATE';
     ELSE
     END IF;
- 
+
     _q_txt = 'CREATE TRIGGER audit_trigger_stm AFTER ' || stm_targets || ' ON ' ||
              target_table ||
              ' FOR EACH STATEMENT EXECUTE PROCEDURE qgep_sys.if_modified_func('||
@@ -182,7 +182,7 @@ BEGIN
     from
         event, where_pks
     ;
-    
+
     execute query;
 END;
 $body$
@@ -190,7 +190,7 @@ LANGUAGE plpgsql;
 
 COMMENT ON FUNCTION qgep_sys.replay_event(int) IS $body$
 Replay a logged event.
- 
+
 Arguments:
    pevent_id:  The event_id of the event in qgep_sys.logged_actions to replay
 $body$;
@@ -204,12 +204,12 @@ DECLARE
 BEGIN
     EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_row ON ' || target_view::text;
     EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_stm ON ' || target_view::text;
- 
+
 	IF array_length(ignored_cols,1) > 0 THEN
 	    _ignored_cols_snip = ', ' || quote_literal(ignored_cols);
 	END IF;
-	_q_txt = 'CREATE TRIGGER audit_trigger_row INSTEAD OF INSERT OR UPDATE OR DELETE ON ' || 
-		 target_view::TEXT || 
+	_q_txt = 'CREATE TRIGGER audit_trigger_row INSTEAD OF INSERT OR UPDATE OR DELETE ON ' ||
+		 target_view::TEXT ||
 		 ' FOR EACH ROW EXECUTE PROCEDURE qgep_sys.if_modified_func(' ||
 		 quote_literal(audit_query_text) || _ignored_cols_snip || ');';
 	RAISE NOTICE '%%',_q_txt;
@@ -219,7 +219,7 @@ BEGIN
   IF (select count(*) from qgep_sys.logged_relations where relation_name = (select target_view)::text AND  uid_column= (select unnest(uid_cols))::text) = 0 THEN
       insert into qgep_sys.logged_relations (relation_name, uid_column)
        select target_view, unnest(uid_cols);
-  END IF;    
+  END IF;
 
 END;
 $body$
@@ -227,7 +227,7 @@ LANGUAGE plpgsql;
 
 COMMENT ON FUNCTION qgep_sys.audit_view(regclass, BOOLEAN, text[], text[]) IS $body$
 ADD auditing support TO a VIEW.
- 
+
 Arguments:
    target_view:      TABLE name, schema qualified IF NOT ON search_path
    audit_query_text: Record the text of the client query that triggered the audit event?
@@ -235,9 +235,9 @@ Arguments:
    uid_cols:         MANDATORY COLUMNS to use to uniquely identify a row from the view (in order to replay UPDATE and DELETE)
 
 Example:
-  SELECT qgep_sys.audit_view('qgep_od.vw_element_installation', 'true'::BOOLEAN, '{field_to_ignore}'::text[], '{key_field1, keyfield2}'::text[]) 
+  SELECT qgep_sys.audit_view('qgep_od.vw_element_installation', 'true'::BOOLEAN, '{field_to_ignore}'::text[], '{key_field1, keyfield2}'::text[])
 $body$;
- 
+
 CREATE OR REPLACE FUNCTION qgep_sys.unaudit_view(target_view regclass) RETURNS void AS $body$
 BEGIN
     EXECUTE 'DROP TRIGGER IF EXISTS audit_trigger_row ON ' || target_view::text;

@@ -2,8 +2,8 @@
 
 -- DROP VIEW vw_wizard_reach_channel;
 
-CREATE OR REPLACE VIEW qgep_od.vw_wizard_reach_channel AS 
- SELECT 
+CREATE OR REPLACE VIEW qgep_od.vw_wizard_reach_channel AS
+ SELECT
      re.obj_id
    , bedding_encasement
    , connection_type
@@ -75,7 +75,7 @@ CREATE OR REPLACE VIEW qgep_od.vw_wizard_reach_channel AS
    , rp_to_dataowner
    , rp_to_provider
    , rp_to_fk_wastewater_networkelement
-   
+
    FROM qgep_od.vw_channel ch
      LEFT JOIN qgep_od.vw_reach re ON ch.obj_id = re.fk_wastewater_structure
   WHERE false;
@@ -243,4 +243,3 @@ DROP TRIGGER IF EXISTS vw_wizard_reach_channel_ON_INSERT ON qgep_od.vw_wizard_re
 
 CREATE TRIGGER vw_wizard_reach_channel_ON_INSERT INSTEAD OF INSERT ON qgep_od.vw_wizard_reach_channel
   FOR EACH ROW EXECUTE PROCEDURE qgep_od.vw_wizard_reach_channel_INSERT();
-

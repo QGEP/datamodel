@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
 ***************************************************************************
@@ -18,16 +17,14 @@
 ***************************************************************************
 """
 
-__author__ = 'Denis Rouzaud'
-__date__ = 'April 2018'
-__copyright__ = '(C) 2018,Denis Rouzaud'
+__author__ = "Denis Rouzaud"
+__date__ = "April 2018"
+__copyright__ = "(C) 2018,Denis Rouzaud"
 # This will get replaced with a git SHA1 when you do a git archive
-__revision__ = '$Format:%H$'
+__revision__ = "$Format:%H$"
 
 
-import http.client
 import os
-import json
 import subprocess
 
 
@@ -56,7 +53,9 @@ qgep_{version}_structure_and_demo_data.backup | Complete backup with structure a
 
 * If you plan to **use QGEP for production**, it is more likely you will be using the plain SQL `qgep_{version}_structure_with_value_lists.sql`.
 * If you want to **give a try at QGEP**, you will likely restore the `qgep_{version}_structure_and_demo_data.backup` backup file.
-""".format(version=version)
+""".format(
+        version=version
+    )
 
 
 def create_dumps():
@@ -76,43 +75,54 @@ def create_plain_structure_only():
     Create a plain SQL dump of data structure of all schemas and the content of pum_sys.inf
     :return: the file name of the dump
     """
-    print('::group::plain SQL structure only')
+    print("::group::plain SQL structure only")
 
     # structure
-    dump_s = 'qgep_{version}_structure.sql'.format(
-        version=os.environ['CI_TAG'])
+    dump_s = "qgep_{version}_structure.sql".format(version=os.environ["CI_TAG"])
 
-    print('Creating dump {}'.format(dump_s))
-    dump_file_s = 'artifacts/{dump}'.format(dump=dump_s)
-    _cmd(['pg_dump',
-                     '--format', 'plain',
-                     '--schema-only',
-                     '--file', dump_file_s,
-                     '--exclude-schema', 'public',
-                     '--no-owner',
-                     'qgep_prod']
-                    )
+    print(f"Creating dump {dump_s}")
+    dump_file_s = f"artifacts/{dump_s}"
+    _cmd(
+        [
+            "pg_dump",
+            "--format",
+            "plain",
+            "--schema-only",
+            "--file",
+            dump_file_s,
+            "--exclude-schema",
+            "public",
+            "--no-owner",
+            "qgep_prod",
+        ]
+    )
 
     # dump all from qgep_sys except logged_actions
-    dump_i = 'qgep_{version}_pum_info.sql'.format(
-        version=os.environ['CI_TAG'])
-    print('Creating dump {}'.format(dump_i))
-    dump_file_i = 'artifacts/{dump}'.format(dump=dump_i)
-    _cmd(['pg_dump',
-                     '--format', 'plain',
-                     '--data-only',
-                     '--file', dump_file_i,
-                     '--schema', 'qgep_sys',
-                     '--exclude-table', 'qgep_sys.logged_actions',
-                     'qgep_prod']
-                    )
-    print('Concatenating the 2 dumps')
+    dump_i = "qgep_{version}_pum_info.sql".format(version=os.environ["CI_TAG"])
+    print(f"Creating dump {dump_i}")
+    dump_file_i = f"artifacts/{dump_i}"
+    _cmd(
+        [
+            "pg_dump",
+            "--format",
+            "plain",
+            "--data-only",
+            "--file",
+            dump_file_i,
+            "--schema",
+            "qgep_sys",
+            "--exclude-table",
+            "qgep_sys.logged_actions",
+            "qgep_prod",
+        ]
+    )
+    print("Concatenating the 2 dumps")
     with open(dump_file_i) as f:
         dump_data = f.read()
     with open(dump_file_s, "a") as f:
         f.write(dump_data)
 
-    print('::endgroup::')
+    print("::endgroup::")
 
     return dump_file_s
 
@@ -123,35 +133,40 @@ def create_plain_value_list(structure_dump_file):
     with value list content
     :return: the file name of the dump
     """
-    print('::group::value lists dump')
+    print("::group::value lists dump")
 
-    dump = 'qgep_{version}_structure_with_value_lists.sql'.format(
-        version=os.environ['CI_TAG'])
+    dump = "qgep_{version}_structure_with_value_lists.sql".format(version=os.environ["CI_TAG"])
 
-    print('Creating dump {}'.format(dump))
-    dump_file = 'artifacts/{dump}'.format(dump=dump)
+    print(f"Creating dump {dump}")
+    dump_file = f"artifacts/{dump}"
 
-    _cmd(['pg_dump',
-                     '--format', 'plain',
-                     '--blobs',
-                     '--data-only',
-                     '--file', dump_file,
-                     '--schema', 'qgep_vl',
-                     'qgep_prod']
-                    )
+    _cmd(
+        [
+            "pg_dump",
+            "--format",
+            "plain",
+            "--blobs",
+            "--data-only",
+            "--file",
+            dump_file,
+            "--schema",
+            "qgep_vl",
+            "qgep_prod",
+        ]
+    )
 
-    print('Concatenating the 2 dumps')
+    print("Concatenating the 2 dumps")
     with open(dump_file) as f:
         dump_data = f.read()
     with open(structure_dump_file) as f:
         structure_dump_data = f.read()
-    with open(dump_file, 'w') as f:
+    with open(dump_file, "w") as f:
         f.write(structure_dump_data)
-        f.write('\n\n\n-- Value lists dump --\n\n')
+        f.write("\n\n\n-- Value lists dump --\n\n")
         f.write(dump_data)
 
-    print('::endgroup::')
-    
+    print("::endgroup::")
+
     return dump_file
 
 
@@ -161,22 +176,29 @@ def create_backup_data():
     :return: the file name
     """
     # Create data-only dumps (with sample data)
-    dump = 'qgep_{version}_demo_data.backup'.format(
-        version = os.environ['CI_TAG'])
-    print('::group::{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dump_file = 'artifacts/{dump}'.format(dump=dump)
-    _cmd(['pg_dump',
-                     '--format', 'custom',
-                     '--blobs',
-                     '--data-only',
-                     '--compress', '5',
-                     '--file', dump_file,
-                     '--table', 'qgep_od.*',
-                     '--table', 'qgep_sys.logged_actions',
-                     'qgep_prod']
-                    )
-    print('::endgroup::')
+    dump = "qgep_{version}_demo_data.backup".format(version=os.environ["CI_TAG"])
+    print(f"::group::{dump}")
+    print(f"Creating dump {dump}")
+    dump_file = f"artifacts/{dump}"
+    _cmd(
+        [
+            "pg_dump",
+            "--format",
+            "custom",
+            "--blobs",
+            "--data-only",
+            "--compress",
+            "5",
+            "--file",
+            dump_file,
+            "--table",
+            "qgep_od.*",
+            "--table",
+            "qgep_sys.logged_actions",
+            "qgep_prod",
+        ]
+    )
+    print("::endgroup::")
     return dump_file
 
 
@@ -186,20 +208,26 @@ def create_backup_complete():
     :return: the file name
     """
     # Create data + structure dumps (with sample data)
-    dump = 'qgep_{version}_structure_and_demo_data.backup'.format(
-        version = os.environ['CI_TAG'])
-    print('::group::{}'.format(dump))
-    print('Creating dump {}'.format(dump))
-    dump_file = 'artifacts/{dump}'.format(dump=dump)
-    _cmd(['pg_dump',
-                     '--format', 'custom',
-                     '--blobs',
-                     '--compress', '5',
-                     '--file', dump_file,
-                     '-N', 'public',
-                     'qgep_prod']
-                    )
-    print('::endgroup::')
+    dump = "qgep_{version}_structure_and_demo_data.backup".format(version=os.environ["CI_TAG"])
+    print(f"::group::{dump}")
+    print(f"Creating dump {dump}")
+    dump_file = f"artifacts/{dump}"
+    _cmd(
+        [
+            "pg_dump",
+            "--format",
+            "custom",
+            "--blobs",
+            "--compress",
+            "5",
+            "--file",
+            dump_file,
+            "-N",
+            "public",
+            "qgep_prod",
+        ]
+    )
+    print("::endgroup::")
 
     return dump_file
 
@@ -208,15 +236,16 @@ def main():
     """
     Creates dumps to be attached to releases.
     """
-    if 'CI_TAG' not in os.environ or not os.environ['CI_TAG']:
-        print('No git tag: not deploying anything')
+    if "CI_TAG" not in os.environ or not os.environ["CI_TAG"]:
+        print("No git tag: not deploying anything")
         return
     else:
-        print('Creating release from tag {}'.format(os.environ['CI_TAG']))
+        print("Creating release from tag {}".format(os.environ["CI_TAG"]))
 
-    os.mkdir('artifacts')
+    os.mkdir("artifacts")
     files = create_dumps()
-    print('Dumps created: {}'.format(', '.join(files)))
+    print("Dumps created: {}".format(", ".join(files)))
+
 
 if __name__ == "__main__":
     main()

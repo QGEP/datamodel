@@ -63,4 +63,3 @@ VOLATILE;
 --- the following code is updating all existinng labels
 
 SELECT qgep_od.update_wastewater_structure_label(NULL, true);
-

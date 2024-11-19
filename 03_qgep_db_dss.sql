@@ -3340,7 +3340,7 @@ ALTER TABLE qgep_vl.symbol_plantype ADD CONSTRAINT pkey_qgep_vl_symbol_plantype_
  INSERT INTO qgep_vl.symbol_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7878,7878,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.symbol_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7875,7875,'network_plan','Werkplan','plan_de_reseau', 'zzz_Werkplan', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.txt_symbol ADD CONSTRAINT fkey_vl_symbol_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.symbol_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.symbol_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.txt_symbol ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.txt_symbol ADD CONSTRAINT rel_symbol_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3352,7 +3352,7 @@ ALTER TABLE qgep_vl.text_plantype ADD CONSTRAINT pkey_qgep_vl_text_plantype_code
  INSERT INTO qgep_vl.text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.txt_text ADD CONSTRAINT fkey_vl_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.text_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.text_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.text_texthali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.text_texthali ADD CONSTRAINT pkey_qgep_vl_text_texthali_code PRIMARY KEY (code);
@@ -3360,7 +3360,7 @@ ALTER TABLE qgep_vl.text_texthali ADD CONSTRAINT pkey_qgep_vl_text_texthali_code
  INSERT INTO qgep_vl.text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7851,7851,'1','1','1', '1', '1', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7852,7852,'2','2','2', '2', '2', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.txt_text ADD CONSTRAINT fkey_vl_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep_vl.text_texthali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.text_texthali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.text_textvali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.text_textvali ADD CONSTRAINT pkey_qgep_vl_text_textvali_code PRIMARY KEY (code);
@@ -3370,7 +3370,7 @@ ALTER TABLE qgep_vl.text_textvali ADD CONSTRAINT pkey_qgep_vl_text_textvali_code
  INSERT INTO qgep_vl.text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7856,7856,'3','3','3', '3', '3', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7857,7857,'4','4','4', '4', '4', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.txt_text ADD CONSTRAINT fkey_vl_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep_vl.text_textvali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.text_textvali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.txt_text ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.txt_text ADD CONSTRAINT rel_text_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3384,7 +3384,7 @@ ALTER TABLE qgep_vl.mutation_kind ADD CONSTRAINT pkey_qgep_vl_mutation_kind_code
  INSERT INTO qgep_vl.mutation_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5582,5582,'changed','geaendert','changee', 'zzz_geaendert', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.mutation_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5583,5583,'deleted','geloescht','effacee', 'zzz_geloescht', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.mutation ADD CONSTRAINT fkey_vl_mutation_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.mutation_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.mutation_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.river ADD CONSTRAINT oorel_od_river_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep_od.surface_water_bodies(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.river_kind () INHERITS (qgep_sys.value_list_base);
@@ -3395,7 +3395,7 @@ ALTER TABLE qgep_vl.river_kind ADD CONSTRAINT pkey_qgep_vl_river_kind_code PRIMA
  INSERT INTO qgep_vl.river_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3396,3396,'travertine_river','Travertinbach','ruisseau_sur_fond_tufcalcaire', 'zzz_Travertinbach', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3400,3400,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river ADD CONSTRAINT fkey_vl_river_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.river_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.lake ADD CONSTRAINT oorel_od_lake_surface_water_bodies FOREIGN KEY (obj_id) REFERENCES qgep_od.surface_water_bodies(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.water_course_segment_algae_growth () INHERITS (qgep_sys.value_list_base);
@@ -3405,7 +3405,7 @@ ALTER TABLE qgep_vl.water_course_segment_algae_growth ADD CONSTRAINT pkey_qgep_v
  INSERT INTO qgep_vl.water_course_segment_algae_growth (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2625,2625,'excessive_rampant','uebermaessig_wuchernd','tres_fort_proliferation', 'zzz_uebermaessig_wuchernd', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_algae_growth (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3050,3050,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_algae_growth FOREIGN KEY (algae_growth)
- REFERENCES qgep_vl.water_course_segment_algae_growth (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_algae_growth (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_altitudinal_zone () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_altitudinal_zone ADD CONSTRAINT pkey_qgep_vl_water_course_segment_altitudinal_zone_code PRIMARY KEY (code);
@@ -3415,7 +3415,7 @@ ALTER TABLE qgep_vl.water_course_segment_altitudinal_zone ADD CONSTRAINT pkey_qg
  INSERT INTO qgep_vl.water_course_segment_altitudinal_zone (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (319,319,'subalpine','subalpin','subalpin', 'zzz_subalpin', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_altitudinal_zone (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3020,3020,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_altitudinal_zone FOREIGN KEY (altitudinal_zone)
- REFERENCES qgep_vl.water_course_segment_altitudinal_zone (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_altitudinal_zone (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_dead_wood () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_dead_wood ADD CONSTRAINT pkey_qgep_vl_water_course_segment_dead_wood_code PRIMARY KEY (code);
@@ -3424,7 +3424,7 @@ ALTER TABLE qgep_vl.water_course_segment_dead_wood ADD CONSTRAINT pkey_qgep_vl_w
  INSERT INTO qgep_vl.water_course_segment_dead_wood (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3052,3052,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_dead_wood (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2630,2630,'scattered','zerstreut','dissemine', 'zzz_zerstreut', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_dead_wood FOREIGN KEY (dead_wood)
- REFERENCES qgep_vl.water_course_segment_dead_wood (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_dead_wood (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_depth_variability () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_depth_variability ADD CONSTRAINT pkey_qgep_vl_water_course_segment_depth_variability_code PRIMARY KEY (code);
@@ -3433,7 +3433,7 @@ ALTER TABLE qgep_vl.water_course_segment_depth_variability ADD CONSTRAINT pkey_q
  INSERT INTO qgep_vl.water_course_segment_depth_variability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2618,2618,'moderate','maessig','moyenne', 'zzz_maessig', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_depth_variability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3049,3049,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_depth_variability FOREIGN KEY (depth_variability)
- REFERENCES qgep_vl.water_course_segment_depth_variability (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_depth_variability (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_discharge_regime () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_discharge_regime ADD CONSTRAINT pkey_qgep_vl_water_course_segment_discharge_regime_code PRIMARY KEY (code);
@@ -3443,7 +3443,7 @@ ALTER TABLE qgep_vl.water_course_segment_discharge_regime ADD CONSTRAINT pkey_qg
  INSERT INTO qgep_vl.water_course_segment_discharge_regime (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (296,296,'close_to_natural','naturnah','presque_naturel', 'zzz_naturnah', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_discharge_regime (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3091,3091,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_discharge_regime FOREIGN KEY (discharge_regime)
- REFERENCES qgep_vl.water_course_segment_discharge_regime (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_discharge_regime (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_ecom_classification () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_ecom_classification ADD CONSTRAINT pkey_qgep_vl_water_course_segment_ecom_classification_code PRIMARY KEY (code);
@@ -3454,7 +3454,7 @@ ALTER TABLE qgep_vl.water_course_segment_ecom_classification ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.water_course_segment_ecom_classification (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3494,3494,'heavily_compromised','stark_beeintraechtigt','fortement_modifie', 'zzz_stark_beeintraechtigt', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_ecom_classification (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3493,3493,'partially_compromised','wenig_beeintraechtigt','peu_modifie', 'zzz_wenig_beeintraechtigt', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_ecom_classification FOREIGN KEY (ecom_classification)
- REFERENCES qgep_vl.water_course_segment_ecom_classification (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_ecom_classification (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_kind ADD CONSTRAINT pkey_qgep_vl_water_course_segment_kind_code PRIMARY KEY (code);
@@ -3462,7 +3462,7 @@ ALTER TABLE qgep_vl.water_course_segment_kind ADD CONSTRAINT pkey_qgep_vl_water_
  INSERT INTO qgep_vl.water_course_segment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2709,2709,'open','offen','ouvert', 'zzz_offen', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3058,3058,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.water_course_segment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_length_profile () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_length_profile ADD CONSTRAINT pkey_qgep_vl_water_course_segment_length_profile_code PRIMARY KEY (code);
@@ -3471,7 +3471,7 @@ ALTER TABLE qgep_vl.water_course_segment_length_profile ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.water_course_segment_length_profile (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (99,99,'continuous','stetig','continu', 'zzz_stetig', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_length_profile (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3035,3035,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_length_profile FOREIGN KEY (length_profile)
- REFERENCES qgep_vl.water_course_segment_length_profile (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_length_profile (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_macrophyte_coverage () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_macrophyte_coverage ADD CONSTRAINT pkey_qgep_vl_water_course_segment_macrophyte_coverage_code PRIMARY KEY (code);
@@ -3480,7 +3480,7 @@ ALTER TABLE qgep_vl.water_course_segment_macrophyte_coverage ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.water_course_segment_macrophyte_coverage (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2628,2628,'excessive_rampant','uebermaessig_wuchernd','tres_fort_proliferation', 'zzz_uebermaessig_wuchernd', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_macrophyte_coverage (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3051,3051,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_macrophyte_coverage FOREIGN KEY (macrophyte_coverage)
- REFERENCES qgep_vl.water_course_segment_macrophyte_coverage (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_macrophyte_coverage (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_section_morphology () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_section_morphology ADD CONSTRAINT pkey_qgep_vl_water_course_segment_section_morphology_code PRIMARY KEY (code);
@@ -3490,7 +3490,7 @@ ALTER TABLE qgep_vl.water_course_segment_section_morphology ADD CONSTRAINT pkey_
  INSERT INTO qgep_vl.water_course_segment_section_morphology (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4578,4578,'heavily_bent','starkbogig','fortement_incurve', 'zzz_starkbogig', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_section_morphology (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4576,4576,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_section_morphology FOREIGN KEY (section_morphology)
- REFERENCES qgep_vl.water_course_segment_section_morphology (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_section_morphology (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_slope () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_slope ADD CONSTRAINT pkey_qgep_vl_water_course_segment_slope_code PRIMARY KEY (code);
@@ -3499,7 +3499,7 @@ ALTER TABLE qgep_vl.water_course_segment_slope ADD CONSTRAINT pkey_qgep_vl_water
  INSERT INTO qgep_vl.water_course_segment_slope (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (293,293,'steep','steil','raide', 'ripido', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_slope (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3019,3019,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_slope FOREIGN KEY (slope)
- REFERENCES qgep_vl.water_course_segment_slope (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_slope (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_utilisation () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_utilisation ADD CONSTRAINT pkey_qgep_vl_water_course_segment_utilisation_code PRIMARY KEY (code);
@@ -3508,7 +3508,7 @@ ALTER TABLE qgep_vl.water_course_segment_utilisation ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.water_course_segment_utilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (385,385,'dam','Stauanlage','installation_de_retenue', 'zzz_Stauanlage', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_utilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3039,3039,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_utilisation FOREIGN KEY (utilisation)
- REFERENCES qgep_vl.water_course_segment_utilisation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_utilisation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_water_hardness () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_water_hardness ADD CONSTRAINT pkey_qgep_vl_water_course_segment_water_hardness_code PRIMARY KEY (code);
@@ -3516,7 +3516,7 @@ ALTER TABLE qgep_vl.water_course_segment_water_hardness ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.water_course_segment_water_hardness (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (322,322,'silicate','Silikat','silicieuse', 'zzz_Silikat', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_water_hardness (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3024,3024,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_water_hardness FOREIGN KEY (water_hardness)
- REFERENCES qgep_vl.water_course_segment_water_hardness (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_water_hardness (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.water_course_segment_width_variability () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.water_course_segment_width_variability ADD CONSTRAINT pkey_qgep_vl_water_course_segment_width_variability_code PRIMARY KEY (code);
@@ -3525,7 +3525,7 @@ ALTER TABLE qgep_vl.water_course_segment_width_variability ADD CONSTRAINT pkey_q
  INSERT INTO qgep_vl.water_course_segment_width_variability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (178,178,'none','keine','nulle', 'nessuno', 'inexistent', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_course_segment_width_variability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3078,3078,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT fkey_vl_water_course_segment_width_variability FOREIGN KEY (width_variability)
- REFERENCES qgep_vl.water_course_segment_width_variability (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_course_segment_width_variability (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.water_course_segment ADD COLUMN fk_watercourse varchar (16);
 ALTER TABLE qgep_od.water_course_segment ADD CONSTRAINT rel_water_course_segment_watercourse FOREIGN KEY (fk_watercourse) REFERENCES qgep_od.river(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3535,7 +3535,7 @@ ALTER TABLE qgep_vl.water_catchment_kind ADD CONSTRAINT pkey_qgep_vl_water_catch
  INSERT INTO qgep_vl.water_catchment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (25,25,'drinking_water','Trinkwasser','eau_potable', 'zzz_Trinkwasser', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_catchment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3075,3075,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT fkey_vl_water_catchment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.water_catchment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_catchment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.water_catchment ADD COLUMN fk_aquifier varchar (16);
 ALTER TABLE qgep_od.water_catchment ADD CONSTRAINT rel_water_catchment_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep_od.aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -3551,7 +3551,7 @@ ALTER TABLE qgep_vl.river_bank_control_grade_of_river ADD CONSTRAINT pkey_qgep_v
  INSERT INTO qgep_vl.river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2611,2611,'sporadic','vereinzelt','localise', 'zzz_vereinzelt', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2615,2615,'complete','vollstaendig','total', 'zzz_vollstaendig', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_control_grade_of_river FOREIGN KEY (control_grade_of_river)
- REFERENCES qgep_vl.river_bank_control_grade_of_river (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_control_grade_of_river (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bank_river_control_type () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_river_control_type ADD CONSTRAINT pkey_qgep_vl_river_bank_river_control_type_code PRIMARY KEY (code);
@@ -3565,7 +3565,7 @@ ALTER TABLE qgep_vl.river_bank_river_control_type ADD CONSTRAINT pkey_qgep_vl_ri
  INSERT INTO qgep_vl.river_bank_river_control_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3484,3484,'loose_natural_stone_permeable','Naturstein_locker_durchlaessig','pierre_naturelle_lache', 'zzz_Naturstein_locker_durchlaessig', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_river_control_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3080,3080,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_river_control_type FOREIGN KEY (river_control_type)
- REFERENCES qgep_vl.river_bank_river_control_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_river_control_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bank_shores () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_shores ADD CONSTRAINT pkey_qgep_vl_river_bank_shores_code PRIMARY KEY (code);
@@ -3574,7 +3574,7 @@ ALTER TABLE qgep_vl.river_bank_shores ADD CONSTRAINT pkey_qgep_vl_river_bank_sho
  INSERT INTO qgep_vl.river_bank_shores (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (405,405,'artificial','kuenstlich','artificielle', 'zzz_kuenstlich', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_shores (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3081,3081,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_shores FOREIGN KEY (shores)
- REFERENCES qgep_vl.river_bank_shores (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_shores (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bank_side () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_side ADD CONSTRAINT pkey_qgep_vl_river_bank_side_code PRIMARY KEY (code);
@@ -3582,7 +3582,7 @@ ALTER TABLE qgep_vl.river_bank_side ADD CONSTRAINT pkey_qgep_vl_river_bank_side_
  INSERT INTO qgep_vl.river_bank_side (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (421,421,'right','rechts','droite', 'zzz_rechts', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_side (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3065,3065,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_side FOREIGN KEY (side)
- REFERENCES qgep_vl.river_bank_side (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_side (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bank_utilisation_of_shore_surroundings () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_utilisation_of_shore_surroundings ADD CONSTRAINT pkey_qgep_vl_river_bank_utilisation_of_shore_surroundings_code PRIMARY KEY (code);
@@ -3591,7 +3591,7 @@ ALTER TABLE qgep_vl.river_bank_utilisation_of_shore_surroundings ADD CONSTRAINT 
  INSERT INTO qgep_vl.river_bank_utilisation_of_shore_surroundings (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3068,3068,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_utilisation_of_shore_surroundings (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (426,426,'forest','Wald','foret', 'zzz_Wald', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_utilisation_of_shore_surroundings FOREIGN KEY (utilisation_of_shore_surroundings)
- REFERENCES qgep_vl.river_bank_utilisation_of_shore_surroundings (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_utilisation_of_shore_surroundings (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bank_vegetation () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bank_vegetation ADD CONSTRAINT pkey_qgep_vl_river_bank_vegetation_code PRIMARY KEY (code);
@@ -3600,7 +3600,7 @@ ALTER TABLE qgep_vl.river_bank_vegetation ADD CONSTRAINT pkey_qgep_vl_river_bank
  INSERT INTO qgep_vl.river_bank_vegetation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (324,324,'atypical_for_habitat','standortuntypisch','non_typique_du_lieu', 'zzz_standortuntypisch', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bank_vegetation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3025,3025,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bank ADD CONSTRAINT fkey_vl_river_bank_vegetation FOREIGN KEY (vegetation)
- REFERENCES qgep_vl.river_bank_vegetation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bank_vegetation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.river_bank ADD COLUMN fk_water_course_segment varchar (16);
 ALTER TABLE qgep_od.river_bank ADD CONSTRAINT rel_river_bank_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep_od.water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3614,7 +3614,7 @@ ALTER TABLE qgep_vl.river_bed_control_grade_of_river ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.river_bed_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2606,2606,'sporadic','vereinzelt','localise', 'zzz_vereinzelt', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bed_control_grade_of_river (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2610,2610,'complete','vollstaendig','total', 'zzz_vollstaendig', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bed ADD CONSTRAINT fkey_vl_river_bed_control_grade_of_river FOREIGN KEY (control_grade_of_river)
- REFERENCES qgep_vl.river_bed_control_grade_of_river (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bed_control_grade_of_river (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bed_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bed_kind ADD CONSTRAINT pkey_qgep_vl_river_bed_kind_code PRIMARY KEY (code);
@@ -3622,7 +3622,7 @@ ALTER TABLE qgep_vl.river_bed_kind ADD CONSTRAINT pkey_qgep_vl_river_bed_kind_co
  INSERT INTO qgep_vl.river_bed_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3089,3089,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bed_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (289,289,'soft','weich','tendre', 'zzz_weich', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bed ADD CONSTRAINT fkey_vl_river_bed_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.river_bed_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bed_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.river_bed_river_control_type () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.river_bed_river_control_type ADD CONSTRAINT pkey_qgep_vl_river_bed_river_control_type_code PRIMARY KEY (code);
@@ -3633,7 +3633,7 @@ ALTER TABLE qgep_vl.river_bed_river_control_type ADD CONSTRAINT pkey_qgep_vl_riv
  INSERT INTO qgep_vl.river_bed_river_control_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3478,3478,'rock_fill_or_loose_boulders','Steinschuettung_Blockwurf','pierres_naturelles', 'zzz_Steinschuettung_Blockwurf', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.river_bed_river_control_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3079,3079,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.river_bed ADD CONSTRAINT fkey_vl_river_bed_river_control_type FOREIGN KEY (river_control_type)
- REFERENCES qgep_vl.river_bed_river_control_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.river_bed_river_control_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.river_bed ADD COLUMN fk_water_course_segment varchar (16);
 ALTER TABLE qgep_od.river_bed ADD CONSTRAINT rel_river_bed_water_course_segment FOREIGN KEY (fk_water_course_segment) REFERENCES qgep_od.water_course_segment(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3645,7 +3645,7 @@ ALTER TABLE qgep_vl.sector_water_body_kind ADD CONSTRAINT pkey_qgep_vl_sector_wa
  INSERT INTO qgep_vl.sector_water_body_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2656,2656,'shore','Ufer','rives', 'zzz_Ufer', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.sector_water_body_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3054,3054,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT fkey_vl_sector_water_body_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.sector_water_body_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.sector_water_body_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.sector_water_body ADD COLUMN fk_surface_water_bodies varchar (16);
 ALTER TABLE qgep_od.sector_water_body ADD CONSTRAINT rel_sector_water_body_surface_water_bodies FOREIGN KEY (fk_surface_water_bodies) REFERENCES qgep_od.surface_water_bodies(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -3663,7 +3663,7 @@ ALTER TABLE qgep_vl.wastewater_structure_accessibility ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.wastewater_structure_accessibility (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3446,3446,'inaccessible','unzugaenglich','inaccessible', 'non_accessibile', 'inaccesibil', '', 'UZG', 'NA', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_accessibility (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3445,3445,'accessible','zugaenglich','accessible', 'accessibile', 'accessibil', '', 'ZG', 'A', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_accessibility FOREIGN KEY (accessibility)
- REFERENCES qgep_vl.wastewater_structure_accessibility (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_accessibility (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_financing () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_financing ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_financing_code PRIMARY KEY (code);
@@ -3671,7 +3671,7 @@ ALTER TABLE qgep_vl.wastewater_structure_financing ADD CONSTRAINT pkey_qgep_vl_w
  INSERT INTO qgep_vl.wastewater_structure_financing (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5511,5511,'private','privat','prive', 'privato', 'privata', 'PR', 'PR', 'PR', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_financing (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5512,5512,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', 'U', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_financing FOREIGN KEY (financing)
- REFERENCES qgep_vl.wastewater_structure_financing (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_financing (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_renovation_necessity () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_renovation_necessity ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_renovation_necessity_code PRIMARY KEY (code);
@@ -3682,7 +3682,7 @@ ALTER TABLE qgep_vl.wastewater_structure_renovation_necessity ADD CONSTRAINT pke
  INSERT INTO qgep_vl.wastewater_structure_renovation_necessity (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3,3,'medium_term','mittelfristig','a_moyen_terme', 'medio_termine', 'termen_mediu', '', 'MF', 'MT', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_renovation_necessity (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5369,5369,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_renovation_necessity FOREIGN KEY (renovation_necessity)
- REFERENCES qgep_vl.wastewater_structure_renovation_necessity (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_renovation_necessity (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_rv_construction_type () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_rv_construction_type ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_rv_construction_type_code PRIMARY KEY (code);
@@ -3693,7 +3693,7 @@ ALTER TABLE qgep_vl.wastewater_structure_rv_construction_type ADD CONSTRAINT pke
  INSERT INTO qgep_vl.wastewater_structure_rv_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4604,4604,'road','Strasse','sous_route', 'strada', 'sub_strada', 'ST', 'ST', 'ST', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_rv_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4601,4601,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_rv_construction_type FOREIGN KEY (rv_construction_type)
- REFERENCES qgep_vl.wastewater_structure_rv_construction_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_rv_construction_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_status () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_status ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_status_code PRIMARY KEY (code);
@@ -3709,7 +3709,7 @@ ALTER TABLE qgep_vl.wastewater_structure_status ADD CONSTRAINT pkey_qgep_vl_wast
  INSERT INTO qgep_vl.wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7959,7959,'other.planned','weitere.geplant','autre.planifie', 'altri.previsto', 'rrr_weitere.geplant', '', 'G', 'PL', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6529,6529,'other.project','weitere.Projekt','autre.projet', 'altri.progetto', 'alta.proiect', '', 'N', 'PR', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_status FOREIGN KEY (status)
- REFERENCES qgep_vl.wastewater_structure_status (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_status (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_structure_condition () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_structure_condition ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_structure_condition_code PRIMARY KEY (code);
@@ -3720,7 +3720,7 @@ ALTER TABLE qgep_vl.wastewater_structure_structure_condition ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.wastewater_structure_structure_condition (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3361,3361,'Z3','Z3','Z3', 'Z3', 'Z3', '', 'Z3', 'Z3', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_structure_condition (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3362,3362,'Z4','Z4','Z4', 'Z4', '', '', 'Z4', 'Z4', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT fkey_vl_wastewater_structure_structure_condition FOREIGN KEY (structure_condition)
- REFERENCES qgep_vl.wastewater_structure_structure_condition (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_structure_condition (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN fk_owner varchar (16);
 ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT rel_wastewater_structure_owner FOREIGN KEY (fk_owner) REFERENCES qgep_od.organisation(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -3744,7 +3744,7 @@ ALTER TABLE qgep_vl.channel_bedding_encasement ADD CONSTRAINT pkey_qgep_vl_chann
  INSERT INTO qgep_vl.channel_bedding_encasement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5327,5327,'bed_plank','Sohlbrett','radier_en_planches', 'zzz_Sohlbrett', 'pat_de_pamant', '', 'SB', 'RP', '', '', 'true');
  INSERT INTO qgep_vl.channel_bedding_encasement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5329,5329,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_bedding_encasement FOREIGN KEY (bedding_encasement)
- REFERENCES qgep_vl.channel_bedding_encasement (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_bedding_encasement (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.channel_connection_type () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.channel_connection_type ADD CONSTRAINT pkey_qgep_vl_channel_connection_type_code PRIMARY KEY (code);
@@ -3762,7 +3762,7 @@ ALTER TABLE qgep_vl.channel_connection_type ADD CONSTRAINT pkey_qgep_vl_channel_
  INSERT INTO qgep_vl.channel_connection_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3036,3036,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.channel_connection_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3666,3666,'jacking_pipe_coupling','Vortriebsrohrkupplung','raccord_pour_tube_de_pousse_tube', 'zzz_Vortriebsrohrkupplung', 'racord_prin_presstube', '', 'VK', 'RTD', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_connection_type FOREIGN KEY (connection_type)
- REFERENCES qgep_vl.channel_connection_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_connection_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.channel_function_hierarchic () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.channel_function_hierarchic ADD CONSTRAINT pkey_qgep_vl_channel_function_hierarchic_code PRIMARY KEY (code);
@@ -3781,7 +3781,7 @@ ALTER TABLE qgep_vl.channel_function_hierarchic ADD CONSTRAINT pkey_qgep_vl_chan
  INSERT INTO qgep_vl.channel_function_hierarchic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5073,5073,'swwf.road_drainage','SAA.Strassenentwaesserung','OAS.evacuation_des_eaux_de_routes', 'ISS.smaltimento_acque_strade', 'swwf.evacuare_ape_rigole', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.channel_function_hierarchic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5075,5075,'swwf.unknown','SAA.unbekannt','OAS.inconnue', 'ISS.sconosciuto', 'swwf.necunoscuta', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_function_hierarchic FOREIGN KEY (function_hierarchic)
- REFERENCES qgep_vl.channel_function_hierarchic (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_function_hierarchic (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.channel_function_hydraulic () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.channel_function_hydraulic ADD CONSTRAINT pkey_qgep_vl_channel_function_hydraulic_code PRIMARY KEY (code);
@@ -3797,7 +3797,7 @@ ALTER TABLE qgep_vl.channel_function_hydraulic ADD CONSTRAINT pkey_qgep_vl_chann
  INSERT INTO qgep_vl.channel_function_hydraulic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5321,5321,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.channel_function_hydraulic (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3655,3655,'vacuum_pipe','Vakuumleitung','conduite_sous_vide', 'canalizzazione_sotto_vuoto', 'conducta_vidata', '', 'VL', 'CV', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_function_hydraulic FOREIGN KEY (function_hydraulic)
- REFERENCES qgep_vl.channel_function_hydraulic (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_function_hydraulic (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.channel_usage_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.channel_usage_current ADD CONSTRAINT pkey_qgep_vl_channel_usage_current_code PRIMARY KEY (code);
@@ -3811,7 +3811,7 @@ ALTER TABLE qgep_vl.channel_usage_current ADD CONSTRAINT pkey_qgep_vl_channel_us
  INSERT INTO qgep_vl.channel_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4526,4526,'wastewater','Schmutzabwasser','eaux_usees', 'acque_luride', 'ape_uzate', '', 'SW', 'EU', '', '', 'true');
  INSERT INTO qgep_vl.channel_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4571,4571,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_usage_current FOREIGN KEY (usage_current)
- REFERENCES qgep_vl.channel_usage_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_usage_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.channel_usage_planned () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.channel_usage_planned ADD CONSTRAINT pkey_qgep_vl_channel_usage_planned_code PRIMARY KEY (code);
@@ -3825,7 +3825,7 @@ ALTER TABLE qgep_vl.channel_usage_planned ADD CONSTRAINT pkey_qgep_vl_channel_us
  INSERT INTO qgep_vl.channel_usage_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4527,4527,'wastewater','Schmutzabwasser','eaux_usees', 'acque_luride', 'ape_uzate', '', 'SW', 'EU', '', '', 'true');
  INSERT INTO qgep_vl.channel_usage_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4569,4569,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.channel ADD CONSTRAINT fkey_vl_channel_usage_planned FOREIGN KEY (usage_planned)
- REFERENCES qgep_vl.channel_usage_planned (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.channel_usage_planned (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.manhole ADD CONSTRAINT oorel_od_manhole_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.manhole_function () INHERITS (qgep_sys.value_list_base);
@@ -3847,7 +3847,7 @@ ALTER TABLE qgep_vl.manhole_function ADD CONSTRAINT pkey_qgep_vl_manhole_functio
  INSERT INTO qgep_vl.manhole_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4798,4798,'separating_structure','Trennbauwerk','ouvrage_de_repartition', 'camera_ripartizione', 'separator', '', 'TB', 'OR', '', '', 'true');
  INSERT INTO qgep_vl.manhole_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5345,5345,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.manhole ADD CONSTRAINT fkey_vl_manhole_function FOREIGN KEY (function)
- REFERENCES qgep_vl.manhole_function (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.manhole_function (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.manhole_material () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.manhole_material ADD CONSTRAINT pkey_qgep_vl_manhole_material_code PRIMARY KEY (code);
@@ -3856,7 +3856,7 @@ ALTER TABLE qgep_vl.manhole_material ADD CONSTRAINT pkey_qgep_vl_manhole_materia
  INSERT INTO qgep_vl.manhole_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4542,4542,'plastic','Kunststoff','matiere_plastique', 'zzz_Kunststoff', 'materie_plastica', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.manhole_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4543,4543,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.manhole ADD CONSTRAINT fkey_vl_manhole_material FOREIGN KEY (material)
- REFERENCES qgep_vl.manhole_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.manhole_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.manhole_surface_inflow () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.manhole_surface_inflow ADD CONSTRAINT pkey_qgep_vl_manhole_surface_inflow_code PRIMARY KEY (code);
@@ -3866,7 +3866,7 @@ ALTER TABLE qgep_vl.manhole_surface_inflow ADD CONSTRAINT pkey_qgep_vl_manhole_s
  INSERT INTO qgep_vl.manhole_surface_inflow (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5343,5343,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.manhole_surface_inflow (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2740,2740,'intake_from_side','Zulauf_seitlich','arrivee_laterale', 'zzz_Zulauf_seitlich', 'admisie_laterala', '', 'ZS', 'AL', '', '', 'true');
  ALTER TABLE qgep_od.manhole ADD CONSTRAINT fkey_vl_manhole_surface_inflow FOREIGN KEY (surface_inflow)
- REFERENCES qgep_vl.manhole_surface_inflow (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.manhole_surface_inflow (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.discharge_point ADD CONSTRAINT oorel_od_discharge_point_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.discharge_point_relevance () INHERITS (qgep_sys.value_list_base);
@@ -3874,7 +3874,7 @@ ALTER TABLE qgep_vl.discharge_point_relevance ADD CONSTRAINT pkey_qgep_vl_discha
  INSERT INTO qgep_vl.discharge_point_relevance (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5580,5580,'relevant_for_water_course','gewaesserrelevant','pertinent_pour_milieu_recepteur', 'zzz_gewaesserrelevant', 'relevanta_pentru_mediul_receptor', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.discharge_point_relevance (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5581,5581,'non_relevant_for_water_course','nicht_gewaesserrelevant','insignifiant_pour_milieu_recepteur', 'zzz_nicht_gewaesserrelevant', 'nerelevanta_pentru_mediul_receptor', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.discharge_point ADD CONSTRAINT fkey_vl_discharge_point_relevance FOREIGN KEY (relevance)
- REFERENCES qgep_vl.discharge_point_relevance (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.discharge_point_relevance (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.discharge_point ADD COLUMN fk_sector_water_body varchar (16);
 ALTER TABLE qgep_od.discharge_point ADD CONSTRAINT rel_discharge_point_sector_water_body FOREIGN KEY (fk_sector_water_body) REFERENCES qgep_od.sector_water_body(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -3885,7 +3885,7 @@ ALTER TABLE qgep_vl.special_structure_bypass ADD CONSTRAINT pkey_qgep_vl_special
  INSERT INTO qgep_vl.special_structure_bypass (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3055,3055,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.special_structure_bypass (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2681,2681,'existent','vorhanden','existant', 'zzz_vorhanden', 'existent', '', 'V', 'E', '', '', 'true');
  ALTER TABLE qgep_od.special_structure ADD CONSTRAINT fkey_vl_special_structure_bypass FOREIGN KEY (bypass)
- REFERENCES qgep_vl.special_structure_bypass (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.special_structure_bypass (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.special_structure_emergency_spillway () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.special_structure_emergency_spillway ADD CONSTRAINT pkey_qgep_vl_special_structure_emergency_spillway_code PRIMARY KEY (code);
@@ -3896,7 +3896,7 @@ ALTER TABLE qgep_vl.special_structure_emergency_spillway ADD CONSTRAINT pkey_qge
  INSERT INTO qgep_vl.special_structure_emergency_spillway (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5878,5878,'none','keiner','aucun', 'nessuno', 'niciunul', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.special_structure_emergency_spillway (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5867,5867,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.special_structure ADD CONSTRAINT fkey_vl_special_structure_emergency_spillway FOREIGN KEY (emergency_spillway)
- REFERENCES qgep_vl.special_structure_emergency_spillway (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.special_structure_emergency_spillway (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.special_structure_function () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.special_structure_function ADD CONSTRAINT pkey_qgep_vl_special_structure_function_code PRIMARY KEY (code);
@@ -3931,7 +3931,7 @@ ALTER TABLE qgep_vl.special_structure_function ADD CONSTRAINT pkey_qgep_vl_speci
  INSERT INTO qgep_vl.special_structure_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3008,3008,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.special_structure_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2745,2745,'vortex_manhole','Wirbelfallschacht','chambre_de_chute_a_vortex', 'zzz_Wirbelfallschacht', 'instalatie_picurare_cu_vortex', '', 'WF', 'CT', '', '', 'true');
  ALTER TABLE qgep_od.special_structure ADD CONSTRAINT fkey_vl_special_structure_function FOREIGN KEY (function)
- REFERENCES qgep_vl.special_structure_function (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.special_structure_function (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.special_structure_stormwater_tank_arrangement () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.special_structure_stormwater_tank_arrangement ADD CONSTRAINT pkey_qgep_vl_special_structure_stormwater_tank_arrangement_code PRIMARY KEY (code);
@@ -3939,7 +3939,7 @@ ALTER TABLE qgep_vl.special_structure_stormwater_tank_arrangement ADD CONSTRAINT
  INSERT INTO qgep_vl.special_structure_stormwater_tank_arrangement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4609,4609,'side_connection','Nebenschluss','connexion_laterale', 'in_parallelo', 'conectare_laterala', '', 'NS', 'CL', '', '', 'true');
  INSERT INTO qgep_vl.special_structure_stormwater_tank_arrangement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4610,4610,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.special_structure ADD CONSTRAINT fkey_vl_special_structure_stormwater_tank_arrangement FOREIGN KEY (stormwater_tank_arrangement)
- REFERENCES qgep_vl.special_structure_stormwater_tank_arrangement (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.special_structure_stormwater_tank_arrangement (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT oorel_od_infiltration_installation_wastewater_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.wastewater_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.infiltration_installation_defects () INHERITS (qgep_sys.value_list_base);
@@ -3948,7 +3948,7 @@ ALTER TABLE qgep_vl.infiltration_installation_defects ADD CONSTRAINT pkey_qgep_v
  INSERT INTO qgep_vl.infiltration_installation_defects (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3276,3276,'marginal','unwesentliche','modestes', 'zzz_unwesentliche', 'modeste', '', 'UW', 'MI', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_defects (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3275,3275,'substantial','wesentliche','importantes', 'zzz_wesentliche', 'importante', '', 'W', 'MA', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_defects FOREIGN KEY (defects)
- REFERENCES qgep_vl.infiltration_installation_defects (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_defects (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_emergency_spillway () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_emergency_spillway ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_emergency_spillway_code PRIMARY KEY (code);
@@ -3959,7 +3959,7 @@ ALTER TABLE qgep_vl.infiltration_installation_emergency_spillway ADD CONSTRAINT 
  INSERT INTO qgep_vl.infiltration_installation_emergency_spillway (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3305,3305,'surface_discharge','oberflaechlichausmuendend','deversement_en_surface', 'zzz_oberflaechlichausmuendend', 'deversare_la_suprafata', '', 'OA', 'DS', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_emergency_spillway (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3308,3308,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_emergency_spillway FOREIGN KEY (emergency_spillway)
- REFERENCES qgep_vl.infiltration_installation_emergency_spillway (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_emergency_spillway (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_kind ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_kind_code PRIMARY KEY (code);
@@ -3975,7 +3975,7 @@ ALTER TABLE qgep_vl.infiltration_installation_kind ADD CONSTRAINT pkey_qgep_vl_i
  INSERT INTO qgep_vl.infiltration_installation_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (278,278,'adsorbing_well','Versickerungsschacht','puits_d_infiltration', 'zzz_Versickerungsschacht', 'put_de_inflitrare', '', 'VS', 'PI', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3283,3283,'infiltration_pipe_sections_gallery','Versickerungsstrang_Galerie','bande_infiltration_galerie', 'zzz_Versickerungsstrang_Galerie', 'conducta_infiltrare_galerie', '', 'VG', 'TIG', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.infiltration_installation_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_labeling () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_labeling ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_labeling_code PRIMARY KEY (code);
@@ -3983,7 +3983,7 @@ ALTER TABLE qgep_vl.infiltration_installation_labeling ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.infiltration_installation_labeling (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5363,5363,'not_labeled','nichtbeschriftet','non_signalee', 'zzz_nichtbeschriftet', 'nemarcat', '', 'NBS', 'NSI', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_labeling (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5364,5364,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_labeling FOREIGN KEY (labeling)
- REFERENCES qgep_vl.infiltration_installation_labeling (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_labeling (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_seepage_utilization () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_seepage_utilization ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_seepage_utilization_code PRIMARY KEY (code);
@@ -3991,7 +3991,7 @@ ALTER TABLE qgep_vl.infiltration_installation_seepage_utilization ADD CONSTRAINT
  INSERT INTO qgep_vl.infiltration_installation_seepage_utilization (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (273,273,'clean_water','Reinabwasser','eaux_claires', 'acque_chiare', 'ape_conventional_curate', '', 'KW', 'EC', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_seepage_utilization (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5359,5359,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_seepage_utilization FOREIGN KEY (seepage_utilization)
- REFERENCES qgep_vl.infiltration_installation_seepage_utilization (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_seepage_utilization (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_vehicle_access () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_vehicle_access ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_vehicle_access_code PRIMARY KEY (code);
@@ -3999,7 +3999,7 @@ ALTER TABLE qgep_vl.infiltration_installation_vehicle_access ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.infiltration_installation_vehicle_access (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3288,3288,'inaccessible','unzugaenglich','inaccessible', 'non_accessibile', 'neaccesibil', '', 'ZU', 'IAC', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_vehicle_access (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3287,3287,'accessible','zugaenglich','accessible', 'accessibile', 'accessibil', '', 'Z', 'AC', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_vehicle_access FOREIGN KEY (vehicle_access)
- REFERENCES qgep_vl.infiltration_installation_vehicle_access (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_vehicle_access (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.infiltration_installation_watertightness () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.infiltration_installation_watertightness ADD CONSTRAINT pkey_qgep_vl_infiltration_installation_watertightness_code PRIMARY KEY (code);
@@ -4007,7 +4007,7 @@ ALTER TABLE qgep_vl.infiltration_installation_watertightness ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.infiltration_installation_watertightness (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5360,5360,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_installation_watertightness (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3294,3294,'watertight','wasserdicht','etanche', 'zzz_wasserdicht', 'etans', '', 'WD', 'E', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT fkey_vl_infiltration_installation_watertightness FOREIGN KEY (watertightness)
- REFERENCES qgep_vl.infiltration_installation_watertightness (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_installation_watertightness (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.infiltration_installation ADD COLUMN fk_aquifier varchar (16);
 ALTER TABLE qgep_od.infiltration_installation ADD CONSTRAINT rel_infiltration_installation_aquifier FOREIGN KEY (fk_aquifier) REFERENCES qgep_od.aquifier(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4023,7 +4023,7 @@ ALTER TABLE qgep_vl.wwtp_structure_kind ADD CONSTRAINT pkey_qgep_vl_wwtp_structu
  INSERT INTO qgep_vl.wwtp_structure_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3032,3032,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.wwtp_structure_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (326,326,'primary_clarifier','Vorklaerbecken','decanteurs_primaires', 'zzz_Vorklaerbecken', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wwtp_structure ADD CONSTRAINT fkey_vl_wwtp_structure_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.wwtp_structure_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wwtp_structure_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.maintenance_event_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.maintenance_event_kind ADD CONSTRAINT pkey_qgep_vl_maintenance_event_kind_code PRIMARY KEY (code);
@@ -4036,7 +4036,7 @@ ALTER TABLE qgep_vl.maintenance_event_kind ADD CONSTRAINT pkey_qgep_vl_maintenan
  INSERT INTO qgep_vl.maintenance_event_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3045,3045,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.maintenance_event_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4564,4564,'examination','Untersuchung','examen', 'zzz_Untersuchung', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.maintenance_event ADD CONSTRAINT fkey_vl_maintenance_event_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.maintenance_event_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.maintenance_event_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.maintenance_event_status () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.maintenance_event_status ADD CONSTRAINT pkey_qgep_vl_maintenance_event_status_code PRIMARY KEY (code);
@@ -4045,7 +4045,7 @@ ALTER TABLE qgep_vl.maintenance_event_status ADD CONSTRAINT pkey_qgep_vl_mainten
  INSERT INTO qgep_vl.maintenance_event_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3678,3678,'not_possible','nicht_moeglich','impossible', 'zzz_nicht_moeglich', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.maintenance_event_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3047,3047,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.maintenance_event ADD CONSTRAINT fkey_vl_maintenance_event_status FOREIGN KEY (status)
- REFERENCES qgep_vl.maintenance_event_status (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.maintenance_event_status (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.maintenance_event ADD COLUMN fk_operating_company varchar (16);
 ALTER TABLE qgep_od.maintenance_event ADD CONSTRAINT rel_maintenance_event_operating_company FOREIGN KEY (fk_operating_company) REFERENCES qgep_od.organisation(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4059,7 +4059,7 @@ ALTER TABLE qgep_vl.planning_zone_kind ADD CONSTRAINT pkey_qgep_vl_planning_zone
  INSERT INTO qgep_vl.planning_zone_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3077,3077,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.planning_zone_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (29,29,'residential_zone','Wohnzone','zone_d_habitations', 'zzz_Wohnzone', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.planning_zone ADD CONSTRAINT fkey_vl_planning_zone_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.planning_zone_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.planning_zone_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.infiltration_zone ADD CONSTRAINT oorel_od_infiltration_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep_od.zone(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.infiltration_zone_infiltration_capacity () INHERITS (qgep_sys.value_list_base);
@@ -4071,7 +4071,7 @@ ALTER TABLE qgep_vl.infiltration_zone_infiltration_capacity ADD CONSTRAINT pkey_
  INSERT INTO qgep_vl.infiltration_zone_infiltration_capacity (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3073,3073,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.infiltration_zone_infiltration_capacity (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2996,2996,'not_allowed','unzulaessig','non_admis', 'zzz_unzulaessig', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.infiltration_zone ADD CONSTRAINT fkey_vl_infiltration_zone_infiltration_capacity FOREIGN KEY (infiltration_capacity)
- REFERENCES qgep_vl.infiltration_zone_infiltration_capacity (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.infiltration_zone_infiltration_capacity (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.drainage_system ADD CONSTRAINT oorel_od_drainage_system_zone FOREIGN KEY (obj_id) REFERENCES qgep_od.zone(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.drainage_system_kind () INHERITS (qgep_sys.value_list_base);
@@ -4083,7 +4083,7 @@ ALTER TABLE qgep_vl.drainage_system_kind ADD CONSTRAINT pkey_qgep_vl_drainage_sy
  INSERT INTO qgep_vl.drainage_system_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2723,2723,'separated_system','Trennsystem','systeme_separatif', 'sistema_separato', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.drainage_system_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3060,3060,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.drainage_system ADD CONSTRAINT fkey_vl_drainage_system_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.drainage_system_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.drainage_system_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.water_body_protection_sector ADD CONSTRAINT oorel_od_water_body_protection_sector_zone FOREIGN KEY (obj_id) REFERENCES qgep_od.zone(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.water_body_protection_sector_kind () INHERITS (qgep_sys.value_list_base);
@@ -4097,7 +4097,7 @@ ALTER TABLE qgep_vl.water_body_protection_sector_kind ADD CONSTRAINT pkey_qgep_v
  INSERT INTO qgep_vl.water_body_protection_sector_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3651,3651,'Zo','Zo','Zo', 'zzz_Zo', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.water_body_protection_sector_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3650,3650,'Zu','Zu','Zu', 'zzz_Zu', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.water_body_protection_sector ADD CONSTRAINT fkey_vl_water_body_protection_sector_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.water_body_protection_sector_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.water_body_protection_sector_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.ground_water_protection_perimeter ADD CONSTRAINT oorel_od_ground_water_protection_perimeter_zone FOREIGN KEY (obj_id) REFERENCES qgep_od.zone(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.groundwater_protection_zone ADD CONSTRAINT oorel_od_groundwater_protection_zone_zone FOREIGN KEY (obj_id) REFERENCES qgep_od.zone(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
@@ -4108,7 +4108,7 @@ ALTER TABLE qgep_vl.groundwater_protection_zone_kind ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.groundwater_protection_zone_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (442,442,'S3','S3','S3', 'S3', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.groundwater_protection_zone_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3040,3040,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.groundwater_protection_zone ADD CONSTRAINT fkey_vl_groundwater_protection_zone_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.groundwater_protection_zone_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.groundwater_protection_zone_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.pipe_profile_profile_type () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_profile_profile_type_code PRIMARY KEY (code);
@@ -4120,7 +4120,7 @@ ALTER TABLE qgep_vl.pipe_profile_profile_type ADD CONSTRAINT pkey_qgep_vl_pipe_p
  INSERT INTO qgep_vl.pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3355,3355,'special','Spezialprofil','profil_special', 'sezione_speciale', 'sectiune_speciala', 'S', 'S', 'PS', 'S', 'S', 'true');
  INSERT INTO qgep_vl.pipe_profile_profile_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3357,3357,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', 'U', 'U', 'I', 'S', 'N', 'true');
  ALTER TABLE qgep_od.pipe_profile ADD CONSTRAINT fkey_vl_pipe_profile_profile_type FOREIGN KEY (profile_type)
- REFERENCES qgep_vl.pipe_profile_profile_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.pipe_profile_profile_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.wwtp_energy_use ADD COLUMN fk_waste_water_treatment_plant varchar (16);
 ALTER TABLE qgep_od.wwtp_energy_use ADD CONSTRAINT rel_wwtp_energy_use_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep_od.waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4133,7 +4133,7 @@ ALTER TABLE qgep_vl.waste_water_treatment_kind ADD CONSTRAINT pkey_qgep_vl_waste
  INSERT INTO qgep_vl.waste_water_treatment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (366,366,'mechanical','mechanisch','mecanique', 'zzz_mechanisch', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.waste_water_treatment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3076,3076,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.waste_water_treatment ADD CONSTRAINT fkey_vl_waste_water_treatment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.waste_water_treatment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.waste_water_treatment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.waste_water_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
 ALTER TABLE qgep_od.waste_water_treatment ADD CONSTRAINT rel_waste_water_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep_od.waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4147,7 +4147,7 @@ ALTER TABLE qgep_vl.sludge_treatment_stabilisation ADD CONSTRAINT pkey_qgep_vl_s
  INSERT INTO qgep_vl.sludge_treatment_stabilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2994,2994,'other','andere','autres', 'altri', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.sludge_treatment_stabilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3004,3004,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.sludge_treatment ADD CONSTRAINT fkey_vl_sludge_treatment_stabilisation FOREIGN KEY (stabilisation)
- REFERENCES qgep_vl.sludge_treatment_stabilisation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.sludge_treatment_stabilisation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.sludge_treatment ADD COLUMN fk_waste_water_treatment_plant varchar (16);
 ALTER TABLE qgep_od.sludge_treatment ADD CONSTRAINT rel_sludge_treatment_waste_water_treatment_plant FOREIGN KEY (fk_waste_water_treatment_plant) REFERENCES qgep_od.waste_water_treatment_plant(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4161,7 +4161,7 @@ ALTER TABLE qgep_vl.chute_kind ADD CONSTRAINT pkey_qgep_vl_chute_kind_code PRIMA
  INSERT INTO qgep_vl.chute_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3592,3592,'natural','natuerlich','naturel', 'zzz_natuerlich', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.chute_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3593,3593,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.chute ADD CONSTRAINT fkey_vl_chute_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.chute_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.chute_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.chute_material () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.chute_material ADD CONSTRAINT pkey_qgep_vl_chute_material_code PRIMARY KEY (code);
@@ -4172,7 +4172,7 @@ ALTER TABLE qgep_vl.chute_material ADD CONSTRAINT pkey_qgep_vl_chute_material_co
  INSERT INTO qgep_vl.chute_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (410,410,'natural_none','natuerlich_kein','naturel_aucun', 'zzz_natuerlich_kein', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.chute_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3061,3061,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.chute ADD CONSTRAINT fkey_vl_chute_material FOREIGN KEY (material)
- REFERENCES qgep_vl.chute_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.chute_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.lock ADD CONSTRAINT oorel_od_lock_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.water_control_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE qgep_od.passage ADD CONSTRAINT oorel_od_passage_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.water_control_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
@@ -4186,7 +4186,7 @@ ALTER TABLE qgep_vl.dam_kind ADD CONSTRAINT pkey_qgep_vl_dam_kind_code PRIMARY K
  INSERT INTO qgep_vl.dam_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (418,418,'tyrolean_weir','Tirolerwehr','prise_tyrolienne', 'zzz_Tirolerwehr', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.dam_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3064,3064,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.dam ADD CONSTRAINT fkey_vl_dam_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.dam_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.dam_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.rock_ramp ADD CONSTRAINT oorel_od_rock_ramp_water_control_structure FOREIGN KEY (obj_id) REFERENCES qgep_od.water_control_structure(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.rock_ramp_stabilisation () INHERITS (qgep_sys.value_list_base);
@@ -4199,7 +4199,7 @@ ALTER TABLE qgep_vl.rock_ramp_stabilisation ADD CONSTRAINT pkey_qgep_vl_rock_ram
  INSERT INTO qgep_vl.rock_ramp_stabilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (414,414,'wooden_beam','Holzbalken','poutres_en_bois', 'zzz_Holzbalken', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.rock_ramp_stabilisation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3063,3063,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.rock_ramp ADD CONSTRAINT fkey_vl_rock_ramp_stabilisation FOREIGN KEY (stabilisation)
- REFERENCES qgep_vl.rock_ramp_stabilisation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.rock_ramp_stabilisation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.fish_pass ADD COLUMN fk_water_control_structure varchar (16);
 ALTER TABLE qgep_od.fish_pass ADD CONSTRAINT rel_fish_pass_water_control_structure FOREIGN KEY (fk_water_control_structure) REFERENCES qgep_od.water_control_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4215,7 +4215,7 @@ ALTER TABLE qgep_vl.reach_point_elevation_accuracy ADD CONSTRAINT pkey_qgep_vl_r
  INSERT INTO qgep_vl.reach_point_elevation_accuracy (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3247,3247,'plusminus_6cm','plusminus_6cm','plus_moins_6cm', 'piu_meno_6cm', 'plus_minus_6cm', '', 'P06', 'P06', '', '', 'true');
  INSERT INTO qgep_vl.reach_point_elevation_accuracy (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5376,5376,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.reach_point ADD CONSTRAINT fkey_vl_reach_point_elevation_accuracy FOREIGN KEY (elevation_accuracy)
- REFERENCES qgep_vl.reach_point_elevation_accuracy (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_point_elevation_accuracy (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_point_outlet_shape () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_point_outlet_shape_code PRIMARY KEY (code);
@@ -4225,7 +4225,7 @@ ALTER TABLE qgep_vl.reach_point_outlet_shape ADD CONSTRAINT pkey_qgep_vl_reach_p
  INSERT INTO qgep_vl.reach_point_outlet_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (286,286,'sharp_edged','scharfkantig','aretes_vives', 'zzz_scharfkantig', 'margini_ascutite', '', 'SK', 'AV', '', '', 'true');
  INSERT INTO qgep_vl.reach_point_outlet_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5375,5375,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.reach_point ADD CONSTRAINT fkey_vl_reach_point_outlet_shape FOREIGN KEY (outlet_shape)
- REFERENCES qgep_vl.reach_point_outlet_shape (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_point_outlet_shape (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.reach_point ADD COLUMN fk_wastewater_networkelement varchar (16);
 ALTER TABLE qgep_od.reach_point ADD CONSTRAINT rel_reach_point_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4239,7 +4239,7 @@ ALTER TABLE qgep_vl.reach_elevation_determination ADD CONSTRAINT pkey_qgep_vl_re
  INSERT INTO qgep_vl.reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4778,4778,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.reach_elevation_determination (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4779,4779,'inaccurate','ungenau','imprecise', 'impreciso', 'imprecisa', '', 'LU', 'IP', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_elevation_determination FOREIGN KEY (elevation_determination)
- REFERENCES qgep_vl.reach_elevation_determination (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_elevation_determination (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_horizontal_positioning () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_horizontal_positioning ADD CONSTRAINT pkey_qgep_vl_reach_horizontal_positioning_code PRIMARY KEY (code);
@@ -4247,7 +4247,7 @@ ALTER TABLE qgep_vl.reach_horizontal_positioning ADD CONSTRAINT pkey_qgep_vl_rea
  INSERT INTO qgep_vl.reach_horizontal_positioning (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5379,5379,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.reach_horizontal_positioning (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5380,5380,'inaccurate','ungenau','imprecise', 'impreciso', 'imprecisa', '', 'LU', 'IP', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_horizontal_positioning FOREIGN KEY (horizontal_positioning)
- REFERENCES qgep_vl.reach_horizontal_positioning (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_horizontal_positioning (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_inside_coating () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_inside_coating ADD CONSTRAINT pkey_qgep_vl_reach_inside_coating_code PRIMARY KEY (code);
@@ -4258,7 +4258,7 @@ ALTER TABLE qgep_vl.reach_inside_coating ADD CONSTRAINT pkey_qgep_vl_reach_insid
  INSERT INTO qgep_vl.reach_inside_coating (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5384,5384,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.reach_inside_coating (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (249,249,'cement_mortar_lining','Zementmoertelauskleidung','revetement_en_mortier_de_ciment', 'zzz_Zementmoertelauskleidung', 'strat_mortar_ciment', '', 'ZM', 'RM', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_inside_coating FOREIGN KEY (inside_coating)
- REFERENCES qgep_vl.reach_inside_coating (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_inside_coating (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_material () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_material ADD CONSTRAINT pkey_qgep_vl_reach_material_code PRIMARY KEY (code);
@@ -4287,7 +4287,7 @@ ALTER TABLE qgep_vl.reach_material ADD CONSTRAINT pkey_qgep_vl_reach_material_co
  INSERT INTO qgep_vl.reach_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3016,3016,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', 'U', 'U', 'I', 'SC', '', 'true');
  INSERT INTO qgep_vl.reach_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2762,2762,'cement','Zement','ciment', 'cemento', 'ciment', 'C', 'Z', 'C', 'C', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_material FOREIGN KEY (material)
- REFERENCES qgep_vl.reach_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_reliner_material () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_reliner_material ADD CONSTRAINT pkey_qgep_vl_reach_reliner_material_code PRIMARY KEY (code);
@@ -4308,7 +4308,7 @@ ALTER TABLE qgep_vl.reach_reliner_material ADD CONSTRAINT pkey_qgep_vl_reach_rel
  INSERT INTO qgep_vl.reach_reliner_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6468,6468,'vinyl_ester_resin_glass_fibre_laminate','Vinylesterharz_Glasfaserlaminat','resine_d_ester_vinylique_lamine_en_fibre_de_verre', 'zzz_Vinylesterharz_Glasfaserlaminat', 'rasina_de_ester_vinil_laminata_in_fibra_de_sticla', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_reliner_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6469,6469,'vinyl_ester_resin_plastic_felt','Vinylesterharz_Kunststofffilz','resine_d_ester_vinylique_feutre_synthetique', 'zzz_Vinylesterharz_Kunststofffilz', 'rasina_de_ester_vinil', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_reliner_material FOREIGN KEY (reliner_material)
- REFERENCES qgep_vl.reach_reliner_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_reliner_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_relining_construction () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_relining_construction ADD CONSTRAINT pkey_qgep_vl_reach_relining_construction_code PRIMARY KEY (code);
@@ -4322,7 +4322,7 @@ ALTER TABLE qgep_vl.reach_relining_construction ADD CONSTRAINT pkey_qgep_vl_reac
  INSERT INTO qgep_vl.reach_relining_construction (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6453,6453,'unknown','unbekannt','inconnu', 'zzz_unbekannt', 'necunoscuta', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_relining_construction (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6480,6480,'spiral_lining','Wickelrohrrelining','chemisage_par_tube_spirale', 'zzz_Wickelrohrrelining', 'captusire_prin_tub_spirala', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_relining_construction FOREIGN KEY (relining_construction)
- REFERENCES qgep_vl.reach_relining_construction (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_relining_construction (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_relining_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_relining_kind ADD CONSTRAINT pkey_qgep_vl_reach_relining_kind_code PRIMARY KEY (code);
@@ -4330,7 +4330,7 @@ ALTER TABLE qgep_vl.reach_relining_kind ADD CONSTRAINT pkey_qgep_vl_reach_relini
  INSERT INTO qgep_vl.reach_relining_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6456,6456,'partial','partiell','partiellement', 'zzz_partiell', 'partial', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_relining_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6457,6457,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach ADD CONSTRAINT fkey_vl_reach_relining_kind FOREIGN KEY (relining_kind)
- REFERENCES qgep_vl.reach_relining_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_relining_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.reach ADD COLUMN fk_reach_point_from varchar (16);
 ALTER TABLE qgep_od.reach ADD CONSTRAINT rel_reach_reach_point_from FOREIGN KEY (fk_reach_point_from) REFERENCES qgep_od.reach_point(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4351,7 +4351,7 @@ ALTER TABLE qgep_vl.mechanical_pretreatment_kind ADD CONSTRAINT pkey_qgep_vl_mec
  INSERT INTO qgep_vl.mechanical_pretreatment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3321,3321,'floating_matter_separator','Schwimmstoffabscheider','separateur_materiaux_flottants', 'separatore_materiali_galleggianti', 'separator_materie_flotanta', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.mechanical_pretreatment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3322,3322,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.mechanical_pretreatment ADD CONSTRAINT fkey_vl_mechanical_pretreatment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.mechanical_pretreatment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.mechanical_pretreatment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.mechanical_pretreatment ADD COLUMN fk_infiltration_installation varchar (16);
 ALTER TABLE qgep_od.mechanical_pretreatment ADD CONSTRAINT rel_mechanical_pretreatment_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep_od.infiltration_installation(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4366,7 +4366,7 @@ ALTER TABLE qgep_vl.retention_body_kind ADD CONSTRAINT pkey_qgep_vl_retention_bo
  INSERT INTO qgep_vl.retention_body_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (347,347,'accumulation_channel','Staukanal','retention_dans_canalisations_stockage', 'zzz_Staukanal', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.retention_body_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3031,3031,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.retention_body ADD CONSTRAINT fkey_vl_retention_body_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.retention_body_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.retention_body_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.retention_body ADD COLUMN fk_infiltration_installation varchar (16);
 ALTER TABLE qgep_od.retention_body ADD CONSTRAINT rel_retention_body_infiltration_installation FOREIGN KEY (fk_infiltration_installation) REFERENCES qgep_od.infiltration_installation(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4376,7 +4376,7 @@ ALTER TABLE qgep_vl.overflow_char_kind_overflow_char ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.overflow_char_kind_overflow_char (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6221,6221,'qq','QQ','QQ', 'QQ', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_char_kind_overflow_char (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6228,6228,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_kind_overflow_char FOREIGN KEY (kind_overflow_char)
- REFERENCES qgep_vl.overflow_char_kind_overflow_char (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_char_kind_overflow_char (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.overflow_char_overflow_char_digital () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep_vl_overflow_char_overflow_char_digital_code PRIMARY KEY (code);
@@ -4384,7 +4384,7 @@ ALTER TABLE qgep_vl.overflow_char_overflow_char_digital ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.overflow_char_overflow_char_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6224,6224,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_char_overflow_char_digital (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6225,6225,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow_char ADD CONSTRAINT fkey_vl_overflow_char_overflow_char_digital FOREIGN KEY (overflow_char_digital)
- REFERENCES qgep_vl.overflow_char_overflow_char_digital (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_char_overflow_char_digital (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.hq_relation ADD COLUMN fk_overflow_char varchar (16);
 ALTER TABLE qgep_od.hq_relation ADD CONSTRAINT rel_hq_relation_overflow_char FOREIGN KEY (fk_overflow_char) REFERENCES qgep_od.overflow_char(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4394,7 +4394,7 @@ ALTER TABLE qgep_vl.structure_part_renovation_demand ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (137,137,'necessary','notwendig','necessaire', 'zzz_notwendig', 'necesare', 'N', 'N', 'N', '', '', 'true');
  INSERT INTO qgep_vl.structure_part_renovation_demand (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5358,5358,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.structure_part ADD CONSTRAINT fkey_vl_structure_part_renovation_demand FOREIGN KEY (renovation_demand)
- REFERENCES qgep_vl.structure_part_renovation_demand (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.structure_part_renovation_demand (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.structure_part ADD COLUMN fk_wastewater_structure varchar (16);
 ALTER TABLE qgep_od.structure_part ADD CONSTRAINT rel_structure_part_wastewater_structure FOREIGN KEY (fk_wastewater_structure) REFERENCES qgep_od.wastewater_structure(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4412,7 +4412,7 @@ ALTER TABLE qgep_vl.access_aid_kind ADD CONSTRAINT pkey_qgep_vl_access_aid_kind_
  INSERT INTO qgep_vl.access_aid_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3230,3230,'door','Tuere','porte', 'porta', 'usa', '', 'T', 'P', '', '', 'true');
  INSERT INTO qgep_vl.access_aid_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3048,3048,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.access_aid ADD CONSTRAINT fkey_vl_access_aid_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.access_aid_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.access_aid_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.dryweather_flume ADD CONSTRAINT oorel_od_dryweather_flume_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.dryweather_flume_material () INHERITS (qgep_sys.value_list_base);
@@ -4424,7 +4424,7 @@ ALTER TABLE qgep_vl.dryweather_flume_material ADD CONSTRAINT pkey_qgep_vl_drywea
  INSERT INTO qgep_vl.dryweather_flume_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3017,3017,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.dryweather_flume_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (237,237,'cement_mortar','Zementmoertel','mortier_de_ciment', 'zzz_Zementmoertel', 'mortar_ciment', '', 'ZM', 'MC', '', '', 'true');
  ALTER TABLE qgep_od.dryweather_flume ADD CONSTRAINT fkey_vl_dryweather_flume_material FOREIGN KEY (material)
- REFERENCES qgep_vl.dryweather_flume_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.dryweather_flume_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.cover ADD CONSTRAINT oorel_od_cover_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.cover_cover_shape () INHERITS (qgep_sys.value_list_base);
@@ -4434,7 +4434,7 @@ ALTER TABLE qgep_vl.cover_cover_shape ADD CONSTRAINT pkey_qgep_vl_cover_cover_sh
  INSERT INTO qgep_vl.cover_cover_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3498,3498,'round','rund','rond', 'zzz_rund', 'rotund', '', 'R', 'R', '', '', 'true');
  INSERT INTO qgep_vl.cover_cover_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5354,5354,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_cover_shape FOREIGN KEY (cover_shape)
- REFERENCES qgep_vl.cover_cover_shape (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_cover_shape (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.cover_fastening () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.cover_fastening ADD CONSTRAINT pkey_qgep_vl_cover_fastening_code PRIMARY KEY (code);
@@ -4442,7 +4442,7 @@ ALTER TABLE qgep_vl.cover_fastening ADD CONSTRAINT pkey_qgep_vl_cover_fastening_
  INSERT INTO qgep_vl.cover_fastening (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5351,5351,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.cover_fastening (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5352,5352,'bolted','verschraubt','vissee', 'zzz_verschraubt', 'insurubata', '', 'VS', 'VS', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_fastening FOREIGN KEY (fastening)
- REFERENCES qgep_vl.cover_fastening (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_fastening (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.cover_material () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.cover_material ADD CONSTRAINT pkey_qgep_vl_cover_material_code PRIMARY KEY (code);
@@ -4453,7 +4453,7 @@ ALTER TABLE qgep_vl.cover_material ADD CONSTRAINT pkey_qgep_vl_cover_material_co
  INSERT INTO qgep_vl.cover_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (235,235,'cast_iron_with_concrete_filling','Guss_mit_Betonfuellung','fonte_avec_remplissage_en_beton', 'zzz_Guss_mit_Betonfuellung', 'fonta_cu_umplutura_beton', '', 'GBT', 'FRB', '', '', 'true');
  INSERT INTO qgep_vl.cover_material (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3015,3015,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_material FOREIGN KEY (material)
- REFERENCES qgep_vl.cover_material (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_material (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.cover_positional_accuracy () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.cover_positional_accuracy ADD CONSTRAINT pkey_qgep_vl_cover_positional_accuracy_code PRIMARY KEY (code);
@@ -4463,7 +4463,7 @@ ALTER TABLE qgep_vl.cover_positional_accuracy ADD CONSTRAINT pkey_qgep_vl_cover_
  INSERT INTO qgep_vl.cover_positional_accuracy (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3242,3242,'plusminus_50cm','plusminus_50cm','plus_moins_50cm', 'piu_meno_50cm', 'plus_minus_50cm', '', 'P50', 'P50', '', '', 'true');
  INSERT INTO qgep_vl.cover_positional_accuracy (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5349,5349,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_positional_accuracy FOREIGN KEY (positional_accuracy)
- REFERENCES qgep_vl.cover_positional_accuracy (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_positional_accuracy (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.cover_sludge_bucket () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.cover_sludge_bucket ADD CONSTRAINT pkey_qgep_vl_cover_sludge_bucket_code PRIMARY KEY (code);
@@ -4471,7 +4471,7 @@ ALTER TABLE qgep_vl.cover_sludge_bucket ADD CONSTRAINT pkey_qgep_vl_cover_sludge
  INSERT INTO qgep_vl.cover_sludge_bucket (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3066,3066,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  INSERT INTO qgep_vl.cover_sludge_bucket (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (422,422,'existent','vorhanden','existant', 'zzz_vorhanden', 'existent', '', 'V', 'E', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_sludge_bucket FOREIGN KEY (sludge_bucket)
- REFERENCES qgep_vl.cover_sludge_bucket (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_sludge_bucket (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.cover_venting () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.cover_venting ADD CONSTRAINT pkey_qgep_vl_cover_venting_code PRIMARY KEY (code);
@@ -4479,7 +4479,7 @@ ALTER TABLE qgep_vl.cover_venting ADD CONSTRAINT pkey_qgep_vl_cover_venting_code
  INSERT INTO qgep_vl.cover_venting (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (230,230,'not_vented','nicht_entlueftet','non_aere', 'zzz_nicht_entlueftet', 'fara_aerisire', '', 'NEL', 'NAE', '', '', 'true');
  INSERT INTO qgep_vl.cover_venting (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5348,5348,'unknown','unbekannt','inconnue', 'sconosciuto', 'necunoscut', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.cover ADD CONSTRAINT fkey_vl_cover_venting FOREIGN KEY (venting)
- REFERENCES qgep_vl.cover_venting (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.cover_venting (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.electric_equipment ADD CONSTRAINT oorel_od_electric_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.electric_equipment_kind () INHERITS (qgep_sys.value_list_base);
@@ -4491,7 +4491,7 @@ ALTER TABLE qgep_vl.electric_equipment_kind ADD CONSTRAINT pkey_qgep_vl_electric
  INSERT INTO qgep_vl.electric_equipment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (377,377,'phone','Telephon','telephone', 'telefono', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.electric_equipment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3038,3038,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.electric_equipment ADD CONSTRAINT fkey_vl_electric_equipment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.electric_equipment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.electric_equipment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.electromechanical_equipment ADD CONSTRAINT oorel_od_electromechanical_equipment_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.electromechanical_equipment_kind () INHERITS (qgep_sys.value_list_base);
@@ -4502,7 +4502,7 @@ ALTER TABLE qgep_vl.electromechanical_equipment_kind ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.electromechanical_equipment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (381,381,'scraper_installation','Raeumeinrichtung','dispositif_de_curage', 'zzz_Raeumeinrichtung', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.electromechanical_equipment_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3072,3072,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.electromechanical_equipment ADD CONSTRAINT fkey_vl_electromechanical_equipment_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.electromechanical_equipment_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.electromechanical_equipment_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.benching ADD CONSTRAINT oorel_od_benching_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.benching_kind () INHERITS (qgep_sys.value_list_base);
@@ -4513,7 +4513,7 @@ ALTER TABLE qgep_vl.benching_kind ADD CONSTRAINT pkey_qgep_vl_benching_kind_code
  INSERT INTO qgep_vl.benching_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3231,3231,'none','kein','aucun', 'nessuno', 'niciun', '', 'KB', 'AN', '', '', 'true');
  INSERT INTO qgep_vl.benching_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3033,3033,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscuta', '', 'U', 'I', '', '', 'true');
  ALTER TABLE qgep_od.benching ADD CONSTRAINT fkey_vl_benching_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.benching_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.benching_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.connection_object ADD COLUMN fk_wastewater_networkelement varchar (16);
 ALTER TABLE qgep_od.connection_object ADD CONSTRAINT rel_connection_object_wastewater_networkelement FOREIGN KEY (fk_wastewater_networkelement) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4537,7 +4537,7 @@ ALTER TABLE qgep_vl.individual_surface_function ADD CONSTRAINT pkey_qgep_vl_indi
  INSERT INTO qgep_vl.individual_surface_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3465,3465,'connecting_or_principal_or_major_road','Verbindungs_Hauptverkehrs_Hochleistungsstrassen','routes_de_raccordement_principales_grand_trafic', '', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.individual_surface_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3463,3463,'forecourt_and_access_road','VorplaetzeZufahrten','places_devant_entree_acces', 'zzz_VorplaetzeZufahrten', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.individual_surface ADD CONSTRAINT fkey_vl_individual_surface_function FOREIGN KEY (function)
- REFERENCES qgep_vl.individual_surface_function (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.individual_surface_function (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.individual_surface_pavement () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.individual_surface_pavement ADD CONSTRAINT pkey_qgep_vl_individual_surface_pavement_code PRIMARY KEY (code);
@@ -4548,7 +4548,7 @@ ALTER TABLE qgep_vl.individual_surface_pavement ADD CONSTRAINT pkey_qgep_vl_indi
  INSERT INTO qgep_vl.individual_surface_pavement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3030,3030,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.individual_surface_pavement (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2034,2034,'barren','vegetationslos','sans_vegetation', 'zzz_vegetationslos', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.individual_surface ADD CONSTRAINT fkey_vl_individual_surface_pavement FOREIGN KEY (pavement)
- REFERENCES qgep_vl.individual_surface_pavement (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.individual_surface_pavement (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.fountain ADD CONSTRAINT oorel_od_fountain_connection_object FOREIGN KEY (obj_id) REFERENCES qgep_od.connection_object(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE qgep_od.hazard_source ADD COLUMN fk_connection_object varchar (16);
@@ -4565,7 +4565,7 @@ ALTER TABLE qgep_vl.catchment_area_direct_discharge_current ADD CONSTRAINT pkey_
  INSERT INTO qgep_vl.catchment_area_direct_discharge_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5458,5458,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_direct_discharge_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5463,5463,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_direct_discharge_current FOREIGN KEY (direct_discharge_current)
- REFERENCES qgep_vl.catchment_area_direct_discharge_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_direct_discharge_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_direct_discharge_planned () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_direct_discharge_planned ADD CONSTRAINT pkey_qgep_vl_catchment_area_direct_discharge_planned_code PRIMARY KEY (code);
@@ -4573,7 +4573,7 @@ ALTER TABLE qgep_vl.catchment_area_direct_discharge_planned ADD CONSTRAINT pkey_
  INSERT INTO qgep_vl.catchment_area_direct_discharge_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5460,5460,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_direct_discharge_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5464,5464,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_direct_discharge_planned FOREIGN KEY (direct_discharge_planned)
- REFERENCES qgep_vl.catchment_area_direct_discharge_planned (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_direct_discharge_planned (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_drainage_system_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_drainage_system_current ADD CONSTRAINT pkey_qgep_vl_catchment_area_drainage_system_current_code PRIMARY KEY (code);
@@ -4584,7 +4584,7 @@ ALTER TABLE qgep_vl.catchment_area_drainage_system_current ADD CONSTRAINT pkey_q
  INSERT INTO qgep_vl.catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5187,5187,'separated_system','Trennsystem','systeme_separatif', 'sistema_separato', 'rrr_Trennsystem', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_drainage_system_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5189,5189,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_drainage_system_current FOREIGN KEY (drainage_system_current)
- REFERENCES qgep_vl.catchment_area_drainage_system_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_drainage_system_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_drainage_system_planned () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_drainage_system_planned ADD CONSTRAINT pkey_qgep_vl_catchment_area_drainage_system_planned_code PRIMARY KEY (code);
@@ -4595,7 +4595,7 @@ ALTER TABLE qgep_vl.catchment_area_drainage_system_planned ADD CONSTRAINT pkey_q
  INSERT INTO qgep_vl.catchment_area_drainage_system_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5192,5192,'separated_system','Trennsystem','systeme_separatif', 'sistema_separato', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_drainage_system_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5195,5195,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_drainage_system_planned FOREIGN KEY (drainage_system_planned)
- REFERENCES qgep_vl.catchment_area_drainage_system_planned (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_drainage_system_planned (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_infiltration_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_infiltration_current ADD CONSTRAINT pkey_qgep_vl_catchment_area_infiltration_current_code PRIMARY KEY (code);
@@ -4603,7 +4603,7 @@ ALTER TABLE qgep_vl.catchment_area_infiltration_current ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.catchment_area_infiltration_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5453,5453,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_infiltration_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5165,5165,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_infiltration_current FOREIGN KEY (infiltration_current)
- REFERENCES qgep_vl.catchment_area_infiltration_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_infiltration_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_infiltration_planned () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_infiltration_planned ADD CONSTRAINT pkey_qgep_vl_catchment_area_infiltration_planned_code PRIMARY KEY (code);
@@ -4611,7 +4611,7 @@ ALTER TABLE qgep_vl.catchment_area_infiltration_planned ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.catchment_area_infiltration_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5462,5462,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_infiltration_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5170,5170,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_infiltration_planned FOREIGN KEY (infiltration_planned)
- REFERENCES qgep_vl.catchment_area_infiltration_planned (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_infiltration_planned (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_retention_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_retention_current ADD CONSTRAINT pkey_qgep_vl_catchment_area_retention_current_code PRIMARY KEY (code);
@@ -4619,7 +4619,7 @@ ALTER TABLE qgep_vl.catchment_area_retention_current ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.catchment_area_retention_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5468,5468,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_retention_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5469,5469,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_retention_current FOREIGN KEY (retention_current)
- REFERENCES qgep_vl.catchment_area_retention_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_retention_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_retention_planned () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_retention_planned ADD CONSTRAINT pkey_qgep_vl_catchment_area_retention_planned_code PRIMARY KEY (code);
@@ -4627,7 +4627,7 @@ ALTER TABLE qgep_vl.catchment_area_retention_planned ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.catchment_area_retention_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5471,5471,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_retention_planned (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5472,5472,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT fkey_vl_catchment_area_retention_planned FOREIGN KEY (retention_planned)
- REFERENCES qgep_vl.catchment_area_retention_planned (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_retention_planned (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.catchment_area ADD COLUMN fk_wastewater_networkelement_rw_current varchar (16);
 ALTER TABLE qgep_od.catchment_area ADD CONSTRAINT rel_catchment_area_wastewater_networkelement_rw_current FOREIGN KEY (fk_wastewater_networkelement_rw_current) REFERENCES qgep_od.wastewater_networkelement(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4647,7 +4647,7 @@ ALTER TABLE qgep_vl.measuring_point_damming_device ADD CONSTRAINT pkey_qgep_vl_m
  INSERT INTO qgep_vl.measuring_point_damming_device (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5724,5724,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.measuring_point_damming_device (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5723,5723,'venturi_necking','Venturieinschnuerung','etranglement_venturi', 'zzz_Venturieinschnuerung', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.measuring_point ADD CONSTRAINT fkey_vl_measuring_point_damming_device FOREIGN KEY (damming_device)
- REFERENCES qgep_vl.measuring_point_damming_device (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.measuring_point_damming_device (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.measuring_point_purpose () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.measuring_point_purpose ADD CONSTRAINT pkey_qgep_vl_measuring_point_purpose_code PRIMARY KEY (code);
@@ -4656,7 +4656,7 @@ ALTER TABLE qgep_vl.measuring_point_purpose ADD CONSTRAINT pkey_qgep_vl_measurin
  INSERT INTO qgep_vl.measuring_point_purpose (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4594,4594,'technical_purpose','technischer_Zweck','but_technique', 'scopo_tecnico', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.measuring_point_purpose (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (4592,4592,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.measuring_point ADD CONSTRAINT fkey_vl_measuring_point_purpose FOREIGN KEY (purpose)
- REFERENCES qgep_vl.measuring_point_purpose (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.measuring_point_purpose (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.measuring_point ADD COLUMN fk_operator varchar (16);
 ALTER TABLE qgep_od.measuring_point ADD CONSTRAINT rel_measuring_point_operator FOREIGN KEY (fk_operator) REFERENCES qgep_od.organisation(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4678,7 +4678,7 @@ ALTER TABLE qgep_vl.measuring_device_kind ADD CONSTRAINT pkey_qgep_vl_measuring_
  INSERT INTO qgep_vl.measuring_device_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6322,6322,'ultrasound','Ultraschall','ultrason', 'zzz_Ultraschall', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.measuring_device_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5709,5709,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.measuring_device ADD CONSTRAINT fkey_vl_measuring_device_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.measuring_device_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.measuring_device_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.measuring_device ADD COLUMN fk_measuring_point varchar (16);
 ALTER TABLE qgep_od.measuring_device ADD CONSTRAINT rel_measuring_device_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep_od.measuring_point(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4689,7 +4689,7 @@ ALTER TABLE qgep_vl.measurement_series_kind ADD CONSTRAINT pkey_qgep_vl_measurem
  INSERT INTO qgep_vl.measurement_series_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2647,2647,'rain_weather','Regenwetter','temps_de_pluie', 'tempo_pioggia', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.measurement_series_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3053,3053,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.measurement_series ADD CONSTRAINT fkey_vl_measurement_series_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.measurement_series_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.measurement_series_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.measurement_series ADD COLUMN fk_measuring_point varchar (16);
 ALTER TABLE qgep_od.measurement_series ADD CONSTRAINT rel_measurement_series_measuring_point FOREIGN KEY (fk_measuring_point) REFERENCES qgep_od.measuring_point(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4700,7 +4700,7 @@ ALTER TABLE qgep_vl.measurement_result_measurement_type ADD CONSTRAINT pkey_qgep
  INSERT INTO qgep_vl.measurement_result_measurement_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5734,5734,'level','Niveau','niveau', 'livello', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.measurement_result_measurement_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5735,5735,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.measurement_result ADD CONSTRAINT fkey_vl_measurement_result_measurement_type FOREIGN KEY (measurement_type)
- REFERENCES qgep_vl.measurement_result_measurement_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.measurement_result_measurement_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.measurement_result ADD COLUMN fk_measuring_device varchar (16);
 ALTER TABLE qgep_od.measurement_result ADD CONSTRAINT rel_measurement_result_measuring_device FOREIGN KEY (fk_measuring_device) REFERENCES qgep_od.measuring_device(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4718,7 +4718,7 @@ ALTER TABLE qgep_vl.overflow_actuation ADD CONSTRAINT pkey_qgep_vl_overflow_actu
  INSERT INTO qgep_vl.overflow_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (304,304,'pneumatic','pneumatisch','pneumatique', 'zzz_pneumatisch', 'pneumatic', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3005,3005,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow ADD CONSTRAINT fkey_vl_overflow_actuation FOREIGN KEY (actuation)
- REFERENCES qgep_vl.overflow_actuation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_actuation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.overflow_adjustability () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.overflow_adjustability ADD CONSTRAINT pkey_qgep_vl_overflow_adjustability_code PRIMARY KEY (code);
@@ -4726,7 +4726,7 @@ ALTER TABLE qgep_vl.overflow_adjustability ADD CONSTRAINT pkey_qgep_vl_overflow_
  INSERT INTO qgep_vl.overflow_adjustability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3021,3021,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_adjustability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (356,356,'adjustable','verstellbar','reglable', 'zzz_verstellbar', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow ADD CONSTRAINT fkey_vl_overflow_adjustability FOREIGN KEY (adjustability)
- REFERENCES qgep_vl.overflow_adjustability (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_adjustability (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.overflow_control () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.overflow_control ADD CONSTRAINT pkey_qgep_vl_overflow_control_code PRIMARY KEY (code);
@@ -4735,7 +4735,7 @@ ALTER TABLE qgep_vl.overflow_control ADD CONSTRAINT pkey_qgep_vl_overflow_contro
  INSERT INTO qgep_vl.overflow_control (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (306,306,'none','keine','aucun', 'nessuno', 'inexistent', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_control (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3028,3028,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow ADD CONSTRAINT fkey_vl_overflow_control FOREIGN KEY (control)
- REFERENCES qgep_vl.overflow_control (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_control (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.overflow_function () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.overflow_function ADD CONSTRAINT pkey_qgep_vl_overflow_function_code PRIMARY KEY (code);
@@ -4746,7 +4746,7 @@ ALTER TABLE qgep_vl.overflow_function ADD CONSTRAINT pkey_qgep_vl_overflow_funct
  INSERT INTO qgep_vl.overflow_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5546,5546,'internal_overflow','Trennueberlauf','deversoir_interne', 'zzz_Trennueberlauf', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_function (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3010,3010,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow ADD CONSTRAINT fkey_vl_overflow_function FOREIGN KEY (function)
- REFERENCES qgep_vl.overflow_function (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_function (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.overflow_signal_transmission () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.overflow_signal_transmission ADD CONSTRAINT pkey_qgep_vl_overflow_signal_transmission_code PRIMARY KEY (code);
@@ -4755,7 +4755,7 @@ ALTER TABLE qgep_vl.overflow_signal_transmission ADD CONSTRAINT pkey_qgep_vl_ove
  INSERT INTO qgep_vl.overflow_signal_transmission (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2695,2695,'sending_receiving','senden_empfangen','emettre_recevoir', 'zzz_senden_empfangen', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.overflow_signal_transmission (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3056,3056,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.overflow ADD CONSTRAINT fkey_vl_overflow_signal_transmission FOREIGN KEY (signal_transmission)
- REFERENCES qgep_vl.overflow_signal_transmission (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.overflow_signal_transmission (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.overflow ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep_od.overflow ADD CONSTRAINT rel_overflow_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4777,7 +4777,7 @@ ALTER TABLE qgep_vl.throttle_shut_off_unit_actuation ADD CONSTRAINT pkey_qgep_vl
  INSERT INTO qgep_vl.throttle_shut_off_unit_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3158,3158,'pneumatic','pneumatisch','pneumatique', 'zzz_pneumatisch', 'pneumatic', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.throttle_shut_off_unit_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3151,3151,'unknown','unbekannt','inconnu', 'sconosciuto', 'necunoscut', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT fkey_vl_throttle_shut_off_unit_actuation FOREIGN KEY (actuation)
- REFERENCES qgep_vl.throttle_shut_off_unit_actuation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.throttle_shut_off_unit_actuation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.throttle_shut_off_unit_adjustability () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.throttle_shut_off_unit_adjustability ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_adjustability_code PRIMARY KEY (code);
@@ -4785,7 +4785,7 @@ ALTER TABLE qgep_vl.throttle_shut_off_unit_adjustability ADD CONSTRAINT pkey_qge
  INSERT INTO qgep_vl.throttle_shut_off_unit_adjustability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3161,3161,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.throttle_shut_off_unit_adjustability (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3160,3160,'adjustable','verstellbar','reglable', 'zzz_verstellbar', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT fkey_vl_throttle_shut_off_unit_adjustability FOREIGN KEY (adjustability)
- REFERENCES qgep_vl.throttle_shut_off_unit_adjustability (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.throttle_shut_off_unit_adjustability (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.throttle_shut_off_unit_control () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.throttle_shut_off_unit_control ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_control_code PRIMARY KEY (code);
@@ -4794,7 +4794,7 @@ ALTER TABLE qgep_vl.throttle_shut_off_unit_control ADD CONSTRAINT pkey_qgep_vl_t
  INSERT INTO qgep_vl.throttle_shut_off_unit_control (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3165,3165,'none','keine','aucun', 'nessuno', 'inexistent', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.throttle_shut_off_unit_control (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3164,3164,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT fkey_vl_throttle_shut_off_unit_control FOREIGN KEY (control)
- REFERENCES qgep_vl.throttle_shut_off_unit_control (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.throttle_shut_off_unit_control (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.throttle_shut_off_unit_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.throttle_shut_off_unit_kind ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_kind_code PRIMARY KEY (code);
@@ -4814,7 +4814,7 @@ ALTER TABLE qgep_vl.throttle_shut_off_unit_kind ADD CONSTRAINT pkey_qgep_vl_thro
  INSERT INTO qgep_vl.throttle_shut_off_unit_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3046,3046,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.throttle_shut_off_unit_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (133,133,'whirl_throttle','Wirbeldrossel','limiteur_a_vortex', 'zzz_Wirbeldrossel', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT fkey_vl_throttle_shut_off_unit_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.throttle_shut_off_unit_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.throttle_shut_off_unit_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.throttle_shut_off_unit_signal_transmission () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.throttle_shut_off_unit_signal_transmission ADD CONSTRAINT pkey_qgep_vl_throttle_shut_off_unit_signal_transmission_code PRIMARY KEY (code);
@@ -4823,7 +4823,7 @@ ALTER TABLE qgep_vl.throttle_shut_off_unit_signal_transmission ADD CONSTRAINT pk
  INSERT INTO qgep_vl.throttle_shut_off_unit_signal_transmission (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3169,3169,'sending_receiving','senden_empfangen','emettre_recevoir', 'zzz_senden_empfangen', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.throttle_shut_off_unit_signal_transmission (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3170,3170,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT fkey_vl_throttle_shut_off_unit_signal_transmission FOREIGN KEY (signal_transmission)
- REFERENCES qgep_vl.throttle_shut_off_unit_signal_transmission (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.throttle_shut_off_unit_signal_transmission (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.throttle_shut_off_unit ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep_od.throttle_shut_off_unit ADD CONSTRAINT rel_throttle_shut_off_unit_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE cascade DEFERRABLE INITIALLY DEFERRED;
@@ -4840,14 +4840,14 @@ ALTER TABLE qgep_vl.prank_weir_weir_edge ADD CONSTRAINT pkey_qgep_vl_prank_weir_
  INSERT INTO qgep_vl.prank_weir_weir_edge (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (349,349,'sharp_edged','scharfkantig','arete_vive', 'zzz_scharfkantig', 'margini_ascutite', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.prank_weir_weir_edge (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3014,3014,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.prank_weir ADD CONSTRAINT fkey_vl_prank_weir_weir_edge FOREIGN KEY (weir_edge)
- REFERENCES qgep_vl.prank_weir_weir_edge (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.prank_weir_weir_edge (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.prank_weir_weir_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.prank_weir_weir_kind ADD CONSTRAINT pkey_qgep_vl_prank_weir_weir_kind_code PRIMARY KEY (code);
  INSERT INTO qgep_vl.prank_weir_weir_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5772,5772,'raised','hochgezogen','a_seuil_sureleve', 'laterale_alto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.prank_weir_weir_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5771,5771,'low','niedrig','a_seuil_abaisse', 'laterale_basso', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.prank_weir ADD CONSTRAINT fkey_vl_prank_weir_weir_kind FOREIGN KEY (weir_kind)
- REFERENCES qgep_vl.prank_weir_weir_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.prank_weir_weir_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.pump ADD CONSTRAINT oorel_od_pump_overflow FOREIGN KEY (obj_id) REFERENCES qgep_od.overflow(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.pump_construction_type () INHERITS (qgep_sys.value_list_base);
@@ -4860,7 +4860,7 @@ ALTER TABLE qgep_vl.pump_construction_type ADD CONSTRAINT pkey_qgep_vl_pump_cont
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3082,3082,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_construction_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (2661,2661,'vacuum_system','Vakuumanlage','systeme_a_vide_d_air', 'impinato_a_vuoto_aria', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_construction_type FOREIGN KEY (construction_type)
- REFERENCES qgep_vl.pump_construction_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.pump_construction_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.pump_placement_of_actuation () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.pump_placement_of_actuation ADD CONSTRAINT pkey_qgep_vl_pump_placement_of_actuation_code PRIMARY KEY (code);
@@ -4868,7 +4868,7 @@ ALTER TABLE qgep_vl.pump_placement_of_actuation ADD CONSTRAINT pkey_qgep_vl_pump
  INSERT INTO qgep_vl.pump_placement_of_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (311,311,'dry','trocken','non_submersible', 'zzz_trocken', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_placement_of_actuation (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3070,3070,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_placement_of_actuation FOREIGN KEY (placement_of_actuation)
- REFERENCES qgep_vl.pump_placement_of_actuation (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.pump_placement_of_actuation (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.pump_placement_of_pump () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.pump_placement_of_pump ADD CONSTRAINT pkey_qgep_vl_pump_placement_of_pump_code PRIMARY KEY (code);
@@ -4876,7 +4876,7 @@ ALTER TABLE qgep_vl.pump_placement_of_pump ADD CONSTRAINT pkey_qgep_vl_pump_plac
  INSERT INTO qgep_vl.pump_placement_of_pump (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3071,3071,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.pump_placement_of_pump (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (363,363,'vertical','vertikal','vertical', 'zzz_vertikal', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_placement_of_pump FOREIGN KEY (placement_of_pump)
- REFERENCES qgep_vl.pump_placement_of_pump (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.pump_placement_of_pump (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.pump_usage_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.pump_usage_current ADD CONSTRAINT pkey_qgep_vl_pump_usage_current_code PRIMARY KEY (code);
@@ -4890,7 +4890,7 @@ ALTER TABLE qgep_vl.pump_usage_current ADD CONSTRAINT pkey_qgep_vl_pump_usage_cu
  INSERT INTO qgep_vl.pump_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6206,6206,'wastewater','Schmutzabwasser','eaux_usees', 'acque_luride', '', '', 'SW', 'EU', '', '', 'true');
  INSERT INTO qgep_vl.pump_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6326,6326,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.pump ADD CONSTRAINT fkey_vl_pump_usage_current FOREIGN KEY (usage_current)
- REFERENCES qgep_vl.pump_usage_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.pump_usage_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.leapingweir ADD CONSTRAINT oorel_od_leapingweir_overflow FOREIGN KEY (obj_id) REFERENCES qgep_od.overflow(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.leapingweir_opening_shape () INHERITS (qgep_sys.value_list_base);
@@ -4901,7 +4901,7 @@ ALTER TABLE qgep_vl.leapingweir_opening_shape ADD CONSTRAINT pkey_qgep_vl_leapin
  INSERT INTO qgep_vl.leapingweir_opening_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3583,3583,'rectangular','Rechteck','rectangulaire', 'zzz_Rechteck', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.leapingweir_opening_shape (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (3584,3584,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.leapingweir ADD CONSTRAINT fkey_vl_leapingweir_opening_shape FOREIGN KEY (opening_shape)
- REFERENCES qgep_vl.leapingweir_opening_shape (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.leapingweir_opening_shape (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.hydraulic_char_data_is_overflowing () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.hydraulic_char_data_is_overflowing ADD CONSTRAINT pkey_qgep_vl_hydraulic_char_data_is_overflowing_code PRIMARY KEY (code);
@@ -4909,7 +4909,7 @@ ALTER TABLE qgep_vl.hydraulic_char_data_is_overflowing ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.hydraulic_char_data_is_overflowing (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5775,5775,'no','nein','non', 'no', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.hydraulic_char_data_is_overflowing (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5778,5778,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT fkey_vl_hydraulic_char_data_is_overflowing FOREIGN KEY (is_overflowing)
- REFERENCES qgep_vl.hydraulic_char_data_is_overflowing (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.hydraulic_char_data_is_overflowing (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.hydraulic_char_data_main_weir_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.hydraulic_char_data_main_weir_kind ADD CONSTRAINT pkey_qgep_vl_hydraulic_char_data_main_weir_kind_code PRIMARY KEY (code);
@@ -4917,7 +4917,7 @@ ALTER TABLE qgep_vl.hydraulic_char_data_main_weir_kind ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.hydraulic_char_data_main_weir_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6420,6420,'spillway_raised','Streichwehr_hochgezogen','deversoir_lateral_a_seuil_sureleve', 'stramazzo_laterale_alto', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.hydraulic_char_data_main_weir_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6421,6421,'spillway_low','Streichwehr_niedrig','deversoir_lateral_a_seuil_abaisse', 'stamazzo_laterale_basso', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT fkey_vl_hydraulic_char_data_main_weir_kind FOREIGN KEY (main_weir_kind)
- REFERENCES qgep_vl.hydraulic_char_data_main_weir_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.hydraulic_char_data_main_weir_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.hydraulic_char_data_pump_characteristics () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.hydraulic_char_data_pump_characteristics ADD CONSTRAINT pkey_qgep_vl_hydraulic_char_data_pump_characteristics_code PRIMARY KEY (code);
@@ -4927,7 +4927,7 @@ ALTER TABLE qgep_vl.hydraulic_char_data_pump_characteristics ADD CONSTRAINT pkey
  INSERT INTO qgep_vl.hydraulic_char_data_pump_characteristics (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6377,6377,'parallel','parallel','parallele', 'parallelo', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.hydraulic_char_data_pump_characteristics (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6378,6378,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT fkey_vl_hydraulic_char_data_pump_characteristics FOREIGN KEY (pump_characteristics)
- REFERENCES qgep_vl.hydraulic_char_data_pump_characteristics (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.hydraulic_char_data_pump_characteristics (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.hydraulic_char_data_pump_usage_current () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.hydraulic_char_data_pump_usage_current ADD CONSTRAINT pkey_qgep_vl_hydraulic_char_data_pump_usage_current_code PRIMARY KEY (code);
@@ -4941,7 +4941,7 @@ ALTER TABLE qgep_vl.hydraulic_char_data_pump_usage_current ADD CONSTRAINT pkey_q
  INSERT INTO qgep_vl.hydraulic_char_data_pump_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6368,6368,'wastewater','Schmutzabwasser','eaux_usees', 'acque_luride', '', '', 'SW', 'EU', '', '', 'true');
  INSERT INTO qgep_vl.hydraulic_char_data_pump_usage_current (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6369,6369,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT fkey_vl_hydraulic_char_data_pump_usage_current FOREIGN KEY (pump_usage_current)
- REFERENCES qgep_vl.hydraulic_char_data_pump_usage_current (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.hydraulic_char_data_pump_usage_current (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.hydraulic_char_data_status () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.hydraulic_char_data_status ADD CONSTRAINT pkey_qgep_vl_hydraulic_char_data_status_code PRIMARY KEY (code);
@@ -4949,7 +4949,7 @@ ALTER TABLE qgep_vl.hydraulic_char_data_status ADD CONSTRAINT pkey_qgep_vl_hydra
  INSERT INTO qgep_vl.hydraulic_char_data_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6372,6372,'current','Ist','actuel', 'attuale', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.hydraulic_char_data_status (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (6373,6373,'current_optimized','Ist_optimiert','actuel_opt', 'attuale_ottimizzato', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT fkey_vl_hydraulic_char_data_status FOREIGN KEY (status)
- REFERENCES qgep_vl.hydraulic_char_data_status (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.hydraulic_char_data_status (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.hydraulic_char_data ADD COLUMN fk_wastewater_node varchar (16);
 ALTER TABLE qgep_od.hydraulic_char_data ADD CONSTRAINT rel_hydraulic_char_data_wastewater_node FOREIGN KEY (fk_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4963,7 +4963,7 @@ ALTER TABLE qgep_vl.backflow_prevention_kind ADD CONSTRAINT pkey_qgep_vl_backflo
  INSERT INTO qgep_vl.backflow_prevention_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5757,5757,'backflow_flap','Rueckstauklappe','clapet_de_non_retour_a_battant', 'zzz_Rueckstauklappe', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.backflow_prevention_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5758,5758,'gate_shield','Stauschild','plaque_de_retenue', 'paratoia_cilindrica', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.backflow_prevention ADD CONSTRAINT fkey_vl_backflow_prevention_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.backflow_prevention_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.backflow_prevention_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.backflow_prevention ADD COLUMN fk_throttle_shut_off_unit varchar (16);
 ALTER TABLE qgep_od.backflow_prevention ADD CONSTRAINT rel_backflow_prevention_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep_od.throttle_shut_off_unit(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -4979,7 +4979,7 @@ ALTER TABLE qgep_vl.solids_retention_type ADD CONSTRAINT pkey_qgep_vl_solids_ret
  INSERT INTO qgep_vl.solids_retention_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5668,5668,'scumboard','Tauchwand','paroi_plongeante', 'parete_sommersa', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.solids_retention_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5669,5669,'unknown','unbekannt','inconnu', 'sconosciuto', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.solids_retention ADD CONSTRAINT fkey_vl_solids_retention_type FOREIGN KEY (type)
- REFERENCES qgep_vl.solids_retention_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.solids_retention_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.tank_cleaning ADD CONSTRAINT oorel_od_tank_cleaning_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.tank_cleaning_type () INHERITS (qgep_sys.value_list_base);
@@ -4990,7 +4990,7 @@ ALTER TABLE qgep_vl.tank_cleaning_type ADD CONSTRAINT pkey_qgep_vl_tank_cleaning
  INSERT INTO qgep_vl.tank_cleaning_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5623,5623,'surge_flushing','Schwallspuelung','rincage_en_cascade', 'zzz_Schwallspülung', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.tank_cleaning_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5624,5624,'tipping_bucket','Spuelkippe','bac_de_rincage', 'zzz_Spuelkippe', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.tank_cleaning ADD CONSTRAINT fkey_vl_tank_cleaning_type FOREIGN KEY (type)
- REFERENCES qgep_vl.tank_cleaning_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.tank_cleaning_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.tank_emptying ADD CONSTRAINT oorel_od_tank_emptying_structure_part FOREIGN KEY (obj_id) REFERENCES qgep_od.structure_part(obj_id) ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE qgep_vl.tank_emptying_type () INHERITS (qgep_sys.value_list_base);
@@ -5000,7 +5000,7 @@ ALTER TABLE qgep_vl.tank_emptying_type ADD CONSTRAINT pkey_qgep_vl_tank_emptying
  INSERT INTO qgep_vl.tank_emptying_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5628,5628,'pump','Pumpe','pompe', 'pompa', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.tank_emptying_type (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (5629,5629,'valve','Schieber','vanne', 'zzz_Schieber', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.tank_emptying ADD CONSTRAINT fkey_vl_tank_emptying_type FOREIGN KEY (type)
- REFERENCES qgep_vl.tank_emptying_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.tank_emptying_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.tank_emptying ADD COLUMN fk_throttle_shut_off_unit varchar (16);
 ALTER TABLE qgep_od.tank_emptying ADD CONSTRAINT rel_tank_emptying_throttle_shut_off_unit FOREIGN KEY (fk_throttle_shut_off_unit) REFERENCES qgep_od.throttle_shut_off_unit(obj_id) ON UPDATE CASCADE ON DELETE set null DEFERRABLE INITIALLY DEFERRED;
@@ -5181,7 +5181,7 @@ ALTER TABLE qgep_vl.wastewater_structure_text_plantype ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.wastewater_structure_text_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_text_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_text_texthali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_text_texthali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_text_texthali_code PRIMARY KEY (code);
@@ -5189,7 +5189,7 @@ ALTER TABLE qgep_vl.wastewater_structure_text_texthali ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.wastewater_structure_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7851,7851,'1','1','1', '1', '1', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7852,7852,'2','2','2', '2', '2', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep_vl.wastewater_structure_text_texthali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_text_texthali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_text_textvali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_text_textvali ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_text_textvali_code PRIMARY KEY (code);
@@ -5199,7 +5199,7 @@ ALTER TABLE qgep_vl.wastewater_structure_text_textvali ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7856,7856,'3','3','3', '3', '3', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7857,7857,'4','4','4', '4', '4', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure_text ADD CONSTRAINT fkey_vl_wastewater_structure_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep_vl.wastewater_structure_text_textvali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_text_textvali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_text_plantype () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_text_plantype ADD CONSTRAINT pkey_qgep_vl_reach_text_plantype_code PRIMARY KEY (code);
@@ -5209,7 +5209,7 @@ ALTER TABLE qgep_vl.reach_text_plantype ADD CONSTRAINT pkey_qgep_vl_reach_text_p
  INSERT INTO qgep_vl.reach_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach_text ADD CONSTRAINT fkey_vl_reach_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.reach_text_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_text_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_text_texthali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_text_texthali ADD CONSTRAINT pkey_qgep_vl_reach_text_texthali_code PRIMARY KEY (code);
@@ -5217,7 +5217,7 @@ ALTER TABLE qgep_vl.reach_text_texthali ADD CONSTRAINT pkey_qgep_vl_reach_text_t
  INSERT INTO qgep_vl.reach_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7851,7851,'1','1','1', '1', '1', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7852,7852,'2','2','2', '2', '2', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach_text ADD CONSTRAINT fkey_vl_reach_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep_vl.reach_text_texthali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_text_texthali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.reach_text_textvali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.reach_text_textvali ADD CONSTRAINT pkey_qgep_vl_reach_text_textvali_code PRIMARY KEY (code);
@@ -5227,7 +5227,7 @@ ALTER TABLE qgep_vl.reach_text_textvali ADD CONSTRAINT pkey_qgep_vl_reach_text_t
  INSERT INTO qgep_vl.reach_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7856,7856,'3','3','3', '3', '3', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.reach_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7857,7857,'4','4','4', '4', '4', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.reach_text ADD CONSTRAINT fkey_vl_reach_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep_vl.reach_text_textvali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.reach_text_textvali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_text_plantype () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_text_plantype ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_plantype_code PRIMARY KEY (code);
@@ -5237,7 +5237,7 @@ ALTER TABLE qgep_vl.catchment_area_text_plantype ADD CONSTRAINT pkey_qgep_vl_cat
  INSERT INTO qgep_vl.catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7848,7848,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_text_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7845,7845,'network_plan','Werkplan','plan_de_reseau', '', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.catchment_area_text_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_text_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_text_texthali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_text_texthali ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_texthali_code PRIMARY KEY (code);
@@ -5245,7 +5245,7 @@ ALTER TABLE qgep_vl.catchment_area_text_texthali ADD CONSTRAINT pkey_qgep_vl_cat
  INSERT INTO qgep_vl.catchment_area_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7851,7851,'1','1','1', '1', '1', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_text_texthali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7852,7852,'2','2','2', '2', '2', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_texthali FOREIGN KEY (texthali)
- REFERENCES qgep_vl.catchment_area_text_texthali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_text_texthali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.catchment_area_text_textvali () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.catchment_area_text_textvali ADD CONSTRAINT pkey_qgep_vl_catchment_area_text_textvali_code PRIMARY KEY (code);
@@ -5255,7 +5255,7 @@ ALTER TABLE qgep_vl.catchment_area_text_textvali ADD CONSTRAINT pkey_qgep_vl_cat
  INSERT INTO qgep_vl.catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7856,7856,'3','3','3', '3', '3', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.catchment_area_text_textvali (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7857,7857,'4','4','4', '4', '4', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.catchment_area_text ADD CONSTRAINT fkey_vl_catchment_area_text_textvali FOREIGN KEY (textvali)
- REFERENCES qgep_vl.catchment_area_text_textvali (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.catchment_area_text_textvali (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.wastewater_structure_symbol_plantype () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.wastewater_structure_symbol_plantype ADD CONSTRAINT pkey_qgep_vl_wastewater_structure_symbol_plantype_code PRIMARY KEY (code);
@@ -5265,7 +5265,7 @@ ALTER TABLE qgep_vl.wastewater_structure_symbol_plantype ADD CONSTRAINT pkey_qge
  INSERT INTO qgep_vl.wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7878,7878,'overviewmap.om5','Uebersichtsplan.UeP5','plan_d_ensemble.pe5', 'piano_di_insieme.pi5', '', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.wastewater_structure_symbol_plantype (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (7875,7875,'network_plan','Werkplan','plan_de_reseau', 'zzz_Werkplan', '', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.wastewater_structure_symbol ADD CONSTRAINT fkey_vl_wastewater_structure_symbol_plantype FOREIGN KEY (plantype)
- REFERENCES qgep_vl.wastewater_structure_symbol_plantype (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.wastewater_structure_symbol_plantype (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 --------- Relations to class organisation for dataowner and provider (new 3.11.2014);
 

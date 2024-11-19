@@ -2,7 +2,7 @@
 
 -- DROP VIEW qgep_od.vw_qgep_maintenance_on_reach;
 
-CREATE OR REPLACE VIEW qgep_od.vw_qgep_maintenance_on_reach AS 
+CREATE OR REPLACE VIEW qgep_od.vw_qgep_maintenance_on_reach AS
  SELECT re_m_w.obj_id AS re_m_w_id,
     maintenance.obj_id,
     maintenance.identifier,

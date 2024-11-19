@@ -2,7 +2,7 @@
 
 -- DROP VIEW qgep_od.vw_reach_relining;
 
-CREATE OR REPLACE VIEW qgep_od.vw_reach_relining AS 
+CREATE OR REPLACE VIEW qgep_od.vw_reach_relining AS
  SELECT re.obj_id,
     re.clear_height,
     re.inside_coating,
@@ -27,4 +27,3 @@ ALTER TABLE qgep_od.vw_reach_relining
   OWNER TO postgres;
 GRANT ALL ON TABLE qgep_od.vw_reach_relining TO postgres;
 GRANT ALL ON TABLE qgep_od.vw_reach_relining TO qgep;
-

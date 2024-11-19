@@ -99,4 +99,3 @@ CREATE OR REPLACE RULE vw_passage_ON_DELETE AS ON DELETE TO qgep_od.vw_passage D
   DELETE FROM qgep_od.passage WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
-

@@ -109,4 +109,3 @@ CREATE OR REPLACE RULE vw_chute_ON_DELETE AS ON DELETE TO qgep_od.vw_chute DO IN
   DELETE FROM qgep_od.chute WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.water_control_structure WHERE obj_id = OLD.obj_id;
 );
-

@@ -226,7 +226,7 @@ ALTER TABLE qgep_vl.examination_recording_type ADD CONSTRAINT pkey_qgep_vl_exami
  INSERT INTO qgep_vl.examination_recording_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3686,3686,'channel_TV','Kanalfernsehen','camera_canalisations', '', '', '', 'true');
  INSERT INTO qgep_vl.examination_recording_type (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3687,3687,'unknown','unbekannt','inconnu', '', '', '', 'true');
  ALTER TABLE qgep_od.examination ADD CONSTRAINT fkey_vl_examination_recording_type FOREIGN KEY (recording_type)
- REFERENCES qgep_vl.examination_recording_type (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.examination_recording_type (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.examination_weather () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.examination_weather ADD CONSTRAINT pkey_qgep_vl_examination_weather_code PRIMARY KEY (code);
@@ -237,7 +237,7 @@ ALTER TABLE qgep_vl.examination_weather ADD CONSTRAINT pkey_qgep_vl_examination_
  INSERT INTO qgep_vl.examination_weather (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3703,3703,'nice_dry','schoen_trocken','beau_sec', '', '', '', 'true');
  INSERT INTO qgep_vl.examination_weather (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3704,3704,'unknown','unbekannt','inconnu', '', '', '', 'true');
  ALTER TABLE qgep_od.examination ADD CONSTRAINT fkey_vl_examination_weather FOREIGN KEY (weather)
- REFERENCES qgep_vl.examination_weather (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.examination_weather (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.examination ADD COLUMN fk_reach_point varchar (16);
 ALTER TABLE qgep_od.examination ADD CONSTRAINT rel_examination_reach_point FOREIGN KEY (fk_reach_point) REFERENCES qgep_od.reach_point(obj_id) ON UPDATE CASCADE ON DELETE set null;
@@ -246,7 +246,7 @@ ALTER TABLE qgep_vl.damage_connection ADD CONSTRAINT pkey_qgep_vl_damage_connect
  INSERT INTO qgep_vl.damage_connection (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (8498,8498,'yes','ja','oui', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_connection (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (8499,8499,'no','nein','non', '', '', '', 'true');
  ALTER TABLE qgep_od.damage ADD CONSTRAINT fkey_vl_damage_connection FOREIGN KEY (connection)
- REFERENCES qgep_vl.damage_connection (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.damage_connection (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.damage_single_damage_class () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.damage_single_damage_class ADD CONSTRAINT pkey_qgep_vl_damage_single_damage_class_code PRIMARY KEY (code);
@@ -257,7 +257,7 @@ ALTER TABLE qgep_vl.damage_single_damage_class ADD CONSTRAINT pkey_qgep_vl_damag
  INSERT INTO qgep_vl.damage_single_damage_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3711,3711,'EZ4','EZ4','EZ4', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_single_damage_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (4561,4561,'unknown','unbekannt','inconnu', '', '', '', 'true');
  ALTER TABLE qgep_od.damage ADD CONSTRAINT fkey_vl_damage_single_damage_class FOREIGN KEY (single_damage_class)
- REFERENCES qgep_vl.damage_single_damage_class (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.damage_single_damage_class (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.damage_channel ADD CONSTRAINT oorel_od_damage_channel_damage FOREIGN KEY (obj_id) REFERENCES qgep_od.damage(obj_id) ON DELETE cascade;
 CREATE TABLE qgep_vl.damage_channel_channel_damage_code () INHERITS (qgep_sys.value_list_base);
@@ -575,20 +575,20 @@ ALTER TABLE qgep_vl.damage_channel_channel_damage_code ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8894,8894,'BDCZD','BDCZD','BDCZD', 'BDCZD', 'BDCZD', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8895,8895,'BDCZE','BDCZE','BDCZE', 'BDCZE', 'BDCZE', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8896,8896,'BDCZZ','BDCZZ','BDCZZ', 'BDCZZ', 'BDCZZ', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8897,8897,'BDDC','BDDC','BDDC', 'BDDC', 'BDDC', '', '', '', '', '', 'true'); 
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8898,8898,'BDDD','BDDD','BDDD', 'BDDD', 'BDDD', '', '', '', '', '', 'true'); 
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8899,8899,'BDDE','BDDE','BDDE', 'BDDE', 'BDDE', '', '', '', '', '', 'true'); 
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8897,8897,'BDDC','BDDC','BDDC', 'BDDC', 'BDDC', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8898,8898,'BDDD','BDDD','BDDD', 'BDDD', 'BDDD', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8899,8899,'BDDE','BDDE','BDDE', 'BDDE', 'BDDE', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8900,8900,'BDECA','BDECA','BDECA', 'BDECA', 'BDECA', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8901,8901,'BDECB','BDECB','BDECB', 'BDECB', 'BDECB', '', '', '', '', '', 'true'); 
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8901,8901,'BDECB','BDECB','BDECB', 'BDECB', 'BDECB', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8902,8902,'BDECC','BDECC','BDECC', 'BDECC', 'BDECC', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8903,8903,'BDEDA','BDEDA','BDEDA', 'BDEDA', 'BDEDA', '', '', '', '', '', 'true'); 
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8903,8903,'BDEDA','BDEDA','BDEDA', 'BDEDA', 'BDEDA', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8904,8904,'BDEDB','BDEDB','BDEDB', 'BDEDB', 'BDEDB', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8905,8905,'BDEDC','BDEDC','BDEDC', 'BDEDC', 'BDEDC', '', '', '', '', '', 'true'); 
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8906,8906,'BDEEA','BDEEA','BDEEA', 'BDEEA', 'BDEEA', '', '', '', '', '', 'true'); 
- INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8907,8907,'BDEEB','BDEEB','BDEEB', 'BDEEB', 'BDEEB', '', '', '', '', '', 'true'); 
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8905,8905,'BDEDC','BDEDC','BDEDC', 'BDEDC', 'BDEDC', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8906,8906,'BDEEA','BDEEA','BDEEA', 'BDEEA', 'BDEEA', '', '', '', '', '', 'true');
+ INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8907,8907,'BDEEB','BDEEB','BDEEB', 'BDEEB', 'BDEEB', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_channel_channel_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8908,8908,'BDEEC','BDEEC','BDEEC', 'BDEEC', 'BDEEC', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.damage_channel ADD CONSTRAINT fkey_vl_damage_channel_channel_damage_code FOREIGN KEY (channel_damage_code)
- REFERENCES qgep_vl.damage_channel_channel_damage_code (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.damage_channel_channel_damage_code (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.damage_manhole ADD CONSTRAINT oorel_od_damage_manhole_damage FOREIGN KEY (obj_id) REFERENCES qgep_od.damage(obj_id) ON DELETE cascade;
 CREATE TABLE qgep_vl.damage_manhole_manhole_damage_code () INHERITS (qgep_sys.value_list_base);
@@ -930,9 +930,9 @@ ALTER TABLE qgep_vl.damage_manhole_manhole_damage_code ADD CONSTRAINT pkey_qgep_
  INSERT INTO qgep_vl.damage_manhole_manhole_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8970,8970,'DDEDC','DDEDC','DDEDC', 'DDEDC', 'DDEDC', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_manhole_manhole_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8971,8971,'DDEEA','DDEEA','DDEEA', 'DDEEA', 'DDEEA', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_manhole_manhole_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8972,8972,'DDEEB','DDEEB','DDEEB', 'DDEEB', 'DDEEB', '', '', '', '', '', 'true');
- INSERT INTO qgep_vl.damage_manhole_manhole_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8973,8973,'DDEEC','DDEEC','DDEEC', 'DDEEC', 'DDEEC', '', '', '', '', '', 'true'); 
+ INSERT INTO qgep_vl.damage_manhole_manhole_damage_code (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8973,8973,'DDEEC','DDEEC','DDEEC', 'DDEEC', 'DDEEC', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.damage_manhole ADD CONSTRAINT fkey_vl_damage_manhole_manhole_damage_code FOREIGN KEY (manhole_damage_code)
- REFERENCES qgep_vl.damage_manhole_manhole_damage_code (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.damage_manhole_manhole_damage_code (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.damage_manhole_manhole_shaft_area () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.damage_manhole_manhole_shaft_area ADD CONSTRAINT pkey_qgep_vl_damage_manhole_manhole_shaft_area_code PRIMARY KEY (code);
@@ -944,7 +944,7 @@ ALTER TABLE qgep_vl.damage_manhole_manhole_shaft_area ADD CONSTRAINT pkey_qgep_v
  INSERT INTO qgep_vl.damage_manhole_manhole_shaft_area (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3748,3748,'I','I','I', '', '', '', 'true');
  INSERT INTO qgep_vl.damage_manhole_manhole_shaft_area (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3749,3749,'J','J','J', '', '', '', 'true');
  ALTER TABLE qgep_od.damage_manhole ADD CONSTRAINT fkey_vl_damage_manhole_manhole_shaft_area FOREIGN KEY (manhole_shaft_area)
- REFERENCES qgep_vl.damage_manhole_manhole_shaft_area (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.damage_manhole_manhole_shaft_area (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.data_media_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.data_media_kind ADD CONSTRAINT pkey_qgep_vl_data_media_kind_code PRIMARY KEY (code);
@@ -956,7 +956,7 @@ ALTER TABLE qgep_vl.data_media_kind ADD CONSTRAINT pkey_qgep_vl_data_media_kind_
  INSERT INTO qgep_vl.data_media_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3789,3789,'server','Server','serveur', '', '', '', 'true');
  INSERT INTO qgep_vl.data_media_kind (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3790,3790,'videotape','Videoband','bande_video', '', '', '', 'true');
  ALTER TABLE qgep_od.data_media ADD CONSTRAINT fkey_vl_data_media_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.data_media_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.data_media_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE qgep_od.file ADD COLUMN fk_data_media varchar(16);
 ALTER TABLE qgep_od.file ADD CONSTRAINT rel_file_data_media FOREIGN KEY (fk_data_media) REFERENCES qgep_od.data_media(obj_id) ON UPDATE CASCADE ON DELETE set null;
@@ -1054,7 +1054,7 @@ ALTER TABLE qgep_vl.file_class ADD CONSTRAINT pkey_qgep_vl_file_class_code PRIMA
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3890,3890,'water_catchment','Wasserfassung','CAPTAGE', '', '', '', 'true');
  INSERT INTO qgep_vl.file_class (code, vsacode, value_en, value_de, value_fr, abbr_en, abbr_de, abbr_fr, active) VALUES (3891,3891,'zone','Zone','ZONE', '', '', '', 'true');
  ALTER TABLE qgep_od.file ADD CONSTRAINT fkey_vl_file_class FOREIGN KEY (class)
- REFERENCES qgep_vl.file_class (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.file_class (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 CREATE TABLE qgep_vl.file_kind () INHERITS (qgep_sys.value_list_base);
 ALTER TABLE qgep_vl.file_kind ADD CONSTRAINT pkey_qgep_vl_file_kind_code PRIMARY KEY (code);
@@ -1067,7 +1067,7 @@ ALTER TABLE qgep_vl.file_kind ADD CONSTRAINT pkey_qgep_vl_file_kind_code PRIMARY
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (8812,8812,'sketch','Skizze','croquis', 'schizzo', 'rrr_Skizze', '', '', '', '', '', 'true');
  INSERT INTO qgep_vl.file_kind (code, vsacode, value_en, value_de, value_fr, value_it, value_ro, abbr_en, abbr_de, abbr_fr, abbr_it, abbr_ro, active) VALUES (9146,9146,'digital_video','digitales_Video','video_numerique', 'video_digitale', 'rrr_digitales_Video', '', '', '', '', '', 'true');
  ALTER TABLE qgep_od.file ADD CONSTRAINT fkey_vl_file_kind FOREIGN KEY (kind)
- REFERENCES qgep_vl.file_kind (code) MATCH SIMPLE 
+ REFERENCES qgep_vl.file_kind (code) MATCH SIMPLE
  ON UPDATE RESTRICT ON DELETE RESTRICT;
 --------- Relations to class organisation for dataowner and provider (new 3.11.2014);
 

@@ -14,11 +14,11 @@ SELECT
 	ws.identifier::text as description,
 	CONCAT_WS(',', 'manhole', mf.value_en) as tag,
 	wn.situation_geometry as geom,
-	CASE 
+	CASE
 		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
-	CASE 
+	CASE
 		WHEN ch_fh.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
@@ -47,11 +47,11 @@ SELECT
 	ws.identifier::text as description,
 	CONCAT_WS(',','special_structure', ss_fu.value_en) as tag,
 	wn.situation_geometry as geom,
-	CASE 
+	CASE
 		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
-	CASE 
+	CASE
 		WHEN ch_fh.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
@@ -112,11 +112,11 @@ SELECT
 	coalesce(from_wn.obj_id, concat('from_node@',re.obj_id)) as description,
 	'junction without structure' as tag,
 	coalesce(from_wn.situation_geometry,  ST_StartPoint(re.progression_geometry)) as geom,
-	CASE 
+	CASE
 		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
-	CASE 
+	CASE
 		WHEN ch_fh.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,
@@ -148,11 +148,11 @@ SELECT
 	coalesce(to_wn.obj_id, concat('to_node@',re.obj_id)) as description,
 	'junction without structure' as tag,
 	coalesce(to_wn.situation_geometry,  ST_EndPoint(re.progression_geometry)) as geom,
-	CASE 
+	CASE
 		WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
 		ELSE 'current'
 	END as state,
-	CASE 
+	CASE
 		WHEN ch_fh.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
 		ELSE 'secondary'
 	END as hierarchy,

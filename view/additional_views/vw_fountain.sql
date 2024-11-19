@@ -113,4 +113,3 @@ CREATE OR REPLACE RULE vw_fountain_ON_DELETE AS ON DELETE TO qgep_od.vw_fountain
   DELETE FROM qgep_od.fountain WHERE obj_id = OLD.obj_id;
   DELETE FROM qgep_od.connection_object WHERE obj_id = OLD.obj_id;
 );
-
