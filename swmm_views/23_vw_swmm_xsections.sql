@@ -38,7 +38,7 @@ SELECT DISTINCT
   0 as Geom4,
   1 as Barrels,
   0 as Culvert, -- default set to 0 instead of NULL
-  CASE 
+  CASE
     WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
     ELSE 'current'
   END as state,
