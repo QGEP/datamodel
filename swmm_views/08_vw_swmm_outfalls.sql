@@ -7,12 +7,12 @@ SELECT
   wn.obj_id as Name,
   coalesce(wn.bottom_level,0) as InvertElev,
 --  'FREE'::varchar as Type,
-  CASE 
+  CASE
     WHEN dp.waterlevel_hydraulic IS NOT NULL THEN 'FIXED'
     ELSE 'FREE'
   END as Type, -- Type of outfall boundary condition: FREE: outfall stage determined by minimum of critical flow depth and normal flow depth in the connecting conduit. NORMAL: outfall stage based on normal flow depth in the connecting conduit. FIXED: outfall stage set to a fixed value. TIDAL: outfall stage given by a table of tide elevation versus time of day. TIMESERIES: outfall stage supplied from a time series of elevations
 --  0 as StageData,
-  CASE 
+  CASE
     WHEN dp.waterlevel_hydraulic IS NOT NULL THEN waterlevel_hydraulic
     ELSE 0
   END as StageData,
@@ -45,12 +45,12 @@ SELECT
   wn.obj_id as Name,
   coalesce(wn.bottom_level,0) as InvertElev,
 --  'FREE'::varchar as Type,
-  CASE 
+  CASE
     WHEN dp.waterlevel_hydraulic IS NOT NULL THEN 'FIXED'
     ELSE 'FREE'
   END as Type, -- Type of outfall boundary condition: FREE: outfall stage determined by minimum of critical flow depth and normal flow depth in the connecting conduit. NORMAL: outfall stage based on normal flow depth in the connecting conduit. FIXED: outfall stage set to a fixed value. TIDAL: outfall stage given by a table of tide elevation versus time of day. TIMESERIES: outfall stage supplied from a time series of elevations
 --  0 as StageData,
-  CASE 
+  CASE
     WHEN dp.waterlevel_hydraulic IS NOT NULL THEN waterlevel_hydraulic
     ELSE 0
   END as StageData,
