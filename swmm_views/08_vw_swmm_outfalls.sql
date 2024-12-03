@@ -21,11 +21,11 @@ SELECT
   ws.identifier as description,
   dp.obj_id::varchar as tag,
   wn.situation_geometry as geom,
-  CASE 
+  CASE
     WHEN ws_st.vsacode IN (7959, 6529, 6526) THEN 'planned'
     ELSE 'current'
   END as state,
-  CASE 
+  CASE
     WHEN cfhi.vsacode in (5062, 5064, 5066, 5068, 5069, 5070, 5071, 5072, 5074) THEN 'primary'
     ELSE 'secondary'
   END as hierarchy,
