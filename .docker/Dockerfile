@@ -1,4 +1,4 @@
-ARG POSTGIS_VERSION=14-3.2
+ARG POSTGIS_VERSION=16-3.5
 FROM postgis/postgis:${POSTGIS_VERSION}
 
 # System deps
