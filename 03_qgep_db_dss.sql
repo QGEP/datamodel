@@ -564,6 +564,8 @@ ALTER TABLE qgep_od.organisation ADD COLUMN fk_dataowner varchar(16);
 COMMENT ON COLUMN qgep_od.organisation.fk_dataowner IS 'Foreignkey to Metaattribute dataowner (as an organisation) - this is the person or body who is allowed to delete, change or maintain this object / Metaattribut Datenherr ist diejenige Person oder Stelle, die berechtigt ist, diesen Datensatz zu löschen, zu ändern bzw. zu verwalten / Maître des données gestionnaire de données, qui est la personne ou l''organisation autorisée pour gérer, modifier ou supprimer les données de cette table/classe';
 ALTER TABLE qgep_od.organisation ADD COLUMN fk_provider varchar (16);
 COMMENT ON COLUMN qgep_od.organisation.fk_provider IS 'Foreignkey to Metaattribute provider (as an organisation) - this is the person or body who delivered the data / Metaattribut Datenlieferant ist diejenige Person oder Stelle, die die Daten geliefert hat / FOURNISSEUR DES DONNEES Organisation qui crée l’enregistrement de ces données ';
+ALTER TABLE qgep_od.organisation ADD COLUMN qgep_active boolean DEFAULT false;
+COMMENT ON COLUMN qgep_od.organisation.qgep_active IS 'Not part of the VSA-DSS data model added solely for QGEP and used to filter organisations';
 -------
 CREATE TRIGGER
 update_last_modified_organisation
