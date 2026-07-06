@@ -201,14 +201,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
         cur.execute(
-            psycopg2.sql.SQL(
-                "SELECT re.material, re.clear_height, rp.level, ws.co_level\
+            psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = %(obj_id)s"
-            ).format(schema=psycopg2.sql.Identifier("qgep_od")),
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier("qgep_od")),
             {"obj_id": obj_id},
         )
         row = cur.fetchone()
@@ -221,11 +219,9 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         row = self.select("file", obj_id, "qgep_od")
         cur = self.cursor()
         cur.execute(
-            psycopg2.sql.SQL(
-                "SELECT *\
+            psycopg2.sql.SQL("SELECT *\
             FROM {schema}.file\
-            WHERE object = %(obj_id)s"
-            ).format(schema=psycopg2.sql.Identifier("qgep_od")),
+            WHERE object = %(obj_id)s").format(schema=psycopg2.sql.Identifier("qgep_od")),
             {"obj_id": obj_id},
         )
         row = cur.fetchone()
@@ -255,14 +251,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
         cur.execute(
-            psycopg2.sql.SQL(
-                "SELECT re.material, re.clear_height, rp.level, ws.co_level\
+            psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = %(obj_id)s"
-            ).format(schema=psycopg2.sql.Identifier("qgep_od")),
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier("qgep_od")),
             {"obj_id": obj_id},
         )
         row = cur.fetchone()
@@ -330,14 +324,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
         cur.execute(
-            psycopg2.sql.SQL(
-                "SELECT re.material, re.clear_height, rp.level, ws.co_level\
+            psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = %(obj_id)s"
-            ).format(schema=psycopg2.sql.Identifier("qgep_od")),
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier("qgep_od")),
             {"obj_id": obj_id},
         )
         row = cur.fetchone()
@@ -431,14 +423,12 @@ class TestTriggers(unittest.TestCase, DbTestBase):
         # it should be in the live table qgep_od.reach and qgep_od.reach_point
         cur = self.cursor()
         cur.execute(
-            psycopg2.sql.SQL(
-                "SELECT re.material, re.clear_height, rp.level, ws.co_level\
+            psycopg2.sql.SQL("SELECT re.material, re.clear_height, rp.level, ws.co_level\
             FROM {schema}.reach re\
             LEFT JOIN {schema}.reach_point rp ON rp.obj_id = re.fk_reach_point_from\
             LEFT JOIN {schema}.wastewater_networkelement wn ON wn.obj_id = rp.fk_wastewater_networkelement\
             LEFT JOIN {schema}.vw_qgep_wastewater_structure ws ON ws.obj_id = wn.fk_wastewater_structure\
-            WHERE ws.obj_id = %(obj_id)s"
-            ).format(schema=psycopg2.sql.Identifier("qgep_od")),
+            WHERE ws.obj_id = %(obj_id)s").format(schema=psycopg2.sql.Identifier("qgep_od")),
             {"obj_id": obj_id},
         )
         row = cur.fetchone()
