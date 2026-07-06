@@ -53,9 +53,7 @@ qgep_{version}_structure_and_demo_data.backup | Complete backup with structure a
 
 * If you plan to **use QGEP for production**, it is more likely you will be using the plain SQL `qgep_{version}_structure_with_value_lists.sql`.
 * If you want to **give a try at QGEP**, you will likely restore the `qgep_{version}_structure_and_demo_data.backup` backup file.
-""".format(
-        version=version
-    )
+""".format(version=version)
 
 
 def create_dumps():
