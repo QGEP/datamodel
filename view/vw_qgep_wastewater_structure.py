@@ -57,7 +57,6 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None, extra_defini
         , main_co_sp.renovation_demand AS co_renovation_demand
 
         , {main_co_cols}
-        , ST_Force2D(COALESCE(wn.situation_geometry, main_co.situation_geometry))::geometry(Point, %(SRID)s) AS situation_geometry
 
         , {ma_columns}
 
@@ -498,14 +497,18 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None, extra_defini
         -- Move reach(es) as well
         UPDATE qgep_od.reach RE
         SET progression_geometry =
-          ST_ForceCurve (ST_SetPoint(
-            ST_CurveToLine (RE.progression_geometry ),
+          ST_SetPoint(
+            RE.progression_geometry,
             0, -- SetPoint index is 0 based, PointN index is 1 based.
             ST_SetSRID( ST_MakePoint(
-                ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
-                ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_PointN(RE.progression_geometry, 1)), ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
+                ST_X(ST_TRANSLATE(ST_MakePoint(
+                    ST_X(ST_PointN(RE.progression_geometry, 1)), 
+                    ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
+                ST_Y(ST_TRANSLATE(ST_MakePoint(
+                    ST_X(ST_PointN(RE.progression_geometry, 1)), 
+                    ST_Y(ST_PointN(RE.progression_geometry, 1))), dx, dy )),
                 ST_Z(ST_PointN(RE.progression_geometry, 1))), %(SRID)s )
-          ) )
+          )
         WHERE fk_reach_point_from IN
         (
           SELECT RP.obj_id FROM qgep_od.reach_point RP
@@ -515,14 +518,18 @@ def vw_qgep_wastewater_structure(srid: int, pg_service: str = None, extra_defini
 
         UPDATE qgep_od.reach RE
         SET progression_geometry =
-          ST_ForceCurve( ST_SetPoint(
-            ST_CurveToLine( RE.progression_geometry ),
+          ST_SetPoint(
+            RE.progression_geometry,
             ST_NumPoints(RE.progression_geometry) - 1,
             ST_SetSRID( ST_MakePoint(
-                ST_X(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
-                ST_Y(ST_TRANSLATE(ST_MakePoint(ST_X(ST_EndPoint(RE.progression_geometry)), ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
+                ST_X(ST_TRANSLATE(ST_MakePoint(
+                    ST_X(ST_EndPoint(RE.progression_geometry)), 
+                    ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
+                ST_Y(ST_TRANSLATE(ST_MakePoint(
+                    ST_X(ST_EndPoint(RE.progression_geometry)), 
+                    ST_Y(ST_EndPoint(RE.progression_geometry))), dx, dy )),
                 ST_Z(ST_PointN(RE.progression_geometry, 1))), %(SRID)s )
-          ) )
+          )
         WHERE fk_reach_point_to IN
         (
           SELECT RP.obj_id FROM qgep_od.reach_point RP

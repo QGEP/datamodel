@@ -84,6 +84,11 @@ psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/functions
 
 psql "service=${PGSERVICE}" -v ON_ERROR_STOP=1 -v SRID=$SRID -f ${DIR}/13_import.sql
 
+# Ajout des personnalisations de Pully
+
+psql "service=${PGSERVICE}" -v ON_ERROR_STOP=on -f ${DIR}/delta/pully_custom.sql
+
+# Création des vues
 
 ${DIR}/view/create_views.py --pg_service ${PGSERVICE} --srid ${SRID}
 

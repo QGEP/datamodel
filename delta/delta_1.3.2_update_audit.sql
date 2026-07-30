@@ -1,3 +1,5 @@
+SELECT (NULL); --audit already applied manually
+/*
 CREATE TABLE qgep_sys.logged_relations (
     relation_name text not null,
     uid_column text not null,
@@ -245,3 +247,4 @@ BEGIN
 END;
 $body$
 LANGUAGE plpgsql;
+*/

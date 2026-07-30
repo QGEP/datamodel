@@ -1,4 +1,5 @@
-
+SELECT (NULL); -- Delta already applied manually
+/*
 ALTER TABLE qgep_od.wastewater_structure ADD COLUMN fk_main_wastewater_node varchar(16);
 ALTER TABLE qgep_od.wastewater_structure ADD CONSTRAINT rel_wastewater_structure_main_wastewater_node FOREIGN KEY (fk_main_wastewater_node) REFERENCES qgep_od.wastewater_node(obj_id) ON UPDATE CASCADE ON DELETE SET NULL;
 
@@ -12,3 +13,4 @@ FROM
     GROUP BY fk_wastewater_structure
 ) AS wn
 WHERE wn.fk_wastewater_structure = ws.obj_id;
+*/

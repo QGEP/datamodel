@@ -270,9 +270,16 @@ def vw_qgep_reach(pg_service: str = None, extra_definition: dict = None):
     BEGIN
 
       -- Synchronize geometry with level
-      IF NEW.rp_from_level <> OLD.rp_from_level OR (NEW.rp_from_level IS NULL AND OLD.rp_from_level IS NOT NULL) OR (NEW.rp_from_level IS NOT NULL AND OLD.rp_from_level IS NULL) THEN
-        NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),0,
-        ST_MakePoint(ST_X(ST_StartPoint(NEW.progression_geometry)),ST_Y(ST_StartPoint(NEW.progression_geometry)),COALESCE(NEW.rp_from_level,'NaN'))));
+      IF NEW.rp_from_level <> OLD.rp_from_level OR 
+      (NEW.rp_from_level IS NULL AND OLD.rp_from_level IS NOT NULL) OR 
+      (NEW.rp_from_level IS NOT NULL AND OLD.rp_from_level IS NULL) THEN
+        NEW.progression_geometry = ST_SetPoint(
+                                    NEW.progression_geometry,
+                                    0,
+                                    ST_MakePoint(
+                                        ST_X(ST_StartPoint(NEW.progression_geometry)),
+                                        ST_Y(ST_StartPoint(NEW.progression_geometry)),
+                                        COALESCE(NEW.rp_from_level,'NaN')));
       ELSE
         IF ST_Z(ST_StartPoint(NEW.progression_geometry)) <> ST_Z(ST_StartPoint(OLD.progression_geometry)) THEN
           NEW.rp_from_level = NULLIF(ST_Z(ST_StartPoint(NEW.progression_geometry)),'NaN');
@@ -280,9 +287,16 @@ def vw_qgep_reach(pg_service: str = None, extra_definition: dict = None):
       END IF;
 
       -- Synchronize geometry with level
-      IF NEW.rp_to_level <> OLD.rp_to_level OR (NEW.rp_to_level IS NULL AND OLD.rp_to_level IS NOT NULL) OR (NEW.rp_to_level IS NOT NULL AND OLD.rp_to_level IS NULL) THEN
-        NEW.progression_geometry = ST_ForceCurve(ST_SetPoint(ST_CurveToLine(NEW.progression_geometry),ST_NumPoints(NEW.progression_geometry)-1,
-        ST_MakePoint(ST_X(ST_EndPoint(NEW.progression_geometry)),ST_Y(ST_EndPoint(NEW.progression_geometry)),COALESCE(NEW.rp_to_level,'NaN'))));
+      IF NEW.rp_to_level <> OLD.rp_to_level OR 
+      (NEW.rp_to_level IS NULL AND OLD.rp_to_level IS NOT NULL) OR 
+      (NEW.rp_to_level IS NOT NULL AND OLD.rp_to_level IS NULL) THEN
+        NEW.progression_geometry = ST_SetPoint(
+                                    NEW.progression_geometry,
+                                    ST_NumPoints(NEW.progression_geometry)-1,
+                                    ST_MakePoint(
+                                        ST_X(ST_EndPoint(NEW.progression_geometry)),
+                                        ST_Y(ST_EndPoint(NEW.progression_geometry)),
+                                        COALESCE(NEW.rp_to_level,'NaN')));
       ELSE
         IF ST_Z(ST_EndPoint(NEW.progression_geometry)) <> ST_Z(ST_EndPoint(OLD.progression_geometry)) THEN
           NEW.rp_to_level = NULLIF(ST_Z(ST_EndPoint(NEW.progression_geometry)),'NaN');

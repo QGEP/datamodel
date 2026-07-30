@@ -1,3 +1,4 @@
+*.backup
 *.pyc
 .noseids
 nosetests.xml

@@ -59,7 +59,7 @@ FROM (
       INNER JOIN qgep_od.reach RE_to ON RP.obj_id = RE_to.fk_reach_point_to
       LEFT JOIN qgep_od.wastewater_networkelement NE_to ON NE_to.obj_id = RE_to.obj_id
       LEFT JOIN qgep_od.channel CH_to ON NE_to.fk_wastewater_structure = CH_to.obj_id
-      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
+      WHERE (_all OR NE.fk_wastewater_structure = _obj_id) --and CH_to.function_hierarchic in (5062,5064,5066,5068,5069,5070,5071,5072,5074)  ----label only reaches with function_hierarchic=pwwf.*
       -- Outputs
       UNION
       SELECT NULL AS co_level, NULL::text AS rpi_level, coalesce(round(RP.level, 2)::text, '?') AS rpo_level, NE.fk_wastewater_structure ws, RP.obj_id, row_number() OVER(PARTITION BY RP.fk_wastewater_networkelement ORDER BY ST_Azimuth(RP.situation_geometry,ST_LineInterpolatePoint(ST_CurveToLine(RE_from.progression_geometry),0.99))/pi()*180 ASC), NULL::text AS bottom_level

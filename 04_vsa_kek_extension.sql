@@ -160,9 +160,9 @@ COMMENT ON COLUMN qgep_od.data_media.identifier IS 'yyy_Name des Datenträgers. 
 COMMENT ON COLUMN qgep_od.data_media.kind IS 'yyy_Beschreibt die Art des Datenträgers / Beschreibt die Art des Datenträgers / Décrit le genre de support de données';
  ALTER TABLE qgep_od.data_media ADD COLUMN location  varchar(50) ;
 COMMENT ON COLUMN qgep_od.data_media.location IS 'Where is the / Wo befindet sich der Datenträger / Où se trouve le support de données';
- ALTER TABLE qgep_od.data_media ADD COLUMN path  varchar(100) ;
+ ALTER TABLE qgep_od.data_media ADD COLUMN path text;
 COMMENT ON COLUMN qgep_od.data_media.path IS 'yyy_Zugriffspfad zum Datenträger. z.B. DVD-Laufwerk -> D: , Server -> \\server\videos, Harddisk -> c:\videos . Kann auch eine URL sein. Bei einem analogen Videoband leer / Zugriffspfad zum Datenträger. z.B. DVD-Laufwerk -> D: , Server -> \\server\videos, Harddisk -> c:\videos . Kann auch eine URL sein. Bei einem analogen Videoband leer / Chemin d’accès au support de données, p. ex. lecteur DVD -> D: , - serveur -> \\ server\videos , disque dur -> c:\videos , Peut aussi être une URL. Pour une bande vidéo analogique: vide';
- ALTER TABLE qgep_od.data_media ADD COLUMN remark  varchar(80) ;
+ ALTER TABLE qgep_od.data_media ADD COLUMN remark text;
 COMMENT ON COLUMN qgep_od.data_media.remark IS 'General remarks / Bemerkungen zum Datenträger / Remarques concernant le support de données';
  ALTER TABLE qgep_od.data_media ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep_od.data_media.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';
@@ -197,9 +197,9 @@ COMMENT ON COLUMN qgep_od.file.identifier IS 'yyy_Name der Datei mit Dateiendung
 COMMENT ON COLUMN qgep_od.file.kind IS 'yyy_Beschreibt die Art der Datei. Für analoge Videos auf Bändern ist der Typ "Video" einzusetzen. Die Bezeichnung wird dann gleich gesetzt wie die Bezeichnung des Videobandes. / Beschreibt die Art der Datei. Für analoge Videos auf Bändern ist der Typ "Video" einzusetzen. Die Bezeichnung wird dann gleich gesetzt wie die Bezeichnung des Videobandes. / Décrit le type de fichier. Pour les vidéos analo-giques sur bandes, le type « vidéo » doit être entré. La désignation sera ensuite la même que celle de la bande vidéo.';
  ALTER TABLE qgep_od.file ADD COLUMN object  varchar(41) ;
 COMMENT ON COLUMN qgep_od.file.object IS 'yyy_Objekt-ID (OBJ_ID) des Datensatzes zu dem die Datei gehört / Objekt-ID (OBJ_ID) des Datensatzes zu dem die Datei gehört / Identification de l’ensemble de données auquel le fichier appartient (OBJ_ID)';
- ALTER TABLE qgep_od.file ADD COLUMN path_relative varchar(200) ;
+ ALTER TABLE qgep_od.file ADD COLUMN path_relative text ;
 COMMENT ON COLUMN qgep_od.file.path_relative IS 'yyy_Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Zusätzlicher Relativer Pfad, wo die Datei auf dem Datenträger zu finden ist. Z.B. DVD_01. / Accès relatif supplémentaire à l’emplacement du fichier sur le support de données. P. ex. DVD_01';
- ALTER TABLE qgep_od.file ADD COLUMN remark  varchar(80) ;
+ ALTER TABLE qgep_od.file ADD COLUMN remark  text ;
 COMMENT ON COLUMN qgep_od.file.remark IS 'General remarks / Allgemeine Bemerkungen / Remarques générales';
  ALTER TABLE qgep_od.file ADD COLUMN last_modification TIMESTAMP without time zone DEFAULT now();
 COMMENT ON COLUMN qgep_od.file.last_modification IS 'Last modification / Letzte_Aenderung / Derniere_modification: INTERLIS_1_DATE';

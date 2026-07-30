@@ -6,7 +6,6 @@ view_name: vw_export_reach
 pkey: obj_id
 view_schema: qgep_od
 
-
 joins:
   elevation_determination:
     table: qgep_vl.reach_elevation_determination
